@@ -171,10 +171,12 @@ body.light-theme .security-card {
 body.light-theme .setting-row strong,
 body.light-theme .setting-row small,
 body.light-theme .config-form label,
+body.light-theme .config-form select,
 body.light-theme .security-card strong,
 body.light-theme .security-card p,
 body.light-theme .security-card small,
 body.light-theme .settings-header h1,
+body.light-theme .settings-header .eyebrow,
 body.light-theme .settings-panel .panel-title h2 {
     color: var(--text);
 }

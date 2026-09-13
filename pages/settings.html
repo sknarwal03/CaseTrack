@@ -53,7 +53,7 @@
                         <p class="eyebrow">Settings</p>
                         <h1>System Preferences</h1>
                     </div>
-                    <button class="new-case" type="button">Save Changes</button>
+                    <button class="new-case" type="button" id="saveSettingsBtn">Save Changes</button>
                 </div>
 
                 <div class="settings-grid">
@@ -83,7 +83,7 @@
                                     <small>Enable reminder alerts for hearings</small>
                                 </div>
                                 <label class="switch">
-                                    <input type="checkbox" checked>
+                                    <input type="checkbox" id="notificationsToggle" checked>
                                     <span class="slider"></span>
                                 </label>
                             </div>
@@ -94,7 +94,7 @@
                                     <small>Backup case data automatically</small>
                                 </div>
                                 <label class="switch">
-                                    <input type="checkbox" checked>
+                                    <input type="checkbox" id="autoSaveToggle" checked>
                                     <span class="slider"></span>
                                 </label>
                             </div>
@@ -112,30 +112,31 @@
                         <div class="config-form">
                             <label>
                                 <span>Default Case Status</span>
-                                <select>
-                                    <option>UI</option>
-                                    <option>UT</option>
-                                    <option>Untrace</option>
-                                    <option>Disposed</option>
+                                <select id="defaultCaseStatus">
+                                    <option value="UI">UI</option>
+                                    <option value="UT">UT</option>
+                                    <option value="Untrace">Untrace</option>
+                                    <option value="Disposed">Disposed</option>
                                 </select>
                             </label>
 
                             <label>
                                 <span>Default Court Type</span>
-                                <select>
-                                    <option>SC</option>
-                                    <option>LC</option>
-                                    <option>JJB</option>
+                                <select id="defaultCourtType">
+                                    <option value="SC">SC</option>
+                                    <option value="LC">LC</option>
+                                    <option value="JJB">JJB</option>
                                 </select>
                             </label>
 
                             <label>
                                 <span>Default Case Stage</span>
-                                <select>
-                                    <option>App</option>
-                                    <option>PW</option>
-                                    <option>DW</option>
-                                    <option>Charge</option>
+                                <select id="defaultCaseStage">
+                                    <option value="App">App</option>
+                                    <option value="PW">PW</option>
+                                    <option value="DW">DW</option>
+                                    <option value="Charge">Charge</option>
+                                    
                                 </select>
                             </label>
                         </div>
@@ -172,7 +173,7 @@
         </main>
     </div>
 
-    <script src="../assets/js/settings.js"></script>
+    <script type="module" src="../assets/js/settings.js"></script>
 </body>
 
 </html>

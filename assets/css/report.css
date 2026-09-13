@@ -112,6 +112,8 @@ body.light-theme .bar-value,
 body.light-theme .list-report li,
 body.light-theme .report-panel .panel-title h2,
 body.light-theme .report-header h1 {
+body.light-theme .report-header h1,
+body.light-theme .eyebrow {
     color: var(--text);
 }
 

@@ -1,3 +1,6 @@
+import { db } from "../../firebase/firebase-config.js";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+
 const themeToggle = document.querySelector('#themeToggle');
 const savedTheme = localStorage.getItem('caseTrackTheme') || 'dark';
 const dateFieldSelect = document.querySelector('#dateFieldSelect');
@@ -14,16 +17,11 @@ const state = {
     selectedDateKey: ''
 };
 
-const getCases = () => {
-    try {
-        const saved = JSON.parse(localStorage.getItem('caseFiles') || '[]');
-        return Array.isArray(saved) ? saved : [];
-    } catch {
-        return [];
-    }
-};
+let casesCache = [];
+const getCases = () => casesCache;
+const casesCollection = collection(db, "cases");
 
-const getRegistrationDateValue = caseItem => caseItem?.registrationDate || caseItem?.putInCourtDate || '';
+const getRegistrationDateValue = caseItem => caseItem?.registrationDate || caseItem?.putInCourtDate || caseItem?.firDate || '';
 
 const formatDateKey = value => {
     if (!value) return '';
@@ -145,8 +143,28 @@ const renderCalendar = () => {
     });
 };
 
-const init = () => {
+const loadCases = async () => {
+    try {
+        const snapshot = await getDocs(query(casesCollection, orderBy("createdAt", "desc")));
+        casesCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (e) {
+        try {
+            const snapshot = await getDocs(casesCollection);
+            casesCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        } catch (error) {
+            console.error("Error loading cases from Firebase:", error);
+            casesCache = [];
+        }
+    }
+    
     updateSelectedDateKey();
+    renderCalendar();
+    renderSelectedDateCases();
+};
+
+const init = () => {
+    applyTheme(savedTheme);
+    
     if (dateFieldSelect) {
         dateFieldSelect.value = state.activeKey;
         dateFieldSelect.addEventListener('change', event => {
@@ -178,9 +196,7 @@ const init = () => {
         applyTheme(nextTheme);
     });
 
-    applyTheme(savedTheme);
-    renderCalendar();
-    renderSelectedDateCases();
+    loadCases();
 };
 
 init();

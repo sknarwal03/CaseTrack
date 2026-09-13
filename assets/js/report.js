@@ -1,14 +1,13 @@
+import { db } from "../../firebase/firebase-config.js";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+
 const themeToggle = document.querySelector('#themeToggle');
 const savedTheme = localStorage.getItem('caseTrackTheme') || 'dark';
 
-const getCases = () => {
-    try {
-        const saved = JSON.parse(localStorage.getItem('caseFiles') || '[]');
-        return Array.isArray(saved) ? saved : [];
-    } catch {
-        return [];
-    }
-};
+let casesCache = [];
+const getCases = () => casesCache;
+
+const casesCollection = collection(db, "cases");
 
 const countByKey = (items, key) => {
     const map = {};
@@ -83,13 +82,33 @@ const applyTheme = theme => {
     }
 };
 
-const init = () => {
-    applyTheme(savedTheme);
+const renderAll = () => {
     renderStatusChart();
     renderStageChart();
     renderList('courtList', 'courtNumber');
     renderList('policeList', 'policeStation');
     updateSummary();
+};
+
+const loadCases = async () => {
+    try {
+        const snapshot = await getDocs(query(casesCollection, orderBy("createdAt", "desc")));
+        casesCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (e) {
+        try {
+            const snapshot = await getDocs(casesCollection);
+            casesCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        } catch (error) {
+            console.error("Error loading cases from Firebase:", error);
+            casesCache = [];
+        }
+    }
+    renderAll();
+};
+
+const init = () => {
+    applyTheme(savedTheme);
+    loadCases();
 
     themeToggle?.addEventListener('click', () => {
         const nextTheme = document.body.classList.contains('light-theme') ? 'dark' : 'light';

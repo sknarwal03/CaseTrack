@@ -263,7 +263,8 @@ body.light-theme .case-calendar-item h3,
 body.light-theme .calendar-page-header,
 body.light-theme .calendar-panel .panel-title h2,
 body.light-theme .selected-date-meta strong,
-body.light-theme .empty-state {
+body.light-theme .empty-state,
+body.light-theme .eyebrow {
     color: var(--text);
 }
 
