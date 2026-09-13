@@ -1,0 +1,501 @@
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px 12px;
+    color: #eff6ff;
+    background-color: #091727;
+    background: #091727;
+    border: 1px solid #284461;
+    border-radius: 8px;
+    outline: 0;
+}
+
+body.light-theme input,
+body.light-theme select,
+body.light-theme textarea {
+    color: var(--text);
+    background-color: #ffffff;
+    background: #ffffff;
+    border-color: var(--line);
+}
+
+.cases-shell {
+    max-width: 1480px;
+}
+
+.cases-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.case-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.case-filter {
+    padding: 8px 12px;
+    border: 1px solid #2b4464;
+    border-radius: 999px;
+    background: #0d1d2e;
+    color: #c7d7ee;
+    font-weight: 700;
+}
+
+.case-filter.active {
+    background: linear-gradient(135deg, #2d84ff, #6c5af7);
+    border-color: transparent;
+    color: #fff;
+}
+
+.cases-table-wrap {
+    overflow: auto;
+    border: 1px solid #213d5f;
+    border-radius: 14px;
+    background: rgba(9, 19, 33, 0.6);
+}
+
+.cases-table {
+    width: 100%;
+    min-width: 920px;
+    border-collapse: collapse;
+}
+
+.cases-table th,
+.cases-table td {
+    padding: 16px 14px;
+    text-align: left;
+    border-bottom: 1px solid #203754;
+    vertical-align: middle;
+}
+
+.cases-table th {
+    color: #bfd0eb;
+    background: rgba(16, 31, 52, 0.9);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.cases-table th.sortable {
+    cursor: pointer;
+}
+
+body.light-theme .cases-table th {
+    background: #edf4ff;
+    color: #2a4668;
+}
+
+.cases-table tbody tr:hover {
+    background: rgba(26, 52, 81, 0.48);
+}
+
+.case-id {
+    display: block;
+    font-weight: 800;
+    color: #edf5ff;
+    margin-bottom: 4px;
+}
+
+.case-meta {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 92px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.status-pill.active {
+    background: rgba(25, 212, 155, 0.16);
+    color: #69f2c3;
+    border: 1px solid rgba(25, 212, 155, 0.35);
+}
+
+.status-pill.pending {
+    background: rgba(143, 94, 255, 0.14);
+    color: #c8a8ff;
+    border: 1px solid rgba(143, 94, 255, 0.3);
+}
+
+.status-pill.closed {
+    background: rgba(52, 141, 255, 0.14);
+    color: #8dc0ff;
+    border: 1px solid rgba(52, 141, 255, 0.32);
+}
+
+.status-pill.warning {
+    background: rgba(255, 88, 109, 0.12);
+    color: #ff9ca9;
+    border: 1px solid rgba(255, 88, 109, 0.3);
+}
+
+.case-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.icon-btn {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #2d4563;
+    border-radius: 10px;
+    background: transparent;
+    color: #dfeaff;
+}
+
+.table-empty {
+    padding: 32px 20px;
+    color: var(--muted);
+    text-align: center;
+}
+
+.case-details-modal {
+    width: min(760px, 100%);
+}
+
+.detail-modal-body {
+    max-height: calc(92vh - 140px);
+    overflow-y: auto;
+    padding-top: 18px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.detail-modal-body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+.detail-header-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 18px 20px;
+    border: 1px solid #244163;
+    border-radius: 14px;
+    background: rgba(12, 24, 40, 0.82);
+}
+
+.detail-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.detail-header-card h3 {
+    margin: 0;
+    font-size: clamp(20px, 2vw, 28px);
+}
+
+.detail-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 94px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: rgba(25, 212, 155, 0.12);
+    border: 1px solid rgba(25, 212, 155, 0.35);
+    color: #69f2c3;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.detail-item {
+    padding: 14px 16px;
+    border: 1px solid #244163;
+    border-radius: 12px;
+    background: rgba(12, 24, 40, 0.6);
+}
+
+.detail-item span {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.detail-item strong {
+    color: #edf5ff;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.textarea-counter-wrap {
+    position: relative;
+}
+
+.textarea-shell {
+    position: relative;
+}
+
+.textarea-total-badge {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: rgba(54, 142, 255, 0.18);
+    border: 1px solid rgba(54, 142, 255, 0.38);
+    color: #a8d1ff;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    pointer-events: none;
+}
+
+textarea {
+    min-height: 74px;
+    resize: vertical;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-right: 46px;
+}
+
+textarea::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+body.light-theme .detail-header-card,
+body.light-theme .detail-item {
+    background: #fff;
+    border-color: var(--line);
+}
+
+body.light-theme .case-filter,
+body.light-theme .cases-table-wrap,
+body.light-theme .cases-table th,
+body.light-theme .cases-table td,
+body.light-theme .icon-btn {
+    border-color: var(--line);
+}
+
+body.light-theme .case-filter {
+    background: #f7fbff;
+    color: var(--text);
+}
+
+body.light-theme .cases-table-wrap {
+    background: #fff;
+}
+
+body.light-theme .cases-table tbody tr:hover {
+    background: #f3f8ff;
+}
+
+body.light-theme .case-id,
+body.light-theme .cases-table th,
+body.light-theme .cases-table td {
+    color: var(--text);
+}
+
+body.light-theme .status-pill.active {
+    background: rgba(25, 212, 155, 0.12);
+}
+
+body.light-theme .status-pill.pending {
+    background: rgba(140, 90, 246, 0.12);
+}
+
+body.light-theme .status-pill.closed {
+    background: rgba(52, 141, 255, 0.12);
+}
+
+body.light-theme .status-pill.warning {
+    background: rgba(255, 88, 109, 0.12);
+}
+
+body.light-theme {
+    --bg: #edf4ff;
+    --panel: #ffffff;
+    --panel-soft: #f5f9ff;
+    --line: #d9e5f3;
+    --text: #13253d;
+    --muted: #5b7088;
+    background: radial-gradient(circle at 70% -10%, #dfefff 0, transparent 32%), var(--bg);
+    color: var(--text);
+}
+
+body.light-theme .layout,
+body.light-theme .main,
+body.light-theme .content {
+    background: transparent;
+}
+
+body.light-theme .sidebar {
+    background: linear-gradient(180deg, #f9fbff 0%, #eef5fd 100%);
+    border-color: var(--line);
+}
+
+body.light-theme .brand-mark,
+body.light-theme .mini-icon {
+    background: #dfeeff;
+    color: #1d5ec8;
+}
+
+body.light-theme .brand small,
+body.light-theme .profile-name small,
+body.light-theme .welcome p,
+body.light-theme .side-quote,
+body.light-theme .panel-title h2,
+body.light-theme .field label,
+body.light-theme .modal-header p,
+body.light-theme .detail-label,
+body.light-theme .detail-item span,
+body.light-theme .table-empty,
+body.light-theme .case-meta {
+    color: var(--muted);
+}
+
+body.light-theme .topbar,
+body.light-theme .panel,
+body.light-theme .modal,
+body.light-theme .cases-table-wrap,
+body.light-theme .detail-header-card,
+body.light-theme .detail-item,
+body.light-theme .search,
+body.light-theme .round-btn,
+body.light-theme .btn,
+body.light-theme .field input,
+body.light-theme .field textarea,
+body.light-theme .field select {
+    background: var(--panel);
+    border-color: var(--line);
+    color: var(--text);
+}
+
+body.light-theme .panel,
+body.light-theme .modal {
+    background: linear-gradient(145deg, #ffffff, #f5f9ff);
+    box-shadow: 0 16px 32px rgba(35, 74, 120, 0.08);
+}
+
+body.light-theme .nav-item {
+    color: #46607d;
+}
+
+body.light-theme .nav-item:hover,
+body.light-theme .nav-item.active {
+    background: linear-gradient(90deg, #dfeeff, #e7e7ff);
+    color: #123157;
+    border-color: #c5d9ff;
+}
+
+body.light-theme .search {
+    background: #f7fbff;
+}
+
+body.light-theme .search input,
+body.light-theme .field input,
+body.light-theme .field textarea,
+body.light-theme .field select,
+body.light-theme .case-id,
+body.light-theme .cases-table th,
+body.light-theme .cases-table td,
+body.light-theme .detail-item strong,
+body.light-theme .detail-header-card h3,
+body.light-theme .modal h2,
+body.light-theme .modal h3,
+body.light-theme .profile-name strong,
+body.light-theme .welcome h1 {
+    color: var(--text);
+}
+
+body.light-theme .btn {
+    background: #f3f7ff;
+    color: var(--text);
+}
+
+body.light-theme .btn.primary,
+body.light-theme .new-case {
+    color: #fff;
+    background: linear-gradient(135deg, #2f7ef7, #6f53f2);
+    border-color: transparent;
+}
+
+body.light-theme .modal-backdrop {
+    background: rgba(10, 18, 29, 0.22);
+}
+
+body.light-theme .field input,
+body.light-theme .field textarea,
+body.light-theme .field select {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+body.light-theme .icon-btn {
+    background: #f4f8ff;
+    color: var(--text);
+    border-color: var(--line);
+}
+
+body.light-theme .cases-table tbody tr:hover {
+    background: #f3f8ff;
+}
+
+body.light-theme .status-pill.active,
+body.light-theme .status-pill.pending,
+body.light-theme .status-pill.closed,
+body.light-theme .status-pill.warning {
+    background: rgba(255,255,255,0.5);
+}
+
+body.light-theme .case-filter {
+    background: #f7fbff;
+    color: var(--text);
+}
+
+body.light-theme .case-filter.active {
+    background: linear-gradient(135deg, #2d84ff, #6c5af7);
+    color: #fff;
+}
+
+@media (max-width: 780px) {
+    .cases-toolbar {
+        align-items: flex-start;
+    }
+
+    .cases-table {
+        min-width: 760px;
+    }
+}

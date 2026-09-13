@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head><title>Debug Cases</title></head>
+<body>
+<h2>LocalStorage Cases Debug</h2>
+<pre id="output" style="white-space:pre-wrap; font-size:13px;"></pre>
+<script>
+const cases = JSON.parse(localStorage.getItem('caseFiles') || '[]');
+const out = document.getElementById('output');
+let text = `Total cases in localStorage: ${cases.length}\n\n`;
+
+let hasDate = 0;
+let noDate = 0;
+
+cases.forEach((c, i) => {
+    const reg = c.registrationDate || '';
+    const pic = c.putInCourtDate || '';
+    const fir = c.firDate || '';
+    const resolved = reg || pic || fir || '❌ NO DATE';
+
+    if (reg || pic || fir) hasDate++;
+    else noDate++;
+
+    text += `--- Case ${i + 1}: FIR-${c.firNo || '?'}/${c.firYear || '?'} ---\n`;
+    text += `  registrationDate : ${reg || 'undefined'}\n`;
+    text += `  putInCourtDate   : ${pic || 'undefined'}\n`;
+    text += `  firDate          : ${fir || 'undefined'}\n`;
+    text += `  ➜ Resolved Date  : ${resolved}\n`;
+    text += `  All keys: ${Object.keys(c).join(', ')}\n\n`;
+});
+
+text += `\n========== SUMMARY ==========\n`;
+text += `Cases WITH a date  : ${hasDate}\n`;
+text += `Cases WITHOUT date : ${noDate}\n`;
+
+out.textContent = text;
+</script>
+</body>
+</html>
+

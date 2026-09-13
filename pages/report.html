@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CaseTrack report page">
+    <title>CaseTrack | Report</title>
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/report.css">
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-mark">⚖</div>
+                <div><strong>CaseTrack</strong><small>Case Management System</small></div>
+            </div>
+            <nav>
+                <a class="nav-item" href="dashboard.html"><span>⌂</span>Dashboard</a>
+                <a class="nav-item" href="cases.html"><span>▧</span>All Cases</a>
+                <a class="nav-item" href="po-cases.html"><span>⚑</span>PO Cases</a>
+                <a class="nav-item" href="#"><span>★</span>Star Cases</a>
+                <a class="nav-item" href="calendar.html"><span>▣</span>Calendar</a>
+                <a class="nav-item active" href="report.html"><span>▥</span>Report</a>
+                <a class="nav-item" href="settings.html"><span>⚙</span>Settings</a>
+            </nav>
+            <div class="side-quote"><b>⚖</b>“Justice delayed<br>is not justice denied,<br>when it is tracked.”</div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <button class="menu" aria-label="Menu">☰</button>
+                <label class="search">
+                    <span>⌕</span>
+                    <input type="search" placeholder="Search report data…">
+                </label>
+                <div class="profile">
+                    <button class="round-btn" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false">☼</button>
+                    <button class="round-btn notification" aria-label="Notifications">♧</button>
+                    <div class="avatar">SN</div>
+                    <div class="profile-name">
+                        <strong>Shivkumar Narwal</strong>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </header>
+
+            <section class="content report-shell">
+                <div class="welcome report-header">
+                    <div>
+                        <p class="eyebrow">Reports</p>
+                        <h1>Case Insights</h1>
+                    </div>
+                    <button class="new-case" type="button">Export Report</button>
+                </div>
+
+                <section class="stats report-stats">
+                    <article class="stat">
+                        <div class="stat-icon blue">▰</div>
+                        <div>
+                            <p>Total Cases</p>
+                            <strong id="reportTotalCases">0</strong>
+                        </div>
+                        <em>All records</em>
+                    </article>
+                    <article class="stat">
+                        <div class="stat-icon green">◉</div>
+                        <div>
+                            <p>Disposed</p>
+                            <strong id="reportDisposed">0</strong>
+                        </div>
+                        <em>Completed</em>
+                    </article>
+                    <article class="stat">
+                        <div class="stat-icon red">▣</div>
+                        <div>
+                            <p>Pending</p>
+                            <strong id="reportPending">0</strong>
+                        </div>
+                        <em>At risk</em>
+                    </article>
+                    <article class="stat">
+                        <div class="stat-icon mint">✓</div>
+                        <div>
+                            <p>Next Hearings</p>
+                            <strong id="reportHearings">0</strong>
+                        </div>
+                        <em>Upcoming</em>
+                    </article>
+                </section>
+
+                <div class="report-grid">
+                    <section class="panel report-panel">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon">⌁</div>
+                                <h2>Case by Status</h2>
+                            </div>
+                        </div>
+                        <div class="bar-chart" id="statusBarChart"></div>
+                    </section>
+
+                    <section class="panel report-panel">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon">▣</div>
+                                <h2>Case Stage</h2>
+                            </div>
+                        </div>
+                        <div class="bar-chart" id="stageBarChart"></div>
+                    </section>
+                </div>
+
+                <div class="report-grid lower-grid">
+                    <section class="panel report-panel">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon">▧</div>
+                                <h2>Top Courts</h2>
+                            </div>
+                        </div>
+                        <ul class="list-report" id="courtList"></ul>
+                    </section>
+
+                    <section class="panel report-panel">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon">▰</div>
+                                <h2>Police Station Summary</h2>
+                            </div>
+                        </div>
+                        <ul class="list-report" id="policeList"></ul>
+                    </section>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../assets/js/report.js"></script>
+</body>
+
+</html>

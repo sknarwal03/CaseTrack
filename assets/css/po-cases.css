@@ -1,0 +1,233 @@
+.po-shell {
+    max-width: 1480px;
+}
+
+.po-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.summary-card {
+    padding: 18px;
+    background: linear-gradient(145deg, #0e2034, #0a192a);
+    border: 1px solid #223d5f;
+    border-radius: 14px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+}
+
+.summary-card p {
+    margin: 0 0 10px;
+    color: #b7c9e5;
+    font-size: 13px;
+}
+
+.summary-card strong {
+    display: block;
+    font-size: 30px;
+    letter-spacing: -0.7px;
+}
+
+.summary-card span {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #79e7c4;
+}
+
+.po-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.po-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.po-filter {
+    padding: 8px 12px;
+    border: 1px solid #2b4464;
+    border-radius: 999px;
+    background: #0d1d2e;
+    color: #c7d7ee;
+    font-weight: 700;
+}
+
+.po-filter.active {
+    background: linear-gradient(135deg, #2d84ff, #6c5af7);
+    border-color: transparent;
+    color: #fff;
+}
+
+.po-table-wrap {
+    overflow: auto;
+    border: 1px solid #213d5f;
+    border-radius: 14px;
+    background: rgba(9, 19, 33, 0.6);
+}
+
+.po-table {
+    width: 100%;
+    min-width: 960px;
+    border-collapse: collapse;
+}
+
+.po-table th,
+.po-table td {
+    padding: 16px 14px;
+    text-align: left;
+    border-bottom: 1px solid #203754;
+    vertical-align: middle;
+}
+
+.po-table th {
+    color: #bfd0eb;
+    background: rgba(16, 31, 52, 0.9);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.po-table tbody tr:hover {
+    background: rgba(26, 52, 81, 0.48);
+}
+
+.case-id {
+    display: block;
+    font-weight: 800;
+    color: #edf5ff;
+    margin-bottom: 4px;
+}
+
+.case-meta {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.priority-badge,
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 94px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.status-pill.active {
+    background: rgba(25, 212, 155, 0.16);
+    color: #69f2c3;
+    border: 1px solid rgba(25, 212, 155, 0.35);
+}
+
+.status-pill.pending {
+    background: rgba(143, 94, 255, 0.14);
+    color: #c8a8ff;
+    border: 1px solid rgba(143, 94, 255, 0.3);
+}
+
+.status-pill.review {
+    background: rgba(52, 141, 255, 0.14);
+    color: #8dc0ff;
+    border: 1px solid rgba(52, 141, 255, 0.32);
+}
+
+.priority-badge.high {
+    background: rgba(255, 88, 109, 0.12);
+    color: #ff9ca9;
+    border: 1px solid rgba(255, 88, 109, 0.3);
+}
+
+.priority-badge.medium {
+    background: rgba(255, 187, 84, 0.14);
+    color: #ffc867;
+    border: 1px solid rgba(255, 187, 84, 0.32);
+}
+
+.priority-badge.low {
+    background: rgba(25, 212, 155, 0.12);
+    color: #83efc9;
+    border: 1px solid rgba(25, 212, 155, 0.25);
+}
+
+.icon-btn {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #2d4563;
+    border-radius: 10px;
+    background: transparent;
+    color: #dfeaff;
+}
+
+body.light-theme .po-summary .summary-card,
+body.light-theme .po-table-wrap,
+body.light-theme .po-table th,
+body.light-theme .po-table td,
+body.light-theme .icon-btn,
+body.light-theme .po-filter {
+    border-color: var(--line);
+}
+
+body.light-theme .summary-card {
+    background: linear-gradient(145deg, #ffffff, #f5f9ff);
+    box-shadow: 0 16px 32px rgba(35, 74, 120, 0.08);
+}
+
+body.light-theme .po-filter {
+    background: #f7fbff;
+    color: var(--text);
+}
+
+body.light-theme .po-table-wrap {
+    background: #fff;
+}
+
+body.light-theme .po-table tbody tr:hover {
+    background: #f3f8ff;
+}
+
+body.light-theme .case-id,
+body.light-theme .po-table th,
+body.light-theme .po-table td {
+    color: var(--text);
+}
+
+body.light-theme .status-pill.active {
+    background: rgba(25, 212, 155, 0.12);
+}
+
+body.light-theme .status-pill.pending {
+    background: rgba(140, 90, 246, 0.12);
+}
+
+body.light-theme .status-pill.review {
+    background: rgba(52, 141, 255, 0.12);
+}
+
+@media (max-width: 780px) {
+    .po-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .po-table {
+        min-width: 760px;
+    }
+}
+
+@media (max-width: 520px) {
+    .po-summary {
+        grid-template-columns: 1fr;
+    }
+}
