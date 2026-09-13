@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CaseTrack PO cases page">
+    <title>CaseTrack | PO Cases</title>
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/poCases-Bv9iwJIl.css">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/dashboard-C36hVVLk.css">
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-mark">⚖</div>
+                <div><strong>CaseTrack</strong><small>Case Management System</small></div>
+            </div>
+            <nav>
+                <a class="nav-item" href="dashboard.html"><span>⌂</span>Dashboard</a>
+                <a class="nav-item" href="cases.html"><span>▧</span>All Cases</a>
+                <a class="nav-item active" href="po-cases.html"><span>⚑</span>PO Cases</a>
+                <a class="nav-item" href="#"><span>★</span>Star Cases</a>
+                <a class="nav-item" href="calendar.html"><span>▣</span>Calendar</a>
+                <a class="nav-item" href="report.html"><span>▥</span>Report</a>
+                <a class="nav-item" href="settings.html"><span>⚙</span>Settings</a>
+            </nav>
+            <div class="side-quote"><b>⚖</b>“Justice delayed<br>is not justice denied,<br>when it is tracked.”</div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <button class="menu" aria-label="Menu">☰</button>
+                <label class="search">
+                    <span>⌕</span>
+                    <input id="caseSearch" type="search" placeholder="Search FIR, officer, court, case type…">
+                </label>
+                <div class="profile">
+                    <button class="round-btn" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false">☼</button>
+                    <button class="round-btn notification" aria-label="Notifications">♧</button>
+                    <div class="avatar">SN</div>
+                    <div class="profile-name">
+                        <strong>Shivkumar Narwal</strong>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </header>
+
+            <section class="content po-shell">
+                <div class="welcome">
+                    <div>
+                        <h1>PO Cases</h1>
+                        <p>Police officer assigned matters and their current review status.</p>
+                    </div>
+                    <button class="new-case" type="button">＋&nbsp; New PO Case</button>
+                </div>
+
+                <div class="po-summary">
+                    <article class="summary-card">
+                        <p>Total PO Cases</p>
+                        <strong>128</strong>
+                        <span>+12% this month</span>
+                    </article>
+                    <article class="summary-card">
+                        <p>Pending Review</p>
+                        <strong>34</strong>
+                        <span>8 urgent</span>
+                    </article>
+                    <article class="summary-card">
+                        <p>Hearing Due</p>
+                        <strong>18</strong>
+                        <span>3 today</span>
+                    </article>
+                    <article class="summary-card">
+                        <p>Closed</p>
+                        <strong>76</strong>
+                        <span>+5 this week</span>
+                    </article>
+                </div>
+
+                <section class="panel">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <div class="mini-icon">⚑</div>
+                            <h2>Assigned PO Matters</h2>
+                        </div>
+                        <div class="case-actions">
+                            <button class="btn" type="button">Export</button>
+                            <button class="btn primary" type="button">Assign PO</button>
+                        </div>
+                    </div>
+
+                    <div class="po-toolbar">
+                        <div class="po-filters">
+                            <button class="po-filter active" data-filter="all" type="button">All</button>
+                            <button class="po-filter" data-filter="pending" type="button">Pending</button>
+                            <button class="po-filter" data-filter="review" type="button">In Review</button>
+                            <button class="po-filter" data-filter="active" type="button">Active</button>
+                        </div>
+                    </div>
+
+                    <div class="po-table-wrap">
+                        <table class="po-table">
+                            <thead>
+                                <tr>
+                                    <th>Case ID</th>
+                                    <th>Assigned Officer</th>
+                                    <th>Police Station</th>
+                                    <th>Next Hearing</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="po-row" data-status="pending">
+                                    <td>
+                                        <span class="case-id">PO-104/2026</span>
+                                        <span class="case-meta">Section 323/324 IPC</span>
+                                    </td>
+                                    <td>Inspector R. Verma</td>
+                                    <td>OSM</td>
+                                    <td>14 Sep 2026</td>
+                                    <td><span class="priority-badge high">High</span></td>
+                                    <td><span class="status-pill pending">Pending</span></td>
+                                    <td>
+                                        <button class="icon-btn" type="button" aria-label="Open">↗</button>
+                                    </td>
+                                </tr>
+                                <tr class="po-row" data-status="review">
+                                    <td>
+                                        <span class="case-id">PO-118/2026</span>
+                                        <span class="case-meta">Section 420 IPC</span>
+                                    </td>
+                                    <td>SI N. Sharma</td>
+                                    <td>Civil Lines</td>
+                                    <td>18 Sep 2026</td>
+                                    <td><span class="priority-badge medium">Medium</span></td>
+                                    <td><span class="status-pill review">In Review</span></td>
+                                    <td>
+                                        <button class="icon-btn" type="button" aria-label="Open">↗</button>
+                                    </td>
+                                </tr>
+                                <tr class="po-row" data-status="active">
+                                    <td>
+                                        <span class="case-id">PO-126/2025</span>
+                                        <span class="case-meta">Section 307 IPC</span>
+                                    </td>
+                                    <td>Inspector A. Singh</td>
+                                    <td>R/City</td>
+                                    <td>09 Sep 2026</td>
+                                    <td><span class="priority-badge high">High</span></td>
+                                    <td><span class="status-pill active">Active</span></td>
+                                    <td>
+                                        <button class="icon-btn" type="button" aria-label="Open">↗</button>
+                                    </td>
+                                </tr>
+                                <tr class="po-row" data-status="pending">
+                                    <td>
+                                        <span class="case-id">PO-132/2026</span>
+                                        <span class="case-meta">Section 279 IPC</span>
+                                    </td>
+                                    <td>DSP P. Nair</td>
+                                    <td>U/E</td>
+                                    <td>12 Sep 2026</td>
+                                    <td><span class="priority-badge low">Low</span></td>
+                                    <td><span class="status-pill pending">Pending</span></td>
+                                    <td>
+                                        <button class="icon-btn" type="button" aria-label="Open">↗</button>
+                                    </td>
+                                </tr>
+                                <tr class="po-row" data-status="active">
+                                    <td>
+                                        <span class="case-id">PO-141/2026</span>
+                                        <span class="case-meta">Section 498A IPC</span>
+                                    </td>
+                                    <td>SI K. Meena</td>
+                                    <td>OSM</td>
+                                    <td>22 Sep 2026</td>
+                                    <td><span class="priority-badge medium">Medium</span></td>
+                                    <td><span class="status-pill active">Active</span></td>
+                                    <td>
+                                        <button class="icon-btn" type="button" aria-label="Open">↗</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <script src="../assets/js/po-cases.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CaseTrack calendar view">
+    <title>CaseTrack | Calendar</title>
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/calendar-CN0u_t8F.css">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/dashboard-C36hVVLk.css">
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-mark">⚖</div>
+                <div><strong>CaseTrack</strong><small>Case Management System</small></div>
+            </div>
+            <nav>
+                <a class="nav-item" href="dashboard.html"><span>⌂</span>Dashboard</a>
+                <a class="nav-item" href="cases.html"><span>▧</span>All Cases</a>
+                <a class="nav-item" href="po-cases.html"><span>⚑</span>PO Cases</a>
+                <a class="nav-item" href="#"><span>★</span>Star Cases</a>
+                <a class="nav-item active" href="calendar.html"><span>▣</span>Calendar</a>
+                <a class="nav-item" href="report.html"><span>▥</span>Report</a>
+                <a class="nav-item" href="settings.html"><span>⚙</span>Settings</a>
+            </nav>
+            <div class="side-quote"><b>⚖</b>“Justice delayed<br>is not justice denied,<br>when it is tracked.”</div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <button class="menu" aria-label="Menu">☰</button>
+                <label class="search">
+                    <span>⌕</span>
+                    <input type="search" placeholder="Search cases by FIR, court, officer…">
+                </label>
+                <div class="profile">
+                    <button class="round-btn" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false">☼</button>
+                    <button class="round-btn notification" aria-label="Notifications">♧</button>
+                    <div class="avatar">SN</div>
+                    <div class="profile-name">
+                        <strong>Shivkumar Narwal</strong>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </header>
+
+            <section class="content calendar-shell">
+                <div class="calendar-page-header">
+                    <div>
+                        <p class="eyebrow">Calendar</p>
+                        <h1>Case Calendar</h1>
+                    </div>
+                    <div class="calendar-options">
+                        <label class="field-select-label">
+                            <span>Show by</span>
+                            <select id="dateFieldSelect">
+                                <option value="registrationDate">Registration Date</option>
+                                <option value="chargesheetDate">Chargesheet Date</option>
+                                <option value="firDate">Date of FIR</option>
+                                <option value="nextDate">Next Date</option>
+                            </select>
+                        </label>
+                        <div class="month-nav">
+                            <button type="button" id="prevMonthBtn" aria-label="Previous month">←</button>
+                            <button type="button" id="nextMonthBtn" aria-label="Next month">→</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calendar-layout">
+                    <section class="panel calendar-panel">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon">▣</div>
+                                <h2 id="monthLabel">Month Year</h2>
+                            </div>
+                        </div>
+
+                        <div class="weekday-row">
+                            <span>Sun</span>
+                            <span>Mon</span>
+                            <span>Tue</span>
+                            <span>Wed</span>
+                            <span>Thu</span>
+                            <span>Fri</span>
+                            <span>Sat</span>
+                        </div>
+
+                        <div id="calendarGrid" class="calendar-grid" aria-live="polite"></div>
+                    </section>
+
+                    <aside class="panel day-panel">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon">✓</div>
+                                <h2>Selected Date</h2>
+                            </div>
+                        </div>
+
+                        <div class="selected-date-meta">
+                            <strong id="selectedDateLabel">Select a date</strong>
+                        </div>
+                        <div id="selectedDateCases" class="selected-date-cases"></div>
+                    </aside>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../assets/js/calendar.js"></script>
+</body>
+
+</html>
