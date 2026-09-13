@@ -8,6 +8,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
+        login: resolve(__dirname, "pages/login.html"),
         dashboard: resolve(__dirname, "pages/dashboard.html"),
         cases: resolve(__dirname, "pages/cases.html"),
         calendar: resolve(__dirname, "pages/calendar.html"),
