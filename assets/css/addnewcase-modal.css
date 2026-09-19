@@ -1,0 +1,968 @@
+:root {
+    --bg: #162c46;
+    --surface: #10243d;
+    --surface-2: #152e4d;
+    --border: #284461;
+    --border-light: #37516f;
+
+    --text: #eff6ff;
+    --muted: #b8cae6;
+
+    --primary: #287cf3;
+    --primary-hover: #368eff;
+
+    --green: #1aa96d;
+    --red: #dd4a61;
+
+    --radius: 12px;
+}
+/* =========================================================
+   CASETRACK — ADD NEW CASE
+   Modern Technical UI
+========================================================= */
+
+
+
+
+
+
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page {
+    width: min(1450px, 94%);
+    margin: auto;
+    padding: 35px 0 70px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    margin-bottom: 28px;
+}
+
+.breadcrumb {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 10px;
+}
+
+.breadcrumb span {
+    color: var(--primary);
+    margin: 0 6px;
+}
+
+.page-header h1 {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.page-header p {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.header-actions,
+.bottom-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    border: 1px solid var(--border-light);
+
+    padding: 11px 18px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+}
+
+.btn-secondary:hover,
+.btn-outline:hover {
+    background: var(--surface-2);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text);
+}
+
+
+/* =========================================================
+   TOP CASE BAR
+========================================================= */
+
+.case-topbar {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 18px 20px;
+
+    margin-bottom: 20px;
+}
+
+.top-field {
+    width: 240px;
+}
+
+/* =========================================================
+   FLOATING LABEL GROUP
+======================================================== */
+
+.floating-label-group {
+    position: relative;
+}
+
+.floating-label-group select {
+    width: 100%;
+    /* Revert to normal padding and height */
+    padding: 0 12px;
+    height: 42px;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.floating-label-group label {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 12px; /* standard input text size */
+    transition: all 0.2s ease;
+    pointer-events: none;
+    letter-spacing: 0.5px;
+    margin: 0;
+    
+    /* For covering border line when floated */
+    padding: 0 4px;
+    background: transparent;
+}
+
+.floating-label-group select:focus ~ label,
+.floating-label-group select:valid ~ label {
+    top: 0; /* Exactly on top border because of translateY(-50%) */
+    font-size: 10px;
+    color: var(--primary);
+    background: var(--bg); /* Matches select/input background to cut border */
+}
+
+select {
+    appearance: none;
+}
+.top-separator {
+    color: var(--muted);
+    font-size: 12px;
+    padding-bottom: 13px;
+}
+
+.case-id {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--muted);
+
+    padding-bottom: 12px;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+
+    background: var(--green);
+
+    border-radius: 50%;
+
+    box-shadow: 0 0 10px var(--green);
+}
+
+
+/* =========================================================
+   FORM CARD
+========================================================= */
+
+.form-card {
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    margin-bottom: 18px;
+
+    overflow: hidden;
+
+    
+}
+
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.section-header {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 20px 22px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.section-icon {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid rgba(40, 124, 243, 0.4);
+
+    background: rgba(40, 124, 243, 0.15);
+
+    color: var(--primary);
+
+    border-radius: 8px;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.section-header h2 {
+    font-size: 15px;
+}
+
+.section-header p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.form-grid {
+    padding: 22px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+}
+
+.span-2 {
+    grid-column: span 2;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   INPUT GROUP
+========================================================= */
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.input-group label {
+    font-size: 12px;
+
+    color: #b7c2d3;
+
+    font-weight: 600;
+}
+
+.input-group small {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+/* Hide number input spinners */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+
+    background: var(--bg);
+
+    border: 1px solid var(--border);
+
+    color: var(--text);
+
+    border-radius: 8px;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
+}
+
+input,
+select {
+    height: 42px;
+
+    padding: 0 12px;
+}
+
+textarea {
+    padding: 12px;
+
+    resize: vertical;
+
+    min-height: 85px;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #536176;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: #34445c;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+
+    background: var(--bg);
+
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.10);
+}
+
+
+/* =========================================================
+   LOCKED INPUT
+========================================================= */
+
+.locked-input {
+    position: relative;
+}
+
+.locked-input input {
+    padding-left: 38px;
+    padding-right: 40px;
+}
+
+.locked-input>span:first-child {
+    position: absolute;
+
+    left: 13px;
+    top: 12px;
+
+    color: var(--muted);
+}
+
+.lock {
+    position: absolute;
+
+    right: 12px;
+    top: 12px;
+
+    font-size: 12px;
+
+    opacity: 0.7;
+}
+
+
+/* =========================================================
+   REGISTRATION NUMBER
+========================================================= */
+
+.registration-input {
+    display: grid;
+    grid-template-columns: 90px 18px 1fr 18px 100px;
+    align-items: center;
+
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    overflow: hidden;
+}
+
+.registration-input:focus-within {
+    border-color: var(--primary);
+    background: var(--bg);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.10);
+}
+
+.registration-input span {
+    text-align: center;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.registration-input select,
+.registration-input input {
+    height: 42px;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.registration-input select {
+    appearance: none;
+    cursor: pointer;
+}
+
+/* Style options to match dark theme */
+option {
+    background-color: var(--surface);
+    color: var(--text);
+}
+
+.registration-input select:focus,
+.registration-input input:focus,
+.registration-input select:hover,
+.registration-input input:hover {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   ACCUSED CARD
+========================================================= */
+
+.accused-card {
+    margin: 22px;
+
+    background: var(--surface-2);
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.accused-number {
+    padding: 11px 15px;
+
+    font-size: 10px;
+
+    letter-spacing: 1.2px;
+
+    color: var(--muted);
+
+    border-bottom: 1px solid var(--border);
+}
+
+.accused-number span {
+    color: var(--primary);
+    margin-left: 5px;
+}
+
+.accused-card .form-grid {
+    padding: 18px;
+}
+
+
+/* =========================================================
+   ADD MORE
+========================================================= */
+
+.add-more {
+    margin: 15px 22px 22px auto;
+    padding: 10px 15px;
+    background: transparent;
+    display: block;
+    border: 1px dashed #385071;
+    color: #7db3ff;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    transition: 0.2s;
+}
+
+.add-more:hover {
+    background: rgba(59, 130, 246, 0.07);
+
+    border-color: var(--primary);
+}
+
+
+/* =========================================================
+   TOGGLE CARDS
+========================================================= */
+
+.toggle-grid {
+    padding: 22px;
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+}
+
+.toggle-card {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 17px;
+
+    border: 1px solid var(--border);
+
+    background: var(--bg);
+
+    border-radius: 9px;
+}
+
+.toggle-card strong {
+    display: block;
+
+    font-size: 13px;
+}
+
+.toggle-card span:not(.slider) {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    margin-top: 4px;
+}
+
+
+/* =========================================================
+   SWITCH
+========================================================= */
+
+.switch {
+    position: relative;
+
+    width: 42px;
+    height: 22px;
+
+    flex-shrink: 0;
+}
+
+.switch input {
+    opacity: 0;
+
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+
+    inset: 0;
+
+    background: var(--border);
+
+    border-radius: 20px;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.slider::before {
+    content: "";
+
+    position: absolute;
+
+    width: 16px;
+    height: 16px;
+
+    left: 3px;
+    top: 3px;
+
+    background: #a9b4c5;
+
+    border-radius: 50%;
+
+    transition: 0.25s;
+}
+
+.switch input:checked+.slider {
+    background: var(--primary);
+}
+
+.switch input:checked+.slider::before {
+    transform: translateX(20px);
+
+    background: white;
+}
+
+
+/* =========================================================
+   BOTTOM ACTIONS
+========================================================= */
+
+.bottom-actions {
+    justify-content: flex-end;
+
+    padding-top: 8px;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #26364d;
+
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   WITNESS TABLE
+========================================================= */
+
+.table-container {
+    padding: 22px;
+    padding-bottom: 0;
+    overflow-x: auto;
+}
+
+.witness-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+.witness-table th {
+    text-align: left;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.witness-table td {
+    padding: 12px 10px 12px 0;
+    border-bottom: 1px solid rgba(36, 50, 71, 0.4);
+    color: var(--text);
+    font-size: 13px;
+}
+
+.witness-table th:last-child,
+.witness-table td:last-child {
+    padding-right: 0;
+}
+
+.witness-table .text-center {
+    text-align: center;
+}
+
+.witness-table input[type="text"],
+.witness-table input[type="date"],
+.witness-table select {
+    height: 38px;
+    font-size: 12px;
+}
+
+.witness-table input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    transition: all 0.2s;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.witness-table input[type="checkbox"]:hover {
+    border-color: var(--primary);
+}
+
+.witness-table input[type="checkbox"]:checked {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.witness-table input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.summary-grid {
+    border-top: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .page {
+        width: 94%;
+        padding-top: 20px;
+    }
+
+    .page-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 18px;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .header-actions .btn {
+        flex: 1;
+    }
+
+    .case-topbar {
+        flex-wrap: wrap;
+    }
+
+    .top-field {
+        width: calc(50% - 10px);
+    }
+
+    .case-id {
+        margin-left: 0;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .span-2,
+    .full-width {
+        grid-column: auto;
+    }
+
+    .toggle-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .registration-input {
+        grid-template-columns:
+            80px 15px 1fr 15px 80px;
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .top-field {
+        width: 100%;
+    }
+
+    .case-topbar {
+        align-items: stretch;
+    }
+
+    .top-separator {
+        display: none;
+    }
+
+    .registration-input {
+        grid-template-columns:
+            1fr 15px 1fr;
+    }
+
+    .registration-input select {
+        grid-column: 1 / -1;
+    }
+
+    .registration-input span:nth-of-type(1) {
+        display: none;
+    }
+
+    .bottom-actions {
+        flex-direction: column;
+    }
+
+    .bottom-actions .btn {
+        width: 100%;
+    }
+
+}
+
+/* Finds the label immediately followed by a required input */
+label:has(+ input:required)::after {
+  content: " *";
+  color: red;
+  font-weight: bold;
+}
+/* =========================================================
+   LIGHT THEME OVERRIDES FOR MODAL
+========================================================= */
+body.light-theme .form-card {
+    background: #f3f7ff;
+    border: 1px solid var(--line);
+    
+}
+body.light-theme .section-header { border-bottom-color: var(--line); }
+body.light-theme .section-header h2 { color: var(--text); }
+body.light-theme .section-header p { color: var(--muted); }
+body.light-theme .input-group label { color: var(--muted); }
+body.light-theme .floating-label-group input,
+body.light-theme .floating-label-group select {
+    background: #fff;
+    color: var(--text);
+    border-color: var(--line);
+}
+body.light-theme .floating-label-group label { color: var(--muted); }
+body.light-theme .accused-card { background: #f3f7ff; border-color: var(--line); }
+body.light-theme .accused-number { color: var(--text); border-bottom-color: var(--line); }
+body.light-theme .witness-table th { background: #f3f7ff; color: var(--text); border-bottom-color: var(--line); }
+body.light-theme .witness-table td { border-bottom-color: var(--line); }
+body.light-theme .sr-no { color: var(--muted); }
+body.light-theme .case-topbar { background: #f3f7ff; border-color: var(--line); }
+body.light-theme .top-separator { color: var(--muted); }
+/* =========================================================
+   TOGGLE CONTAINER
+========================================================= */
+.toggle-container {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+body.light-theme .toggle-container {
+    background: #fff;
+    border-color: var(--line);
+}
+/* =========================================================
+   LIGHT THEME OVERRIDES FOR SWITCH
+========================================================= */
+body.light-theme .slider {
+    background: #dce5f0;
+}
+body.light-theme .slider::before {
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+body.light-theme .switch input:checked+.slider {
+    background: var(--primary);
+}
+body.light-theme .switch input:checked+.slider::before {
+    background: #ffffff;
+}

@@ -1,4 +1,4 @@
-import { db } from "../../firebase/firebase-config.js";
+import { db } from "@config/firebase-config.js";
 import {
     collection,
     addDoc,
@@ -10,9 +10,6 @@ import {
 
 const modal = document.querySelector("#caseModal");
 const form = document.querySelector("#caseForm");
-const themeToggle = document.querySelector("#themeToggle");
-const notificationToggle = document.querySelector("#notificationToggle");
-const notificationPanel = document.querySelector("#notificationPanel");
 
 let casesCache = [];
 let activePcRange = "thisMonth";
@@ -127,7 +124,7 @@ const syncWitnessCounter = () => {
     if (!witnessNamesField || !totalWitnessField) return;
 
     totalWitnessField.value = String(getListEntries(witnessNamesField.value).length);
-    syncWitnessBalance();
+    // syncWitnessBalance();
 };
 
 const syncWitnessBalance = () => {
@@ -199,7 +196,7 @@ const syncListCounter = (fieldName, defaultValue = "1. ") => {
         update();
 
         if (fieldName === "witnessNames") {
-            syncWitnessCounter();
+            // syncWitnessCounter();
         }
     });
 
@@ -211,9 +208,9 @@ const syncListCounter = (fieldName, defaultValue = "1. ") => {
 ========================= */
 
 const openModal = () => {
-    syncFirYearFromDate();
-    syncWitnessCounter();
-    syncWitnessBalance();
+    // syncFirYearFromDate();
+    // syncWitnessCounter();
+    // syncWitnessBalance();
 
     modal?.classList.add("show");
     document.body.style.overflow = "hidden";
@@ -653,51 +650,10 @@ document.querySelector("#caseSearch")?.addEventListener("input", event => {
 
     document.querySelectorAll(".case-row").forEach(row => {
         row.style.display =
-            row.textContent.toLowerCase().includes(q)
-                ? "flex"
-                : "none";
+            row.textContent.toLowerCase().includes(q) ? "" : "none";
     });
 });
 
-/* =========================
-   THEME
-========================= */
-
-const applyTheme = theme => {
-    const isLight = theme === "light";
-
-    document.body.classList.toggle("light-theme", isLight);
-
-    if (themeToggle) {
-        themeToggle.textContent = isLight ? "☾" : "☼";
-        themeToggle.setAttribute(
-            "aria-label",
-            isLight
-                ? "Switch to dark theme"
-                : "Switch to light theme"
-        );
-        themeToggle.setAttribute(
-            "aria-pressed",
-            String(isLight)
-        );
-    }
-};
-
-applyTheme(localStorage.getItem("caseTrackTheme") || "dark");
-
-themeToggle?.addEventListener("click", () => {
-    const nextTheme =
-        document.body.classList.contains("light-theme")
-            ? "dark"
-            : "light";
-
-    localStorage.setItem("caseTrackTheme", nextTheme);
-    applyTheme(nextTheme);
-});
-
-/* =========================
-   RANGE SELECTOR
-========================= */
 
 const bindPcRangeSelector = () => {
     const trigger = document.querySelector(".pc-range-trigger");
@@ -786,47 +742,65 @@ form?.addEventListener("submit", async event => {
     }
 
     try {
-        syncFirYearFromDate();
-        syncWitnessCounter();
-        syncWitnessBalance();
+        // syncFirYearFromDate();
+        // syncWitnessCounter();
+        // syncWitnessBalance();
 
-        const rawData = Object.fromEntries(new FormData(form));
+                const formData = new FormData(form);
+        const rawData = Object.fromEntries(formData);
+        
+        rawData.accused_name = formData.getAll("accused_name[]");
+        rawData.accused_father_name = formData.getAll("accused_father_name[]");
+        rawData.accused_mobile = formData.getAll("accused_mobile[]");
+        rawData.arrested = formData.getAll("arrested[]");
+        rawData.arrestingdate = formData.getAll("arrestingdate[]");
+        rawData.custody_status = formData.getAll("custody_status[]");
+        rawData.baildate = formData.getAll("baildate[]");
+        rawData.po_status = formData.getAll("po_status[]");
+        rawData.po_date = formData.getAll("po_date[]");
+        rawData.accused_address = formData.getAll("accused_address[]");
+        
+        rawData.witness_name = formData.getAll("witness_name[]");
+        rawData.witness_status = formData.getAll("witness_status[]");
+        rawData.witness_examined = formData.getAll("witness_examined[]");
+        rawData.witness_examined_date = formData.getAll("witness_examined_date[]");
 
         const caseData = {
-            firNo: String(rawData.firNo || "").trim(),
-            firYear: String(rawData.firYear || "").trim(),
-            firDate: String(rawData.firDate || "").trim(),
-            underSection: String(rawData.underSection || "").trim(),
-            policeStation: String(rawData.policeStation || "").trim(),
-            caseStatus: String(rawData.caseStatus || "").trim(),
+            firNo: String(rawData.firno || "").trim(),
+            firYear: String(rawData.firyear || "").trim(),
+            firDate: String(rawData.firdate || "").trim(),
+            underSection: String(rawData.undersection || "").trim(),
+            policeStation: String(rawData.policestation || "").trim(),
+            caseStatus: String(rawData.casestatus || "").trim(),
 
-            registrationDate: String(rawData.registrationDate || "").trim(),
-            courtType: String(rawData.courtType || "").trim(),
-            courtNumber: String(rawData.courtNumber || "").trim(),
-            registrationNo: String(rawData.registrationNo || "").trim(),
-            caseStage: String(rawData.caseStage || "").trim(),
-            dateOfCharge: String(rawData.dateOfCharge || "").trim(),
-            dateOfDecision: String(rawData.dateOfDecision || "").trim(),
-            nextDate: String(rawData.nextDate || "").trim(),
+            registrationDate: String(rawData.regdate || "").trim(),
+            courtType: String(rawData.courttype || "").trim(),
+            courtNumber: String(rawData.courtnan || "").trim(),
+            registrationNo: String(rawData.regnumber || "").trim(),
+            caseStage: String(rawData.casestatus || "").trim(),
+            dateOfCharge: String(rawData.chargedate || "").trim(),
+            dateOfDecision: String(rawData.dod_date || "").trim(),
+            nextDate: String(rawData.nextdate || "").trim(),
 
-            ioRank: String(rawData.ioRank || "").trim(),
-            nameOfIO: String(rawData.nameOfIO || "").trim(),
+            ioRank: String(rawData.iorank || "").trim(),
+            nameOfIO: String(rawData.ioname || "").trim(),
 
-            incidentDate: String(rawData.incidentDate || "").trim(),
-            incidentPlace: String(rawData.incidentPlace || "").trim(),
-            incidentDetails: String(rawData.incidentDetails || "").trim(),
+            incidentDate: String(rawData.incident_date || "").trim(),
+            incidentPlace: String(rawData.incident_place || "").trim(),
+            incidentDetails: "",
 
-            complainantName: String(rawData.complainantName || "").trim(),
-            complainantContact: String(rawData.complainantContact || "").trim(),
-            complainantAddress: String(rawData.complainantAddress || "").trim(),
+            complainantName: String(rawData.complainant_name || "").trim(),
+            complainantContact: String(rawData.complainant_mobile || "").trim(),
+            complainantAddress: String(rawData.complainant_address || "").trim(),
 
-            accused: String(rawData.accused || "").trim(),
-            totalWitness: Number(rawData.totalWitness || 0),
-            witnessExamined: Number(rawData.witnessExamined || 0),
-            witnessLeft: Number(rawData.witnessLeft || 0),
-            witnessNames: String(rawData.witnessNames || "").trim()
+            accused: rawData.accused_name ? rawData.accused_name.filter(n => n.trim() !== "").join(", ") : "",
+            totalWitness: Number(rawData.total_witness || 0),
+            witnessExamined: Number(rawData.examined_witness || 0),
+            witnessLeft: Number(rawData.left_witness || 0),
+            witnessNames: rawData.witness_name ? rawData.witness_name.filter(n => n.trim() !== "").join(", ") : "",
+            
+            newFormData: rawData
         };
-
         const documentId = await saveCaseToFirestore(caseData);
 
         casesCache.unshift({
@@ -850,8 +824,8 @@ form?.addEventListener("submit", async event => {
             witnessNamesField.dispatchEvent(new Event("input", { bubbles: true }));
         }
 
-        syncWitnessCounter();
-        syncWitnessBalance();
+        // syncWitnessCounter();
+        // syncWitnessBalance();
 
         closeModal();
         renderDashboard();
@@ -911,8 +885,8 @@ const init = async () => {
                 );
             }
 
-            syncWitnessCounter();
-            syncWitnessBalance();
+            // syncWitnessCounter();
+            // syncWitnessBalance();
         }, 0);
     });
 
@@ -931,3 +905,392 @@ const init = async () => {
 };
 
 init();
+
+
+// --- INJECTED FROM ADDNEWCASE.JS ---
+/* =========================================================
+   CASETRACK — ADD NEW CASE JS
+========================================================= */
+
+
+
+const firDate = document.getElementById("firdate");
+const firYear = document.getElementById("firyear");
+
+const addAccused = document.getElementById("addAccused");
+const accusedContainer = document.getElementById("accusedContainer");
+
+/* =========================================================
+   ACCUSED CARD LOGIC (ARREST & PO)
+========================================================= */
+
+function setupAccusedCard(card) {
+    const arrestCheckbox = card.querySelector(".arrested");
+    const arrestDate = card.querySelector(".arrestingdate");
+    const custodyStatus = card.querySelector(".custody-status");
+    const bailDate = card.querySelector(".baildate");
+    
+    if (arrestCheckbox && arrestDate) {
+        arrestCheckbox.addEventListener("change", () => {
+            if (arrestCheckbox.checked) {
+                arrestDate.disabled = false;
+                if (custodyStatus) custodyStatus.disabled = false;
+            } else {
+                arrestDate.disabled = true;
+                arrestDate.value = "";
+                if (arrestDate._flatpickr) arrestDate._flatpickr.clear();
+                
+                if (custodyStatus) {
+                    custodyStatus.disabled = true;
+                    custodyStatus.value = "";
+                }
+                if (bailDate) {
+                    bailDate.disabled = true;
+                    bailDate.value = "";
+                    if (bailDate._flatpickr) bailDate._flatpickr.clear();
+                }
+            }
+        });
+        
+        // Initial sync
+        if (!arrestCheckbox.checked) {
+            arrestDate.disabled = true;
+            if (custodyStatus) custodyStatus.disabled = true;
+        }
+    }
+
+    if (custodyStatus && bailDate) {
+        custodyStatus.addEventListener("change", () => {
+            if (custodyStatus.value === "bailed_police" || custodyStatus.value === "bailed_court") {
+                bailDate.disabled = false;
+            } else {
+                bailDate.disabled = true;
+                bailDate.value = "";
+                if (bailDate._flatpickr) bailDate._flatpickr.clear();
+            }
+        });
+
+        if (custodyStatus.value !== "bailed_police" && custodyStatus.value !== "bailed_court") {
+            bailDate.disabled = true;
+        }
+    }
+
+    const poSelect = card.querySelector(".po-status");
+    const poDate = card.querySelector(".po-date");
+
+    if (poSelect && poDate) {
+        poSelect.addEventListener("change", () => {
+            if (poSelect.checked) {
+                poDate.disabled = false;
+            } else {
+                poDate.disabled = true;
+                poDate.value = "";
+                if (poDate._flatpickr) poDate._flatpickr.clear();
+            }
+        });
+        
+        // Initial sync
+        if (!poSelect.checked) {
+            poDate.disabled = true;
+        }
+    }
+}
+
+// Setup existing accused cards on page load
+document.querySelectorAll(".accused-card").forEach(setupAccusedCard);
+
+/* =========================================================
+   AUTO FIR YEAR
+========================================================= */
+
+firDate.addEventListener("change", () => {
+    if (!firDate.value) {
+        firYear.value = "";
+        return;
+    }
+    const date = new Date(firDate.value);
+    firYear.value = date.getFullYear();
+});
+
+
+/* =========================================================
+   ADD MORE ACCUSED
+========================================================= */
+
+let accusedCount = 1;
+
+addAccused.addEventListener("click", () => {
+
+    accusedCount++;
+
+    const card = document.createElement("div");
+
+    card.className = "accused-card";
+
+    card.innerHTML = `
+
+        <div class="accused-number">
+            ACCUSED <span>${String(accusedCount).padStart(2, "0")}</span>
+        </div>
+
+        <div class="form-grid">
+
+            <div class="input-group">
+
+                <label>Accused Name</label>
+
+                <input
+                    type="text"
+                    name="accused_name[]"
+                    placeholder="Full name">
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>Father's Name</label>
+
+                <input
+                    type="text"
+                    name="accused_father_name[]"
+                    placeholder="Father's name">
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>Mobile Number</label>
+
+                <input
+                    type="tel"
+                    name="accused_mobile[]"
+                    maxlength="10"
+                    placeholder="10 digit mobile number">
+
+            </div>
+
+
+            <div class="input-group">
+                <label>Arrest Status</label>
+                <div class="toggle-container">
+                    <span style="font-size: 13px; color: var(--muted); flex-grow: 1;">Mark as Arrested</span>
+                    <label class="switch">
+                        <input type="checkbox" name="arrested[]" class="arrested" value="yes">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Arrest Date</label>
+                <input type="date" name="arrestingdate[]" class="arrestingdate" disabled>
+            </div>
+
+            <div class="input-group">
+                <label>Custody Status</label>
+                <select name="custody_status[]" class="custody-status" disabled>
+                    <option value="">Select Status</option>
+                    <option value="bailed_police">Bailed by Police</option>
+                    <option value="bailed_court">Bailed by Court</option>
+                    <option value="jc">In Judicial Custody</option>
+                    <option value="pc">In Police Custody</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Bail Date</label>
+                <input type="date" name="baildate[]" class="baildate" disabled>
+            </div>
+
+            <div class="input-group">
+                <label>Proclaimed Offender</label>
+                <div class="toggle-container">
+                    <span style="font-size: 13px; color: var(--muted); flex-grow: 1;">Mark as PO</span>
+                    <label class="switch">
+                        <input type="checkbox" name="po_status[]" class="po-status" value="yes">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>PO V.O.D</label>
+                <input type="date" name="po_date[]" class="po-date" disabled>
+            </div>
+
+            <div class="input-group full-width">
+                <label>Accused Address</label>
+                <textarea name="accused_address[]" rows="3" placeholder="Enter complete address"></textarea>
+            </div>
+        </div>
+    `;
+
+    accusedContainer.appendChild(card);
+    initDatePickers(card);
+    setupAccusedCard(card);
+});
+
+
+/* =========================================================
+   FLATPICKR DATE INITIALIZATION
+========================================================= */
+
+function initDatePickers(container = document) {
+    const dateInputs = container.querySelectorAll('input[type="date"], input.flatpickr-date');
+    dateInputs.forEach(input => {
+        // Change type to text so native browser calendar doesn't interfere
+        if (input.getAttribute('type') === 'date') {
+            input.setAttribute('type', 'text');
+            input.classList.add('flatpickr-date');
+        }
+    });
+
+    flatpickr(dateInputs, {
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        disableMobile: true // Forces flatpickr on mobile instead of native
+    });
+}
+
+// Initialize on page load
+initDatePickers();
+
+
+/* =========================================================
+   WITNESS TABLE LOGIC
+========================================================= */
+
+const witnessTableBody = document.getElementById("witnessTableBody");
+const addWitnessBtn = document.getElementById("addWitness");
+const totalWitnessInput = document.getElementById("totalWitness");
+const examinedWitnessInput = document.getElementById("examinedWitness");
+const leftWitnessInput = document.getElementById("leftWitness");
+
+function updateWitnessCounts() {
+    const rows = witnessTableBody.querySelectorAll("tr");
+    
+    let validTotal = 0;
+    let examinedCount = 0;
+    
+    rows.forEach(row => {
+        const nameInput = row.querySelector("input[type='text']");
+        const checkbox = row.querySelector(".examined-checkbox");
+        
+        if (nameInput && nameInput.value.trim() !== "") {
+            validTotal++;
+            if (checkbox && checkbox.checked) {
+                examinedCount++;
+            }
+        }
+    });
+    
+    totalWitnessInput.value = validTotal;
+    examinedWitnessInput.value = examinedCount;
+    leftWitnessInput.value = validTotal - examinedCount;
+}
+
+function setupWitnessRow(row) {
+    const nameInput = row.querySelector("input[type='text']");
+    const checkbox = row.querySelector(".examined-checkbox");
+    const dateInput = row.querySelector(".examined-date");
+
+    // Update counts as the user types a name
+    nameInput.addEventListener("input", updateWitnessCounts);
+
+    checkbox.addEventListener("change", () => {
+        dateInput.disabled = !checkbox.checked;
+        if (!checkbox.checked) {
+            dateInput.value = "";
+            if (dateInput._flatpickr) {
+                dateInput._flatpickr.clear();
+            }
+        } else {
+            // Automatically show picker when checked
+            if (dateInput._flatpickr) {
+                setTimeout(() => dateInput._flatpickr.open(), 50);
+            }
+        }
+        updateWitnessCounts();
+    });
+}
+
+// Setup initial row
+witnessTableBody.querySelectorAll("tr").forEach(setupWitnessRow);
+updateWitnessCounts();
+
+addWitnessBtn.addEventListener("click", () => {
+    const rowCount = witnessTableBody.querySelectorAll("tr").length + 1;
+    const tr = document.createElement("tr");
+    
+    tr.innerHTML = `
+        <td class="sr-no">${rowCount}</td>
+        <td><input type="text" name="witness_name[]" placeholder="Full name"></td>
+        <td>
+            <select name="witness_status[]">
+                <option value="">Pending</option>
+                <option value="chief">Chief</option>
+                <option value="cross">Cross</option>
+                <option value="givenup">Given Up</option>
+            </select>
+        </td>
+        <td class="text-center">
+            <input type="checkbox" name="witness_examined[]" class="examined-checkbox" value="yes">
+        </td>
+        <td><input type="date" name="witness_examined_date[]" class="examined-date" disabled></td>
+    `;
+    
+    witnessTableBody.appendChild(tr);
+    setupWitnessRow(tr);
+    initDatePickers(tr);
+    updateWitnessCounts();
+});
+
+
+
+
+form?.addEventListener("reset", () => {
+    setTimeout(() => {
+        // Clear Flatpickr instances
+        document.querySelectorAll('.flatpickr-date').forEach(input => {
+            if (input._flatpickr) {
+                input._flatpickr.clear();
+            }
+        });
+
+        // Reset Accused container (keep first card)
+        const accusedContainer = document.getElementById("accusedContainer");
+        if (accusedContainer) {
+            const cards = accusedContainer.querySelectorAll('.accused-card');
+            for (let i = 1; i < cards.length; i++) {
+                cards[i].remove();
+            }
+        }
+        if (typeof accusedCount !== 'undefined') accusedCount = 1;
+
+        // Reset Witness table (keep first row)
+        const witnessTableBody = document.getElementById("witnessTableBody");
+        if (witnessTableBody) {
+            const rows = witnessTableBody.querySelectorAll('tr');
+            for (let i = 1; i < rows.length; i++) {
+                rows[i].remove();
+            }
+        }
+
+        if (typeof updateWitnessCounts === 'function') updateWitnessCounts();
+        
+        // Reset disabled states on first accused card
+        const firstAccused = document.querySelector('.accused-card');
+        if (firstAccused) {
+            const arrDate = firstAccused.querySelector(".arrestingdate");
+            const cusStat = firstAccused.querySelector(".custody-status");
+            const bailDate = firstAccused.querySelector(".baildate");
+            const poDate = firstAccused.querySelector(".po-date");
+            if (arrDate) arrDate.disabled = true;
+            if (cusStat) { cusStat.disabled = true; cusStat.value = ""; }
+            if (bailDate) bailDate.disabled = true;
+            if (poDate) poDate.disabled = true;
+        }
+    }, 10);
+});

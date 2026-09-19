@@ -4,6 +4,12 @@ import { resolve } from "path";
 export default defineConfig({
   base: "/CaseTrack/",
 
+  resolve: {
+    alias: {
+      "@config": resolve(__dirname, "firebase")
+    }
+  },
+
   build: {
     rollupOptions: {
       input: {

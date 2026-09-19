@@ -1,4 +1,4 @@
-import { db } from "../../firebase/firebase-config.js";
+import { db } from "@config/firebase-config.js";
 import {
     collection,
     addDoc,
@@ -12,6 +12,7 @@ import {
 
 const themeToggle = document.querySelector("#themeToggle");
 const savedTheme = localStorage.getItem("caseTrackTheme") || "dark";
+/* Theme handled by shared-layout.js */
 const modal = document.querySelector("#caseModal");
 const detailsModal = document.querySelector("#caseDetailsModal");
 const form = document.querySelector("#caseForm");
@@ -143,6 +144,7 @@ const getCaseStatusBucket = status => {
 /* =========================
    THEME
 ========================= */
+/* Theme handled by shared-layout.js */
 
 const applyTheme = theme => {
     const isLight = theme === "light";

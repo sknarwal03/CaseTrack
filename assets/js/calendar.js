@@ -1,8 +1,7 @@
-import { db } from "../../firebase/firebase-config.js";
+import { db } from "@config/firebase-config.js";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 
-const themeToggle = document.querySelector('#themeToggle');
-const savedTheme = localStorage.getItem('caseTrackTheme') || 'dark';
+/* Theme handled by shared-layout.js */
 const dateFieldSelect = document.querySelector('#dateFieldSelect');
 const monthLabel = document.querySelector('#monthLabel');
 const calendarGrid = document.querySelector('#calendarGrid');
@@ -53,16 +52,6 @@ const updateSelectedDateKey = () => {
     if (!state.selectedDateKey) {
         const safeDate = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth(), 1);
         state.selectedDateKey = formatDateKey(safeDate);
-    }
-};
-
-const applyTheme = theme => {
-    const isLight = theme === 'light';
-    document.body.classList.toggle('light-theme', isLight);
-    if (themeToggle) {
-        themeToggle.textContent = isLight ? '☾' : '☼';
-        themeToggle.setAttribute('aria-label', isLight ? 'Switch to dark theme' : 'Switch to light theme');
-        themeToggle.setAttribute('aria-pressed', String(isLight));
     }
 };
 
@@ -163,8 +152,8 @@ const loadCases = async () => {
 };
 
 const init = () => {
-    applyTheme(savedTheme);
-    
+    /* Theme handled by shared-layout.js */
+
     if (dateFieldSelect) {
         dateFieldSelect.value = state.activeKey;
         dateFieldSelect.addEventListener('change', event => {
@@ -188,12 +177,6 @@ const init = () => {
         state.selectedDateKey = formatDateKey(new Date(state.currentDate.getFullYear(), state.currentDate.getMonth(), 1));
         renderCalendar();
         renderSelectedDateCases();
-    });
-
-    themeToggle?.addEventListener('click', () => {
-        const nextTheme = document.body.classList.contains('light-theme') ? 'dark' : 'light';
-        localStorage.setItem('caseTrackTheme', nextTheme);
-        applyTheme(nextTheme);
     });
 
     loadCases();
