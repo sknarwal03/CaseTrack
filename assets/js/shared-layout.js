@@ -1,4 +1,5 @@
 import '../../components/add-case/add-case.js';
+import { setupDropdown } from './shared-utils.js';
 /**
  * shared-layout.js
  * Injects shared sidebar + topbar into every app page.
@@ -132,8 +133,32 @@ function applyTheme(theme) {
    SIDEBAR MOBILE TOGGLE
 ========================================================= */
 function initSidebarToggle() {
-    document.querySelector(".menu")?.addEventListener("click", () => {
-        document.getElementById("appSidebar")?.classList.toggle("open");
+    const menuBtn = document.querySelector(".menu");
+    const sidebar = document.getElementById("appSidebar");
+    if (!menuBtn || !sidebar) return;
+
+    menuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle("open");
+    });
+
+    document.addEventListener("click", (e) => {
+        if (sidebar.classList.contains("open") && !sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+            sidebar.classList.remove("open");
+        }
+    });
+
+    const navItems = sidebar.querySelectorAll(".nav-item");
+    navItems.forEach(item => {
+        item.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+        });
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && sidebar.classList.contains("open")) {
+            sidebar.classList.remove("open");
+        }
     });
 }
 
@@ -241,20 +266,8 @@ function initProfileDropdown() {
     profile.appendChild(dropdown);
 
     // Toggle
-    const toggle = e => {
-        e.stopPropagation();
-        const open = dropdown.classList.toggle("open");
-        trigger.setAttribute("aria-expanded", open);
-    };
-    trigger.addEventListener("click", toggle);
-    trigger.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") toggle(e); });
+    setupDropdown(trigger, dropdown, "open");
 
-    document.addEventListener("click", e => {
-        if (!profile.contains(e.target)) {
-            dropdown.classList.remove("open");
-            trigger.setAttribute("aria-expanded", "false");
-        }
-    });
 
     // Settings
     document.getElementById("pd-settings")?.addEventListener("click", () => {

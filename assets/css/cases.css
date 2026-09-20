@@ -151,6 +151,28 @@ body.light-theme .cases-table th {
     gap: 8px;
 }
 
+/* Fix Export button styling without breaking global .btn */
+.cases-shell .case-actions .btn:not(.primary) {
+    background: #142942;
+    color: #d8e7fc;
+    border: 1px solid #37516f;
+}
+
+.cases-shell .case-actions .btn:not(.primary):hover {
+    background: #1c395c;
+    border-color: #4a6a8f;
+}
+
+/* Light Theme support for Export button */
+body.light-theme .cases-shell .case-actions .btn:not(.primary) {
+    background: #fff;
+    color: var(--text);
+    border-color: var(--line);
+}
+body.light-theme .cases-shell .case-actions .btn:not(.primary):hover {
+    background: #f3f8ff;
+}
+
 .icon-btn {
     width: 34px;
     height: 34px;
@@ -158,6 +180,10 @@ body.light-theme .cases-table th {
     border-radius: 10px;
     background: transparent;
     color: #dfeaff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }
 
 .table-empty {
@@ -208,6 +234,11 @@ body.light-theme .cases-table th {
 .detail-header-card h3 {
     margin: 0;
     font-size: clamp(20px, 2vw, 28px);
+}
+
+.detail-header-card > div:last-child h3 {
+    font-size: 19px;
+    font-weight: 600;
 }
 
 .detail-status {
@@ -488,6 +519,23 @@ body.light-theme .case-filter {
 body.light-theme .case-filter.active {
     background: linear-gradient(135deg, #2d84ff, #6c5af7);
     color: #fff;
+}
+
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+.table-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.cases-table th:last-child,
+.cases-table td:last-child {
+    min-width: 120px; /* space for view + edit buttons */
+    white-space: nowrap;
 }
 
 @media (max-width: 780px) {

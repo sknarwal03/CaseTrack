@@ -1,4 +1,5 @@
 import { db } from '@config/firebase-config.js';
+import { parseCaseDate, setupDropdown } from './shared-utils.js';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 
 let casesCache = [];
@@ -38,18 +39,6 @@ window.addEventListener('caseAdded', () => {
 /* =========================
    DATE HELPER
 ========================= */
-function parseCaseDate(dateStr) {
-    if (!dateStr) return null;
-    if (dateStr.includes('/')) {
-        const parts = dateStr.split('/');
-        if (parts.length === 3) {
-            return new Date(parts[2], parseInt(parts[1], 10) - 1, parts[0]);
-        }
-    }
-    const d = new Date(dateStr);
-    return isNaN(d.getTime()) ? null : d;
-}
-
 /* =========================
    UPDATE TODAY DATE
 ========================= */
@@ -59,6 +48,160 @@ const updateTodayDate = () => {
         const options = { weekday: 'long', day: '2-digit', month: 'short', year: 'numeric' };
         el.textContent = new Intl.DateTimeFormat('en-GB', options).format(new Date());
     }
+};
+
+/* =========================
+   DONUT CHART — DYNAMIC
+========================= */
+
+// Palette: first 3 match the existing legend colours; extras for additional categories
+const DONUT_PALETTE = [
+    '#3994ff', '#8854f4', '#19d49b',
+    '#ff9f43', '#ee5a6f', '#00cec9',
+    '#a29bfe', '#fd79a8', '#55efc4', '#fdcb6e',
+];
+
+// Map dropdown value → case object field key
+const FIELD_MAP = {
+    'FIR Year':    c => String(c.firYear  || '').trim() || 'Unknown',
+    'Court Type':  c => String(c.courtType || '').trim() || 'Unknown',
+    'Court Name':  c => String(c.courtName || '').trim() || 'Unknown',
+    'Case Stage':  c => String(c.trialStage || '').trim() || 'Unknown',
+};
+
+const renderDonut = (cases) => {
+    const donutChartEl = document.querySelector('.donut');
+    const donutTotalEl = document.getElementById('donutTotal');
+    const legendEl     = document.querySelector('.legend');
+    const tooltip      = document.querySelector('.donut-tooltip');
+
+    if (!donutChartEl) return;
+
+    const selectedField = (document.querySelector('.status-filter')?.value) || 'FIR Year';
+    const getKey = FIELD_MAP[selectedField] || FIELD_MAP['FIR Year'];
+
+    // ── Group cases by selected dimension ─────────────────────────────
+    const counts = {};
+    (cases || []).forEach(c => {
+        const k = getKey(c);
+        counts[k] = (counts[k] || 0) + 1;
+    });
+
+    // Sort by count descending, exclude zero
+    const entries = Object.entries(counts)
+        .filter(([, v]) => v > 0)
+        .sort((a, b) => b[1] - a[1]);
+
+    const total = entries.reduce((s, [, v]) => s + v, 0);
+
+    if (donutTotalEl) donutTotalEl.textContent = String(total || 0);
+
+    // Empty state
+    if (total === 0 || entries.length === 0) {
+        donutChartEl.style.background = `conic-gradient(#2a3f5a 0deg 360deg)`;
+        donutChartEl.querySelector('.donut-slice-overlay')?.remove();
+        if (legendEl) legendEl.innerHTML = '<li style="color:var(--muted);font-size:12px;">No data</li>';
+        if (tooltip) tooltip.classList.remove('show');
+        return;
+    }
+
+    // ── Build conic-gradient string ───────────────────────────────────
+    let gradParts = [];
+    let runningDeg = 0;
+    const sliceData = [];
+
+    entries.forEach(([label, count], idx) => {
+        const color = DONUT_PALETTE[idx % DONUT_PALETTE.length];
+        const deg = (count / total) * 360;
+        const pct = ((count / total) * 100).toFixed(1);
+        gradParts.push(`${color} ${runningDeg.toFixed(4)}deg ${(runningDeg + deg).toFixed(4)}deg`);
+        sliceData.push({ label, color, count, pct, startDeg: runningDeg, endDeg: runningDeg + deg });
+        runningDeg += deg;
+    });
+
+    donutChartEl.style.background =
+        `conic-gradient(${gradParts.join(', ')})`;
+
+    // ── Legend ────────────────────────────────────────────────────────
+    if (legendEl) {
+        legendEl.innerHTML = sliceData.map(s =>
+            `<li>` +
+            `<i style="background:${s.color};border-radius:4px;width:11px;height:11px;display:block;flex-shrink:0;"></i>` +
+            `<span title="${s.label}">${s.label}</span>` +
+            `<b>${s.count} <span style="font-weight:400;color:var(--muted)">(${s.pct}%)</span></b>` +
+            `</li>`
+        ).join('');
+    }
+
+    // ── SVG hover overlay ─────────────────────────────────────────────
+    donutChartEl.querySelector('.donut-slice-overlay')?.remove();
+    if (tooltip) tooltip.classList.remove('show');
+
+    const EXPLODE_PX = 7;
+    const R = 50;
+    const ns = 'http://www.w3.org/2000/svg';
+
+    const polar = (angleDeg) => {
+        const rad = (angleDeg - 90) * Math.PI / 180;
+        return { x: 50 + R * Math.cos(rad), y: 50 + R * Math.sin(rad) };
+    };
+
+    const arcPath = (startDeg, endDeg) => {
+        if (endDeg - startDeg >= 359.99) {
+            return `M 50 50 m -${R} 0 a ${R} ${R} 0 1 1 ${R*2} 0 a ${R} ${R} 0 1 1 -${R*2} 0`;
+        }
+        const s = polar(startDeg);
+        const e = polar(endDeg);
+        const large = endDeg - startDeg > 180 ? 1 : 0;
+        return `M 50 50 L ${s.x} ${s.y} A ${R} ${R} 0 ${large} 1 ${e.x} ${e.y} Z`;
+    };
+
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 100 100');
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', '100%');
+    svg.classList.add('donut-slice-overlay');
+
+    sliceData.forEach(slice => {
+        const midDeg = (slice.startDeg + slice.endDeg) / 2;
+        const midRad = (midDeg - 90) * Math.PI / 180;
+        const tx = Math.cos(midRad) * EXPLODE_PX;
+        const ty = Math.sin(midRad) * EXPLODE_PX;
+
+        const highlight = document.createElementNS(ns, 'path');
+        highlight.setAttribute('d', arcPath(slice.startDeg, slice.endDeg));
+        highlight.setAttribute('fill', slice.color);
+        highlight.classList.add('slice-highlight');
+        highlight.style.transform = 'translate(0,0)';
+        highlight.style.opacity = '0';
+        svg.appendChild(highlight);
+
+        const hit = document.createElementNS(ns, 'path');
+        hit.setAttribute('d', arcPath(slice.startDeg, slice.endDeg));
+        hit.setAttribute('fill', 'transparent');
+        hit.classList.add('slice-hit');
+        svg.appendChild(hit);
+
+        hit.addEventListener('mouseenter', () => {
+            highlight.style.transform = `translate(${tx}px, ${ty}px)`;
+            highlight.style.opacity = '1';
+            if (tooltip) {
+                tooltip.innerHTML =
+                    `<div class="tooltip-label"><i style="background:${slice.color};color:${slice.color}"></i>${slice.label}</div>` +
+                    `<div class="tooltip-row"><strong>Cases</strong><span>${slice.count}</span></div>` +
+                    `<div class="tooltip-row"><strong>Percentage</strong><span>${slice.pct}%</span></div>`;
+                tooltip.classList.add('show');
+            }
+        });
+
+        hit.addEventListener('mouseleave', () => {
+            highlight.style.transform = 'translate(0,0)';
+            highlight.style.opacity = '0';
+            if (tooltip) tooltip.classList.remove('show');
+        });
+    });
+
+    donutChartEl.appendChild(svg);
 };
 
 /* =========================
@@ -113,16 +256,9 @@ const renderDashboard = () => {
     if (closedCasesEl) closedCasesEl.textContent = String(closed);
     if (pendingHearingsEl) pendingHearingsEl.textContent = String(pendingHearingsCount);
 
-    if (donutTotalEl) donutTotalEl.textContent = String(total);
+    // ── Donut chart is rendered separately via renderDonut() ──
+    renderDonut(casesCache);
 
-    if (donutChartEl && total > 0) {
-        const actDeg = (active / total) * 360;
-        const clDeg = (closed / total) * 360;
-        const pdDeg = (pending / total) * 360; // UCR etc.
-        donutChartEl.style.setProperty('--ut-deg', actDeg + 'deg');
-        donutChartEl.style.setProperty('--cl-deg', (actDeg + clDeg) + 'deg');
-        donutChartEl.style.setProperty('--pd-deg', (actDeg + clDeg + pdDeg) + 'deg');
-    }
 
     // Render Upcoming Hearings
     if (hearingList) {
@@ -187,27 +323,8 @@ const renderDashboard = () => {
 ========================= */
 const bindPcRangeSelector = () => {
     // Dropdown toggle
+    setupDropdown(".pc-range-trigger", ".pc-range-panel", "show-dropdown");
     const trigger = document.querySelector(".pc-range-trigger");
-    if (trigger) {
-        trigger.addEventListener("click", event => {
-            event.preventDefault();
-            event.stopPropagation();
-            const menu = trigger.parentElement.querySelector(".pc-range-panel");
-            if (menu) {
-                const shouldOpen = !menu.classList.contains("show-dropdown");
-                menu.classList.toggle("show-dropdown", shouldOpen);
-                menu.style.display = shouldOpen ? "" : "none";
-            }
-        });
-    }
-
-    document.addEventListener("click", event => {
-        const menu = document.querySelector(".pc-range-menu");
-        if (!menu || menu.contains(event.target)) return;
-        const panel = menu.querySelector(".pc-range-panel");
-        panel?.classList.remove("show-dropdown");
-        if (panel) panel.style.display = "none";
-    });
 
     const buttons = document.querySelectorAll('.pc-range-option');
     buttons.forEach(btn => {
@@ -244,5 +361,10 @@ const init = async () => {
     bindPcRangeSelector();
     bindViewAllButtons();
     await loadCases();
+
+    // Re-render donut when the breakdown dropdown changes
+    document.querySelector('.status-filter')?.addEventListener('change', () => {
+        renderDonut(casesCache);
+    });
 };
 init();

@@ -893,33 +893,33 @@ label:has(+ input:required)::after {
   font-weight: bold;
 }
 /* =========================================================
-   LIGHT THEME OVERRIDES FOR MODAL
+   LIGHT THEME SYNC FOR ADD CASE MODAL
 ========================================================= */
-body.light-theme .form-card {
-    background: #f3f7ff;
-    border: 1px solid var(--line);
-    
+
+body.light-theme #caseModal .add-more {
+    border: 1px dashed #93c5fd;
+    color: #2563eb;
 }
-body.light-theme .section-header { border-bottom-color: var(--line); }
-body.light-theme .section-header h2 { color: var(--text); }
-body.light-theme .section-header p { color: var(--muted); }
-body.light-theme .input-group label { color: var(--muted); }
-body.light-theme .floating-label-group input,
-body.light-theme .floating-label-group select {
-    background: #fff;
-    color: var(--text);
-    border-color: var(--line);
+
+body.light-theme #caseModal .add-more:hover {
+    background: #eff6ff;
+    border-color: #3b82f6;
 }
-body.light-theme .floating-label-group label { color: var(--muted); }
-body.light-theme .accused-card { background: #f3f7ff; border-color: var(--line); }
-body.light-theme .accused-number { color: var(--text); border-bottom-color: var(--line); }
-body.light-theme .witness-table th { background: #f3f7ff; color: var(--text); border-bottom-color: var(--line); }
-body.light-theme .witness-table td { border-bottom-color: var(--line); }
-body.light-theme .sr-no { color: var(--muted); }
-body.light-theme .case-topbar { background: #f3f7ff; border-color: var(--line); }
-body.light-theme .top-separator { color: var(--muted); }
+
+body.light-theme #caseModal .modal-footer .btn:not(.primary) {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+body.light-theme #caseModal .modal-footer .btn:not(.primary):hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+}
+
 /* =========================================================
-   TOGGLE CONTAINER
+   TOGGLE CONTAINER — base (dark theme uses var())
 ========================================================= */
 .toggle-container {
     height: 42px;
@@ -930,27 +930,6 @@ body.light-theme .top-separator { color: var(--muted); }
     border: 1px solid var(--border);
     border-radius: 8px;
 }
-body.light-theme .toggle-container {
-    background: #fff;
-    border-color: var(--line);
-}
-/* =========================================================
-   LIGHT THEME OVERRIDES FOR SWITCH
-========================================================= */
-body.light-theme .slider {
-    background: #dce5f0;
-}
-body.light-theme .slider::before {
-    background: #ffffff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-}
-body.light-theme .switch input:checked+.slider {
-    background: var(--primary);
-}
-body.light-theme .switch input:checked+.slider::before {
-    background: #ffffff;
-}
-
 
 /* =========================================
    DYNAMIC REMOVE BUTTONS
@@ -1022,4 +1001,288 @@ body.light-theme .switch input:checked+.slider::before {
 .remove-witness-btn:hover {
     background: var(--primary);
     color: #fff;
+}
+
+/* =========================================================
+   DARK THEME — #caseModal button overrides
+   (counteracts the duplicate .btn rule in shared.css
+    that sets background:#f3f7ff on all .btn globally)
+========================================================= */
+#caseModal .modal-footer .btn:not(.primary) {
+    background: #142942;
+    color: #d8e7fc;
+    border: 1px solid #37516f;
+}
+
+#caseModal .modal-footer .btn:not(.primary):hover {
+    background: #1c395c;
+    border-color: #4a6a8f;
+    color: #e8f1ff;
+}
+
+/* Close button — dark */
+#caseModal .close {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #b0c4de;
+}
+#caseModal .close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* =========================================================
+   LIGHT THEME — #caseModal comprehensive overrides
+   All scoped to body.light-theme #caseModal
+========================================================= */
+
+/* Modal shell */
+body.light-theme #caseModal .modal {
+    background: linear-gradient(180deg, #ffffff, #f5f9ff);
+    border: 1px solid #dce8f8;
+    color: #13253d;
+}
+
+body.light-theme #caseModal .modal-header,
+body.light-theme #caseModal .modal-footer {
+    border-color: #dce8f8;
+    background: transparent;
+}
+
+body.light-theme #caseModal .modal-header h3,
+body.light-theme #caseModal .modal-header p {
+    color: #13253d;
+}
+
+/* Close button — light */
+body.light-theme #caseModal .close {
+    background: #edf2fc;
+    border: 1px solid #ccd9ee;
+    color: #3c5474;
+}
+body.light-theme #caseModal .close:hover {
+    background: #dce8f8;
+    color: #13253d;
+}
+
+/* Form cards / sections */
+body.light-theme #caseModal .form-card {
+    background: #ffffff;
+    border-color: #dce8f8;
+}
+
+body.light-theme #caseModal .section-header {
+    background: #f5f8fe;
+    border-color: #dce8f8;
+}
+
+body.light-theme #caseModal .section-header h2 {
+    color: #13253d;
+}
+
+body.light-theme #caseModal .section-header p,
+body.light-theme #caseModal .input-group small {
+    color: #5f7187;
+}
+
+/* Labels */
+body.light-theme #caseModal .input-group label {
+    color: #3c5474;
+}
+
+/* Accused card */
+body.light-theme #caseModal .accused-card {
+    background: #f5f8fe;
+    border-color: #dce8f8;
+}
+
+body.light-theme #caseModal .accused-number {
+    border-color: #dce8f8;
+    color: #5f7187;
+}
+
+/* Inputs / selects / textareas */
+body.light-theme #caseModal input,
+body.light-theme #caseModal select,
+body.light-theme #caseModal textarea,
+body.light-theme #caseModal .field input,
+body.light-theme #caseModal .field select,
+body.light-theme #caseModal .field textarea {
+    background: #ffffff;
+    border: 1px solid #c9d8ef;
+    color: #13253d;
+    box-shadow: none;
+}
+
+body.light-theme #caseModal input:hover,
+body.light-theme #caseModal select:hover,
+body.light-theme #caseModal textarea:hover {
+    border-color: #94afd4;
+}
+
+body.light-theme #caseModal input:focus,
+body.light-theme #caseModal select:focus,
+body.light-theme #caseModal textarea:focus,
+body.light-theme #caseModal .field input:focus,
+body.light-theme #caseModal .field select:focus,
+body.light-theme #caseModal .field textarea:focus {
+    border-color: #287cf3;
+    box-shadow: 0 0 0 3px rgba(40, 124, 243, 0.1);
+}
+
+body.light-theme #caseModal input::placeholder,
+body.light-theme #caseModal textarea::placeholder {
+    color: #8dafc8;
+}
+
+/* Disabled inputs */
+body.light-theme #caseModal input:disabled,
+body.light-theme #caseModal select:disabled,
+body.light-theme #caseModal textarea:disabled {
+    background: #f0f4fa;
+    border-color: #dce8f8;
+    color: #8dafc8;
+    cursor: not-allowed;
+}
+
+/* Registration input compound */
+body.light-theme #caseModal .registration-input {
+    background: #ffffff;
+    border-color: #c9d8ef;
+}
+
+body.light-theme #caseModal .registration-input:focus-within {
+    border-color: #287cf3;
+    box-shadow: 0 0 0 3px rgba(40, 124, 243, 0.1);
+}
+
+body.light-theme #caseModal .registration-input span {
+    color: #5f7187;
+}
+
+/* Toggle container (Arrested / PO mark labels) */
+body.light-theme #caseModal .toggle-container {
+    background: #ffffff;
+    border-color: #c9d8ef;
+    color: #3c5474;
+}
+
+/* Slider / switch — unchecked */
+body.light-theme #caseModal .slider {
+    background: #c8d8ee;
+}
+body.light-theme #caseModal .slider::before {
+    background: #ffffff;
+}
+
+/* Slider / switch — checked */
+body.light-theme #caseModal .switch input:checked + .slider {
+    background: #287cf3;
+}
+body.light-theme #caseModal .switch input:checked + .slider::before {
+    background: #ffffff;
+}
+
+/* Toggle cards (Arrested / PO sections) */
+body.light-theme #caseModal .toggle-card {
+    background: #f5f8fe;
+    border-color: #dce8f8;
+}
+
+body.light-theme #caseModal .toggle-card strong {
+    color: #13253d;
+}
+
+body.light-theme #caseModal .toggle-card span:not(.slider) {
+    color: #5f7187;
+}
+
+/* Witness table */
+body.light-theme #caseModal .witness-table th {
+    color: #5f7187;
+    border-color: #dce8f8;
+}
+
+body.light-theme #caseModal .witness-table td {
+    color: #13253d;
+    border-color: #edf2fb;
+}
+
+/* Witness checkboxes */
+body.light-theme #caseModal .witness-table input[type="checkbox"] {
+    background: #ffffff;
+    border-color: #c9d8ef;
+}
+
+body.light-theme #caseModal .witness-table input[type="checkbox"]:hover {
+    border-color: #287cf3;
+}
+
+body.light-theme #caseModal .witness-table input[type="checkbox"]:checked {
+    background: #287cf3;
+    border-color: #287cf3;
+}
+
+/* Witness summary grid border */
+body.light-theme #caseModal .summary-grid {
+    border-color: #dce8f8;
+}
+
+/* Scrollbar inside modal */
+body.light-theme #caseModal .modal-body::-webkit-scrollbar-track {
+    background: #f5f8fe;
+}
+body.light-theme #caseModal .modal-body::-webkit-scrollbar-thumb {
+    background: rgba(14, 49, 87, 0.15);
+}
+body.light-theme #caseModal .modal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(14, 49, 87, 0.28);
+}
+
+/* Section icon */
+body.light-theme #caseModal .section-icon {
+    background: rgba(40, 124, 243, 0.1);
+    border-color: rgba(40, 124, 243, 0.25);
+    color: #287cf3;
+}
+
+/* case-topbar if visible inside modal */
+body.light-theme #caseModal .case-topbar {
+    background: #f5f8fe;
+    border-color: #dce8f8;
+}
+
+/* Required asterisk readable in light */
+body.light-theme #caseModal label:has(+ input:required)::after {
+    color: #dc2626;
+}
+
+/* Select options readable in light theme browsers that support styling */
+body.light-theme #caseModal option {
+    background: #ffffff;
+    color: #13253d;
+}
+
+/* Floating label in light theme */
+body.light-theme #caseModal .floating-label-group label {
+    color: #5f7187;
+}
+
+body.light-theme #caseModal .floating-label-group select:focus ~ label,
+body.light-theme #caseModal .floating-label-group select:valid ~ label {
+    color: #287cf3;
+    background: #ffffff;
+}
+
+/* Witness action button */
+body.light-theme #caseModal .remove-witness-btn,
+body.light-theme #caseModal .remove-accused-btn {
+    border-color: #287cf3;
+    color: #287cf3;
+}
+
+body.light-theme #caseModal .remove-witness-btn:hover,
+body.light-theme #caseModal .remove-accused-btn:hover {
+    background: #287cf3;
+    color: #ffffff;
 }

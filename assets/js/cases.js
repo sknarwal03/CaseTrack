@@ -1,23 +1,14 @@
 import { db } from '@config/firebase-config.js';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { parseCaseDate, setupModal } from './shared-utils.js';
 
 const detailsModal = document.querySelector('#caseDetailsModal');
-const closeDetailModalButton = document.querySelector('[data-close-detail-modal]');
+const modalHelper = setupModal(detailsModal);
 
 let casesCache = [];
 const casesCollection = collection(db, 'cases');
 
-function parseCaseDate(dateStr) {
-    if (!dateStr) return null;
-    if (dateStr.includes('/')) {
-        const parts = dateStr.split('/');
-        if (parts.length === 3) {
-            return new Date(parts[2], parseInt(parts[1], 10) - 1, parts[0]);
-        }
-    }
-    const d = new Date(dateStr);
-    return isNaN(d.getTime()) ? null : d;
-}
+// parseCaseDate is imported from shared-utils.js
 
 const loadCases = async () => {
     try {
@@ -80,8 +71,8 @@ const renderCaseTable = () => {
             '<td>' + (caseItem.nextDate || '') + '</td>' +
             '<td><span class="status-badge ' + statusClass + '">' + (caseItem.trialStage || '') + '</span></td>' +
             '<td><div class="table-actions">' +
-            '<button class="icon-btn view-btn" title="View Details">👁️</button>' +
-            '<button class="icon-btn edit-btn" title="Edit Case">✏️</button>' +
+            '<button class="icon-btn view-btn" title="View Details"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>' +
+            '<button class="icon-btn edit-btn" title="Edit Case"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>' +
             '</div></td>';
 
         row.querySelector('.fir-trigger')?.addEventListener('click', event => {
@@ -100,32 +91,63 @@ const renderCaseTable = () => {
     });
 };
 
-const closeDetailModal = () => {
-    if (!detailsModal) return;
-    detailsModal.classList.remove('show');
-    detailsModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-};
-
 const openDetailModal = caseItem => {
     if (!detailsModal) return;
 
-    let shareBtn = document.querySelector('#sharePdfBtn');
-    if (!shareBtn) {
+    let shareWrap = document.querySelector('#sharePdfWrap');
+    if (!shareWrap) {
         const header = detailsModal.querySelector('.modal-header');
         if (header) {
-            shareBtn = document.createElement('button');
-            shareBtn.id = 'sharePdfBtn';
-            shareBtn.className = 'btn primary';
-            shareBtn.style.marginLeft = 'auto';
-            shareBtn.style.marginRight = '15px';
-            shareBtn.textContent = 'Share as PDF';
-            header.insertBefore(shareBtn, header.querySelector('.close'));
+            shareWrap = document.createElement('div');
+            shareWrap.id = 'sharePdfWrap';
+            shareWrap.style.position = 'relative';
+            shareWrap.style.marginLeft = 'auto';
+            shareWrap.style.marginRight = '15px';
+            shareWrap.innerHTML = `
+                <button id="sharePdfBtn" class="btn primary" type="button" style="display: flex; align-items: center; gap: 6px;">Share <span style="font-size: 10px;">▼</span></button>
+                <div id="shareMenu" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; background: var(--panel, #1e293b); border: 1px solid var(--line, #334155); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 100; min-width: 180px; overflow: hidden;">
+                    <a href="#" id="sharePrint" style="display: block; padding: 12px 16px; color: var(--text, #f8fafc); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--line, #334155);">🖨️ Print / Save PDF</a>
+                    <a href="#" id="shareWa" style="display: block; padding: 12px 16px; color: var(--text, #f8fafc); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--line, #334155);">📱 WhatsApp</a>
+                    <a href="#" id="shareEmail" style="display: block; padding: 12px 16px; color: var(--text, #f8fafc); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--line, #334155);">📧 Email</a>
+                    <a href="#" id="shareNative" style="display: block; padding: 12px 16px; color: var(--text, #f8fafc); text-decoration: none; font-size: 14px;">📤 Native Share</a>
+                </div>
+            `;
+            header.insertBefore(shareWrap, header.querySelector('.close'));
+
+            const shareBtn = shareWrap.querySelector('#sharePdfBtn');
+            const shareMenu = shareWrap.querySelector('#shareMenu');
+            
+            shareBtn.onclick = (e) => {
+                e.stopPropagation();
+                shareMenu.style.display = shareMenu.style.display === 'none' ? 'block' : 'none';
+            };
+            document.addEventListener('click', (e) => {
+                if (!shareWrap.contains(e.target)) {
+                    shareMenu.style.display = 'none';
+                }
+            });
+            
+            shareMenu.querySelectorAll('a').forEach(a => {
+                a.onmouseover = () => a.style.background = 'rgba(128, 128, 128, 0.1)';
+                a.onmouseout = () => a.style.background = 'transparent';
+            });
         }
     }
 
-    if (shareBtn) {
-        shareBtn.onclick = () => {
+    if (shareWrap) {
+        let displayFir = caseItem.firNo || '';
+        if (caseItem.firNo && caseItem.firYear) {
+            const yrStr = String(caseItem.firYear).trim();
+            if (yrStr.length >= 2) displayFir = caseItem.firNo + '/' + yrStr.slice(-2);
+        }
+        const textSummary = `Case Details\nFIR No: ${displayFir}\nStatus: ${caseItem.status || 'N/A'}\nNext Date: ${caseItem.nextDate || 'N/A'}\nCourt: ${caseItem.courtName || 'N/A'}`;
+
+        const shareMenu = shareWrap.querySelector('#shareMenu');
+        
+        shareWrap.querySelector('#sharePrint').onclick = (e) => {
+            e.preventDefault();
+            shareMenu.style.display = 'none';
+            
             const content = document.querySelector('.detail-modal-body').innerHTML;
             const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style')).map(s => s.outerHTML).join('\n');
             
@@ -211,6 +233,37 @@ const openDetailModal = caseItem => {
                 printWindow.document.close();
             }
         };
+
+        shareWrap.querySelector('#shareWa').onclick = (e) => {
+            e.preventDefault();
+            shareMenu.style.display = 'none';
+            window.open(`https://wa.me/?text=${encodeURIComponent(textSummary)}`, '_blank');
+        };
+
+        shareWrap.querySelector('#shareEmail').onclick = (e) => {
+            e.preventDefault();
+            shareMenu.style.display = 'none';
+            window.open(`mailto:?subject=${encodeURIComponent('Case Details - FIR ' + displayFir)}&body=${encodeURIComponent(textSummary)}`, '_self');
+        };
+
+        const nativeBtn = shareWrap.querySelector('#shareNative');
+        if (navigator.share) {
+            nativeBtn.style.display = 'block';
+            nativeBtn.onclick = async (e) => {
+                e.preventDefault();
+                shareMenu.style.display = 'none';
+                try {
+                    await navigator.share({
+                        title: `Case Details - FIR ${displayFir}`,
+                        text: textSummary,
+                    });
+                } catch(err) {
+                    console.log('Share failed:', err);
+                }
+            };
+        } else {
+            nativeBtn.style.display = 'none';
+        }
     }
 
     const headerCard = document.querySelector('.detail-header-card');
@@ -408,14 +461,8 @@ const openDetailModal = caseItem => {
         }
     }
 
-    detailsModal.classList.add('show');
-    detailsModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+    modalHelper.openModal();
 };
-
-closeDetailModalButton?.addEventListener('click', closeDetailModal);
-detailsModal?.addEventListener('click', event => { if (event.target === detailsModal) closeDetailModal(); });
-document.addEventListener('keydown', event => { if (event.key === 'Escape' && detailsModal?.classList.contains('show')) closeDetailModal(); });
 
 // Search functionality
 document.addEventListener('input', event => {
