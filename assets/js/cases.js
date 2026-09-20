@@ -64,20 +64,28 @@ const renderCaseTable = () => {
         else if (st === 'disposed' || st === 'cancellation') statusClass = 'status-disp';
         else statusClass = 'status-pd';
 
+        let displayFir = caseItem.firNo || '';
+        if (caseItem.firNo && caseItem.firYear) {
+            const yrStr = String(caseItem.firYear).trim();
+            if (yrStr.length >= 2) {
+                displayFir = caseItem.firNo + '/' + yrStr.slice(-2);
+            }
+        }
+
         row.innerHTML =
-            '<td><strong>' + (caseItem.firNo || '') + '</strong></td>' +
+            '<td><strong style="cursor: pointer; color: var(--primary);" class="fir-trigger">' + displayFir + '</strong></td>' +
             '<td>' + (caseItem.firDate || '') + '</td>' +
             '<td>' + (caseItem.underSection || '') + '</td>' +
             '<td>' + (caseItem.courtName || '') + '</td>' +
             '<td>' + (caseItem.nextDate || '') + '</td>' +
             '<td><span class="status-badge ' + statusClass + '">' + (caseItem.trialStage || '') + '</span></td>' +
             '<td><div class="table-actions">' +
-            '<button class="icon-btn view-btn" title="View Details">👁</button>' +
-            '<button class="icon-btn edit-btn" title="Edit Case">✎</button>' +
+            '<button class="icon-btn view-btn" title="View Details">👁️</button>' +
+            '<button class="icon-btn edit-btn" title="Edit Case">✏️</button>' +
             '</div></td>';
 
-        row.addEventListener('click', event => {
-            if (event.target.closest('.icon-btn')) return;
+        row.querySelector('.fir-trigger')?.addEventListener('click', event => {
+            event.stopPropagation();
             openDetailModal(caseItem);
         });
         row.querySelector('.view-btn')?.addEventListener('click', event => {
@@ -101,81 +109,303 @@ const closeDetailModal = () => {
 
 const openDetailModal = caseItem => {
     if (!detailsModal) return;
-    const firLabel = document.querySelector('#detailFIRLabel');
-    if (firLabel) firLabel.textContent = 'FIR No. ' + (caseItem.firNo || '') + ' / ' + (caseItem.firYear || '');
 
-    const badge = document.querySelector('#detailStatusBadge');
-    if (badge) badge.textContent = caseItem.status || '';
+    let shareBtn = document.querySelector('#sharePdfBtn');
+    if (!shareBtn) {
+        const header = detailsModal.querySelector('.modal-header');
+        if (header) {
+            shareBtn = document.createElement('button');
+            shareBtn.id = 'sharePdfBtn';
+            shareBtn.className = 'btn primary';
+            shareBtn.style.marginLeft = 'auto';
+            shareBtn.style.marginRight = '15px';
+            shareBtn.textContent = 'Share as PDF';
+            header.insertBefore(shareBtn, header.querySelector('.close'));
+        }
+    }
 
-    const nextHearingLabel = document.querySelector('.detail-header-card h3:last-child');
-    if (nextHearingLabel) nextHearingLabel.textContent = (caseItem.nextDate || '') + ' - ' + (caseItem.trialStage || '');
+    if (shareBtn) {
+        shareBtn.onclick = () => {
+            const content = document.querySelector('.detail-modal-body').innerHTML;
+            const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style')).map(s => s.outerHTML).join('\n');
+            
+            const printWindow = window.open('', '_blank');
+            if (printWindow) {
+                printWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>FIR Details - ${caseItem.firNo || ''}/${caseItem.firYear || ''}</title>
+                        ${styles}
+                        <style>
+                            :root {
+                                --pdf-bg: #ffffff;
+                                --pdf-card: #f8fafc;
+                                --pdf-text: #1e293b;
+                                --pdf-border: #e2e8f0;
+                                --pdf-muted: #64748b;
+                                --pdf-accent: #e0f2fe;
+                            }
+                            body { 
+                                background: var(--pdf-bg) !important; 
+                                color: var(--pdf-text) !important;
+                                padding: 20px; 
+                                overflow: visible !important; 
+                                font-family: 'Segoe UI', system-ui, sans-serif;
+                            }
+                            h2, h3, h4 { color: #0f172a !important; }
+                            .detail-label { color: var(--pdf-muted) !important; }
+                            .detail-modal-body { max-height: none !important; overflow: visible !important; }
+                            .detail-header-card { 
+                                background: var(--pdf-accent) !important;
+                                border: 1px solid #bae6fd !important; 
+                                padding: 15px; 
+                                margin-bottom: 20px; 
+                                border-radius: 8px; 
+                            }
+                            .detail-header-card h3 { color: #0369a1 !important; }
+                            .detail-header-card .detail-status {
+                                background: #dbeafe !important;
+                                color: #1e40af !important;
+                                border: 1px solid #bfdbfe !important;
+                            }
+                            .detail-item { 
+                                background: var(--pdf-card) !important;
+                                padding: 10px;
+                                border-radius: 6px;
+                                border: 1px solid var(--pdf-border) !important;
+                                color: var(--pdf-text) !important;
+                            }
+                            .detail-item strong { color: #0f172a !important; }
+                            .detail-item span { color: var(--pdf-muted) !important; }
+                            
+                            span[style*="#555"] { color: var(--pdf-muted) !important; }
+                            div[style*="border-bottom"] { border-bottom-color: var(--pdf-border) !important; }
+
+                            @media print {
+                                @page { size: A4; margin: 15mm; }
+                                body { 
+                                    -webkit-print-color-adjust: exact !important; 
+                                    print-color-adjust: exact !important; 
+                                    background: var(--pdf-bg) !important;
+                                }
+                                h4 { page-break-after: avoid; }
+                                .detail-item, .detail-header-card { page-break-inside: avoid; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h2 style="text-align: center; margin-bottom: 20px; color: var(--primary);">Case Information Report</h2>
+                        <div class="detail-modal-body">${content}</div>
+                        <script>
+                            window.onload = () => {
+                                setTimeout(() => {
+                                    window.print();
+                                    window.close();
+                                }, 250);
+                            };
+                        </script>
+                    </body>
+                    </html>
+                `);
+                printWindow.document.close();
+            }
+        };
+    }
+
+    const headerCard = document.querySelector('.detail-header-card');
+    if (headerCard) {
+        let displayFir = caseItem.firNo || '';
+        if (caseItem.firNo && caseItem.firYear) {
+            const yrStr = String(caseItem.firYear).trim();
+            if (yrStr.length >= 2) {
+                displayFir = caseItem.firNo + '/' + yrStr.slice(-2);
+            }
+        }
+
+        let nextStageTxt = '';
+        if (caseItem.nextDate) nextStageTxt += caseItem.nextDate;
+        if (caseItem.trialStage) nextStageTxt += (nextStageTxt ? ' ' : '') + caseItem.trialStage;
+
+        headerCard.innerHTML = `
+            <div>
+                <span class="detail-label">FIR No.</span>
+                <h3 id="detailFIRLabel">${displayFir}</h3>
+            </div>
+            <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                <span class="detail-label">Case Status</span>
+                <span class="detail-status" id="detailStatusBadge" style="display: inline-flex; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">${caseItem.status || ''}</span>
+            </div>
+            <div style="text-align: right;">
+                <span class="detail-label">Next Date & Trial Stage</span>
+                <h3>${nextStageTxt}</h3>
+            </div>
+        `;
+    }
 
     const detailFields = document.querySelector('#caseDetailFields');
     if (detailFields) {
-        const generalFields = [
-            ['Court Type', caseItem.courtType],
-            ['Date of FIR', caseItem.firDate],
-            ['Under Section', caseItem.underSection],
-            ['Crime Head', caseItem.crimeHead],
-            ['Police Station', caseItem.policeStation],
+        const sections = [
+            {
+                title: 'FIR Details',
+                fields: [
+                    ['firNo', caseItem.firNo],
+                    ['firYear', caseItem.firYear],
+                    ['firDate', caseItem.firDate],
+                    ['underSection', caseItem.underSection],
+                    ['crimeHead', caseItem.crimeHead],
+                    ['policeStation', caseItem.policeStation]
+                ]
+            },
+            {
+                title: 'Court Details',
+                fields: [
+                    ['courtType', caseItem.courtType],
+                    ['courtName', caseItem.courtName],
+                    ['regPrefix', caseItem.regPrefix],
+                    ['regNo', caseItem.regNo],
+                    ['regYear', caseItem.regYear],
+                    ['regDate', caseItem.regDate]
+                ]
+            },
+            {
+                title: 'Case Progress',
+                fields: [
+                    ['challanDate', caseItem.challanDate],
+                    ['chargeDate', caseItem.chargeDate],
+                    ['nextDate', caseItem.nextDate],
+                    ['trialStage', caseItem.trialStage],
+                    ['decisionDate', caseItem.decisionDate]
+                ]
+            },
+            {
+                title: 'Investigating Officer',
+                fields: [
+                    ['ioRank', caseItem.ioRank],
+                    ['ioName', caseItem.ioName],
+                    ['beltNo', caseItem.beltNo],
+                    ['mobileNo', caseItem.mobileNo]
+                ]
+            },
+            {
+                title: 'Incident Details',
+                fields: [
+                    ['incidentDate', caseItem.incidentDate],
+                    ['incidentPlace', caseItem.incidentPlace]
+                ]
+            },
+            {
+                title: 'Complainant Details',
+                fields: [
+                    ['complainantName', caseItem.complainantName],
+                    ['complainantFatherName', caseItem.complainantFatherName],
+                    ['complainantMobile', caseItem.complainantMobile],
+                    ['complainantAddress', caseItem.complainantAddress]
+                ]
+            },
+            {
+                title: 'Other Details',
+                fields: [
+                    ['status', caseItem.status],
+                    ['highlighted', caseItem.highlighted ? 'true' : 'false']
+                ]
+            }
+        ];
 
-            ['Registration Prefix', caseItem.regPrefix],
-            ['Registration No', caseItem.regNo],
-            ['Registration Year', caseItem.regYear],
-            ['Registration Date', caseItem.regDate],
-            ['Court Name', caseItem.courtName],
-            ['Challan Date', caseItem.challanDate],
-            ['Charge Date', caseItem.chargeDate],
-            ['Decision Date', caseItem.decisionDate],
+        let html = '';
 
-            ['IO Rank', caseItem.ioRank],
-            ['IO Name', caseItem.ioName],
-            ['Belt No', caseItem.beltNo],
-            ['IO Mobile', caseItem.mobileNo],
-
-            ['Incident Date', caseItem.incidentDate],
-            ['Incident Place', caseItem.incidentPlace],
-            ['Complainant', caseItem.complainantName],
-            ['Complainant Father', caseItem.complainantFatherName],
-            ['Complainant Mobile', caseItem.complainantMobile],
-            ['Complainant Address', caseItem.complainantAddress],
-
-            ['Highlighted', caseItem.highlighted ? 'Yes' : 'No']
-        ].filter(([, value]) => value !== undefined && value !== '');
-
-        let html = generalFields.map(([label, value]) => '<div class="detail-item"><span>' + label + '</span><strong>' + value + '</strong></div>').join('');
+        sections.forEach(sec => {
+            const validFields = sec.fields.filter(([, v]) => v !== undefined && v !== '');
+            if (validFields.length > 0) {
+                html += '<div style="grid-column: 1 / -1; margin-top: 1rem; border-bottom: 1px solid #eaeaea; padding-bottom: 5px;"><h4>' + sec.title + '</h4></div>';
+                html += validFields.map(([label, value]) => '<div class="detail-item"><span>' + label + '</span><strong>' + value + '</strong></div>').join('');
+            }
+        });
 
         if (caseItem.accused && caseItem.accused.length > 0) {
-            html += '<div style="grid-column: 1 / -1; margin-top: 1rem;"><h4>Accused</h4></div>';
+            html += '<div style="grid-column: 1 / -1; margin-top: 1rem; border-bottom: 1px solid #eaeaea; padding-bottom: 5px;"><h4>Accused Details</h4></div>';
             caseItem.accused.forEach((a, i) => {
                 const details = [];
                 if (a.fatherName) details.push('S/o ' + a.fatherName);
                 if (a.mobile) details.push(a.mobile);
-                if (a.arrested) details.push('Arrested: ' + a.arrestDate);
+                if (a.arrested) details.push('Arrested: ' + (a.arrestDate || ''));
+                
+                if (a.custodyStatus) {
+                    const custMap = {
+                        'bailed_police': 'Bailed by Police',
+                        'bailed_court': 'Bailed by Court',
+                        'jc': 'In Judicial Custody',
+                        'pc': 'In Police Custody'
+                    };
+                    details.push('Custody: ' + (custMap[a.custodyStatus] || a.custodyStatus));
+                }
+                
                 if (
                     a.custodyStatus === 'bailed_police' ||
                     a.custodyStatus === 'bailed_court'
                 ) {
-                    details.push('Bail: ' + a.bailDate);
+                    if (a.bailDate) details.push('Bail: ' + a.bailDate);
                 }
-                if (a.poStatus) details.push('PO: ' + a.poDate);
+                
+                if (a.poStatus) details.push('PO Status: true', 'PO Date: ' + (a.poDate || ''));
+                if (a.address) details.push('Address: ' + a.address);
 
-                html += '<div class="detail-item" style="grid-column: 1 / -1; border-left: 2px solid #5d429a; padding-left: 10px;"><span>Accused ' + (i + 1) + '</span><strong>' + a.name + '</strong>' + (details.length ? '<small>' + details.join(' | ') + '</small>' : '') + '</div>';
+                html += '<div class="detail-item" style="grid-column: 1 / -1; border-left: 2px solid #5d429a; padding-left: 10px;"><span>Accused ' + (i + 1) + '</span><strong>' + (a.name || 'Unnamed') + '</strong>' + (details.length ? '<small style="display: block; margin-top: 5px; opacity: 0.8;">' + details.join(' &bull; ') + '</small>' : '') + '</div>';
             });
         }
 
         if (caseItem.witnesses && caseItem.witnesses.length > 0) {
-            html += '<div style="grid-column: 1 / -1; margin-top: 1rem;"><h4>Witnesses</h4></div>';
+            html += '<div style="grid-column: 1 / -1; margin-top: 1rem; border-bottom: 1px solid #eaeaea; padding-bottom: 5px;"><h4>Witness Details</h4></div>';
             caseItem.witnesses.forEach((w, i) => {
                 const details = [];
                 if (w.status) details.push('Status: ' + w.status);
-                if (w.examined) details.push('Examined: ' + w.examinedDate);
+                if (w.examined) details.push('Examined: ' + (w.examinedDate || ''));
 
-                html += '<div class="detail-item" style="grid-column: 1 / -1; border-left: 2px solid #4a90e2; padding-left: 10px;"><span>Witness ' + (i + 1) + '</span><strong>' + w.name + '</strong>' + (details.length ? '<small>' + details.join(' | ') + '</small>' : '') + '</div>';
+                html += '<div class="detail-item" style="grid-column: 1 / -1; border-left: 2px solid #4a90e2; padding-left: 10px;"><span>Witness ' + (i + 1) + '</span><strong>' + (w.name || 'Unnamed') + '</strong>' + (details.length ? '<small style="display: block; margin-top: 5px; opacity: 0.8;">' + details.join(' &bull; ') + '</small>' : '') + '</div>';
             });
         }
 
         detailFields.innerHTML = html;
+
+        // Render Case Timeline
+        const timeline = [];
+        const addTimelineDate = (dateStr, label) => {
+            if (dateStr) {
+                const d = parseCaseDate(dateStr);
+                if (d) timeline.push({ dateStr, label, ms: d.getTime() });
+            }
+        };
+
+        addTimelineDate(caseItem.incidentDate, 'Incident Date');
+        addTimelineDate(caseItem.firDate, 'FIR Date');
+        addTimelineDate(caseItem.regDate, 'Registration Date');
+        addTimelineDate(caseItem.challanDate, 'Challan Date');
+        addTimelineDate(caseItem.chargeDate, 'Charge Date');
+        addTimelineDate(caseItem.nextDate, 'Next Court Date');
+        addTimelineDate(caseItem.decisionDate, 'Decision Date');
+
+        if (caseItem.accused && Array.isArray(caseItem.accused)) {
+            caseItem.accused.forEach(a => {
+                const suffix = caseItem.accused.length > 1 && a.name ? ` (${a.name})` : '';
+                addTimelineDate(a.arrestDate, 'Arrest Date' + suffix);
+                addTimelineDate(a.bailDate, 'Bail Date' + suffix);
+                addTimelineDate(a.poDate, 'PO Date' + suffix);
+            });
+        }
+
+        if (timeline.length > 0) {
+            timeline.sort((a, b) => a.ms - b.ms);
+            let tlHtml = '<div style="grid-column: 1 / -1; margin-top: 1.5rem; border-bottom: 1px solid #eaeaea; padding-bottom: 5px;"><h4>Case Timeline</h4></div>';
+            tlHtml += '<div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; padding-left: 10px; border-left: 2px solid var(--primary); margin-top: 10px;">';
+            timeline.forEach(item => {
+                tlHtml += `<div style="display: flex; gap: 15px;">
+                    <span style="font-weight: bold; min-width: 90px;">${item.dateStr}</span>
+                    <span style="color: #555;">- ${item.label}</span>
+                </div>`;
+            });
+            tlHtml += '</div>';
+            detailFields.innerHTML += tlHtml;
+        }
     }
 
     detailsModal.classList.add('show');
