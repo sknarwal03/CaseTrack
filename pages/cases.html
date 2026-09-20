@@ -8,6 +8,8 @@
     <title>CaseTrack | All Cases</title>
     <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/css/cases.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="../components/add-case/add-case.css">
 </head>
 
 <body data-page="cases">
@@ -23,7 +25,7 @@
                         <h1>All Cases</h1>
                         <p>Complete overview of every registered matter and hearing.</p>
                     </div>
-                    <button class="new-case" id="openCaseModal" type="button">＋&nbsp; New Case</button>
+                    <button class="new-case" data-open-add-case type="button">＋&nbsp; New Case</button>
                 </div>
 
                 <section class="panel">
@@ -34,18 +36,18 @@
                         </div>
                         <div class="case-actions">
                             <button class="btn" type="button">Export</button>
-                            <button class="btn primary" id="addCaseButton" type="button">Add Case</button>
+                            <button class="btn primary" data-open-add-case type="button">Add Case</button>
                         </div>
                     </div>
 
                     <div class="cases-toolbar">
                         <div class="case-filters">
                             <button class="case-filter active" data-filter="all" type="button">All</button>
-                            <button class="case-filter" data-filter="active" type="button">Pending</button>
-                            <button class="case-filter" data-filter="pending" type="button">Disposed</button>
-                            <button class="case-filter" data-filter="closed" type="button">P O</button>
-                            <button class="case-filter" data-filter="warning" type="button">Star Case</button>
-                            <button class="case-filter" data-filter="warning" type="button">Year</button>
+                            <button class="case-filter" data-filter="pending" type="button">Pending</button>
+                            <button class="case-filter" data-filter="disposed" type="button">Disposed</button>
+                            <button class="case-filter" data-filter="po" type="button">P O</button>
+                            <button class="case-filter" data-filter="star" type="button">Star Case</button>
+                            <button class="case-filter" data-filter="year" type="button">Year</button>
                         </div>
                     </div>
 
@@ -96,147 +98,8 @@
         </section>
     </div>
 
-    <div class="modal-backdrop" id="caseModal">
-        <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-            <header class="modal-header">
-                <div>
-                    <h2 id="modalTitle">Add New Case</h2>
-                    <p>Enter complete case information.</p>
-                </div>
-                <button class="close" type="button" id="closeModal" aria-label="Close">×</button>
-            </header>
-            <form id="caseForm">
-                <div class="modal-body">
-                    <section class="form-section">
-                        <h3><span>1</span> FIR Information</h3>
-                        <div class="form-grid">
-                            <div class="field"><label class="required">FIR No.</label><input name="firNo" required placeholder="150"></div>
-                            <div class="field"><label class="required">FIR Year</label><input name="firYear" required type="number" placeholder="2026" readonly></div>
-                            <div class="field"><label class="required">Date of FIR</label><input name="firDate" required type="date"></div>
-                            <div class="field"><label class="required">Under Section</label><input name="underSection" required placeholder="e.g. 323/324 IPC"></div>
-                            <div class="field"><label class="required">Police Station</label><select name="policeStation" required>
-                                    <option value="">Select police station</option>
-                                    <option>OSM</option>
-                                    <option>Civil Lines</option>
-                                    <option>R/City</option>
-                                    <option>U/E</option>
-                                </select></div>
-                            <div class="field"><label class="required">Case Status</label><select name="caseStatus" required>
-                                    <option value="">Select status</option>
-                                    <option>UI</option>
-                                    <option>UT</option>
-                                    <option>Untrace</option>
-                                    <option>Cancellation</option>
-                                    <option>Disposed</option>
-                                </select></div>
-                        </div>
-                    </section>
-                    <section class="form-section">
-                        <h3><span>2</span> Court & Registration Information</h3>
-                        <div class="form-grid">
-                            <div class="field"><label>Registration Date</label><input name="registrationDate" type="date"></div>
-                            <div class="field"><label>Court Type</label><select name="courtType">
-                                    <option value="">Select court type</option>
-                                    <option>SC</option>
-                                    <option>LC</option>
-                                    <option>JJB</option>
-                                </select></div>
-                            <div class="field"><label>In the court of:</label><select name="courtNumber">
-                                    <option value="">Select court/judge</option>
-                                    <option>51-Ms. Heena Shehrawat-JMIC</option>
-                                    <option>52-Mr. Arjun Singh-ACJM</option>
-                                    <option>53-Ms. Neha Sharma-SDJM</option>
-                                    <option>54-Mr. Rakesh Kumar-JMIC</option>
-                                    <option>55-Ms. Pooja Verma-CJM</option>
-                                    <option>56-Mr. Sandeep Yadav-Additional Session Judge</option>
-                                    <option>57-Ms. Isha Mehta-ACJM</option>
-                                    <option>58-Mr. Vikram Chauhan-SDJM</option>
-                                    <option>59-Ms. Kavita Singh-JMIC</option>
-                                    <option>60-Mr. Mohan Lal-Session Judge</option>
-                                </select></div>
-                            <div class="field"><label>Registration No.</label><input name="registrationNo" placeholder="Registration number"></div>
-                            <div class="field"><label>Case Stage</label><select name="caseStage">
-                                    <option value="">Select case stage</option>
-                                    <option>App</option>
-                                    <option>PW</option>
-                                    <option>DW</option>
-                                    <option>313 Crpc</option>
-                                    <option>Charge</option>
-                                    <option>Final Order</option>
-                                </select></div>
-                            <div class="field"><label>Date of Charge</label><input name="dateOfCharge" type="date"></div>
-                            <div class="field"><label>Date of Decision</label><input name="dateOfDecision" type="date"></div>
-                        </div>
-                    </section>
-                    <section class="form-section">
-                        <h3><span>3</span> Investigation Information</h3>
-                        <div class="form-grid">
-                            <div class="field"><label>IO Rank</label><select name="ioRank">
-                                    <option value="">Select IO rank</option>
-                                    <option>HPS</option>
-                                    <option>Insp</option>
-                                    <option>SI</option>
-                                    <option>L/SI</option>
-                                    <option>PSI</option>
-                                    <option>L/PSI</option>
-                                    <option>ASI</option>
-                                    <option>L/ASI</option>
-                                    <option>HC</option>
-                                    <option>L/HC</option>
-                                </select></div>
-                            <div class="field"><label>IO Name</label><input name="nameOfIO" placeholder="Investigating officer"></div>
-                            <div class="field"><label>Next Date</label><input name="nextDate" type="date"></div>
-                        </div>
-                    </section>
-                    <section class="form-section">
-                        <h3><span>4</span> Incident Information</h3>
-                        <div class="form-grid">
-                            <div class="field"><label>Incident Date</label><input name="incidentDate" type="date"></div>
-                            <div class="field"><label>Incident Place</label><input name="incidentPlace" placeholder="Enter incident place"></div>
-                            <div class="field full"><label>Incident Details</label><textarea name="incidentDetails" placeholder="Enter incident details"></textarea></div>
-                        </div>
-                    </section>
-                    <section class="form-section">
-                        <h3><span>5</span> Complainant Information</h3>
-                        <div class="form-grid">
-                            <div class="field"><label>Complainant Name</label><input name="complainantName" placeholder="Enter complainant name"></div>
-                            <div class="field"><label>Contact Number</label><input name="complainantContact" type="tel" placeholder="Enter contact number"></div>
-                            <div class="field full"><label>Complainant Address</label><textarea name="complainantAddress" placeholder="Enter address"></textarea></div>
-                        </div>
-                    </section>
-                    <section class="form-section">
-                        <h3><span>6</span> Accused Information</h3>
-                        <div class="form-grid">
-                            <div class="field full textarea-counter-wrap">
-                                <label>Accused</label>
-                                <div class="textarea-shell">
-                                    <span class="textarea-total-badge" data-counter-for="accused">0</span>
-                                    <textarea name="accused" data-counter-target="accused" placeholder="Enter accused name(s)"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <section class="form-section">
-                        <h3><span>7</span> Witness Information</h3>
-                        <div class="form-grid">
-                            <div class="field"><label>Total Witness</label><input name="totalWitness" type="number" min="0" placeholder="0"></div>
-                            <div class="field"><label>Witness Examined</label><input name="witnessExamined" type="number" min="0" placeholder="0"></div>
-                            <div class="field"><label>Witness Left</label><input name="witnessLeft" type="number" min="0" placeholder="0"></div>
-                            <div class="field full textarea-counter-wrap">
-                                <label>Names of Witness</label>
-                                <div class="textarea-shell">
-                                    <span class="textarea-total-badge" data-counter-for="witnessNames">0</span>
-                                    <textarea name="witnessNames" data-counter-target="witnessNames" placeholder="Enter witness names"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-                <footer class="modal-footer"><button class="btn" type="reset">Reset</button><button class="btn" type="button" id="cancelModal">Cancel</button><button class="btn primary" type="submit">Save Case</button></footer>
-            </form>
-        </section>
-    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script type="module" src="../assets/js/cases.js"></script>
     <script type="module" src="../assets/js/shared-layout.js"></script>
 </body>

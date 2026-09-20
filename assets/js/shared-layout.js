@@ -1,3 +1,4 @@
+import '../../components/add-case/add-case.js';
 /**
  * shared-layout.js
  * Injects shared sidebar + topbar into every app page.
@@ -64,10 +65,10 @@ const TOPBAR_HTML = /* html */ `
                 </div>
             </div>
         </div>
-        <div class="avatar" id="userAvatar">SN</div>
+        <div class="avatar" id="userAvatar"></div>
         <div class="profile-name" id="userProfileName">
-            <strong id="userDisplayName">Shivkumar Narwal</strong>
-            <small id="userRole">Administrator</small>
+            <strong id="userDisplayName"></strong>
+            <small id="userRole"></small>
         </div>
     </div>
 </header>
@@ -161,28 +162,37 @@ function initNotifications() {
 async function initUserInfo() {
     try {
         const { auth } = await import("@config/firebase-config.js");
-        const { onAuthStateChanged, signOut } = await import("firebase/auth");
+        const { onAuthStateChanged } = await import("firebase/auth");
 
-        onAuthStateChanged(auth, user => {
-            if (!user) {
-                window.location.href = "login.html";
-                return;
-            }
-            // Update avatar initials & name
-            const name = user.displayName || "User";
+        const updateUI = (name, email) => {
             const initials = name.split(" ").map(w => w[0]).join("").substring(0, 2).toUpperCase();
-
+            
             const avatar = document.getElementById("userAvatar");
             const displayName = document.getElementById("userDisplayName");
+            const role = document.getElementById("userRole");
             const pdAvatar = document.querySelector(".pd-avatar");
             const pdName = document.querySelector(".pd-name");
             const pdEmail = document.querySelector(".pd-email");
 
             if (avatar) avatar.textContent = initials;
             if (displayName) displayName.textContent = name;
+            if (role) role.textContent = "Administrator";
             if (pdAvatar) pdAvatar.textContent = initials;
             if (pdName) pdName.textContent = name;
-            if (pdEmail) pdEmail.textContent = user.email || "";
+            if (pdEmail && email) pdEmail.textContent = email;
+        };
+
+        const savedName = localStorage.getItem("caseTrackUserName");
+        if (savedName) updateUI(savedName, "");
+
+        onAuthStateChanged(auth, user => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+            const name = user.displayName || "User";
+            localStorage.setItem("caseTrackUserName", name);
+            updateUI(name, user.email || "");
         });
     } catch (e) {
         console.warn("Firebase auth not available:", e);
@@ -217,7 +227,7 @@ function initProfileDropdown() {
     dropdown.setAttribute("role", "menu");
     dropdown.innerHTML = `
         <div class="profile-dropdown-header">
-            <div class="pd-avatar">SN</div>
+            <div class="pd-avatar"></div>
             <div class="pd-info">
                 <strong class="pd-name">Loading…</strong>
                 <small class="pd-email"></small>

@@ -526,22 +526,6 @@ option {
     overflow: hidden;
 }
 
-.accused-number {
-    padding: 11px 15px;
-
-    font-size: 10px;
-
-    letter-spacing: 1.2px;
-
-    color: var(--muted);
-
-    border-bottom: 1px solid var(--border);
-}
-
-.accused-number span {
-    color: var(--primary);
-    margin-left: 5px;
-}
 
 .accused-card .form-grid {
     padding: 18px;
@@ -965,4 +949,77 @@ body.light-theme .switch input:checked+.slider {
 }
 body.light-theme .switch input:checked+.slider::before {
     background: #ffffff;
+}
+
+
+/* =========================================
+   DYNAMIC REMOVE BUTTONS
+========================================= */
+
+/* ---------- ACCUSED ---------- */
+
+.accused-number {
+    padding: 11px 15px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 10px;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+}
+
+.accused-number span {
+    color: var(--primary);
+    margin-left: 5px;
+}
+
+.accused-number .remove-accused-btn {
+    margin-left: auto;
+    padding: 7px 14px;
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.accused-number .remove-accused-btn:hover {
+    background: var(--primary);
+    color: #fff;
+}
+/* ---------- WITNESS ---------- */
+
+.witness-action {
+    text-align: right !important;
+    white-space: nowrap;
+}
+
+.remove-witness-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--primary);
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 15px;
+    line-height: 1;
+
+    transition: all 0.2s ease;
+}
+
+.remove-witness-btn:hover {
+    background: var(--primary);
+    color: #fff;
 }
