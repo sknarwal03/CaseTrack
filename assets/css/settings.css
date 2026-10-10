@@ -125,6 +125,29 @@
     margin-top: 20px;
 }
 
+.setting-link {
+    color: inherit;
+    text-decoration: none;
+    transition: border-color .2s ease, background-color .2s ease, transform .2s ease;
+}
+
+.setting-link:hover {
+    border-color: #3d8bff;
+    background: rgba(35, 65, 100, .65);
+    transform: translateY(-1px);
+}
+
+.setting-link:focus-visible {
+    outline: 2px solid #7ea9db;
+    outline-offset: 3px;
+}
+
+.setting-link-arrow {
+    color: #7ea9db;
+    font-size: 28px;
+    line-height: 1;
+}
+
 .security-boxes {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -166,6 +189,11 @@ body.light-theme .config-form select,
 body.light-theme .security-card {
     background: #fff;
     border-color: var(--line);
+}
+
+body.light-theme .setting-link:hover {
+    background: #f4f7fb;
+    border-color: #7ea9db;
 }
 
 body.light-theme .setting-row strong,

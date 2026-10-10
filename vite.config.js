@@ -20,7 +20,9 @@ export default defineConfig({
         calendar: resolve(__dirname, "pages/calendar.html"),
         poCases: resolve(__dirname, "pages/po-cases.html"),
         report: resolve(__dirname, "pages/report.html"),
-        settings: resolve(__dirname, "pages/settings.html")
+        settings: resolve(__dirname, "pages/settings.html"),
+        registerDiary: resolve(__dirname, "pages/register-diary.html"),
+        allJudges: resolve(__dirname, "pages/all-judges.html")
       }
     }
   }

@@ -6,7 +6,100 @@ const detailsModal = document.querySelector('#caseDetailsModal');
 const modalHelper = setupModal(detailsModal);
 
 let casesCache = [];
+let activeCaseSort = { key: '', direction: '' };
 const casesCollection = collection(db, 'cases');
+const REGISTER_DIARY_FILE_STATUS_KEY = 'register-diary-file-statuses';
+
+function applyCaseFilters() {
+    const filter = document.querySelector('.case-filter.active')?.dataset.filter || 'all';
+    const query = document.getElementById('globalSearch')?.value.trim().toLowerCase() || '';
+    const isPoFilter = filter === 'po';
+    const isDisposedFilter = filter === 'disposed';
+    const hearingHeader = document.querySelector('[data-sort="nextDate"]');
+    const stageHeader = document.querySelector('[data-sort="caseStage"]');
+    if (hearingHeader) hearingHeader.textContent = isPoFilter ? 'PO Accused' : isDisposedFilter ? 'Disposed Date' : 'Next Hearing';
+    if (stageHeader) stageHeader.textContent = isPoFilter ? 'PO Date' : isDisposedFilter ? 'Judgement' : 'Case Stage';
+    const rows = [...document.querySelectorAll('.case-row-data')];
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+        const hearingCell = row.querySelector('.next-hearing-cell');
+        const stageCell = row.querySelector('.case-stage-cell');
+        if (hearingCell) {
+            hearingCell.textContent = isPoFilter
+                ? row.dataset.poAccused || ''
+                : isDisposedFilter ? row.dataset.decisionDate || '' : row.dataset.nextDate || '';
+        }
+        if (stageCell) {
+            let badge = stageCell.querySelector('.status-badge');
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = `status-badge ${row.dataset.statusClass || ''}`;
+                stageCell.replaceChildren(badge);
+            }
+            badge.textContent = isPoFilter
+                ? row.dataset.poDates || ''
+                : isDisposedFilter ? row.dataset.judgement || '' : row.dataset.caseStage || '';
+        }
+
+        let matchesFilter = filter === 'po'
+            ? row.dataset.po === 'true'
+            : row.dataset.poRowIndex === '0';
+        if (filter === 'pending') {
+            matchesFilter = matchesFilter && row.dataset.status !== 'disposed' && row.dataset.status !== 'cancellation';
+        } else if (filter === 'disposed') {
+            matchesFilter = matchesFilter && row.dataset.status === 'disposed';
+        } else if (filter === 'po') {
+            matchesFilter = row.dataset.po === 'true';
+        } else if (filter === 'star') {
+            matchesFilter = matchesFilter && row.dataset.highlighted === 'true';
+        }
+
+        const matchesSearch = !query || row.textContent.toLowerCase().includes(query);
+        const visible = matchesFilter && matchesSearch;
+        row.style.display = visible ? '' : 'none';
+        if (visible) visibleCount++;
+    });
+
+    const total = document.getElementById('caseTotalCount');
+    if (total) total.textContent = `Total Cases: ${visibleCount}`;
+}
+
+function getCaseSortValue(caseItem, key) {
+    if (key === 'firNo') {
+        return [caseItem.firNo || '', caseItem.firYear || ''].filter(Boolean).join('/');
+    }
+    if (key === 'firDate' || key === 'nextDate') {
+        const parsedDate = parseCaseDate(caseItem[key]);
+        return parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate.getTime() : null;
+    }
+    if (key === 'courtNumber') return caseItem.courtName || caseItem.courtNumber || '';
+    if (key === 'caseStage') return caseItem.trialStage || '';
+    return caseItem[key] || '';
+}
+
+function compareCaseValues(left, right, key) {
+    const leftValue = getCaseSortValue(left, key);
+    const rightValue = getCaseSortValue(right, key);
+    if (leftValue === null || leftValue === '') return rightValue === null || rightValue === '' ? 0 : 1;
+    if (rightValue === null || rightValue === '') return -1;
+    if (typeof leftValue === 'number' && typeof rightValue === 'number') return leftValue - rightValue;
+    return String(leftValue).localeCompare(String(rightValue), undefined, { numeric: true, sensitivity: 'base' });
+}
+
+function getRegisterDiaryDateRecords(caseId) {
+    try {
+        const saved = JSON.parse(localStorage.getItem(REGISTER_DIARY_FILE_STATUS_KEY) || '{}');
+        const records = saved?.[caseId]?.dateRecords;
+        return Array.isArray(records)
+            ? records.filter(record => record && typeof record.date === 'string'
+                && ['previous', 'next'].includes(record.kind))
+            : [];
+    } catch (error) {
+        console.error('Could not load register diary dates for case timeline:', error);
+        return [];
+    }
+}
 
 // parseCaseDate is imported from shared-utils.js
 
@@ -24,6 +117,14 @@ const loadCases = async () => {
         }
     }
     renderCaseTable();
+    const requestedCaseId = new URLSearchParams(window.location.search).get('case');
+    if (requestedCaseId) {
+        const requestedCase = casesCache.find(caseItem => caseItem.id === requestedCaseId);
+        if (requestedCase) {
+            openDetailModal(requestedCase);
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+    }
 };
 
 window.addEventListener('caseAdded', () => { loadCases(); });
@@ -33,10 +134,21 @@ const renderCaseTable = () => {
     if (!tableBody) return;
     if (casesCache.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">No cases found.</td></tr>';
+        applyCaseFilters();
         return;
     }
     tableBody.innerHTML = '';
-    casesCache.forEach(caseItem => {
+    const casesToRender = [...casesCache];
+    if (activeCaseSort.key) {
+        casesToRender.sort((left, right) => {
+            const result = compareCaseValues(left, right, activeCaseSort.key);
+            return activeCaseSort.direction === 'desc' ? -result : result;
+        });
+    }
+    casesToRender.forEach(caseItem => {
+        const poAccused = (caseItem.accused || []).filter(accused => accused.poStatus === true);
+        const displayedAccused = poAccused.length ? poAccused : [null];
+        displayedAccused.forEach((poAccusedPerson, poRowIndex) => {
         const row = document.createElement('tr');
         row.className = 'case-row-data';
 
@@ -44,8 +156,14 @@ const renderCaseTable = () => {
         row.dataset.highlighted = caseItem.highlighted ? 'true' : 'false';
         row.dataset.firyear = caseItem.firYear || '';
 
-        const hasPo = Array.isArray(caseItem.accused) && caseItem.accused.some(a => a.poStatus === true);
-        row.dataset.po = hasPo ? 'true' : 'false';
+        row.dataset.po = poAccusedPerson ? 'true' : 'false';
+        row.dataset.poRowIndex = String(poRowIndex);
+        row.dataset.poAccused = poAccusedPerson?.name || '';
+        row.dataset.poDates = poAccusedPerson?.poDate || '';
+        row.dataset.nextDate = caseItem.nextDate || '';
+        row.dataset.caseStage = caseItem.trialStage || '';
+        row.dataset.decisionDate = caseItem.decisionDate || '';
+        row.dataset.judgement = caseItem.judgement || caseItem.judgment || '';
 
         if (caseItem.highlighted) row.classList.add('highlighted');
 
@@ -54,6 +172,7 @@ const renderCaseTable = () => {
         if (st === 'ut' || st === 'ui') statusClass = 'status-ut';
         else if (st === 'disposed' || st === 'cancellation') statusClass = 'status-disp';
         else statusClass = 'status-pd';
+        row.dataset.statusClass = statusClass;
 
         let displayFir = caseItem.firNo || '';
         if (caseItem.firNo && caseItem.firYear) {
@@ -68,8 +187,8 @@ const renderCaseTable = () => {
             '<td>' + (caseItem.firDate || '') + '</td>' +
             '<td>' + (caseItem.underSection || '') + '</td>' +
             '<td>' + (caseItem.courtName || '') + '</td>' +
-            '<td>' + (caseItem.nextDate || '') + '</td>' +
-            '<td><span class="status-badge ' + statusClass + '">' + (caseItem.trialStage || '') + '</span></td>' +
+            '<td class="next-hearing-cell">' + (caseItem.nextDate || '') + '</td>' +
+            '<td class="case-stage-cell"><span class="status-badge ' + statusClass + '">' + (caseItem.trialStage || '') + '</span></td>' +
             '<td><div class="table-actions">' +
             '<button class="icon-btn view-btn" title="View Details"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>' +
             '<button class="icon-btn edit-btn" title="Edit Case"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>' +
@@ -88,7 +207,9 @@ const renderCaseTable = () => {
             if (window.openAddCaseModal) window.openAddCaseModal(caseItem);
         });
         tableBody.appendChild(row);
+        });
     });
+    applyCaseFilters();
 };
 
 const openDetailModal = caseItem => {
@@ -103,8 +224,12 @@ const openDetailModal = caseItem => {
             shareWrap.style.position = 'relative';
             shareWrap.style.marginLeft = 'auto';
             shareWrap.style.marginRight = '15px';
+            shareWrap.style.display = 'flex';
+            shareWrap.style.alignItems = 'center';
+            shareWrap.style.gap = '8px';
             shareWrap.innerHTML = `
-                <button id="sharePdfBtn" class="btn primary" type="button" style="display: flex; align-items: center; gap: 6px;">Share <span style="font-size: 10px;">▼</span></button>
+                <button id="sharePdfBtn" class="case-modal-icon-btn share-case-icon" type="button" aria-label="Share case" title="Share case"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4"></path></svg></button>
+                <button id="editCaseModalBtn" class="case-modal-icon-btn edit-case-icon" type="button" aria-label="Edit case" title="Edit case"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"></path></svg></button>
                 <div id="shareMenu" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; background: var(--panel, #1e293b); border: 1px solid var(--line, #334155); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 100; min-width: 180px; overflow: hidden;">
                     <a href="#" id="sharePrint" style="display: block; padding: 12px 16px; color: var(--text, #f8fafc); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--line, #334155);">🖨️ Print / Save PDF</a>
                     <a href="#" id="shareWa" style="display: block; padding: 12px 16px; color: var(--text, #f8fafc); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--line, #334155);">📱 WhatsApp</a>
@@ -143,6 +268,12 @@ const openDetailModal = caseItem => {
         const textSummary = `Case Details\nFIR No: ${displayFir}\nStatus: ${caseItem.status || 'N/A'}\nNext Date: ${caseItem.nextDate || 'N/A'}\nCourt: ${caseItem.courtName || 'N/A'}`;
 
         const shareMenu = shareWrap.querySelector('#shareMenu');
+        shareWrap.querySelector('#editCaseModalBtn').onclick = event => {
+            event.stopPropagation();
+            shareMenu.style.display = 'none';
+            modalHelper?.closeModal();
+            window.openAddCaseModal?.(caseItem);
+        };
         
         shareWrap.querySelector('#sharePrint').onclick = (e) => {
             e.preventDefault();
@@ -434,7 +565,21 @@ const openDetailModal = caseItem => {
         addTimelineDate(caseItem.regDate, 'Registration Date');
         addTimelineDate(caseItem.challanDate, 'Challan Date');
         addTimelineDate(caseItem.chargeDate, 'Charge Date');
-        addTimelineDate(caseItem.nextDate, 'Next Court Date');
+        const diaryDateRecords = getRegisterDiaryDateRecords(caseItem.id);
+        const dateIdentity = value => {
+            const parsed = parseCaseDate(value);
+            return parsed
+                ? `${parsed.getFullYear()}-${parsed.getMonth()}-${parsed.getDate()}`
+                : String(value || '');
+        };
+        if (!diaryDateRecords.some(record => dateIdentity(record.date) === dateIdentity(caseItem.nextDate))) {
+            addTimelineDate(caseItem.nextDate, 'Next Court Date');
+        }
+        diaryDateRecords.forEach(record => {
+            const dateKind = record.kind === 'previous' ? 'Previous Court Date' : 'Next Court Date';
+            const trialStage = String(record.trialStage || '').trim();
+            addTimelineDate(record.date, `${dateKind}${trialStage ? ` (${trialStage})` : ''}`);
+        });
         addTimelineDate(caseItem.decisionDate, 'Decision Date');
 
         if (caseItem.accused && Array.isArray(caseItem.accused)) {
@@ -464,42 +609,47 @@ const openDetailModal = caseItem => {
     modalHelper.openModal();
 };
 
+export { openDetailModal as openCaseDetailsModal };
+
 // Search functionality
 document.addEventListener('input', event => {
     if (event.target.id === 'globalSearch') {
-        const q = event.target.value.trim().toLowerCase();
-        document.querySelectorAll('.case-row-data').forEach(row => {
-            row.style.display = !q || row.textContent.toLowerCase().includes(q) ? '' : 'none';
-        });
+        applyCaseFilters();
     }
 });
 
 // Status filters
+const requestedCaseFilter = new URLSearchParams(window.location.search).get('filter');
+if (requestedCaseFilter) {
+    const requestedFilterButton = document.querySelector(`.case-filter[data-filter="${requestedCaseFilter}"]`);
+    if (requestedFilterButton) {
+        document.querySelectorAll('.case-filter').forEach(button => {
+            button.classList.toggle('active', button === requestedFilterButton);
+        });
+    }
+}
+
 document.querySelectorAll('.case-filter').forEach(button => {
     button.addEventListener('click', () => {
         document.querySelectorAll('.case-filter').forEach(btn => btn.classList.toggle('active', btn === button));
-        const filter = button.dataset.filter;
+        applyCaseFilters();
+    });
+});
 
-        document.querySelectorAll('.case-row-data').forEach(row => {
-            if (filter === 'all') {
-                row.style.display = '';
-            } else if (filter === 'pending') {
-                const st = row.dataset.status;
-                row.style.display = (st !== 'disposed' && st !== 'cancellation') ? '' : 'none';
-            } else if (filter === 'disposed') {
-                row.style.display = (row.dataset.status === 'disposed') ? '' : 'none';
-            } else if (filter === 'po') {
-                row.style.display = (row.dataset.po === 'true') ? '' : 'none';
-            } else if (filter === 'star') {
-                row.style.display = (row.dataset.highlighted === 'true') ? '' : 'none';
-            } else if (filter === 'year' || filter.match(/^\d{4}$/)) {
-                // Year filter
-                const targetYear = filter === 'year' ? new Date().getFullYear().toString() : filter;
-                row.style.display = (row.dataset.firyear === targetYear) ? '' : 'none';
-            } else {
-                row.style.display = 'none';
-            }
+document.querySelectorAll('.cases-table th.sortable[data-sort]').forEach(header => {
+    header.addEventListener('click', () => {
+        const key = header.dataset.sort;
+        const direction = activeCaseSort.key === key && activeCaseSort.direction === 'asc'
+            ? 'desc'
+            : 'asc';
+        activeCaseSort = { key, direction };
+        document.querySelectorAll('.cases-table th.sortable').forEach(item => {
+            item.dataset.direction = item === header ? direction : 'none';
+            item.setAttribute('aria-sort', item === header
+                ? (direction === 'asc' ? 'ascending' : 'descending')
+                : 'none');
         });
+        renderCaseTable();
     });
 });
 

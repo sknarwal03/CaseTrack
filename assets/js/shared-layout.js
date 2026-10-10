@@ -1,5 +1,7 @@
 import '../../components/add-case/add-case.js';
 import { setupDropdown } from './shared-utils.js';
+import { db } from '@config/firebase-config.js';
+import { collection, getDocs } from 'firebase/firestore';
 /**
  * shared-layout.js
  * Injects shared sidebar + topbar into every app page.
@@ -20,11 +22,10 @@ const SIDEBAR_HTML = /* html */ `
         <div><strong>CaseTrack</strong><small>Case Management System</small></div>
     </a>
     <nav id="sidebarNav">
-        <a class="nav-item" data-page="dashboard"  href="dashboard.html"><span>⌂</span>Dashboard</a>
         <a class="nav-item" data-page="cases"      href="cases.html"><span>▧</span>All Cases</a>
         <a class="nav-item" data-page="po-cases"   href="po-cases.html"><span>⚑</span>PO Cases</a>
-        <a class="nav-item" data-page="star-cases" href="#"><span>★</span>Star Cases</a>
         <a class="nav-item" data-page="calendar"   href="calendar.html"><span>▣</span>Calendar</a>
+        <a class="nav-item" data-page="register-diary" href="register-diary.html"><span>✎</span>Register Diary</a>
         <a class="nav-item" data-page="report"     href="report.html"><span>▥</span>Report</a>
         <a class="nav-item" data-page="settings"   href="settings.html"><span>⚙</span>Settings</a>
     </nav>
@@ -38,10 +39,13 @@ const SIDEBAR_HTML = /* html */ `
 const TOPBAR_HTML = /* html */ `
 <header class="topbar" id="appTopbar">
     <button class="menu" aria-label="Toggle sidebar">☰</button>
-    <label class="search">
+    <div class="global-search-wrap">
+    <label class="search" for="globalSearch">
         <span>⌕</span>
-        <input type="search" id="globalSearch" placeholder="Search FIR, complainant, court, officer…">
+        <input type="search" id="globalSearch" placeholder="Search FIR, complainant, court, officer…" autocomplete="off">
     </label>
+    <div class="global-search-results" id="globalSearchResults" role="listbox" hidden></div>
+    </div>
     <div class="profile">
         <button class="round-btn" id="themeToggle" type="button"
             aria-label="Switch to light theme" aria-pressed="false">☼</button>
@@ -259,6 +263,9 @@ function initProfileDropdown() {
             </div>
         </div>
         <div class="profile-dropdown-divider"></div>
+        <button class="profile-dropdown-item mobile-only" id="pd-notifications"><span class="pd-icon">🔔</span> Notifications</button>
+        <button class="profile-dropdown-item mobile-only" id="pd-theme"><span class="pd-icon">◐</span> Theme</button>
+        <div class="profile-dropdown-divider mobile-only"></div>
         <button class="profile-dropdown-item" id="pd-settings"><span class="pd-icon">⚙</span> Settings</button>
         <div class="profile-dropdown-divider"></div>
         <button class="profile-dropdown-item logout" id="pd-logout"><span class="pd-icon">⎋</span> Logout</button>
@@ -268,6 +275,17 @@ function initProfileDropdown() {
     // Toggle
     setupDropdown(trigger, dropdown, "open");
 
+    // Notifications (Mobile)
+    document.getElementById("pd-notifications")?.addEventListener("click", (e) => {
+        // Trigger the original notification button click
+        document.getElementById("notificationToggle")?.click();
+    });
+
+    // Theme (Mobile)
+    document.getElementById("pd-theme")?.addEventListener("click", () => {
+        // Trigger the original theme button click
+        document.getElementById("themeToggle")?.click();
+    });
 
     // Settings
     document.getElementById("pd-settings")?.addEventListener("click", () => {
@@ -288,12 +306,162 @@ function initProfileDropdown() {
 /* =========================================================
    BOOT
 ========================================================= */
+function initGlobalSearch() {
+    const input = document.getElementById('globalSearch');
+    const resultsBox = document.getElementById('globalSearchResults');
+    if (!input || !resultsBox) return;
+
+    let cachedCases = null;
+    let loadPromise = null;
+    let requestId = 0;
+
+    const closeResults = () => { resultsBox.hidden = true; };
+    const collectText = value => {
+        if (value === null || value === undefined) return '';
+        if (Array.isArray(value)) return value.map(collectText).join(' ');
+        if (typeof value === 'object') return Object.values(value).map(collectText).join(' ');
+        return String(value);
+    };
+    const loadCases = async () => {
+        if (cachedCases) return cachedCases;
+        if (!loadPromise) {
+            loadPromise = getDocs(collection(db, 'cases')).then(snapshot => {
+                cachedCases = snapshot.docs.map(caseDoc => ({ id: caseDoc.id, ...caseDoc.data() }));
+                return cachedCases;
+            }).finally(() => { loadPromise = null; });
+        }
+        return loadPromise;
+    };
+    const renderResults = async () => {
+        const currentRequest = ++requestId;
+        const queryText = input.value.trim().toLocaleLowerCase();
+        resultsBox.replaceChildren();
+        if (!queryText) {
+            closeResults();
+            return;
+        }
+
+        const loading = document.createElement('div');
+        loading.className = 'global-search-message';
+        loading.textContent = 'Searching cases…';
+        resultsBox.appendChild(loading);
+        resultsBox.hidden = false;
+
+        try {
+            const cases = await loadCases();
+            if (currentRequest !== requestId) return;
+            const caseMatches = cases
+                .filter(caseItem => collectText(caseItem).toLocaleLowerCase().includes(queryText))
+                .map(caseItem => ({ caseItem, title: '', details: '', href: '' }));
+            const isRegisterDiary = document.body.dataset.page === 'register-diary';
+            const matches = isRegisterDiary ? [] : [...caseMatches];
+
+            if (isRegisterDiary) {
+                cases.forEach(caseItem => {
+                    const detailPrefix = `diary-file-detail-${caseItem.id}-`;
+                    Object.keys(localStorage).filter(key => key.startsWith(detailPrefix)).forEach(key => {
+                        const note = localStorage.getItem(key) || '';
+                        if (!note.toLocaleLowerCase().includes(queryText)) return;
+                        const date = key.slice(detailPrefix.length);
+                        const firNumber = [caseItem.firNo, caseItem.firYear].filter(Boolean).join('/');
+                        matches.push({
+                            caseItem,
+                            title: `Register Diary · FIR ${firNumber || '—'}`,
+                            details: `${date} · ${note.trim()}`,
+                            href: `register-diary.html?date=${encodeURIComponent(date)}`
+                        });
+                    });
+                });
+
+                Object.keys(localStorage).forEach(key => {
+                    const note = localStorage.getItem(key) || '';
+                    const extraNoteMatch = /^daily-extra-(\d{4}-\d{2}-\d{2})-\d+$/.exec(key);
+                    if (!extraNoteMatch || !note.trim() || !note.toLocaleLowerCase().includes(queryText)) return;
+                    const [, date] = extraNoteMatch;
+                    const parsedDate = new Date(`${date}T12:00:00`);
+                    const dateLabel = Number.isNaN(parsedDate.getTime())
+                        ? date
+                        : parsedDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                    matches.push({
+                        caseItem: null,
+                        title: `Extra Notes · ${dateLabel}`,
+                        details: note.trim(),
+                        href: `register-diary.html?date=${encodeURIComponent(date)}`
+                    });
+                });
+                matches.push(...caseMatches);
+            }
+            resultsBox.replaceChildren();
+            if (!matches.length) {
+                const empty = document.createElement('div');
+                empty.className = 'global-search-message';
+                empty.textContent = isRegisterDiary
+                    ? 'No matching cases or diary notes found.'
+                    : 'No matching cases found.';
+                resultsBox.appendChild(empty);
+                return;
+            }
+
+            matches.slice(0, 10).forEach(match => {
+                const caseItem = match.caseItem;
+                const result = document.createElement('button');
+                result.type = 'button';
+                result.className = 'global-search-result';
+                result.setAttribute('role', 'option');
+                const main = document.createElement('strong');
+                const firNumber = caseItem
+                    ? [caseItem.firNo, caseItem.firYear].filter(Boolean).join('/')
+                    : '';
+                main.textContent = match.title || (firNumber ? `FIR ${firNumber}` : 'Case record');
+                const details = document.createElement('small');
+                details.textContent = match.details || [caseItem?.complainantName, caseItem?.courtName, caseItem?.policeStation]
+                    .filter(Boolean).join(' · ');
+                result.append(main, details);
+                result.addEventListener('click', () => {
+                    window.location.href = match.href || `cases.html?case=${encodeURIComponent(caseItem.id)}`;
+                });
+                resultsBox.appendChild(result);
+            });
+            if (matches.length > 10) {
+                const more = document.createElement('div');
+                more.className = 'global-search-message';
+                more.textContent = `Showing 10 of ${matches.length} matching cases.`;
+                resultsBox.appendChild(more);
+            }
+        } catch (error) {
+            if (currentRequest !== requestId) return;
+            console.error('Global case search failed:', error);
+            resultsBox.replaceChildren();
+            const message = document.createElement('div');
+            message.className = 'global-search-message';
+            message.textContent = 'Could not search cases. Please try again.';
+            resultsBox.appendChild(message);
+        }
+    };
+
+    input.addEventListener('input', renderResults);
+    input.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeResults();
+        if (event.key === 'Enter') {
+            const firstResult = resultsBox.querySelector('.global-search-result');
+            if (firstResult && !resultsBox.hidden) {
+                event.preventDefault();
+                firstResult.click();
+            }
+        }
+    });
+    document.addEventListener('click', event => {
+        if (!event.target.closest('.global-search-wrap')) closeResults();
+    });
+}
+
 function boot() {
     injectLayout();
     markActiveNav();
     initTheme();
     initSidebarToggle();
     initNotifications();
+    initGlobalSearch();
     initProfileDropdown();
     initUserInfo();
 }
@@ -303,4 +471,3 @@ if (document.readyState === "loading") {
 } else {
     boot();
 }
-

@@ -38,7 +38,7 @@
 
                     <div class="case-id">
                         <span class="status-dot"></span>
-                        NEW CASE
+                        <span id="caseModalStateLabel">NEW CASE</span>
                     </div>
 
                 </section>
@@ -96,13 +96,18 @@
                         </div>
                         <div class="input-group">
                             <label for="crimehead">Crime Head</label>
-                            <select name="crimehead" id="crimehead">
-                                <option value="">--Select Crime Head--</option>
-                                <option value="murder">Murder</option>
-                                <option value="dowry">Dowry</option>
-                                <option value="snatching">Snatching</option>
-                                <option value="theft">Theft</option>
-                            </select>
+                            <div class="searchable-select" data-master-list="crimeHead">
+                                <input type="text" name="crimehead" id="crimehead"
+                                    placeholder="Select or search Crime Head" autocomplete="off"
+                                    maxlength="200"
+                                    role="combobox" aria-autocomplete="list" aria-expanded="false"
+                                    aria-controls="crimeHeadOptions">
+                                <button class="searchable-select-toggle" type="button"
+                                    aria-label="Show Crime Head options" aria-expanded="false">▾</button>
+                                <div class="searchable-select-options" id="crimeHeadOptions"
+                                    role="listbox" aria-label="Crime Head options" hidden></div>
+                            </div>
+                            <small class="master-list-status" id="crimeHeadMasterStatus" aria-live="polite"></small>
 
                         </div>
 
@@ -118,7 +123,7 @@
                                 <span>⌂</span>
 
                                 <input type="text" id="policestation" name="policestation"
-                                    placeholder="Retrieved from login page" readonly>
+                                    value="OSM" readonly>
 
                                 <span class="lock">🔒</span>
 
@@ -158,17 +163,9 @@
 
                             <div class="registration-input">
 
-                                <select id="regprefix" name="regprefix">
-                                    <option value="CHA">CHA</option>
-                                    <option value="CHI">CHI</option>
-                                    <option value="SC">SC</option>
-                                    <option value="NDPS">NDPS</option>
-                                    <option value="PC">PC</option>
-                                    <option value="ELC">ELC</option>
-                                    <option value="UCR">UCR</option>
-                                    <option value="JJB">JJB</option>
-
-                                </select>
+                                <input type="text" id="regprefix" name="regprefix" value="CHI"
+                                    autocomplete="off" aria-label="Registration number prefix"
+                                    aria-controls="regprefixSuggestions" aria-expanded="false" maxlength="12">
 
                                 <span>/</span>
 
@@ -177,6 +174,8 @@
                                 <span>/</span>
 
                                 <input type="number" id="regyear" name="regyear" placeholder="Year">
+
+                                <ul id="regprefixSuggestions" class="registration-suggestions" role="listbox" hidden></ul>
 
                             </div>
 
@@ -193,33 +192,18 @@
 
                         </div>
                         <div class="input-group">
-
-                            <label for="courtnan">
-                                Court No. & Name
-                            </label>
-
-                            <select name="courtnan" id="courtnan">
-                                <option value="">--Select Judge--</option>
-
-                                <option>
-                                    51 JMIC — Ms. Heena Sahrawat
-                                </option>
-
-                                <option>
-                                    50 JMIC — Ms. Deeksha Sahrawat
-                                </option>
-
-                                <option>
-                                    49 JMIC — Mr. Vinit
-                                </option>
-
-                                <option>
-                                    48 JMIC — Mr. Shankar Doon
-                                </option>
-
+                            <label for="caseJudgeSelect">Court No. &amp; Name</label>
+                            <select id="caseJudgeSelect" aria-describedby="judgeSelectStatus">
+                                <option value="">--Select Court--</option>
                             </select>
-
+                            <small class="master-list-status" id="judgeSelectStatus" aria-live="polite"></small>
+                            <input type="hidden" id="caseJudgeId" name="judgeId">
+                            <input type="hidden" id="caseJudgeDisplayName" name="judgeDisplayName">
                         </div>
+                        <input type="hidden" id="caseCourtNumber" name="courtNumber">
+                        <input type="hidden" id="caseJudgeCourtType" name="judgeCourtType">
+                        <input type="hidden" id="caseJudgeName" name="judgeName">
+                        <input type="hidden" name="courtnan" id="courtnan">
 
 
                         <div class="input-group">
@@ -538,7 +522,7 @@
 
                 <!-- ================= WITNESS ================= -->
 
-                <section class="form-card">
+                <section class="form-card" id="sectionWitness">
 
                     <div class="section-header">
 
@@ -548,8 +532,6 @@
                             <h2>Witness Details</h2>
                             <p>Track witness examination progress</p>
                         </div>
-
-
 
                     </div>
 
@@ -620,11 +602,12 @@
                 <!-- ================= OTHER DETAILS ================= -->
 
 
-                <section class="form-card">
+                <section class="form-card" id="sectionOther">
 
                     <div class="section-header">
 
                         <div class="section-icon">07</div>
+
 
                         <div>
                             <h2>Other Details</h2>

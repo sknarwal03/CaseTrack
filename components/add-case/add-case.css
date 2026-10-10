@@ -418,6 +418,134 @@ textarea:focus {
         0 0 0 3px rgba(59, 130, 246, 0.10);
 }
 
+.searchable-select {
+    display: flex;
+    position: relative;
+    width: 100%;
+}
+
+.searchable-select input {
+    min-width: 0;
+    flex: 1;
+    border-radius: 8px 0 0 8px;
+}
+
+.searchable-select:focus-within input {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.10);
+    position: relative;
+    z-index: 1;
+}
+
+.searchable-select-toggle {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border: 1px solid var(--border);
+    border-left: 0;
+    border-radius: 0 8px 8px 0;
+    background: var(--bg);
+    color: var(--muted);
+    font: inherit;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.searchable-select-toggle:hover,
+.searchable-select:focus-within .searchable-select-toggle {
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.searchable-select-options {
+    position: fixed;
+    z-index: 2000;
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 4px;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    background: var(--surface);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.searchable-select-options[hidden] {
+    display: none;
+}
+
+.searchable-select-option {
+    display: block;
+    width: 100%;
+    min-height: 38px;
+    padding: 9px 11px;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--text);
+    text-align: left;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.searchable-select-option:hover,
+.searchable-select-option:focus {
+    outline: none;
+    background: var(--surface-2);
+}
+
+.searchable-select-option.add-master-option {
+    margin-top: 4px;
+    border-top: 1px solid var(--border);
+    color: var(--primary-hover);
+}
+
+.searchable-select-empty {
+    padding: 10px 11px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.master-list-status:empty {
+    display: none;
+}
+
+body.light-theme .searchable-select-toggle {
+    background: #ffffff;
+    border-color: #c9d8ef;
+    color: #5f7187;
+}
+
+body.light-theme .searchable-select-toggle:hover,
+body.light-theme .searchable-select:focus-within .searchable-select-toggle {
+    border-color: #287cf3;
+    color: #13253d;
+}
+
+body.light-theme .searchable-select-options {
+    border-color: #c9d8ef;
+    background: #ffffff;
+    box-shadow: 0 10px 28px rgba(19, 37, 61, 0.18);
+}
+
+body.light-theme .searchable-select-option {
+    color: #13253d;
+}
+
+body.light-theme .searchable-select-option:hover,
+body.light-theme .searchable-select-option:focus {
+    background: #edf4ff;
+}
+
+body.light-theme .searchable-select-option.add-master-option {
+    border-color: #dce8f8;
+    color: #287cf3;
+}
+
+body.light-theme .searchable-select-empty {
+    color: #5f7187;
+}
+
 
 /* =========================================================
    LOCKED INPUT
@@ -458,6 +586,7 @@ textarea:focus {
 ========================================================= */
 
 .registration-input {
+    position: relative;
     display: grid;
     grid-template-columns: 90px 18px 1fr 18px 100px;
     align-items: center;
@@ -466,7 +595,7 @@ textarea:focus {
     border: 1px solid var(--border);
     border-radius: 8px;
     transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .registration-input:focus-within {
@@ -481,7 +610,6 @@ textarea:focus {
     font-weight: 700;
 }
 
-.registration-input select,
 .registration-input input {
     height: 42px;
     border: none;
@@ -489,10 +617,29 @@ textarea:focus {
     box-shadow: none;
 }
 
-.registration-input select {
-    appearance: none;
-    cursor: pointer;
+.registration-input #regprefix { text-transform: uppercase; }
+
+.registration-suggestions {
+    position: absolute;
+    z-index: 30;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 180px;
+    max-height: 210px;
+    overflow-y: auto;
+    padding: 5px;
+    margin: 0;
+    list-style: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .2);
 }
+
+.registration-suggestions[hidden] { display: none; }
+.registration-suggestions li { padding: 8px 10px; border-radius: 6px; cursor: pointer; }
+.registration-suggestions li:hover,
+.registration-suggestions li.active { background: var(--surface-2); color: var(--primary); }
 
 /* Style options to match dark theme */
 option {
@@ -500,9 +647,7 @@ option {
     color: var(--text);
 }
 
-.registration-input select:focus,
 .registration-input input:focus,
-.registration-input select:hover,
 .registration-input input:hover {
     border: none !important;
     background: transparent !important;

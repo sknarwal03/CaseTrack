@@ -18,16 +18,15 @@
         
 
         <main class="main">
-            
 
             <section class="content cases-shell">
-                <div class="welcome">
+                <!-- <div class="welcome">
                     <div>
                         <h1>All Cases</h1>
                         <p>Complete overview of every registered matter and hearing.</p>
                     </div>
                     <button class="new-case" data-open-add-case type="button">＋&nbsp; New Case</button>
-                </div>
+                </div> -->
 
                 <section class="panel">
                     <div class="panel-heading">
@@ -43,13 +42,13 @@
 
                     <div class="cases-toolbar">
                         <div class="case-filters">
-                            <button class="case-filter active" data-filter="all" type="button">All</button>
-                            <button class="case-filter" data-filter="pending" type="button">Pending</button>
-                            <button class="case-filter" data-filter="disposed" type="button">Disposed</button>
-                            <button class="case-filter" data-filter="po" type="button">P O</button>
-                            <button class="case-filter" data-filter="star" type="button">Star Case</button>
-                            <button class="case-filter" data-filter="year" type="button">Year</button>
+                            <button class="case-filter active" data-filter="all" type="button">All Cases</button>
+                            <button class="case-filter" data-filter="pending" type="button">Pending Cases</button>
+                            <button class="case-filter" data-filter="disposed" type="button">Disposed Cases</button>
+                            <button class="case-filter" data-filter="po" type="button">PO Cases</button>
+                            <button class="case-filter" data-filter="star" type="button">Star Cases</button>
                         </div>
+                        <div class="case-total-count" id="caseTotalCount" aria-live="polite">Total Cases: 0</div>
                     </div>
 
                     <div class="cases-table-wrap">

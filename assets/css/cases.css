@@ -39,6 +39,17 @@ body.light-theme textarea {
     gap: 10px;
 }
 
+.case-total-count {
+    margin-left: auto;
+    padding: 8px 13px;
+    border: 1px solid #2b4464;
+    border-radius: 9px;
+    color: #c7d7ee;
+    background: #0d1d2e;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
 .case-filter {
     padding: 8px 12px;
     border: 1px solid #2b4464;
@@ -52,6 +63,10 @@ body.light-theme textarea {
     background: linear-gradient(135deg, #2d84ff, #6c5af7);
     border-color: transparent;
     color: #fff;
+}
+
+@media (max-width: 640px) {
+    .case-total-count { margin-left: 0; }
 }
 
 .cases-table-wrap {
@@ -85,6 +100,7 @@ body.light-theme textarea {
 
 .cases-table th.sortable {
     cursor: pointer;
+    user-select: none;
 }
 
 body.light-theme .cases-table th {
@@ -334,6 +350,7 @@ body.light-theme .detail-item {
 }
 
 body.light-theme .case-filter,
+body.light-theme .case-total-count,
 body.light-theme .cases-table-wrap,
 body.light-theme .cases-table th,
 body.light-theme .cases-table td,
@@ -342,6 +359,11 @@ body.light-theme .icon-btn {
 }
 
 body.light-theme .case-filter {
+    background: #f7fbff;
+    color: var(--text);
+}
+
+body.light-theme .case-total-count {
     background: #f7fbff;
     color: var(--text);
 }

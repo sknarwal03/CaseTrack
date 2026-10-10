@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CaseTrack All Judges Register">
+    <title>CaseTrack | All Judges Register</title>
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/shared.css">
+    <link rel="stylesheet" href="../assets/css/all-judges.css">
+</head>
+
+<body data-page="all-judges">
+    <div class="layout">
+        <main class="main">
+            <section class="content judges-shell">
+                <div class="judges-book">
+                    <button class="judges-close-button" type="button" id="closeJudgesPage" aria-label="Close All Judges"
+                        title="Close">×</button>
+                    <header class="judges-header">
+                        <div>
+                            <h1>All Judges</h1>
+                            <p>Maintain the court assignments used across registered cases.</p>
+                        </div>
+                    </header>
+                    <div class="judges-status" id="judgesStatus" role="status" aria-live="polite"></div>
+                    <div class="judges-list" id="judgesList" aria-live="polite"></div>
+                    <button class="judges-fab" type="button" id="addJudgeButton" aria-label="Add Judge"
+                        title="Add Judge">+</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <dialog class="judge-dialog" id="judgeDialog" aria-labelledby="judgeDialogTitle">
+        <form id="judgeForm">
+            <header class="judge-dialog-header">
+                <div>
+                    <p class="judges-kicker">REGISTER ENTRY</p>
+                    <h2 id="judgeDialogTitle">Add Judge</h2>
+                </div>
+                <button class="judge-dialog-close" type="button" id="closeJudgeDialog" aria-label="Close">×</button>
+            </header>
+            <div class="judge-fields">
+                <label>Court Number
+                    <input type="text" name="courtNumber" placeholder="e.g. 51" autocomplete="off" required>
+                </label>
+                <label>Judicial Designations
+                    <select name="designation" required>
+                        <option value="" disabled selected>Select judicial designation</option>
+                        <option value="DJ">DJ</option>
+                        <option value="ASJ">ASJ</option>
+                        <option value="CJM">CJM</option>
+                        <option value="ACJM">ACJM</option>
+                        <option value="ACJ">ACJ</option>
+                        <option value="JMIC">JMIC</option>
+                    </select>
+                </label>
+                <label>Name Prefix
+                    <select name="namePrefix" id="judgeNamePrefix" required>
+                        <option value="" disabled selected>Select prefix</option>
+                        <option value="Mr.">Mr.</option>
+                        <option value="Ms.">Ms.</option>
+                        <option value="Mrs.">Mrs.</option>
+                        <option value="Dr.">Dr.</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </label>
+                <label id="customPrefixField" hidden>Custom Prefix
+                    <input type="text" name="customPrefix" placeholder="Enter prefix" autocomplete="off">
+                </label>
+                <label>Judge Name
+                    <input type="text" name="judgeName" placeholder="e.g. Amit Sharma" autocomplete="name" required>
+                </label>
+                <label>Nick Name
+                    <input type="text" name="nickName" placeholder="Enter nickname" autocomplete="off">
+                </label>
+                <label class="judge-display-field">Full Judge Display Name
+                    <input type="text" id="fullJudgeName" readonly aria-readonly="true">
+                </label>
+            </div>
+            <p class="judge-form-status" id="judgeFormStatus" role="status" aria-live="polite"></p>
+            <footer class="judge-dialog-actions">
+                <button class="judge-delete-action" type="button" id="judgeDeleteActions" hidden>Delete Judge</button>
+                <button class="judge-cancel-button" type="button" id="cancelJudgeButton">Cancel</button>
+                <button class="judges-add-button" type="submit" id="saveJudgeButton">Save Judge</button>
+            </footer>
+        </form>
+    </dialog>
+
+    <script type="module" src="../assets/js/shared-layout.js"></script>
+    <script type="module" src="../assets/js/all-judges.js"></script>
+</body>
+
+</html>
