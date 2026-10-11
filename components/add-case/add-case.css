@@ -1,21 +1,3 @@
-:root {
-    --bg: #162c46;
-    --surface: #10243d;
-    --surface-2: #152e4d;
-    --border: #284461;
-    --border-light: #37516f;
-
-    --text: #eff6ff;
-    --muted: #b8cae6;
-
-    --primary: #287cf3;
-    --primary-hover: #368eff;
-
-    --green: #1aa96d;
-    --red: #dd4a61;
-
-    --radius: 12px;
-}
 /* =========================================================
    CASETRACK — ADD NEW CASE
    Modern Technical UI
@@ -227,6 +209,85 @@ select {
     box-shadow: 0 0 10px var(--green);
 }
 
+#caseModal .modal-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+}
+
+#caseModal .modal-header .case-id {
+    justify-content: center;
+    margin: 0;
+    padding-bottom: 0;
+}
+
+#caseModal .modal-header .case-id.is-editing .status-dot {
+    background: #f59e0b;
+    box-shadow: 0 0 10px #f59e0b;
+}
+
+#caseModal .modal-header .close {
+    justify-self: end;
+}
+
+#caseModal .modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+#caseModal .modal-body > .case-topbar,
+#caseModal .modal-body > .form-card {
+    flex: 0 0 auto;
+}
+
+#caseModal .case-section-fir {
+    order: 1;
+}
+
+#caseModal .case-section-io {
+    order: 2;
+}
+
+#caseModal .case-section-complainant {
+    order: 3;
+}
+
+#caseModal .case-section-status {
+    order: 4;
+}
+
+#caseModal .case-section-court-registration {
+    order: 5;
+}
+
+#caseModal .case-section-next-date {
+    order: 6;
+}
+
+#caseModal .case-section-accused {
+    order: 7;
+}
+
+#caseModal .case-section-witness {
+    order: 8;
+}
+
+#caseModal .case-section-other {
+    order: 9;
+}
+
+@media (max-width: 600px) {
+    #caseModal .modal-header {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    #caseModal .modal-header .case-id {
+        grid-column: 1 / -1;
+        justify-self: center;
+    }
+}
+
 
 /* =========================================================
    FORM CARD
@@ -307,6 +368,11 @@ select {
     gap: 20px;
 }
 
+.decision-fields-grid {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
 .span-2 {
     grid-column: span 2;
 }
@@ -333,6 +399,138 @@ select {
     color: #b7c2d3;
 
     font-weight: 600;
+}
+
+#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .locked-input, .registration-input)):not(:has(.toggle-container)) {
+    position: relative;
+    display: block;
+}
+
+#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .locked-input, .registration-input)):not(:has(.toggle-container)) > label {
+    position: absolute;
+    z-index: 2;
+    top: 21px;
+    left: 12px;
+    margin: 0;
+    padding: 0 4px;
+    transform: translateY(-50%);
+    background: transparent;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+#caseModal .input-group:not(.permanent-label-group):has(> label + textarea):not(:has(.toggle-container)) > label {
+    top: 0;
+    transform: translateY(-50%);
+    background: var(--bg);
+}
+
+#caseModal .input-group:not(.permanent-label-group):has(> label + .locked-input):not(:has(.toggle-container)) > label {
+    left: 34px;
+}
+
+#caseModal .input-group:has(> label + input:not([type="checkbox"]):not([type="hidden"])) > input:not([type="checkbox"]):not([type="hidden"]),
+#caseModal .input-group:has(> label + select) > select,
+#caseModal .input-group:has(> label + textarea) > textarea {
+    padding-top: 10px;
+}
+
+#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .locked-input, .registration-input)):not(:has(.toggle-container)):has(:is(input:not([type="checkbox"]):not([type="hidden"]):focus, select:focus, textarea:focus, .searchable-select:focus-within, .locked-input:focus-within, .registration-input:focus-within)) > label,
+#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .locked-input, .registration-input)):not(:has(.toggle-container)):has(input:not([type="checkbox"]):not([type="hidden"]):not(:placeholder-shown)) > label,
+#caseModal .input-group:not(.permanent-label-group):has(> label + select option:checked:not([value=""])) > label,
+#caseModal .input-group:not(.permanent-label-group):has(> label + textarea) > label {
+    top: 0;
+    font-size: 11px;
+    color: var(--primary);
+    background: var(--bg);
+}
+
+#caseModal .input-group input:placeholder-shown::placeholder,
+#caseModal .input-group textarea:placeholder-shown::placeholder {
+    color: transparent;
+}
+
+#caseModal .input-group input:focus::placeholder,
+#caseModal .input-group textarea:focus::placeholder {
+    color: #536176;
+}
+
+#caseModal .registration-input input {
+    padding-top: 10px;
+}
+
+#caseModal .permanent-label-group {
+    position: relative;
+    display: block;
+}
+
+#caseModal .permanent-label-group > label {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 12px;
+    margin: 0;
+    padding: 0 4px;
+    transform: translateY(-50%);
+    background: var(--bg);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+}
+
+#caseModal .permanent-label-group > select {
+    padding-top: 10px;
+}
+
+#caseModal .toggle-label-group {
+    position: relative;
+    padding-top: 8px;
+}
+
+#caseModal .toggle-label-group > label {
+    position: absolute;
+    z-index: 2;
+    top: 8px;
+    left: 12px;
+    margin: 0;
+    padding: 0 4px;
+    transform: translateY(-50%);
+    background: var(--surface-2);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+}
+
+#caseModal .input-group:has(> label + select) {
+    position: relative;
+    display: block;
+}
+
+#caseModal .input-group:has(> label + select) > label {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 12px;
+    margin: 0;
+    padding: 0 4px;
+    transform: translateY(-50%);
+    background: var(--bg);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+}
+
+#caseModal .input-group:has(> label + select) > select {
+    padding-top: 10px;
 }
 
 .input-group small {
@@ -427,7 +625,7 @@ textarea:focus {
 .searchable-select input {
     min-width: 0;
     flex: 1;
-    border-radius: 8px 0 0 8px;
+    border-radius: 8px;
 }
 
 .searchable-select:focus-within input {
@@ -508,6 +706,165 @@ textarea:focus {
 
 .master-list-status:empty {
     display: none;
+}
+
+#caseModal .date-stage-control {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    min-width: 0;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#caseModal .date-stage-group {
+    grid-column: 1 / -1;
+}
+
+#caseModal .date-stage-control:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#caseModal .date-stage-control input,
+#caseModal .date-stage-control select {
+    min-width: 0;
+    height: 40px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+#caseModal .date-stage-control input:hover,
+#caseModal .date-stage-control select:hover,
+#caseModal .date-stage-control input:focus,
+#caseModal .date-stage-control select:focus {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    outline: none;
+}
+
+#caseModal .date-stage-separator {
+    color: var(--muted);
+    font-size: 18px;
+}
+
+body.light-theme #caseModal .date-stage-control {
+    border-color: #c9d8ef;
+    background: #fff;
+}
+
+body.light-theme #caseModal .date-stage-control:focus-within {
+    border-color: #287cf3;
+    box-shadow: 0 0 0 3px rgba(40, 124, 243, 0.1);
+}
+
+body.light-theme #caseModal .date-stage-control input,
+body.light-theme #caseModal .date-stage-control select {
+    border: 0;
+    background: transparent;
+}
+
+body.light-theme #caseModal .date-stage-control input:hover,
+body.light-theme #caseModal .date-stage-control select:hover,
+body.light-theme #caseModal .date-stage-control input:focus,
+body.light-theme #caseModal .date-stage-control select:focus {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+#caseModal .hearing-record-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+#caseModal .hearing-records-label {
+    margin: 12px 0 0;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#caseModal .hearing-record-actions button {
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface-2);
+    color: var(--text);
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+}
+
+#caseModal .hearing-record-add {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: #fff;
+}
+
+#caseModal .hearing-record-cancel {
+    border-color: var(--border);
+    background: transparent;
+}
+
+#caseModal .hearing-record-actions .hearing-record-delete {
+    margin-left: auto;
+    border-color: rgba(220, 53, 69, 0.35);
+    color: #dc3545;
+}
+
+#caseModal .hearing-record-status {
+    min-height: 0;
+    margin: 6px 0 0;
+    color: var(--danger, #d9534f);
+    font-size: 12px;
+}
+
+#caseModal .hearing-record-status:empty {
+    display: none;
+}
+
+#caseModal .hearing-record-list {
+    display: grid;
+    gap: 7px;
+    margin-top: 10px;
+}
+
+#caseModal .hearing-record-empty {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+#caseModal .hearing-record-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface-2);
+    cursor: pointer;
+}
+
+#caseModal .hearing-record-row:hover,
+#caseModal .hearing-record-row:focus-visible {
+    border-color: var(--primary);
+    outline: none;
+}
+
+#caseModal .hearing-record-details {
+    min-width: 0;
+    color: var(--text);
+    font-size: 13px;
+    overflow-wrap: anywhere;
 }
 
 body.light-theme .searchable-select-toggle {
@@ -992,6 +1349,22 @@ option {
             80px 15px 1fr 15px 80px;
     }
 
+    .modal {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal > .modal-header,
+    .modal > .modal-footer {
+        flex: 0 0 auto;
+    }
+
+    .modal > .modal-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+    }
+
 }
 
 @media (max-width: 500px) {
@@ -1031,11 +1404,22 @@ option {
 
 }
 
-/* Finds the label immediately followed by a required input */
-label:has(+ input:required)::after {
-  content: " *";
-  color: red;
-  font-weight: bold;
+#caseModal label.validation-error::after {
+    content: " *";
+    color: #dc2626;
+    font-weight: 700;
+}
+
+#caseModal .validation-error > input:not([type="checkbox"]):not([type="hidden"]),
+#caseModal .validation-error > select,
+#caseModal .validation-error > textarea,
+#caseModal .validation-error .searchable-select input,
+#caseModal .validation-error .locked-input input {
+    border-color: #dc2626 !important;
+}
+
+#caseModal .validation-error .registration-input {
+    border-color: #dc2626;
 }
 /* =========================================================
    LIGHT THEME SYNC FOR ADD CASE MODAL
@@ -1235,6 +1619,16 @@ body.light-theme #caseModal .input-group label {
     color: #3c5474;
 }
 
+body.light-theme #caseModal .permanent-label-group > label {
+    background: #ffffff;
+    color: #287cf3;
+}
+
+body.light-theme #caseModal .toggle-label-group > label {
+    background: #f5f8fe;
+    color: #287cf3;
+}
+
 /* Accused card */
 body.light-theme #caseModal .accused-card {
     background: #f5f8fe;
@@ -1395,11 +1789,6 @@ body.light-theme #caseModal .section-icon {
 body.light-theme #caseModal .case-topbar {
     background: #f5f8fe;
     border-color: #dce8f8;
-}
-
-/* Required asterisk readable in light */
-body.light-theme #caseModal label:has(+ input:required)::after {
-    color: #dc2626;
 }
 
 /* Select options readable in light theme browsers that support styling */

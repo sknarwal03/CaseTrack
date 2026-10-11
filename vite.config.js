@@ -22,7 +22,8 @@ export default defineConfig({
         report: resolve(__dirname, "pages/report.html"),
         settings: resolve(__dirname, "pages/settings.html"),
         registerDiary: resolve(__dirname, "pages/register-diary.html"),
-        allJudges: resolve(__dirname, "pages/all-judges.html")
+        allJudges: resolve(__dirname, "pages/all-judges.html"),
+        manageIo: resolve(__dirname, "pages/manage-io.html")
       }
     }
   }

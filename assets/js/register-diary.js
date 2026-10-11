@@ -1,9 +1,13 @@
 // Register Diary cases are loaded from the shared Firestore case collection.
 import { db } from '@config/firebase-config.js';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, deleteField, doc, getDocs, runTransaction } from 'firebase/firestore';
+import { latestChargeDate } from './charge-date.js';
+import { normalizeTrialStage, populateTrialStageSelect, setTrialStageSelectValue } from './trial-stages.js';
 
 const requestedDiaryDate = new URLSearchParams(window.location.search).get('date');
 const requestedDiaryParts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(requestedDiaryDate || '');
+const requestedDiaryCaseId = new URLSearchParams(window.location.search).get('case');
+let requestedDiaryCaseFocused = false;
 let currentDate = requestedDiaryParts
     ? new Date(Number(requestedDiaryParts[1]), Number(requestedDiaryParts[2]) - 1, Number(requestedDiaryParts[3]), 12)
     : new Date();
@@ -20,6 +24,7 @@ let editingDateRecordId = null;
 const pendingFirClicks = new Map();
 
 const $ = id => document.getElementById(id);
+populateTrialStageSelect($('diaryDateForm')?.elements.namedItem('trialStage'));
 let extraNotesDbPromise;
 
 document.addEventListener('pointerdown', event => {
@@ -154,8 +159,54 @@ function updateFileStatus(caseId, changes, diaryDate = keyDate(currentDate)) {
     }
 }
 
+async function persistHearingDateRecords(caseId, dateRecords) {
+    try {
+        const today = keyDate(new Date());
+        const nextRecord = dateRecords
+            .filter(record => record && caseDateKey(record.date) > today)
+            .sort((a, b) => caseDateKey(a.date).localeCompare(caseDateKey(b.date)))[0];
+        const nextDate = nextRecord ? formatDiaryDate(nextRecord.date) : '';
+        const trialStage = String(nextRecord?.trialStage || '').trim();
+        const reference = doc(db, 'cases', caseId);
+        await runTransaction(db, async transaction => {
+            const snapshot = await transaction.get(reference);
+            if (!snapshot.exists()) throw new Error('This case no longer exists.');
+            transaction.update(reference, {
+                hearingDateRecord: dateRecords,
+                nextDate,
+                trialStage,
+                chargeDate: latestChargeDate(dateRecords),
+                registerDiaryDaterecords: deleteField(),
+                registerDiaryDateRecords: deleteField()
+            });
+        });
+        const caseItem = cases.find(item => item.id === caseId);
+        if (caseItem) {
+            caseItem.hearingDateRecord = dateRecords;
+            caseItem.nextDate = nextDate;
+            caseItem.trialStage = trialStage;
+            delete caseItem.registerDiaryDaterecords;
+            delete caseItem.registerDiaryDateRecords;
+        }
+        return true;
+    } catch (error) {
+        console.error('Could not save hearing dates to Firestore:', error);
+        return false;
+    }
+}
+
 function reconcileCaseDateRecords(caseItem) {
     const today = keyDate(new Date());
+    const firestoreRecords = Array.isArray(caseItem.hearingDateRecord)
+        ? caseItem.hearingDateRecord
+        : Array.isArray(caseItem.registerDiaryDaterecords)
+            ? caseItem.registerDiaryDaterecords
+            : Array.isArray(caseItem.registerDiaryDateRecords)
+                ? caseItem.registerDiaryDateRecords
+                : null;
+    if (firestoreRecords && JSON.stringify(firestoreRecords) !== JSON.stringify(getFileStatus(caseItem.id).dateRecords)) {
+        updateFileStatus(caseItem.id, { dateRecords: firestoreRecords });
+    }
     const state = getFileStatus(caseItem.id);
     const originalNextDate = caseDateKey(caseItem.nextDate);
     const records = state.dateRecords.map(record =>
@@ -182,6 +233,13 @@ function reconcileCaseDateRecords(caseItem) {
         .filter(record => record.kind !== 'next' || record.date > today);
     if (JSON.stringify(reconciledRecords) !== JSON.stringify(state.dateRecords)) {
         updateFileStatus(caseItem.id, { dateRecords: reconciledRecords });
+    }
+    const storedRecords = getFileStatus(caseItem.id).dateRecords;
+    const needsFirestoreSync = JSON.stringify(storedRecords) !== JSON.stringify(caseItem.hearingDateRecord || [])
+        || Object.prototype.hasOwnProperty.call(caseItem, 'registerDiaryDaterecords')
+        || Object.prototype.hasOwnProperty.call(caseItem, 'registerDiaryDateRecords');
+    if (needsFirestoreSync && (firestoreRecords || storedRecords.length > 0)) {
+        void persistHearingDateRecords(caseItem.id, storedRecords);
     }
 }
 
@@ -226,6 +284,27 @@ function getLinkedNextDate(caseItem, diaryDate) {
     return candidates.sort((a, b) => a.date.localeCompare(b.date))[0] || null;
 }
 
+function publishHearingDateNotifications() {
+    const today = keyDate(new Date());
+    const excludedStatuses = new Set(['ucr', 'untrace', 'untraced', 'cancellation', 'disposed', 'ui', 'under investigation']);
+    const notifications = cases
+        .filter(caseItem => !excludedStatuses.has(String(caseItem.status || '').trim().toLowerCase()))
+        .filter(caseItem => !getLinkedNextDate(caseItem, today))
+        .map(caseItem => {
+            const firNumber = [caseItem.firNo, caseItem.firYear]
+                .filter(value => value !== null && value !== undefined && String(value).trim())
+                .join('/');
+            return {
+                caseId: caseItem.id,
+                title: 'Next date update needed',
+                message: `FIR ${firNumber || 'number not assigned'} has no upcoming hearing date. Update the next date.`
+            };
+        });
+    window.dispatchEvent(new CustomEvent('caseTrackNotificationsUpdated', {
+        detail: { notifications }
+    }));
+}
+
 let caseDetailsModulePromise;
 function openCaseDetailsDialog(caseItem) {
     if (!caseDetailsModulePromise) caseDetailsModulePromise = import('./cases.js');
@@ -246,6 +325,23 @@ function openDateDialog(caseItem) {
     $('diaryDateDialog').showModal();
 }
 
+function focusRequestedDiaryCase() {
+    if (!requestedDiaryCaseId || requestedDiaryCaseFocused) return;
+    const caseItem = cases.find(item => item.id === requestedDiaryCaseId);
+    if (!caseItem) return;
+    requestedDiaryCaseFocused = true;
+    const diaryItem = document.querySelector(`.diary-file-item[data-case-id="${CSS.escape(caseItem.id)}"]`);
+    if (diaryItem) {
+        diaryItem.classList.add('is-notification-target');
+        diaryItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+        openDateDialog(caseItem);
+    }
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.delete('case');
+    window.history.replaceState({}, '', currentUrl);
+}
+
 function resetDateEditor() {
     editingDateRecordId = null;
     $('diaryDateForm').reset();
@@ -257,7 +353,7 @@ function editDateRecord(record) {
     const form = $('diaryDateForm');
     editingDateRecordId = record.id;
     form.elements.namedItem('date').value = record.date;
-    form.elements.namedItem('trialStage').value = record.trialStage || '';
+    setTrialStageSelectValue(form.elements.namedItem('trialStage'), record.trialStage);
     $('diaryDateSubmit').textContent = 'Update Date';
     $('diaryDateCancelEdit').hidden = false;
     $('diaryDialogStatus').textContent = '';
@@ -284,7 +380,8 @@ function renderSavedDates() {
         const openDate = document.createElement('button');
         openDate.type = 'button';
         openDate.className = 'diary-saved-date-link';
-        openDate.textContent = `${formatDiaryDate(record.date)}${record.trialStage ? ` — ${record.trialStage}` : ''}`;
+        const displayStage = normalizeTrialStage(record.trialStage);
+        openDate.textContent = `${formatDiaryDate(record.date)}${displayStage ? ` — ${displayStage}` : ''}`;
         openDate.setAttribute('aria-label', `Open diary for ${formatDiaryDate(record.date)}`);
         openDate.addEventListener('click', () => {
             const [year, month, day] = record.date.split('-').map(Number);
@@ -323,14 +420,17 @@ function renderSavedDates() {
         remove.className = 'diary-date-delete';
         remove.textContent = 'Delete';
         remove.setAttribute('aria-label', `Delete date ${formatDiaryDate(record.date)}`);
-        remove.addEventListener('click', () => {
+        remove.addEventListener('click', async () => {
             if (editingDateRecordId === record.id) resetDateEditor();
-            const updated = updateFileStatus(dateDialogCase.id, {
-                dateRecords: getFileStatus(dateDialogCase.id).dateRecords
+            const caseId = dateDialogCase.id;
+            const dateRecords = getFileStatus(caseId).dateRecords
                     .filter(item => item.id !== record.id)
-            });
+            const updated = updateFileStatus(caseId, { dateRecords });
             if (updated) {
-                $('diaryDialogStatus').textContent = '';
+                const synced = await persistHearingDateRecords(caseId, dateRecords);
+                $('diaryDialogStatus').textContent = synced
+                    ? ''
+                    : 'Date was removed locally but could not be synced to Firestore.';
                 renderSavedDates();
                 renderNotes();
             }
@@ -341,7 +441,7 @@ function renderSavedDates() {
     });
 }
 
-function submitDiaryDate(event) {
+async function submitDiaryDate(event) {
     event.preventDefault();
     if (!dateDialogCase) return;
     const form = event.currentTarget;
@@ -374,9 +474,11 @@ function submitDiaryDate(event) {
     });
     const updated = updateFileStatus(dateDialogCase.id, { dateRecords: [...remainingRecords, savedRecord] });
     if (!updated) return;
-    $('diaryDialogStatus').textContent = kind === 'previous'
-        ? 'Previous date saved.'
-        : 'Next date saved.';
+    const savedRecords = [...remainingRecords, savedRecord];
+    const synced = await persistHearingDateRecords(dateDialogCase.id, savedRecords);
+    $('diaryDialogStatus').textContent = synced
+        ? kind === 'previous' ? 'Previous date saved.' : 'Next date saved.'
+        : 'Date was saved locally but could not be synced to Firestore.';
     resetDateEditor();
     renderSavedDates();
     renderNotes();
@@ -645,12 +747,13 @@ function createDiaryFileItem({ caseItem, trialStage }, diaryDate, isSessionCase 
 
     const stage = document.createElement('span');
     stage.className = 'diary-file-stage';
-    stage.textContent = trialStage ? ` ${trialStage}` : '';
+    const displayStage = normalizeTrialStage(trialStage);
+    stage.textContent = displayStage ? ` ${displayStage}` : '';
     const linkedDate = getLinkedNextDate(caseItem, diaryDate);
     const linkedDateStage = document.createElement('span');
     linkedDateStage.className = 'diary-file-linked-date';
     linkedDateStage.textContent = linkedDate
-        ? ` - ${formatDiaryDate(linkedDate.date)}${linkedDate.trialStage ? ` ${linkedDate.trialStage}` : ''}`
+        ? ` - ${formatDiaryDate(linkedDate.date)}${linkedDate.trialStage ? ` ${normalizeTrialStage(linkedDate.trialStage)}` : ''}`
         : '';
     const statusGroup = document.createElement('span');
     statusGroup.className = 'diary-file-status-group';
@@ -898,6 +1001,7 @@ function createExtraNoteRow(index, dateKey, extraNotePrefix, extraNotes) {
 function renderNotes() {
     const grid = $('diaryTimeGrid'); grid.innerHTML = '';
     reconcileAllCaseDates();
+    publishHearingDateNotifications();
     const dateKey = keyDate(currentDate);
     const matchingCases = [];
     cases.forEach(caseItem => {
@@ -1064,6 +1168,7 @@ async function loadCases() {
     }
     reconcileAllCaseDates();
     renderNotes();
+    focusRequestedDiaryCase();
 }
 
 // Expose for inline onclick

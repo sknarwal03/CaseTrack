@@ -1,6 +1,7 @@
 import { db } from '@config/firebase-config.js';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { parseCaseDate, setupModal } from './shared-utils.js';
+import { normalizeTrialStage } from './trial-stages.js';
 
 const detailsModal = document.querySelector('#caseDetailsModal');
 const modalHelper = setupModal(detailsModal);
@@ -16,30 +17,24 @@ function applyCaseFilters() {
     const isPoFilter = filter === 'po';
     const isDisposedFilter = filter === 'disposed';
     const hearingHeader = document.querySelector('[data-sort="nextDate"]');
-    const stageHeader = document.querySelector('[data-sort="caseStage"]');
-    if (hearingHeader) hearingHeader.textContent = isPoFilter ? 'PO Accused' : isDisposedFilter ? 'Disposed Date' : 'Next Hearing';
-    if (stageHeader) stageHeader.textContent = isPoFilter ? 'PO Date' : isDisposedFilter ? 'Judgement' : 'Case Stage';
+    if (hearingHeader) {
+        hearingHeader.textContent = isPoFilter
+            ? 'PO Accused - PO Date'
+            : isDisposedFilter ? 'Disposed Date - Judgement' : 'Next Hearing';
+    }
     const rows = [...document.querySelectorAll('.case-row-data')];
     let visibleCount = 0;
 
     rows.forEach(row => {
         const hearingCell = row.querySelector('.next-hearing-cell');
-        const stageCell = row.querySelector('.case-stage-cell');
         if (hearingCell) {
-            hearingCell.textContent = isPoFilter
-                ? row.dataset.poAccused || ''
-                : isDisposedFilter ? row.dataset.decisionDate || '' : row.dataset.nextDate || '';
-        }
-        if (stageCell) {
-            let badge = stageCell.querySelector('.status-badge');
-            if (!badge) {
-                badge = document.createElement('span');
-                badge.className = `status-badge ${row.dataset.statusClass || ''}`;
-                stageCell.replaceChildren(badge);
-            }
-            badge.textContent = isPoFilter
-                ? row.dataset.poDates || ''
-                : isDisposedFilter ? row.dataset.judgement || '' : row.dataset.caseStage || '';
+            const firstValue = isPoFilter
+                ? row.dataset.poAccused
+                : isDisposedFilter ? row.dataset.decisionDate : row.dataset.nextDate;
+            const secondValue = isPoFilter
+                ? row.dataset.poDates
+                : isDisposedFilter ? row.dataset.judgement : row.dataset.caseStage;
+            hearingCell.textContent = [firstValue, secondValue].filter(Boolean).join(' - ');
         }
 
         let matchesFilter = filter === 'po'
@@ -70,7 +65,8 @@ function getCaseSortValue(caseItem, key) {
         return [caseItem.firNo || '', caseItem.firYear || ''].filter(Boolean).join('/');
     }
     if (key === 'firDate' || key === 'nextDate') {
-        const parsedDate = parseCaseDate(caseItem[key]);
+        const value = key === 'nextDate' ? getCaseHearingSummary(caseItem).date : caseItem[key];
+        const parsedDate = parseCaseDate(value);
         return parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate.getTime() : null;
     }
     if (key === 'courtNumber') return caseItem.courtName || caseItem.courtNumber || '';
@@ -87,10 +83,22 @@ function compareCaseValues(left, right, key) {
     return String(leftValue).localeCompare(String(rightValue), undefined, { numeric: true, sensitivity: 'base' });
 }
 
-function getRegisterDiaryDateRecords(caseId) {
+function getRegisterDiaryDateRecords(caseItem) {
+    const firestoreRecords = Array.isArray(caseItem.hearingDateRecord)
+        ? caseItem.hearingDateRecord
+        : Array.isArray(caseItem.registerDiaryDaterecords)
+            ? caseItem.registerDiaryDaterecords
+            : Array.isArray(caseItem.registerDiaryDateRecords)
+                ? caseItem.registerDiaryDateRecords
+                : null;
+    if (firestoreRecords) {
+        return firestoreRecords.filter(record => record && typeof record.date === 'string'
+            && ['previous', 'next'].includes(record.kind));
+    }
+
     try {
         const saved = JSON.parse(localStorage.getItem(REGISTER_DIARY_FILE_STATUS_KEY) || '{}');
-        const records = saved?.[caseId]?.dateRecords;
+        const records = saved?.[caseItem.id]?.dateRecords;
         return Array.isArray(records)
             ? records.filter(record => record && typeof record.date === 'string'
                 && ['previous', 'next'].includes(record.kind))
@@ -99,6 +107,34 @@ function getRegisterDiaryDateRecords(caseId) {
         console.error('Could not load register diary dates for case timeline:', error);
         return [];
     }
+}
+
+function getCaseHearingSummary(caseItem) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const records = getRegisterDiaryDateRecords(caseItem)
+        .map(record => ({ ...record, parsedDate: parseCaseDate(record.date) }))
+        .filter(record => record.parsedDate && !Number.isNaN(record.parsedDate.getTime()));
+    const upcoming = records
+        .filter(record => {
+            if (record.kind !== 'next') return false;
+            const date = new Date(record.parsedDate);
+            date.setHours(0, 0, 0, 0);
+            return date > today;
+        })
+        .sort((left, right) => right.parsedDate - left.parsedDate)[0];
+
+    if (upcoming) {
+        return {
+            date: upcoming.parsedDate.toLocaleDateString('en-GB'),
+            trialStage: normalizeTrialStage(upcoming.trialStage)
+        };
+    }
+    if (records.length > 0) return { date: '', trialStage: '' };
+    return {
+        date: caseItem.nextDate || '',
+        trialStage: normalizeTrialStage(caseItem.trialStage)
+    };
 }
 
 // parseCaseDate is imported from shared-utils.js
@@ -133,7 +169,7 @@ const renderCaseTable = () => {
     const tableBody = document.querySelector('#casesTableBody');
     if (!tableBody) return;
     if (casesCache.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">No cases found.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">No cases found.</td></tr>';
         applyCaseFilters();
         return;
     }
@@ -160,8 +196,9 @@ const renderCaseTable = () => {
         row.dataset.poRowIndex = String(poRowIndex);
         row.dataset.poAccused = poAccusedPerson?.name || '';
         row.dataset.poDates = poAccusedPerson?.poDate || '';
-        row.dataset.nextDate = caseItem.nextDate || '';
-        row.dataset.caseStage = caseItem.trialStage || '';
+        const hearingSummary = getCaseHearingSummary(caseItem);
+        row.dataset.nextDate = hearingSummary.date;
+        row.dataset.caseStage = hearingSummary.trialStage;
         row.dataset.decisionDate = caseItem.decisionDate || '';
         row.dataset.judgement = caseItem.judgement || caseItem.judgment || '';
 
@@ -187,8 +224,7 @@ const renderCaseTable = () => {
             '<td>' + (caseItem.firDate || '') + '</td>' +
             '<td>' + (caseItem.underSection || '') + '</td>' +
             '<td>' + (caseItem.courtName || '') + '</td>' +
-            '<td class="next-hearing-cell">' + (caseItem.nextDate || '') + '</td>' +
-            '<td class="case-stage-cell"><span class="status-badge ' + statusClass + '">' + (caseItem.trialStage || '') + '</span></td>' +
+            '<td class="next-hearing-cell">' + [hearingSummary.date, hearingSummary.trialStage].filter(Boolean).join(' - ') + '</td>' +
             '<td><div class="table-actions">' +
             '<button class="icon-btn view-btn" title="View Details"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>' +
             '<button class="icon-btn edit-btn" title="Edit Case"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>' +
@@ -409,7 +445,7 @@ const openDetailModal = caseItem => {
 
         let nextStageTxt = '';
         if (caseItem.nextDate) nextStageTxt += caseItem.nextDate;
-        if (caseItem.trialStage) nextStageTxt += (nextStageTxt ? ' ' : '') + caseItem.trialStage;
+        if (caseItem.trialStage) nextStageTxt += (nextStageTxt ? ' ' : '') + normalizeTrialStage(caseItem.trialStage);
 
         headerCard.innerHTML = `
             <div>
@@ -458,7 +494,7 @@ const openDetailModal = caseItem => {
                     ['challanDate', caseItem.challanDate],
                     ['chargeDate', caseItem.chargeDate],
                     ['nextDate', caseItem.nextDate],
-                    ['trialStage', caseItem.trialStage],
+                    ['trialStage', normalizeTrialStage(caseItem.trialStage)],
                     ['decisionDate', caseItem.decisionDate]
                 ]
             },
@@ -467,8 +503,8 @@ const openDetailModal = caseItem => {
                 fields: [
                     ['ioRank', caseItem.ioRank],
                     ['ioName', caseItem.ioName],
-                    ['beltNo', caseItem.beltNo],
-                    ['mobileNo', caseItem.mobileNo]
+                    ['IO Belt No', caseItem.ioBeltno ?? caseItem.beltNo],
+                    ['IO Mobile No', caseItem.iomobileNo ?? caseItem.mobileNo]
                 ]
             },
             {
@@ -565,7 +601,7 @@ const openDetailModal = caseItem => {
         addTimelineDate(caseItem.regDate, 'Registration Date');
         addTimelineDate(caseItem.challanDate, 'Challan Date');
         addTimelineDate(caseItem.chargeDate, 'Charge Date');
-        const diaryDateRecords = getRegisterDiaryDateRecords(caseItem.id);
+        const diaryDateRecords = getRegisterDiaryDateRecords(caseItem);
         const dateIdentity = value => {
             const parsed = parseCaseDate(value);
             return parsed
@@ -577,7 +613,7 @@ const openDetailModal = caseItem => {
         }
         diaryDateRecords.forEach(record => {
             const dateKind = record.kind === 'previous' ? 'Previous Court Date' : 'Next Court Date';
-            const trialStage = String(record.trialStage || '').trim();
+            const trialStage = normalizeTrialStage(record.trialStage);
             addTimelineDate(record.date, `${dateKind}${trialStage ? ` (${trialStage})` : ''}`);
         });
         addTimelineDate(caseItem.decisionDate, 'Decision Date');

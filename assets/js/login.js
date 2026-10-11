@@ -1,6 +1,8 @@
 import { auth } from "@config/firebase-config.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+document.body.classList.toggle("light-theme", localStorage.getItem("caseTrackTheme") === "light");
+
 const loginForm = document.querySelector("#loginForm");
 const loginError = document.querySelector("#loginError");
 

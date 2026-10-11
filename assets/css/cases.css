@@ -71,6 +71,9 @@ body.light-theme textarea {
 
 .cases-table-wrap {
     overflow: auto;
+    max-width: 100%;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
     border: 1px solid #213d5f;
     border-radius: 14px;
     background: rgba(9, 19, 33, 0.6);
@@ -78,7 +81,7 @@ body.light-theme textarea {
 
 .cases-table {
     width: 100%;
-    min-width: 920px;
+    min-width: 820px;
     border-collapse: collapse;
 }
 
@@ -101,6 +104,10 @@ body.light-theme textarea {
 .cases-table th.sortable {
     cursor: pointer;
     user-select: none;
+}
+
+.cases-table .next-hearing-cell {
+    white-space: nowrap;
 }
 
 body.light-theme .cases-table th {
@@ -399,14 +406,10 @@ body.light-theme .status-pill.warning {
 }
 
 body.light-theme {
-    --bg: #edf4ff;
-    --panel: #ffffff;
-    --panel-soft: #f5f9ff;
-    --line: #d9e5f3;
-    --text: #13253d;
-    --muted: #5b7088;
-    background: radial-gradient(circle at 70% -10%, #dfefff 0, transparent 32%), var(--bg);
-    color: var(--text);
+    --panel: var(--surface);
+    background-color: var(--page-bg);
+    background-image: radial-gradient(circle at 70% -10%, #dfefff 0, transparent 32%);
+    color: var(--text-primary);
 }
 
 body.light-theme .layout,
@@ -566,6 +569,30 @@ body.light-theme .case-filter.active {
     }
 
     .cases-table {
-        min-width: 760px;
+        min-width: 700px;
+    }
+}
+
+@media (max-width: 520px) {
+    .cases-toolbar,
+    .case-filters {
+        width: 100%;
+    }
+
+    .case-filters {
+        gap: 6px;
+    }
+
+    .case-filter {
+        min-height: 44px;
+        padding: 8px 10px;
+    }
+
+    .case-total-count {
+        margin-left: 0;
+    }
+
+    .case-actions {
+        gap: 4px;
     }
 }

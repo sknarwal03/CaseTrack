@@ -108,10 +108,28 @@
     transition: background-color .18s ease, transform .18s ease, box-shadow .18s ease;
 }
 
+.judges-book .judges-fab {
+    background: linear-gradient(180deg, #0b1b30, #091728);
+    color: #fff;
+}
+
 .judges-fab:hover {
     background: #146c43;
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, .32);
+}
+
+.judges-book .judges-fab:hover {
+    background: #0b1b30;
+}
+
+body.light-theme .judges-book .judges-fab {
+    background: linear-gradient(180deg, #f9fbff 0%, #eef5fd 100%);
+    color: #fff;
+}
+
+body.light-theme .judges-book .judges-fab:hover {
+    background: #eef5fd;
 }
 
 .judges-fab:focus-visible {
@@ -381,6 +399,32 @@ body.light-theme .judges-header {
     .judge-fields { grid-template-columns: minmax(0, 1fr); }
     .judge-fields .judge-display-field { grid-column: auto; }
     .judge-dialog-actions button { flex: 1; }
+
+    .judge-dialog {
+        width: calc(100vw - 20px);
+        max-width: 620px;
+        max-height: calc(100dvh - 20px);
+        overflow-y: auto;
+    }
+
+    .judge-dialog-close {
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+    }
+
+    .judge-fields input,
+    .judge-fields select {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    .judges-add-button,
+    .judge-cancel-button,
+    .judge-delete-action,
+    .judge-dialog-actions button {
+        min-height: 44px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

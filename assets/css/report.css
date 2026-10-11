@@ -1,6 +1,6 @@
 :root {
-    --report-line: #223f61;
-    --report-soft: rgba(17, 31, 49, 0.7);
+    --report-line: var(--border-color);
+    --report-soft: color-mix(in srgb, var(--surface-raised) 88%, transparent);
 }
 
 .report-shell {
@@ -112,9 +112,11 @@ body.light-theme .bar-value,
 body.light-theme .list-report li,
 body.light-theme .report-panel .panel-title h2,
 body.light-theme .report-header h1 {
-body.light-theme .report-header h1,
-body.light-theme .eyebrow {
     color: var(--text);
+}
+
+body.light-theme .eyebrow {
+    color: var(--brand-primary);
 }
 
 body.light-theme .bar-track {
@@ -133,5 +135,32 @@ body.light-theme .list-report li {
 
     .bar-row {
         grid-template-columns: 90px 1fr 36px;
+    }
+}
+
+@media (max-width: 520px) {
+    .report-grid {
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    .report-panel {
+        min-height: 0;
+        padding: 14px;
+    }
+
+    .bar-row {
+        grid-template-columns: minmax(58px, 76px) minmax(0, 1fr) 30px;
+        gap: 7px;
+    }
+
+    .bar-label,
+    .bar-value {
+        font-size: 11px;
+    }
+
+    .list-report li {
+        align-items: flex-start;
+        padding: 10px;
     }
 }

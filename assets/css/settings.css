@@ -1,5 +1,5 @@
 :root {
-    --settings-line: #223f61;
+    --settings-line: var(--border-color);
 }
 
 .settings-shell {
@@ -213,5 +213,59 @@ body.light-theme .settings-panel .panel-title h2 {
     .settings-grid,
     .security-boxes {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    .settings-grid {
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    .settings-panel {
+        min-height: 0;
+        padding: 14px;
+    }
+
+    .settings-list {
+        gap: 10px;
+    }
+
+    .setting-row {
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .switch {
+        flex: 0 0 52px;
+        width: 52px;
+        height: 32px;
+        min-height: 44px;
+        padding: 6px 0;
+    }
+
+    .slider {
+        top: 6px;
+        height: 32px;
+    }
+
+    .slider::before {
+        top: 6px;
+    }
+
+    .switch input:checked + .slider::before {
+        transform: translateX(24px);
+    }
+
+    .security-boxes {
+        gap: 10px;
+    }
+
+    .security-card {
+        padding: 14px;
+    }
+
+    .setting-link {
+        min-height: 56px;
     }
 }

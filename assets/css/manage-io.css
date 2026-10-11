@@ -1,0 +1,98 @@
+.io-book .judges-fab {
+    background: linear-gradient(180deg, #0b1b30, #091728);
+    color: #fff;
+}
+
+.io-book .judges-fab:hover {
+    background: #0b1b30;
+}
+
+body.light-theme .io-book .judges-fab {
+    background: linear-gradient(180deg, #f9fbff 0%, #eef5fd 100%);
+    color: #fff;
+}
+
+body.light-theme .io-book .judges-fab:hover {
+    background: #eef5fd;
+}
+
+.io-row {
+    display: block;
+    min-height: 56px;
+    padding: 5px 4px;
+}
+
+.io-row-content {
+    min-width: 0;
+    cursor: pointer;
+}
+
+.io-row-name {
+    color: #253657;
+    font: 18px/1.3 'Segoe Print', 'Bradley Hand', 'Comic Sans MS', cursive;
+    overflow-wrap: anywhere;
+}
+
+.io-row-status {
+    margin-left: 8px;
+    color: #8a4b26;
+    font: 700 10px Arial, sans-serif;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.io-active-field {
+    grid-column: 1 / -1;
+    display: flex;
+    grid-auto-flow: column;
+    justify-content: start;
+    align-items: center;
+}
+
+.io-active-field[hidden] {
+    display: none;
+}
+
+.io-active-field input {
+    width: 18px;
+    min-height: 18px;
+    accent-color: #198754;
+}
+
+.io-form-error {
+    color: #a32626;
+}
+
+.io-empty-state {
+    padding: 42px 12px;
+    text-align: center;
+    color: #535c59;
+    font: 14px/1.5 Arial, sans-serif;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 600px) {
+    .io-row {
+        padding: 5px 0;
+    }
+
+    .io-active-field input {
+        width: 24px;
+        height: 24px;
+    }
+
+    .io-row-name {
+        font-size: 16px;
+    }
+}

@@ -1,13 +1,23 @@
 /* login.css */
+:root {
+    --border-color: #1b3552;
+    --border-strong: #294a6d;
+    --surface-soft: #10243d;
+    --brand-primary: #348dff;
+    --text-primary: #f4f7ff;
+    --text-secondary: #9cb1d0;
+}
+
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #06111f;
-    color: #eaf3ff;
+    background: var(--bg);
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    min-height: 100svh;
 }
 
 .login-wrapper {
@@ -18,7 +28,7 @@ body {
 
 .login-container {
     background: rgba(14, 27, 42, 0.7);
-    border: 1px solid rgba(41, 74, 109, 0.4);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 40px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
@@ -150,3 +160,105 @@ body {
     min-height: 20px;
 }
 
+body.light-theme {
+    --bg: #f3f6fa;
+    --surface: #ffffff;
+    --surface-soft: #edf2f8;
+    --text: #182638;
+    --text-primary: #182638;
+    --text-secondary: #5d6f85;
+    --border-color: #d7e0eb;
+    --border-strong: #c3cfdd;
+    --brand-primary: #287cf3;
+    background: var(--bg);
+    color: var(--text);
+}
+
+body.light-theme .login-container {
+    background: rgba(255, 255, 255, 0.94);
+    border-color: var(--border-color);
+    box-shadow: 0 20px 40px rgba(35, 57, 82, 0.12);
+}
+
+body.light-theme .brand,
+body.light-theme .login-form h2,
+body.light-theme .input-group label {
+    color: var(--text);
+}
+
+body.light-theme .brand-mark {
+    background: var(--surface-soft);
+    border-color: var(--border-color);
+    color: var(--brand-primary);
+}
+
+body.light-theme .brand small,
+body.light-theme .login-form p,
+body.light-theme .remember {
+    color: var(--text-secondary);
+}
+
+body.light-theme .input-group input {
+    background: var(--surface);
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+}
+
+body.light-theme .input-group input:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+body.light-theme .forgot-link {
+    color: var(--brand-primary);
+}
+
+@media (max-width: 520px) {
+    body {
+        align-items: flex-start;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow-y: auto;
+        padding-top: max(12px, env(safe-area-inset-top));
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+    }
+
+    .login-wrapper {
+        max-width: 440px;
+        padding: 12px;
+    }
+
+    .login-container {
+        padding: clamp(20px, 7vw, 30px);
+        border-radius: 14px;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .brand {
+        margin-bottom: 22px;
+    }
+
+    .login-form p {
+        margin-bottom: 22px;
+    }
+
+    .input-group {
+        margin-bottom: 16px;
+    }
+
+    .input-group input {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    .actions {
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .login-btn {
+        min-height: 48px;
+    }
+}

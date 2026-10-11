@@ -1,5 +1,7 @@
 import { db } from '@config/firebase-config.js';
-import { collection, addDoc, updateDoc, doc, getDocs, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, doc, deleteField, getDocs, onSnapshot, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore';
+import { latestChargeDate } from '../../assets/js/charge-date.js';
+import { normalizeTrialStage, populateTrialStageSelect, setTrialStageSelectValue } from '../../assets/js/trial-stages.js';
 import addCaseHtml from './add-case.html?raw';
 
 const masterDefinitions = {
@@ -22,6 +24,7 @@ const pendingMasterWrites = new Map();
 if (!document.getElementById('caseModal')) {
     document.body.insertAdjacentHTML('beforeend', addCaseHtml);
 }
+populateTrialStageSelect(document.getElementById('nextDateStageTrial'));
 
 function normalizeMasterValue(value) {
     return value.trim().normalize('NFKC').replace(/\s+/g, ' ').toLowerCase();
@@ -133,14 +136,14 @@ function setupMasterCombobox(type) {
     const toggle = wrapper?.querySelector('.searchable-select-toggle');
     const menu = wrapper?.querySelector('.searchable-select-options');
     const status = document.getElementById(`${type === 'crimeHead' ? 'crimeHead' : 'court'}MasterStatus`);
-    if (!input || !wrapper || !toggle || !menu || !status) {
+    if (!input || !wrapper || !menu || !status) {
         throw new Error(`Missing ${type} searchable list elements`);
     }
 
     const close = () => {
         menu.hidden = true;
         input.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-expanded', 'false');
+        toggle?.setAttribute('aria-expanded', 'false');
     };
 
     const positionMenu = () => {
@@ -149,7 +152,7 @@ function setupMasterCombobox(type) {
         const spaceBelow = window.innerHeight - bounds.bottom;
         const placeAbove = spaceBelow < 230 && bounds.top > spaceBelow;
         menu.style.left = `${bounds.left}px`;
-        menu.style.width = `${bounds.width + toggle.getBoundingClientRect().width}px`;
+        menu.style.width = `${bounds.width + (toggle?.getBoundingClientRect().width || 0)}px`;
         menu.style.top = placeAbove ? '' : `${bounds.bottom}px`;
         menu.style.bottom = placeAbove ? `${window.innerHeight - bounds.top}px` : '';
         menu.classList.toggle('opens-above', placeAbove);
@@ -158,7 +161,7 @@ function setupMasterCombobox(type) {
     const open = (showAll = true) => {
         menu.hidden = false;
         input.setAttribute('aria-expanded', 'true');
-        toggle.setAttribute('aria-expanded', 'true');
+        toggle?.setAttribute('aria-expanded', 'true');
         render(showAll ? '' : input.value);
         positionMenu();
     };
@@ -242,7 +245,7 @@ function setupMasterCombobox(type) {
             close();
         }
     });
-    toggle.addEventListener('click', () => {
+    toggle?.addEventListener('click', () => {
         if (menu.hidden) {
             input.focus();
             open(true);
@@ -300,7 +303,7 @@ document.addEventListener('click', event => {
             const input = wrapper.querySelector('input');
             const toggle = wrapper.querySelector('.searchable-select-toggle');
             input.setAttribute('aria-expanded', 'false');
-            toggle.setAttribute('aria-expanded', 'false');
+            toggle?.setAttribute('aria-expanded', 'false');
         }
     });
 });
@@ -314,6 +317,7 @@ document.querySelector('#caseModal .modal-body')?.addEventListener('scroll', () 
 
 const modal = document.getElementById('caseModal');
 const form = document.getElementById('caseForm');
+if (form) form.noValidate = true;
 const registrationPrefixInput = document.getElementById('regprefix');
 const registrationNumberInput = document.getElementById('regnumber');
 const registrationYearInput = document.getElementById('regyear');
@@ -458,6 +462,18 @@ const judgeNameInput = document.getElementById('caseJudgeName');
 const courtNameInput = document.getElementById('courtnan');
 let caseJudgeRecords = new Map();
 let judgeLoadSequence = 0;
+const caseIoSelect = document.getElementById('caseIoSelect');
+const ioSelectStatus = document.getElementById('ioSelectStatus');
+const caseIoIdInput = document.getElementById('caseIoId');
+const ioRankInput = document.getElementById('iorank');
+const ioNameInput = document.getElementById('ioname');
+const ioBeltInput = document.getElementById('ioBeltno');
+const ioMobileInput = document.getElementById('iomobileNo');
+let caseIoRecords = new Map();
+let ioLoadSequence = 0;
+let stopIoListener = null;
+let caseIoSelectionTouched = false;
+let resettingFormForModalOpen = false;
 
 function normalizeJudgeValue(value) {
     return String(value || '').trim().normalize('NFKC').replace(/\s+/g, ' ').toLocaleLowerCase();
@@ -490,7 +506,7 @@ function getEligibleCaseJudges() {
 function populateCaseJudgeOptions(selectedId = '') {
     if (!judgeSelect) return;
     const eligibleJudges = getEligibleCaseJudges();
-    judgeSelect.replaceChildren(new Option('--Select Court--', ''));
+    judgeSelect.replaceChildren(new Option('', '', true, true));
     eligibleJudges.forEach(judge => {
         judgeSelect.add(new Option(getJudgeDisplayName(judge), judge.id));
     });
@@ -668,6 +684,150 @@ document.getElementById('courttype')?.addEventListener('change', () => {
     }
 });
 
+function caseIoSnapshot(caseItem = {}) {
+    return {
+        ioId: String(caseItem.ioId || '').trim(),
+        ioRank: String(caseItem.ioRank || '').trim(),
+        ioName: String(caseItem.ioName || '').trim(),
+        ioBeltno: String(caseItem.ioBeltno ?? caseItem.beltNo ?? '').trim(),
+        iomobileNo: String(caseItem.iomobileNo ?? caseItem.mobileNo ?? '').trim()
+    };
+}
+
+function applyCaseIoSnapshot(officer = {}, ioId = '') {
+    caseIoIdInput.value = ioId;
+    ioRankInput.value = String(officer.ioRank || '');
+    ioNameInput.value = String(officer.ioName || '');
+    ioBeltInput.value = String(officer.ioBeltno ?? officer.beltNo ?? '');
+    ioMobileInput.value = String(officer.iomobileNo ?? officer.mobileNo ?? '');
+}
+
+function formatCaseIo(officer) {
+    const identity = [officer.ioRank, officer.ioName].filter(Boolean).join(' ').trim();
+    const mobileNo = officer.iomobileNo ?? officer.mobileNo;
+    const beltNo = officer.ioBeltno ?? officer.beltNo;
+    const beltAndMobile = beltNo && mobileNo
+        ? `${beltNo} - ${mobileNo}`
+        : beltNo || mobileNo || '';
+    return [identity, beltAndMobile].filter(Boolean).join(' ');
+}
+
+function matchesCaseIo(officer, savedIo) {
+    return normalizeJudgeValue(officer.ioName) === normalizeJudgeValue(savedIo.ioName) &&
+        normalizeJudgeValue(officer.ioRank) === normalizeJudgeValue(savedIo.ioRank) &&
+        normalizeJudgeValue(officer.ioBeltno ?? officer.beltNo) === normalizeJudgeValue(savedIo.ioBeltno) &&
+        normalizeJudgeValue(officer.iomobileNo ?? officer.mobileNo) === normalizeJudgeValue(savedIo.iomobileNo);
+}
+
+function populateCaseIoOptions(caseItem = {}) {
+    if (!caseIoSelect) return;
+    const savedIo = caseIoSelectionTouched
+        ? caseIoSnapshot({
+            ioId: caseIoIdInput.value,
+            ioRank: ioRankInput.value,
+            ioName: ioNameInput.value,
+            ioBeltno: ioBeltInput.value,
+            iomobileNo: ioMobileInput.value
+        })
+        : caseIoSnapshot(caseItem);
+    const currentId = caseIoIdInput.value || savedIo.ioId;
+    const options = [...caseIoRecords.values()].filter(officer =>
+        officer.active !== false || officer.id === currentId
+    );
+    caseIoSelect.replaceChildren(new Option('Select Investigating Officer', '', true, true));
+    options.forEach(officer => {
+        caseIoSelect.add(new Option(
+            formatCaseIo(officer),
+            officer.id
+        ));
+    });
+    const selectedById = currentId && caseIoRecords.get(currentId);
+    const matchingLegacyRecords = !savedIo.ioId && savedIo.ioName
+        ? [...caseIoRecords.values()].filter(officer => matchesCaseIo(officer, savedIo))
+        : [];
+    const selectedOfficer = selectedById || (matchingLegacyRecords.length === 1 ? matchingLegacyRecords[0] : null);
+
+    if (selectedOfficer) {
+        caseIoSelect.value = selectedOfficer.id;
+        applyCaseIoSnapshot(selectedOfficer, selectedOfficer.id);
+        if (selectedOfficer.active === false) {
+            ioSelectStatus.textContent = 'This saved IO is inactive; it remains selected for this existing case.';
+        } else {
+            ioSelectStatus.textContent = '';
+        }
+    } else if (savedIo.ioName || savedIo.ioId) {
+        caseIoSelect.add(new Option(
+            `Saved case IO: ${formatCaseIo(savedIo) || 'no longer in register'}`,
+            '__legacy__'
+        ));
+        caseIoSelect.value = '__legacy__';
+        applyCaseIoSnapshot(savedIo, savedIo.ioId);
+        ioSelectStatus.textContent = 'Saved IO details are preserved; no unique register match was found.';
+    } else {
+        applyCaseIoSnapshot({});
+        if (!options.length) {
+            ioSelectStatus.textContent = 'Add officers from Settings → Manage IO.';
+        } else {
+            ioSelectStatus.textContent = '';
+        }
+    }
+}
+
+function subscribeCaseIOs(caseItem, loadId) {
+    if (!caseIoSelect || !ioSelectStatus) return;
+    if (stopIoListener) stopIoListener();
+    caseIoSelect.disabled = true;
+    caseIoSelectionTouched = false;
+    caseIoSelect.replaceChildren(new Option('Loading IO register…', '', true, true));
+    caseIoSelect.options[0].disabled = true;
+    ioSelectStatus.textContent = 'Loading investigating officers…';
+    caseIoRecords = new Map();
+    stopIoListener = onSnapshot(collection(db, 'investigatingOfficers'), snapshot => {
+        if (loadId !== ioLoadSequence) return;
+        caseIoRecords = new Map(snapshot.docs.map(officerDocument => [
+            officerDocument.id,
+            { id: officerDocument.id, active: true, ...officerDocument.data() }
+        ]));
+        populateCaseIoOptions(caseItem || {});
+        caseIoSelect.disabled = false;
+    }, error => {
+        if (loadId !== ioLoadSequence) return;
+        console.error('Error loading IO register for case form:', error);
+        const savedIo = caseIoSnapshot(caseItem || {});
+        caseIoSelect.replaceChildren(new Option('Could not load IO register', '', true, true));
+        caseIoSelect.options[0].disabled = true;
+        if (savedIo.ioName || savedIo.ioId) {
+            caseIoSelect.add(new Option(
+                `Saved case IO: ${formatCaseIo(savedIo) || 'unavailable'}`,
+                '__legacy__'
+            ));
+            caseIoSelect.value = '__legacy__';
+            applyCaseIoSnapshot(savedIo, savedIo.ioId);
+        }
+        caseIoSelect.disabled = false;
+        ioSelectStatus.textContent = 'Could not load IOs. Saved case details have been preserved; reopen the form to retry.';
+    });
+}
+
+caseIoSelect?.addEventListener('change', () => {
+    caseIoSelectionTouched = true;
+    const selectedId = caseIoSelect.value;
+    if (selectedId === '__legacy__') return;
+    const officer = caseIoRecords.get(selectedId);
+    applyCaseIoSnapshot(officer || {}, officer?.id || '');
+    ioSelectStatus.textContent = '';
+});
+
+form.addEventListener('reset', () => {
+    if (resettingFormForModalOpen) return;
+    setTimeout(() => {
+        caseIoSelectionTouched = true;
+        caseIoSelect.selectedIndex = 0;
+        applyCaseIoSnapshot({});
+        ioSelectStatus.textContent = '';
+    }, 0);
+});
+
 function initDatePickers(container = document) {
     const dateInputs = container.querySelectorAll('input[type="date"], input.flatpickr-date');
     dateInputs.forEach(input => {
@@ -685,7 +845,10 @@ setTimeout(() => initDatePickers(modal), 50);
 
 // Helper for resetting form state
 function resetForm() {
+    resettingFormForModalOpen = true;
     form.reset();
+    resettingFormForModalOpen = false;
+    resetHearingRecords();
     masterComboboxes.forEach(({ close }) => close());
     document.querySelectorAll('.flatpickr-date').forEach(input => {
         if (input._flatpickr) input._flatpickr.clear();
@@ -782,8 +945,7 @@ function updateCaseStatusFields() {
         courtTypeWrap: document.getElementById('courttypeWrap'),
         courtReg: document.getElementById('sectionCourtReg'),
         chargeDate: document.getElementById('fieldChargedate'),
-        nextDate: document.getElementById('fieldNextdate'),
-        trialStage: document.getElementById('fieldTrialStage'),
+        nextDate: document.getElementById('sectionNextDate'),
         accused: document.getElementById('sectionAccused'),
         witness: document.getElementById('sectionWitness'),
         other: document.getElementById('sectionOther')
@@ -811,13 +973,13 @@ function updateCaseStatusFields() {
     switch (status) {
         case 'UCR': // Untrace
         case 'Cancellation':
-            hide(els.chargeDate, els.nextDate, els.trialStage, els.accused, els.witness, els.other);
+            hide(els.chargeDate, els.nextDate, els.accused, els.witness, els.other);
             break;
         case 'Disposed':
-            hide(els.nextDate, els.trialStage);
+            hide(els.nextDate);
             break;
         case 'UI': // Under Investigation
-            hide(els.courtTypeWrap, els.courtReg, els.accused, els.witness, els.other);
+            hide(els.courtTypeWrap, els.courtReg, els.nextDate, els.accused, els.witness, els.other);
             break;
         case 'UT': // Under Trial
         default:
@@ -828,8 +990,294 @@ function updateCaseStatusFields() {
 
 document.getElementById('casestatus')?.addEventListener('change', updateCaseStatusFields);
 document.getElementById('caseForm')?.addEventListener('reset', () => {
-    setTimeout(updateCaseStatusFields, 10);
+    setTimeout(() => {
+        updateCaseStatusFields();
+        updateDecisionFields();
+        renderNextDateStage();
+    }, 10);
 });
+
+const nextDateStageDate = document.getElementById('nextDateStageDate');
+const nextDateStageTrial = document.getElementById('nextDateStageTrial');
+const nextDateValue = document.getElementById('caseNextDateValue');
+const trialStageValue = document.getElementById('caseTrialStageValue');
+const hearingRecordList = document.getElementById('hearingRecordList');
+const hearingRecordStatus = document.getElementById('hearingRecordStatus');
+const addHearingRecordButton = document.getElementById('addHearingRecord');
+const cancelHearingEditButton = document.getElementById('cancelHearingEdit');
+const deleteHearingRecordButton = document.getElementById('deleteHearingRecord');
+const HEARING_RECORD_STORAGE_KEY = 'register-diary-file-statuses';
+let hearingDateRecords = [];
+let editingHearingRecordId = null;
+
+function parseHearingDate(value) {
+    const trimmed = String(value || '').trim();
+    const match = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/)
+        || trimmed.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if (!match) return '';
+    const [, first, second, third] = match;
+    const [year, month, day] = trimmed.includes('-')
+        ? [Number(first), Number(second), Number(third)]
+        : [Number(third), Number(second), Number(first)];
+    const parsed = new Date(year, month - 1, day);
+    if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) return '';
+    return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+function formatHearingDate(dateKey) {
+    const parsed = parseHearingDate(dateKey);
+    if (!parsed) return String(dateKey || '');
+    const [year, month, day] = parsed.split('-');
+    return `${day}/${month}/${year}`;
+}
+
+function hearingDateKind(dateKey) {
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    return dateKey > todayKey ? 'next' : 'previous';
+}
+
+function resetHearingRecords() {
+    hearingDateRecords = [];
+    editingHearingRecordId = null;
+    if (hearingRecordStatus) hearingRecordStatus.textContent = '';
+    if (addHearingRecordButton) addHearingRecordButton.textContent = 'Add Hearing';
+    if (cancelHearingEditButton) cancelHearingEditButton.hidden = true;
+    if (deleteHearingRecordButton) deleteHearingRecordButton.hidden = true;
+    if (hearingRecordList) hearingRecordList.replaceChildren();
+    updateChargeDate();
+}
+
+function updateChargeDate() {
+    const chargeDateInput = document.getElementById('chargedate');
+    if (chargeDateInput) chargeDateInput.value = latestChargeDate(hearingDateRecords);
+}
+
+function renderHearingRecords() {
+    if (!hearingRecordList) return;
+    hearingRecordList.replaceChildren();
+    if (hearingDateRecords.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'hearing-record-empty';
+        empty.textContent = 'No hearing dates saved.';
+        hearingRecordList.append(empty);
+        return;
+    }
+
+    [...hearingDateRecords]
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .forEach(record => {
+            const row = document.createElement('div');
+            row.className = 'hearing-record-row';
+            row.tabIndex = 0;
+            row.setAttribute('role', 'button');
+            const displayStage = normalizeTrialStage(record.trialStage);
+            row.setAttribute('aria-label', `Edit hearing ${formatHearingDate(record.date)}${displayStage ? `, ${displayStage}` : ''}`);
+            const details = document.createElement('span');
+            details.className = 'hearing-record-details';
+            details.textContent = `${formatHearingDate(record.date)}${displayStage ? ` — ${displayStage}` : ''}`;
+
+            const beginEdit = () => {
+                editingHearingRecordId = record.id;
+                if (nextDateStageDate?._flatpickr) {
+                    nextDateStageDate._flatpickr.setDate(record.date, false, 'Y-m-d');
+                } else if (nextDateStageDate) {
+                    nextDateStageDate.value = formatHearingDate(record.date);
+                }
+                setTrialStageSelectValue(nextDateStageTrial, record.trialStage);
+                if (addHearingRecordButton) addHearingRecordButton.textContent = 'Update Hearing';
+                if (cancelHearingEditButton) cancelHearingEditButton.hidden = false;
+                if (deleteHearingRecordButton) deleteHearingRecordButton.hidden = false;
+                if (hearingRecordStatus) hearingRecordStatus.textContent = '';
+            };
+            row.addEventListener('click', beginEdit);
+            row.addEventListener('keydown', event => {
+                if (event.key !== 'Enter' && event.key !== ' ') return;
+                event.preventDefault();
+                beginEdit();
+            });
+            row.append(details);
+            hearingRecordList.append(row);
+        });
+}
+
+function cancelHearingRecordEdit() {
+    editingHearingRecordId = null;
+    if (addHearingRecordButton) addHearingRecordButton.textContent = 'Add Hearing';
+    if (cancelHearingEditButton) cancelHearingEditButton.hidden = true;
+    if (deleteHearingRecordButton) deleteHearingRecordButton.hidden = true;
+    if (nextDateStageDate?._flatpickr) nextDateStageDate._flatpickr.clear(false);
+    else if (nextDateStageDate) nextDateStageDate.value = '';
+    if (nextDateStageTrial) nextDateStageTrial.value = '';
+    if (hearingRecordStatus) hearingRecordStatus.textContent = '';
+}
+
+function updateHearingDateSnapshot() {
+    updateChargeDate();
+    if (!nextDateValue || !trialStageValue) return;
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const nextRecord = hearingDateRecords
+        .filter(record => record.date > todayKey)
+        .sort((a, b) => a.date.localeCompare(b.date))[0];
+    nextDateValue.value = nextRecord ? formatHearingDate(nextRecord.date) : '';
+    trialStageValue.value = nextRecord?.trialStage || '';
+    renderNextDateStage();
+}
+
+function loadHearingRecords(caseItem) {
+    resetHearingRecords();
+    if (!caseItem) return;
+
+    try {
+        const saved = localStorage.getItem(HEARING_RECORD_STORAGE_KEY);
+        const allCases = saved ? JSON.parse(saved) : {};
+        if (!allCases || typeof allCases !== 'object' || Array.isArray(allCases)) {
+            throw new Error('Saved hearing records have an invalid format.');
+        }
+        const firestoreRecords = Array.isArray(caseItem.hearingDateRecord)
+            ? caseItem.hearingDateRecord
+            : Array.isArray(caseItem.registerDiaryDaterecords)
+                ? caseItem.registerDiaryDaterecords
+                : Array.isArray(caseItem.registerDiaryDateRecords)
+                    ? caseItem.registerDiaryDateRecords
+                    : null;
+        const savedRecords = firestoreRecords || allCases[caseItem.id]?.dateRecords;
+        if (Array.isArray(savedRecords)) {
+            hearingDateRecords = savedRecords
+                .filter(record => record && typeof record.id === 'string'
+                    && ['previous', 'next'].includes(record.kind)
+                    && parseHearingDate(record.date))
+                .map(record => ({
+                    id: record.id,
+                    kind: record.kind,
+                    date: parseHearingDate(record.date),
+                    trialStage: String(record.trialStage || '').trim()
+                }));
+        }
+
+        const legacyDate = parseHearingDate(caseItem.nextDate);
+        if (legacyDate && !hearingDateRecords.some(record => record.date === legacyDate)
+            && !hearingDateRecords.some(record => record.kind === 'next')) {
+            hearingDateRecords.push({
+                id: `case-next-${legacyDate}`,
+                kind: hearingDateKind(legacyDate),
+                date: legacyDate,
+                trialStage: String(caseItem.trialStage || '').trim()
+            });
+        }
+        updateChargeDate();
+        renderHearingRecords();
+    } catch (error) {
+        console.error('Could not load hearing records:', error);
+        if (hearingRecordStatus) hearingRecordStatus.textContent = 'Saved hearing records could not be loaded.';
+    }
+}
+
+function persistHearingRecords(caseId) {
+    try {
+        const saved = localStorage.getItem(HEARING_RECORD_STORAGE_KEY);
+        const allCases = saved ? JSON.parse(saved) : {};
+        if (!allCases || typeof allCases !== 'object' || Array.isArray(allCases)) {
+            throw new Error('Saved hearing records have an invalid format.');
+        }
+        const previousCase = allCases[caseId] && typeof allCases[caseId] === 'object'
+            ? allCases[caseId]
+            : {};
+        allCases[caseId] = {
+            ...previousCase,
+            dateRecords: hearingDateRecords.map(record => ({
+                id: record.id,
+                kind: record.kind,
+                date: record.date,
+                trialStage: record.trialStage
+            }))
+        };
+        localStorage.setItem(HEARING_RECORD_STORAGE_KEY, JSON.stringify(allCases));
+    } catch (error) {
+        console.error('Could not save hearing records for Register Diary:', error);
+        alert('The case was saved, but its hearing records could not be synced with Register Diary in this browser.');
+    }
+}
+
+function renderNextDateStage() {
+    if (!nextDateStageDate || !nextDateStageTrial || !nextDateValue || !trialStageValue) return;
+    const savedDate = nextDateValue.value.trim();
+    if (nextDateStageDate._flatpickr) {
+        if (savedDate) nextDateStageDate._flatpickr.setDate(savedDate, false, 'd/m/Y');
+        else nextDateStageDate._flatpickr.clear(false);
+    } else {
+        nextDateStageDate.value = savedDate;
+    }
+    setTrialStageSelectValue(nextDateStageTrial, trialStageValue.value.trim());
+}
+
+function syncNextDateStage() {
+    updateHearingDateSnapshot();
+}
+
+addHearingRecordButton?.addEventListener('click', () => {
+    const dateKey = parseHearingDate(nextDateStageDate?.value);
+    if (!dateKey) {
+        if (hearingRecordStatus) hearingRecordStatus.textContent = 'Select a valid hearing date first.';
+        return;
+    }
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const editedRecord = hearingDateRecords.find(record => record.id === editingHearingRecordId);
+    if (dateKey === todayKey && editedRecord?.date !== dateKey) {
+        if (hearingRecordStatus) hearingRecordStatus.textContent = 'Choose a date other than today.';
+        return;
+    }
+
+    const trialStage = String(nextDateStageTrial?.value || '').trim();
+    const id = editingHearingRecordId || `hearing-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const updatedRecord = { id, kind: hearingDateKind(dateKey), date: dateKey, trialStage };
+    hearingDateRecords = hearingDateRecords.filter(record =>
+        record.id !== editingHearingRecordId
+        && !(updatedRecord.kind === 'next' && record.kind === 'next')
+        && record.date !== dateKey
+    );
+    hearingDateRecords.push(updatedRecord);
+    editingHearingRecordId = null;
+    if (addHearingRecordButton) addHearingRecordButton.textContent = 'Add Hearing';
+    if (cancelHearingEditButton) cancelHearingEditButton.hidden = true;
+    if (deleteHearingRecordButton) deleteHearingRecordButton.hidden = true;
+    if (hearingRecordStatus) hearingRecordStatus.textContent = '';
+    updateHearingDateSnapshot();
+    renderHearingRecords();
+});
+
+cancelHearingEditButton?.addEventListener('click', cancelHearingRecordEdit);
+deleteHearingRecordButton?.addEventListener('click', () => {
+    const record = hearingDateRecords.find(item => item.id === editingHearingRecordId);
+    if (!record) return;
+    if (!window.confirm(`Delete hearing date ${formatHearingDate(record.date)}?`)) return;
+    hearingDateRecords = hearingDateRecords.filter(item => item.id !== record.id);
+    cancelHearingRecordEdit();
+    updateHearingDateSnapshot();
+    renderHearingRecords();
+});
+
+function updateDecisionFields() {
+    const decidedToggle = document.getElementById('is_decided');
+    const decisionFields = document.getElementById('decisionFields');
+    const decisionDate = document.getElementById('dod_date');
+    const judgement = document.getElementById('judgement');
+    const show = decidedToggle?.checked === true;
+
+    if (decisionFields) decisionFields.style.display = show ? 'grid' : 'none';
+
+    [decisionDate, judgement].forEach(field => {
+        if (!field) return;
+        const group = field.closest('.input-group');
+        if (group) group.style.display = show ? '' : 'none';
+        field.disabled = !show;
+        field.required = show && field.id === 'dod_date';
+    });
+}
+
+document.getElementById('is_decided')?.addEventListener('change', updateDecisionFields);
 
 window.openAddCaseModal = (caseItem = null) => {
     resetForm();
@@ -838,6 +1286,7 @@ window.openAddCaseModal = (caseItem = null) => {
     if (title) title.textContent = caseItem ? 'Edit Case' : 'Add New Case';
     const stateLabel = document.getElementById('caseModalStateLabel');
     if (stateLabel) stateLabel.textContent = caseItem ? 'EDITING CASE' : 'NEW CASE';
+    document.getElementById('caseModalState')?.classList.toggle('is-editing', Boolean(caseItem));
 
     if (caseItem && caseItem.id) {
         form.dataset.editId = caseItem.id;
@@ -867,10 +1316,12 @@ window.openAddCaseModal = (caseItem = null) => {
             nextDate: 'nextdate',
             trialStage: 'trial_stage',
             decisionDate: 'dod_date',
+            judgement: 'judgement',
+            ioId: 'ioId',
             ioRank: 'iorank',
             ioName: 'ioname',
-            beltNo: 'beltno',
-            mobileNo: 'iomobile',
+            ioBeltno: 'ioBeltno',
+            iomobileNo: 'iomobileNo',
             incidentDate: 'incident_date',
             incidentPlace: 'incident_place',
             complainantName: 'complainant_name',
@@ -895,6 +1346,14 @@ window.openAddCaseModal = (caseItem = null) => {
                 }
             }
         });
+        const decidedToggle = document.getElementById('is_decided');
+        if (decidedToggle) {
+            const hasLegacyDecision = Boolean(caseItem.decisionDate || caseItem.judgement);
+            decidedToggle.checked = caseItem.isDecided === undefined
+                ? hasLegacyDecision
+                : caseItem.isDecided === true;
+        }
+        updateDecisionFields();
 
         // Recreate Accused
         if (Array.isArray(caseItem.accused) && caseItem.accused.length > 0) {
@@ -986,12 +1445,17 @@ window.openAddCaseModal = (caseItem = null) => {
             }
         }
     }
+    if (!caseItem) updateDecisionFields();
+    loadHearingRecords(caseItem);
+    renderNextDateStage();
 
     const policeStationInput = document.getElementById('policestation');
     if (policeStationInput) policeStationInput.value = 'OSM';
 
     const loadId = ++judgeLoadSequence;
     void loadCaseJudges(caseItem, loadId);
+    const ioLoadId = ++ioLoadSequence;
+    subscribeCaseIOs(caseItem, ioLoadId);
     updateCaseStatusFields();
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
@@ -999,6 +1463,11 @@ window.openAddCaseModal = (caseItem = null) => {
 
 const closeModal = () => {
     masterComboboxes.forEach(({ close }) => close());
+    ioLoadSequence += 1;
+    if (stopIoListener) {
+        stopIoListener();
+        stopIoListener = null;
+    }
     modal.classList.remove('show');
     document.body.style.overflow = '';
 };
@@ -1021,12 +1490,18 @@ if (firDate && firYear) {
     firDate.addEventListener('change', () => {
         if (!firDate.value) { firYear.value = ''; return; }
         if (firDate._flatpickr && firDate._flatpickr.selectedDates.length > 0) {
-            firYear.value = firDate._flatpickr.selectedDates[0].getFullYear(); return;
+            firYear.value = firDate._flatpickr.selectedDates[0].getFullYear();
+            clearRequiredFieldError(firYear);
+            return;
         }
         const parts = firDate.value.split('/');
         if (parts.length === 3) {
             const y = parseInt(parts[2], 10);
-            if (!isNaN(y)) { firYear.value = y; return; }
+            if (!isNaN(y)) {
+                firYear.value = y;
+                clearRequiredFieldError(firYear);
+                return;
+            }
         }
     });
 }
@@ -1319,8 +1794,67 @@ document.getElementById('witnessTableBody')?.addEventListener('change', e => {
     if (e.target.name === 'witness_examined[]') updateWitnessCounts();
 });
 
+function getValidationContainer(field) {
+    return field.closest('.input-group, .top-field') || field.parentElement;
+}
+
+function setRequiredFieldError(field, isInvalid) {
+    const container = getValidationContainer(field);
+    const label = container?.querySelector(':scope > label');
+
+    field.classList.toggle('validation-error', isInvalid);
+    field.setAttribute('aria-invalid', String(isInvalid));
+    container?.classList.toggle('validation-error', isInvalid);
+    label?.classList.toggle('validation-error', isInvalid);
+}
+
+function validateRequiredFields() {
+    const requiredFields = Array.from(form.querySelectorAll('[required]'))
+        .filter(field => !field.disabled);
+    let firstInvalidField = null;
+
+    requiredFields.forEach(field => {
+        const isInvalid = String(field.value || '').trim() === '';
+        setRequiredFieldError(field, isInvalid);
+        if (isInvalid && !firstInvalidField) firstInvalidField = field;
+    });
+
+    if (firstInvalidField) {
+        firstInvalidField.focus();
+        return false;
+    }
+
+    return true;
+}
+
+function clearRequiredFieldError(field) {
+    if (String(field.value || '').trim() !== '') {
+        setRequiredFieldError(field, false);
+    }
+}
+
+form?.addEventListener('input', event => {
+    const field = event.target.closest('[required]');
+    if (field && form.contains(field)) clearRequiredFieldError(field);
+});
+
+form?.addEventListener('change', event => {
+    const field = event.target.closest('[required]');
+    if (field && form.contains(field)) clearRequiredFieldError(field);
+});
+
+form?.addEventListener('reset', () => {
+    form.querySelectorAll('.validation-error').forEach(element => {
+        element.classList.remove('validation-error');
+        if (element.matches('[required]')) element.setAttribute('aria-invalid', 'false');
+    });
+});
+
 form?.addEventListener('submit', async e => {
     e.preventDefault();
+    syncNextDateStage();
+    if (!validateRequiredFields()) return;
+
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Saving...';
@@ -1356,15 +1890,24 @@ form?.addEventListener('submit', async e => {
             judgeId: String(rawData.judgeId || '').trim(),
             judgeDisplayName: String(rawData.judgeDisplayName || '').trim(),
             challanDate: String(rawData.challandate || '').trim(),
-            chargeDate: String(rawData.chargedate || '').trim(),
+            chargeDate: latestChargeDate(hearingDateRecords),
             nextDate: String(rawData.nextdate || '').trim(),
             trialStage: String(rawData.trial_stage || '').trim(),
-            decisionDate: String(rawData.dod_date || '').trim(),
+            hearingDateRecord: hearingDateRecords.map(record => ({
+                id: record.id,
+                kind: record.kind,
+                date: record.date,
+                trialStage: record.trialStage
+            })),
+            isDecided: document.getElementById('is_decided')?.checked === true,
+            decisionDate: String(document.getElementById('dod_date')?.value || '').trim(),
+            judgement: String(document.getElementById('judgement')?.value || '').trim(),
 
             ioRank: String(rawData.iorank || '').trim(),
             ioName: String(rawData.ioname || '').trim(),
-            beltNo: String(rawData.beltno || '').trim(),
-            mobileNo: String(rawData.iomobile || '').trim(),
+            ioId: String(rawData.ioId || '').trim(),
+            ioBeltno: String(rawData.ioBeltno || '').trim(),
+            iomobileNo: String(rawData.iomobileNo || '').trim(),
 
             incidentDate: String(rawData.incident_date || '').trim(),
             incidentPlace: String(rawData.incident_place || '').trim(),
@@ -1425,14 +1968,20 @@ form?.addEventListener('submit', async e => {
         if (form.dataset.editId) {
             await updateDoc(doc(db, 'cases', form.dataset.editId), {
                 ...caseData,
+                beltNo: deleteField(),
+                mobileNo: deleteField(),
+                registerDiaryDaterecords: deleteField(),
+                registerDiaryDateRecords: deleteField(),
                 updatedAt: serverTimestamp()
             });
+            await persistHearingRecords(form.dataset.editId);
         } else {
-            await addDoc(casesCollection, {
+            const createdCase = await addDoc(casesCollection, {
                 ...caseData,
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
             });
+            await persistHearingRecords(createdCase.id);
         }
         window.dispatchEvent(new CustomEvent('caseAdded'));
         closeModal();

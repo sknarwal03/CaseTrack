@@ -1,7 +1,8 @@
 import '../../components/add-case/add-case.js';
+import './notification-date-dialog.js';
 import { setupDropdown } from './shared-utils.js';
 import { db } from '@config/firebase-config.js';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 /**
  * shared-layout.js
  * Injects shared sidebar + topbar into every app page.
@@ -38,7 +39,11 @@ const SIDEBAR_HTML = /* html */ `
 ========================================================= */
 const TOPBAR_HTML = /* html */ `
 <header class="topbar" id="appTopbar">
-    <button class="menu" aria-label="Toggle sidebar">☰</button>
+    <button class="menu" type="button" aria-label="Open navigation" aria-controls="appSidebar" aria-expanded="false">☰</button>
+    <a class="mobile-brand" href="dashboard.html" aria-label="CaseTrack Dashboard">
+        <span class="brand-mark" aria-hidden="true">⚖</span>
+        <span>CaseTrack</span>
+    </a>
     <div class="global-search-wrap">
     <label class="search" for="globalSearch">
         <span>⌕</span>
@@ -51,22 +56,13 @@ const TOPBAR_HTML = /* html */ `
             aria-label="Switch to light theme" aria-pressed="false">☼</button>
         <div class="notification-wrap">
             <button class="round-btn notification" id="notificationToggle" type="button"
-                aria-label="Notifications">♧</button>
+                aria-label="Notifications" data-count="0">♧</button>
             <div class="notification-panel" id="notificationPanel" aria-live="polite">
                 <div class="notification-header">
-                    <strong>Notifications</strong><span>3 new</span>
+                    <strong>Notifications</strong><span id="notificationCount">0</span>
                 </div>
-                <div class="notification-item unread">
-                    <b>Hearing reminder</b>
-                    <small>FIR-150 hearing scheduled for today at 09:00 AM.</small>
-                </div>
-                <div class="notification-item unread">
-                    <b>Case update</b>
-                    <small>PO case status was changed to In Review.</small>
-                </div>
-                <div class="notification-item">
-                    <b>Document uploaded</b>
-                    <small>Evidence bundle added for FIR-188/2026.</small>
+                <div class="notification-items" id="notificationItems">
+                    <div class="notification-item"><small>No notifications.</small></div>
                 </div>
             </div>
         </div>
@@ -95,6 +91,13 @@ function injectLayout() {
     if (main && !document.getElementById("appTopbar")) {
         main.insertAdjacentHTML("afterbegin", TOPBAR_HTML);
     }
+
+    if (!document.getElementById("mobileNavBackdrop")) {
+        document.body.insertAdjacentHTML(
+            "beforeend",
+            '<button class="mobile-nav-backdrop" id="mobileNavBackdrop" type="button" aria-label="Close navigation" hidden></button>'
+        );
+    }
 }
 
 /* =========================================================
@@ -119,11 +122,20 @@ function initTheme() {
         localStorage.setItem("caseTrackTheme", next);
         applyTheme(next);
     });
+
+    document.getElementById("themeSwitch")?.addEventListener("change", event => {
+        const next = event.currentTarget.checked ? "light" : "dark";
+        localStorage.setItem("caseTrackTheme", next);
+        applyTheme(next);
+    });
 }
 
 function applyTheme(theme) {
     const isLight = theme === "light";
     document.body.classList.toggle("light-theme", isLight);
+
+    const settingsSwitch = document.getElementById("themeSwitch");
+    if (settingsSwitch) settingsSwitch.checked = isLight;
 
     const btn = document.getElementById("themeToggle");
     if (btn) {
@@ -139,31 +151,48 @@ function applyTheme(theme) {
 function initSidebarToggle() {
     const menuBtn = document.querySelector(".menu");
     const sidebar = document.getElementById("appSidebar");
-    if (!menuBtn || !sidebar) return;
+    const backdrop = document.getElementById("mobileNavBackdrop");
+    if (!menuBtn || !sidebar || !backdrop) return;
+
+    const mobileViewport = window.matchMedia("(max-width: 780px)");
+    let previousBodyOverflow = "";
+    const setOpen = open => {
+        const isOpen = open && mobileViewport.matches;
+        sidebar.classList.toggle("open", isOpen);
+        menuBtn.setAttribute("aria-expanded", String(isOpen));
+        menuBtn.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+        sidebar.setAttribute("aria-hidden", String(mobileViewport.matches && !isOpen));
+        sidebar.inert = mobileViewport.matches && !isOpen;
+        backdrop.hidden = !isOpen;
+        document.body.classList.toggle("mobile-nav-open", isOpen);
+        if (isOpen) {
+            previousBodyOverflow = document.body.style.overflow;
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = previousBodyOverflow;
+        }
+    };
 
     menuBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        sidebar.classList.toggle("open");
+        setOpen(!sidebar.classList.contains("open"));
     });
-
-    document.addEventListener("click", (e) => {
-        if (sidebar.classList.contains("open") && !sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
-            sidebar.classList.remove("open");
-        }
-    });
+    backdrop.addEventListener("click", () => setOpen(false));
 
     const navItems = sidebar.querySelectorAll(".nav-item");
     navItems.forEach(item => {
-        item.addEventListener("click", () => {
-            sidebar.classList.remove("open");
-        });
+        item.addEventListener("click", () => setOpen(false));
     });
 
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && sidebar.classList.contains("open")) {
-            sidebar.classList.remove("open");
+            setOpen(false);
+            menuBtn.focus();
         }
     });
+
+    mobileViewport.addEventListener("change", () => setOpen(false));
+    setOpen(false);
 }
 
 /* =========================================================
@@ -173,6 +202,144 @@ function initNotifications() {
     const toggle = document.getElementById("notificationToggle");
     const panel  = document.getElementById("notificationPanel");
     if (!toggle || !panel) return;
+    const items = document.getElementById("notificationItems");
+    const count = document.getElementById("notificationCount");
+    const casesById = new Map();
+
+    window.addEventListener("caseTrackNotificationsUpdated", event => {
+        if (!items) return;
+        const notifications = Array.isArray(event.detail?.notifications)
+            ? event.detail.notifications
+            : [];
+        items.replaceChildren();
+        toggle.dataset.count = String(notifications.length);
+        toggle.setAttribute("aria-label", `Notifications${notifications.length ? `, ${notifications.length} cases need a next date` : ""}`);
+        if (count) count.textContent = `${notifications.length} need attention`;
+        if (notifications.length === 0) {
+            const empty = document.createElement("div");
+            empty.className = "notification-item";
+            const message = document.createElement("small");
+            message.textContent = "No notifications.";
+            empty.append(message);
+            items.append(empty);
+            return;
+        }
+
+        notifications.forEach(notification => {
+            const item = document.createElement(notification.caseId ? "button" : "div");
+            item.className = "notification-item unread";
+            if (notification.caseId) {
+                item.type = "button";
+                item.addEventListener("click", async () => {
+                    let caseItem = casesById.get(notification.caseId);
+                    if (!caseItem) {
+                        try {
+                            const snapshot = await getDoc(doc(db, "cases", notification.caseId));
+                            if (!snapshot.exists()) throw new Error("The case no longer exists.");
+                            caseItem = { id: snapshot.id, ...snapshot.data() };
+                            casesById.set(snapshot.id, caseItem);
+                        } catch (error) {
+                            console.error(`Could not load case ${notification.caseId} from its hearing reminder:`, error);
+                            return;
+                        }
+                    }
+                    if (typeof window.openNotificationDateDialog !== "function") {
+                        console.error("The date update dialog is unavailable for this hearing reminder.");
+                        return;
+                    }
+                    void window.openNotificationDateDialog(caseItem);
+                    panel.classList.remove("show");
+                });
+            }
+            const title = document.createElement("b");
+            title.textContent = notification.title || "Next date update needed";
+            const message = document.createElement("small");
+            message.textContent = notification.message || "";
+            item.append(title, message);
+            items.append(item);
+        });
+    });
+
+    const parseDiaryDate = value => {
+        if (typeof value !== "string" || !value.trim()) return "";
+        const dateValue = value.trim();
+        const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateValue);
+        const local = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(dateValue);
+        if (!iso && !local) return "";
+        const [, first, second, third] = iso || local;
+        const [year, month, day] = iso
+            ? [Number(first), Number(second), Number(third)]
+            : [Number(third), Number(second), Number(first)];
+        const parsed = new Date(year, month - 1, day);
+        if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) return "";
+        return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    };
+    const refreshHearingNotifications = async () => {
+        try {
+            const today = new Date();
+            const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+            const snapshot = await getDocs(collection(db, "cases"));
+            casesById.clear();
+            snapshot.docs.forEach(caseDoc => {
+                casesById.set(caseDoc.id, { id: caseDoc.id, ...caseDoc.data() });
+            });
+            let localStatuses = {};
+            try {
+                const savedStatuses = JSON.parse(localStorage.getItem("register-diary-file-statuses") || "{}");
+                if (savedStatuses && typeof savedStatuses === "object" && !Array.isArray(savedStatuses)) {
+                    localStatuses = savedStatuses;
+                }
+            } catch (error) {
+                console.error("Could not read Register Diary hearing dates for notifications:", error);
+            }
+
+            const excludedStatuses = new Set(["ucr", "untrace", "untraced", "cancellation", "disposed", "ui", "under investigation"]);
+            const notifications = snapshot.docs
+                .map(caseDoc => casesById.get(caseDoc.id))
+                .filter(caseItem => !excludedStatuses.has(String(caseItem.status || "").trim().toLowerCase()))
+                .filter(caseItem => {
+                    const records = Array.isArray(caseItem.hearingDateRecord)
+                        ? caseItem.hearingDateRecord
+                        : Array.isArray(caseItem.registerDiaryDaterecords)
+                            ? caseItem.registerDiaryDaterecords
+                            : Array.isArray(caseItem.registerDiaryDateRecords)
+                                ? caseItem.registerDiaryDateRecords
+                                : localStatuses[caseItem.id]?.dateRecords || [];
+                    const validRecords = records
+                        .map(record => ({ ...record, date: parseDiaryDate(record?.date) }))
+                        .filter(record => record.date);
+                    const hasUpcomingRecord = validRecords.some(record => record.date > todayKey);
+                    if (hasUpcomingRecord) return false;
+                    const hasManagedNextRecord = validRecords.some(record => record.kind === "next");
+                    const hasUpcomingLegacyDate = !hasManagedNextRecord
+                        && parseDiaryDate(caseItem.nextDate) > todayKey;
+                    if (hasUpcomingLegacyDate) return false;
+                    const nearestRecord = validRecords
+                        .sort((left, right) => Math.abs(new Date(`${left.date}T12:00:00`).getTime() - today.getTime())
+                            - Math.abs(new Date(`${right.date}T12:00:00`).getTime() - today.getTime()))[0];
+                    caseItem.notificationDiaryDate = nearestRecord?.date || parseDiaryDate(caseItem.nextDate) || todayKey;
+                    return true;
+                })
+                .map(caseItem => {
+                    const firNumber = [caseItem.firNo, caseItem.firYear]
+                        .filter(value => value !== null && value !== undefined && String(value).trim())
+                        .join("/");
+                    return {
+                        caseId: caseItem.id,
+                        diaryDate: caseItem.notificationDiaryDate,
+                        title: "Next date update needed",
+                        message: `FIR ${firNumber || "number not assigned"} has no upcoming hearing date. Update the next date.`
+                    };
+                });
+            window.dispatchEvent(new CustomEvent("caseTrackNotificationsUpdated", {
+                detail: { notifications }
+            }));
+        } catch (error) {
+            console.error("Could not load cases for hearing-date notifications:", error);
+        }
+    };
+    void refreshHearingNotifications();
+    window.addEventListener("caseAdded", refreshHearingNotifications);
 
     toggle.addEventListener("click", e => {
         e.stopPropagation();
@@ -274,6 +441,16 @@ function initProfileDropdown() {
 
     // Toggle
     setupDropdown(trigger, dropdown, "open");
+    const syncTriggerState = () => trigger.setAttribute("aria-expanded", String(dropdown.classList.contains("open")));
+    trigger.addEventListener("click", syncTriggerState);
+    trigger.addEventListener("keydown", syncTriggerState);
+    document.addEventListener("click", syncTriggerState);
+    document.addEventListener("keydown", syncTriggerState);
+    dropdown.addEventListener("click", event => {
+        if (!event.target.closest("button")) return;
+        dropdown.classList.remove("open");
+        syncTriggerState();
+    });
 
     // Notifications (Mobile)
     document.getElementById("pd-notifications")?.addEventListener("click", (e) => {

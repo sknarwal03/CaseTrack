@@ -1,5 +1,6 @@
 import { db } from '@config/firebase-config.js';
 import { parseCaseDate, setupDropdown } from './shared-utils.js';
+import { normalizeTrialStage } from './trial-stages.js';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 
 let casesCache = [];
@@ -66,7 +67,7 @@ const FIELD_MAP = {
     'FIR Year':    c => String(c.firYear  || '').trim() || 'Unknown',
     'Court Type':  c => String(c.courtType || '').trim() || 'Unknown',
     'Court Name':  c => String(c.courtName || '').trim() || 'Unknown',
-    'Case Stage':  c => String(c.trialStage || '').trim() || 'Unknown',
+    'Case Stage':  c => normalizeTrialStage(c.trialStage) || 'Unknown',
 };
 
 const renderDonut = (cases) => {
