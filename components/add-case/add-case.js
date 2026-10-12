@@ -1003,6 +1003,7 @@ function openCaseIoDialog(officer = null) {
     }
     openIoDialog({
         officer,
+        caseModal: true,
         getOfficers: () => [...caseIoRecords.values()],
         onSaved: ({ mode, id, data }) => {
             caseIoRecords.set(id, { ...caseIoRecords.get(id), id, ...data });

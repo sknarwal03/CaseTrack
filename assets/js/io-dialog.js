@@ -215,15 +215,17 @@ function ensureDialog() {
  * Opens the shared Add/Edit IO dialog.
  * @param {object} options
  * @param {object|null} [options.officer] Existing officer (with `id`) to edit; omit to add.
+ * @param {boolean} [options.caseModal] Match the add/edit case modal theme.
  * @param {() => object[]} options.getOfficers Current officer list, used for duplicate checks and edits.
  * @param {(result: {mode: 'add'|'edit', id: string, data: object}) => void} [options.onSaved]
  * @param {(result: {id: string, deactivated: boolean}) => void} [options.onDeleted]
  */
-export function openIoDialog({ officer = null, getOfficers, onSaved, onDeleted } = {}) {
+export function openIoDialog({ officer = null, caseModal = false, getOfficers, onSaved, onDeleted } = {}) {
     const { dialog, form, title, activeField, saveButton, deleteButton } = ensureDialog();
     if (dialog.open) return;
     session = { getOfficers, onSaved, onDeleted };
 
+    dialog.classList.toggle('case-modal-io-dialog', caseModal);
     form.reset();
     form.dataset.editId = officer?.id || '';
     title.textContent = officer ? 'Edit IO' : 'Add IO';

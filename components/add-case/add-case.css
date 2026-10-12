@@ -542,6 +542,101 @@ body.light-theme #caseModal .io-manage-trigger:focus-visible {
     background: #edf4ff;
 }
 
+.case-modal-io-dialog {
+    border-color: var(--border);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-overlay);
+}
+
+body:not(.light-theme) #ioDialog.case-modal-io-dialog {
+    border-color: var(--border);
+    background: var(--surface);
+    color: var(--text);
+    color-scheme: dark;
+    box-shadow: var(--shadow-overlay);
+}
+
+.case-modal-io-dialog .judge-dialog-header {
+    border-bottom-color: var(--border);
+}
+
+.case-modal-io-dialog .judges-kicker {
+    color: var(--primary);
+}
+
+.case-modal-io-dialog .judge-dialog-header h2 {
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+.case-modal-io-dialog .judge-dialog-close {
+    color: var(--muted);
+}
+
+.case-modal-io-dialog .judge-dialog-close:hover {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.case-modal-io-dialog .judge-fields label {
+    color: var(--text);
+}
+
+.case-modal-io-dialog .judge-fields input,
+.case-modal-io-dialog .judge-fields select {
+    border-color: var(--border);
+    background: var(--bg);
+    color: var(--text);
+}
+
+.case-modal-io-dialog .judge-fields option {
+    background: var(--surface);
+    color: var(--text);
+}
+
+.case-modal-io-dialog .judge-fields input:focus,
+.case-modal-io-dialog .judge-fields select:focus {
+    outline-color: var(--primary);
+}
+
+.case-modal-io-dialog .judge-form-status {
+    color: var(--muted);
+}
+
+.case-modal-io-dialog .judge-form-status.is-error {
+    color: var(--red);
+}
+
+.case-modal-io-dialog .judges-add-button {
+    border-color: var(--primary);
+    background: var(--primary);
+}
+
+.case-modal-io-dialog .judges-add-button:hover {
+    background: var(--primary-hover);
+}
+
+.case-modal-io-dialog .judge-cancel-button {
+    border-color: var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.case-modal-io-dialog .judge-cancel-button:hover {
+    background: var(--surface-soft);
+}
+
+.case-modal-io-dialog .judge-delete-action {
+    border-color: var(--red);
+    background: transparent;
+    color: var(--red);
+}
+
+.case-modal-io-dialog .judge-delete-action:hover {
+    background: var(--surface-2);
+}
+
 #caseModal .toggle-label-group {
     position: relative;
     padding-top: 8px;
