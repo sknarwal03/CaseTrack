@@ -75,9 +75,14 @@
                                 Under Section
                             </label>
 
-                            <input type="text" id="undersection" name="undersection"
-                                placeholder="e.g. 323/325/34 IPC *Previously used sections can be selected automatically."
-                                required>
+                            <div class="under-section-autocomplete">
+                                <input type="text" id="undersection" name="undersection"
+                                    placeholder="e.g. 323/325/34 IPC" autocomplete="off"
+                                    role="combobox" aria-autocomplete="list" aria-expanded="false"
+                                    aria-controls="underSectionOptions" aria-haspopup="listbox" required>
+                                <ul id="underSectionOptions" class="under-section-options" role="listbox"
+                                    aria-label="Saved Under Section suggestions" aria-live="polite" hidden></ul>
+                            </div>
 
                         </div>
                         <div class="input-group">
@@ -279,9 +284,15 @@
                     <div class="form-grid">
                         <div class="input-group permanent-label-group">
                             <label for="caseIoSelect">Investigating Officer</label>
-                            <select id="caseIoSelect" aria-describedby="ioSelectStatus">
-                                <option value="" selected>Select Investigating Officer</option>
-                            </select>
+                            <div class="io-select-with-action">
+                                <select id="caseIoSelect" aria-describedby="ioSelectStatus">
+                                    <option value="" selected>Select Investigating Officer</option>
+                                </select>
+                                <button type="button" id="editManageIO" class="io-manage-trigger"
+                                    aria-label="Edit selected Investigating Officer" title="Edit selected IO" hidden>✎</button>
+                                <button type="button" id="openManageIO" class="io-manage-trigger"
+                                    aria-label="Add or Manage Investigating Officer" title="Add or Manage IO">+</button>
+                            </div>
                             <small class="master-list-status" id="ioSelectStatus" aria-live="polite"></small>
                         </div>
                         <input type="hidden" id="caseIoId" name="ioId">

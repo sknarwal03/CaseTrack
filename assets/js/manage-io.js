@@ -1,45 +1,24 @@
 import { db } from '@config/firebase-config.js';
 import {
-    addDoc,
     collection,
-    deleteDoc,
     deleteField,
-    doc,
     getDocs,
     onSnapshot,
-    serverTimestamp,
-    updateDoc,
     writeBatch
 } from 'firebase/firestore';
+import { normalize, officerName, openIoDialog } from './io-dialog.js';
 
 const ioCollection = collection(db, 'investigatingOfficers');
 const ioList = document.getElementById('ioList');
 const ioStatus = document.getElementById('ioStatus');
-const ioDialog = document.getElementById('ioDialog');
-const ioForm = document.getElementById('ioForm');
-const ioDialogTitle = document.getElementById('ioDialogTitle');
-const ioFormStatus = document.getElementById('ioFormStatus');
-const ioActiveField = document.getElementById('ioActiveField');
-const saveIoButton = document.getElementById('saveIoButton');
-const deleteIoButton = document.getElementById('deleteIoButton');
 let officers = [];
 let loadingError = false;
 let legacyMigrationStarted = false;
 const rankOrder = ['ACP', 'DSP', 'Insp', 'SI', 'LSI', 'PSI', 'LPSI', 'ASI', 'LASI', 'HC', 'LHC'];
 
-function normalize(value) {
-    return String(value || '').trim().normalize('NFKC').replace(/\s+/g, ' ').toLocaleLowerCase();
-}
-
 function rankPriority(rank) {
     const index = rankOrder.findIndex(knownRank => normalize(knownRank) === normalize(rank));
     return index === -1 ? rankOrder.length : index;
-}
-
-function officerName(officer) {
-    return [String(officer.ioRank || '').trim(), String(officer.ioName || '').trim()]
-        .filter(Boolean)
-        .join(' ');
 }
 
 function setStatus(message, isError = false) {
@@ -47,49 +26,14 @@ function setStatus(message, isError = false) {
     ioStatus.classList.toggle('is-error', isError);
 }
 
-function setFormStatus(message, isError = false) {
-    ioFormStatus.textContent = message;
-    ioFormStatus.classList.toggle('is-error', isError);
-}
-
 function openForm(officer = null) {
-    ioForm.reset();
-    ioForm.dataset.editId = officer?.id || '';
-    ioDialogTitle.textContent = officer ? 'Edit IO' : 'Add IO';
-    saveIoButton.textContent = officer ? 'Update IO' : 'Save IO';
-    deleteIoButton.hidden = !officer;
-    ioActiveField.hidden = !officer;
-    ioForm.elements.namedItem('ioRank').value = officer?.ioRank || '';
-    ioForm.elements.namedItem('ioName').value = officer?.ioName || '';
-    ioForm.elements.namedItem('ioBeltno').value = officer?.ioBeltno ?? officer?.beltNo ?? '';
-    ioForm.elements.namedItem('iomobileNo').value = officer?.iomobileNo ?? officer?.mobileNo ?? '';
-    ioForm.elements.namedItem('active').checked = officer?.active !== false;
-    setFormStatus('');
-    ioDialog.showModal();
-}
-
-function matchesOfficer(data, officer) {
-    return normalize(data.ioName) === normalize(officer.ioName) &&
-        normalize(data.ioRank) === normalize(officer.ioRank) &&
-        normalize(data.ioBeltno ?? data.beltNo) === normalize(officer.ioBeltno ?? officer.beltNo) &&
-        normalize(data.iomobileNo ?? data.mobileNo) === normalize(officer.iomobileNo ?? officer.mobileNo);
-}
-
-async function getLinkedCases(officer) {
-    const casesSnapshot = await getDocs(collection(db, 'cases'));
-    return casesSnapshot.docs.filter(caseDocument => {
-        const data = caseDocument.data();
-        return data.ioId === officer.id || (!data.ioId && matchesOfficer(data, officer));
-    });
-}
-
-function isDuplicate(candidate, excludeId = '') {
-    return officers.some(officer => {
-        if (officer.id === excludeId) return false;
-        return normalize(officer.ioName) === normalize(candidate.ioName) &&
-            normalize(officer.ioRank) === normalize(candidate.ioRank) &&
-            normalize(officer.ioBeltno ?? officer.beltNo) === normalize(candidate.ioBeltno) &&
-            normalize(officer.iomobileNo ?? officer.mobileNo) === normalize(candidate.iomobileNo);
+    openIoDialog({
+        officer,
+        getOfficers: () => officers,
+        onSaved: ({ mode }) => setStatus(mode === 'edit' ? 'IO updated. Linked cases have been refreshed.' : 'IO added.'),
+        onDeleted: ({ deactivated }) => setStatus(
+            deactivated ? 'IO deactivated because existing cases reference this record.' : 'IO deleted.'
+        )
     });
 }
 
@@ -141,131 +85,7 @@ function renderOfficers() {
     }));
 }
 
-async function safelyDeleteOfficer(officer) {
-    deleteIoButton.disabled = true;
-    try {
-        const linkedCases = await getLinkedCases(officer);
-        if (linkedCases.length) {
-            const confirmed = window.confirm(
-                `${officerName(officer)} is linked to ${linkedCases.length} case(s). Deactivate this IO instead of deleting the record? Existing case details will be preserved.`
-            );
-            if (!confirmed) return;
-            await updateDoc(doc(db, 'investigatingOfficers', officer.id), {
-                active: false,
-                updatedAt: serverTimestamp()
-            });
-            ioDialog.close();
-            setStatus('IO deactivated because existing cases reference this record.');
-            return;
-        }
-
-        if (!window.confirm(`Permanently delete ${officerName(officer)}? This IO is not referenced by any case.`)) return;
-        await deleteDoc(doc(db, 'investigatingOfficers', officer.id));
-        ioDialog.close();
-        setStatus('IO deleted.');
-    } catch (error) {
-        console.error('Error deleting IO:', error);
-        setFormStatus('Could not delete or deactivate this IO. Check your connection and permissions, then try again.', true);
-    } finally {
-        deleteIoButton.disabled = false;
-    }
-}
-
-async function saveOfficer(data, editingId) {
-    const now = serverTimestamp();
-    if (!editingId) {
-        await addDoc(ioCollection, {
-            ...data,
-            createdAt: now,
-            updatedAt: now
-        });
-        return;
-    }
-
-    const previous = officers.find(officer => officer.id === editingId);
-    if (!previous) throw new Error('The IO record is no longer available. Refresh the page and try again.');
-    const linkedCases = await getLinkedCases(previous);
-    const caseSnapshot = {
-        ioId: editingId,
-        ioRank: data.ioRank,
-        ioName: data.ioName,
-        ioBeltno: data.ioBeltno,
-        beltNo: deleteField(),
-        iomobileNo: data.iomobileNo,
-        mobileNo: deleteField(),
-        updatedAt: now
-    };
-
-    for (let start = 0; start < linkedCases.length; start += 449) {
-        const batch = writeBatch(db);
-        linkedCases.slice(start, start + 449).forEach(caseDocument => {
-            batch.update(caseDocument.ref, caseSnapshot);
-        });
-        if (start + 449 >= linkedCases.length) {
-            batch.update(doc(db, 'investigatingOfficers', editingId), {
-                ...data,
-                beltNo: deleteField(),
-                mobileNo: deleteField(),
-                updatedAt: now
-            });
-        }
-        await batch.commit();
-    }
-    if (!linkedCases.length) {
-        await updateDoc(doc(db, 'investigatingOfficers', editingId), {
-            ...data,
-            beltNo: deleteField(),
-            mobileNo: deleteField(),
-            updatedAt: now
-        });
-    }
-}
-
-ioForm.addEventListener('submit', async event => {
-    event.preventDefault();
-    if (!ioForm.reportValidity()) return;
-    const data = {
-        ioRank: String(ioForm.elements.namedItem('ioRank').value).trim(),
-        ioName: String(ioForm.elements.namedItem('ioName').value).trim(),
-        ioBeltno: String(ioForm.elements.namedItem('ioBeltno').value).trim(),
-        iomobileNo: String(ioForm.elements.namedItem('iomobileNo').value).trim(),
-        active: ioForm.elements.namedItem('active').checked
-    };
-    const editingId = ioForm.dataset.editId || '';
-    if (!data.ioName) return;
-    if (isDuplicate(data, editingId)) {
-        setFormStatus('An IO with these same details is already registered.', true);
-        return;
-    }
-
-    saveIoButton.disabled = true;
-    deleteIoButton.disabled = true;
-    setFormStatus('');
-    try {
-        await saveOfficer(data, editingId);
-        ioDialog.close();
-        setStatus(editingId ? 'IO updated. Linked cases have been refreshed.' : 'IO added.');
-    } catch (error) {
-        console.error('Error saving IO:', error);
-        setFormStatus(error.message === 'The IO record is no longer available. Refresh the page and try again.'
-            ? error.message
-            : 'Could not save this IO. Check your connection and permissions, then try again.', true);
-    } finally {
-        saveIoButton.disabled = false;
-        deleteIoButton.disabled = false;
-    }
-});
-
 document.getElementById('addIoButton').addEventListener('click', () => openForm());
-deleteIoButton.addEventListener('click', () => {
-    const officer = officers.find(item => item.id === ioForm.dataset.editId);
-    if (officer) void safelyDeleteOfficer(officer);
-});
-document.getElementById('closeIoDialog').addEventListener('click', () => ioDialog.close());
-document.getElementById('cancelIoButton').addEventListener('click', () => ioDialog.close());
-ioDialog.addEventListener('click', event => {
-    if (event.target === ioDialog) ioDialog.close();
-});
 document.getElementById('closeIoPage').addEventListener('click', () => {
     const hasSameOriginPreviousPage = window.history.length > 1 && document.referrer &&
         new URL(document.referrer).origin === window.location.origin;

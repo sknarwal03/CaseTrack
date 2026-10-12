@@ -2,6 +2,7 @@ import { db } from '@config/firebase-config.js';
 import { collection, addDoc, updateDoc, doc, deleteField, getDocs, onSnapshot, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore';
 import { latestChargeDate } from '../../assets/js/charge-date.js';
 import { normalizeTrialStage, populateTrialStageSelect, setTrialStageSelectValue } from '../../assets/js/trial-stages.js';
+import { openIoDialog } from '../../assets/js/io-dialog.js';
 import addCaseHtml from './add-case.html?raw';
 
 const masterDefinitions = {
@@ -318,6 +319,176 @@ document.querySelector('#caseModal .modal-body')?.addEventListener('scroll', () 
 const modal = document.getElementById('caseModal');
 const form = document.getElementById('caseForm');
 if (form) form.noValidate = true;
+const underSectionInput = document.getElementById('undersection');
+const underSectionOptions = document.getElementById('underSectionOptions');
+let savedUnderSections = [];
+let underSectionMenuOpen = false;
+let activeUnderSectionIndex = -1;
+let stopUnderSectionListener = null;
+
+function closeUnderSectionSuggestions() {
+    underSectionMenuOpen = false;
+    activeUnderSectionIndex = -1;
+    if (underSectionOptions) underSectionOptions.hidden = true;
+    underSectionInput?.setAttribute('aria-expanded', 'false');
+    underSectionInput?.removeAttribute('aria-activedescendant');
+}
+
+function positionUnderSectionSuggestions() {
+    if (!underSectionInput || !underSectionOptions) return;
+    const bounds = underSectionInput.getBoundingClientRect();
+    const viewportPadding = 8;
+    const width = Math.min(bounds.width, window.innerWidth - viewportPadding * 2);
+    const left = Math.max(viewportPadding, Math.min(bounds.left, window.innerWidth - width - viewportPadding));
+    const spaceBelow = window.innerHeight - bounds.bottom;
+    const placeAbove = spaceBelow < 230 && bounds.top > spaceBelow;
+    const availableHeight = placeAbove ? bounds.top - viewportPadding : spaceBelow - viewportPadding;
+    underSectionOptions.style.left = `${left}px`;
+    underSectionOptions.style.width = `${width}px`;
+    underSectionOptions.style.maxHeight = `${Math.max(60, Math.min(240, availableHeight))}px`;
+    underSectionOptions.style.top = placeAbove ? '' : `${bounds.bottom + 4}px`;
+    underSectionOptions.style.bottom = placeAbove ? `${window.innerHeight - bounds.top + 4}px` : '';
+}
+
+function appendUnderSectionLabel(option, value, query) {
+    const lowerValue = value.toLowerCase();
+    const lowerQuery = query.toLowerCase();
+    let fromIndex = 0;
+    let matchIndex = lowerValue.indexOf(lowerQuery, fromIndex);
+
+    while (matchIndex !== -1) {
+        option.append(document.createTextNode(value.slice(fromIndex, matchIndex)));
+        const match = document.createElement('mark');
+        match.textContent = value.slice(matchIndex, matchIndex + query.length);
+        option.append(match);
+        fromIndex = matchIndex + query.length;
+        matchIndex = lowerValue.indexOf(lowerQuery, fromIndex);
+    }
+
+    option.append(document.createTextNode(value.slice(fromIndex)));
+}
+
+function renderUnderSectionSuggestions() {
+    if (!underSectionInput || !underSectionOptions) return;
+    const query = underSectionInput.value;
+    const matches = query
+        ? savedUnderSections.filter(section => section.toLowerCase().includes(query.toLowerCase())).slice(0, 8)
+        : [];
+    underSectionOptions.replaceChildren();
+    activeUnderSectionIndex = Math.min(activeUnderSectionIndex, matches.length - 1);
+
+    if (matches.length) {
+        matches.forEach((section, index) => {
+            const option = document.createElement('li');
+            option.id = `underSectionOption${index}`;
+            option.className = 'under-section-option';
+            option.setAttribute('role', 'option');
+            option.setAttribute('aria-selected', String(index === activeUnderSectionIndex));
+            appendUnderSectionLabel(option, section, query);
+            option.addEventListener('mousedown', event => event.preventDefault());
+            option.addEventListener('click', () => {
+                underSectionInput.value = section;
+                underSectionInput.dispatchEvent(new Event('input', { bubbles: true }));
+                closeUnderSectionSuggestions();
+                underSectionInput.focus();
+            });
+            underSectionOptions.appendChild(option);
+        });
+    } else if (query) {
+        const emptyMessage = document.createElement('li');
+        emptyMessage.className = 'under-section-empty';
+        emptyMessage.setAttribute('role', 'presentation');
+        emptyMessage.textContent = 'No matching saved sections';
+        underSectionOptions.appendChild(emptyMessage);
+    }
+
+    underSectionOptions.hidden = !underSectionMenuOpen || !query;
+    underSectionInput.setAttribute('aria-expanded', String(!underSectionOptions.hidden));
+    underSectionInput.removeAttribute('aria-activedescendant');
+    if (underSectionOptions.hidden) return;
+
+    positionUnderSectionSuggestions();
+    if (activeUnderSectionIndex >= 0 && matches[activeUnderSectionIndex]) {
+        const activeOption = underSectionOptions.children[activeUnderSectionIndex];
+        underSectionInput.setAttribute('aria-activedescendant', activeOption.id);
+        activeOption.scrollIntoView({ block: 'nearest' });
+    }
+}
+
+function loadSavedUnderSections() {
+    if (stopUnderSectionListener) return;
+    stopUnderSectionListener = onSnapshot(collection(db, 'cases'), snapshot => {
+        const uniqueSections = new Map();
+        snapshot.docs.forEach(caseDocument => {
+            const value = caseDocument.data().underSection;
+            if (typeof value !== 'string' || !value.trim()) return;
+            const normalized = value.trim().toLowerCase();
+            if (!uniqueSections.has(normalized)) uniqueSections.set(normalized, value);
+        });
+        savedUnderSections = [...uniqueSections.values()];
+        if (underSectionMenuOpen) renderUnderSectionSuggestions();
+    }, error => {
+        stopUnderSectionListener = null;
+        console.error('Error loading saved case sections:', error);
+    });
+}
+
+underSectionInput?.addEventListener('input', () => {
+    loadSavedUnderSections();
+    activeUnderSectionIndex = -1;
+    underSectionMenuOpen = Boolean(underSectionInput.value);
+    renderUnderSectionSuggestions();
+});
+underSectionInput?.addEventListener('focus', () => {
+    loadSavedUnderSections();
+    if (underSectionInput.value) {
+        underSectionMenuOpen = true;
+        renderUnderSectionSuggestions();
+    }
+});
+underSectionInput?.addEventListener('keydown', event => {
+    const query = underSectionInput.value;
+    const matches = query
+        ? savedUnderSections.filter(section => section.toLowerCase().includes(query.toLowerCase())).slice(0, 8)
+        : [];
+
+    if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && query && matches.length) {
+        event.preventDefault();
+        if (!underSectionMenuOpen) {
+            underSectionMenuOpen = true;
+            activeUnderSectionIndex = event.key === 'ArrowDown' ? 0 : matches.length - 1;
+        } else if (activeUnderSectionIndex < 0) {
+            activeUnderSectionIndex = event.key === 'ArrowDown' ? 0 : matches.length - 1;
+        } else {
+            const direction = event.key === 'ArrowDown' ? 1 : -1;
+            activeUnderSectionIndex = (activeUnderSectionIndex + direction + matches.length) % matches.length;
+        }
+        renderUnderSectionSuggestions();
+    } else if (event.key === 'Enter' && underSectionMenuOpen && activeUnderSectionIndex >= 0) {
+        event.preventDefault();
+        const option = underSectionOptions?.children[activeUnderSectionIndex];
+        option?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    } else if (event.key === 'Escape' && underSectionMenuOpen) {
+        event.preventDefault();
+        closeUnderSectionSuggestions();
+    } else if (event.key === 'Tab') {
+        closeUnderSectionSuggestions();
+    }
+});
+
+underSectionOptions?.addEventListener('click', event => {
+    if (event.target === underSectionOptions) closeUnderSectionSuggestions();
+});
+if (underSectionOptions) document.body.appendChild(underSectionOptions);
+document.addEventListener('click', event => {
+    if (!underSectionInput?.contains(event.target)
+        && !underSectionOptions?.contains(event.target)
+        && !underSectionInput?.parentElement?.contains(event.target)) {
+        closeUnderSectionSuggestions();
+    }
+});
+window.addEventListener('resize', positionUnderSectionSuggestions);
+document.querySelector('#caseModal .modal-body')?.addEventListener('scroll', positionUnderSectionSuggestions);
 const registrationPrefixInput = document.getElementById('regprefix');
 const registrationNumberInput = document.getElementById('regnumber');
 const registrationYearInput = document.getElementById('regyear');
@@ -771,6 +942,12 @@ function populateCaseIoOptions(caseItem = {}) {
             ioSelectStatus.textContent = '';
         }
     }
+    syncIoEditButton();
+}
+
+function syncIoEditButton() {
+    const editButton = document.getElementById('editManageIO');
+    if (editButton) editButton.hidden = !caseIoRecords.has(caseIoSelect?.value);
 }
 
 function subscribeCaseIOs(caseItem, loadId) {
@@ -816,6 +993,39 @@ caseIoSelect?.addEventListener('change', () => {
     const officer = caseIoRecords.get(selectedId);
     applyCaseIoSnapshot(officer || {}, officer?.id || '');
     ioSelectStatus.textContent = '';
+    syncIoEditButton();
+});
+
+function openCaseIoDialog(officer = null) {
+    if (caseIoSelect.disabled) {
+        ioSelectStatus.textContent = 'Please wait while the IO register loads.';
+        return;
+    }
+    openIoDialog({
+        officer,
+        getOfficers: () => [...caseIoRecords.values()],
+        onSaved: ({ mode, id, data }) => {
+            caseIoRecords.set(id, { ...caseIoRecords.get(id), id, ...data });
+            caseIoSelectionTouched = true;
+            if (mode === 'add') caseIoIdInput.value = id;
+            populateCaseIoOptions();
+            if (mode === 'add') ioSelectStatus.textContent = 'IO saved and selected.';
+        },
+        onDeleted: ({ id, deactivated }) => {
+            const wasSelected = caseIoIdInput.value === id;
+            if (deactivated) caseIoRecords.set(id, { ...caseIoRecords.get(id), id, active: false });
+            else caseIoRecords.delete(id);
+            caseIoSelectionTouched = true;
+            if (wasSelected && !deactivated) applyCaseIoSnapshot({});
+            populateCaseIoOptions();
+        }
+    });
+}
+
+document.getElementById('openManageIO')?.addEventListener('click', () => openCaseIoDialog());
+document.getElementById('editManageIO')?.addEventListener('click', () => {
+    const officer = caseIoRecords.get(caseIoSelect.value);
+    if (officer) openCaseIoDialog(officer);
 });
 
 form.addEventListener('reset', () => {
@@ -825,6 +1035,7 @@ form.addEventListener('reset', () => {
         caseIoSelect.selectedIndex = 0;
         applyCaseIoSnapshot({});
         ioSelectStatus.textContent = '';
+        syncIoEditButton();
     }, 0);
 });
 
@@ -850,6 +1061,7 @@ function resetForm() {
     resettingFormForModalOpen = false;
     resetHearingRecords();
     masterComboboxes.forEach(({ close }) => close());
+    closeUnderSectionSuggestions();
     document.querySelectorAll('.flatpickr-date').forEach(input => {
         if (input._flatpickr) input._flatpickr.clear();
     });

@@ -254,7 +254,8 @@ select {
 }
 
 #caseModal .case-section-status {
-    order: 4;
+    order: 0;
+    justify-content: center;
 }
 
 #caseModal .case-section-court-registration {
@@ -401,12 +402,12 @@ select {
     font-weight: 600;
 }
 
-#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .locked-input, .registration-input)):not(:has(.toggle-container)) {
+#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .under-section-autocomplete, .locked-input, .registration-input)):not(:has(.toggle-container)) {
     position: relative;
     display: block;
 }
 
-#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .locked-input, .registration-input)):not(:has(.toggle-container)) > label {
+#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .under-section-autocomplete, .locked-input, .registration-input)):not(:has(.toggle-container)) > label {
     position: absolute;
     z-index: 2;
     top: 21px;
@@ -434,12 +435,13 @@ select {
 
 #caseModal .input-group:has(> label + input:not([type="checkbox"]):not([type="hidden"])) > input:not([type="checkbox"]):not([type="hidden"]),
 #caseModal .input-group:has(> label + select) > select,
-#caseModal .input-group:has(> label + textarea) > textarea {
+#caseModal .input-group:has(> label + textarea) > textarea,
+#caseModal .under-section-autocomplete input {
     padding-top: 10px;
 }
 
-#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .locked-input, .registration-input)):not(:has(.toggle-container)):has(:is(input:not([type="checkbox"]):not([type="hidden"]):focus, select:focus, textarea:focus, .searchable-select:focus-within, .locked-input:focus-within, .registration-input:focus-within)) > label,
-#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .locked-input, .registration-input)):not(:has(.toggle-container)):has(input:not([type="checkbox"]):not([type="hidden"]):not(:placeholder-shown)) > label,
+#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .under-section-autocomplete, .locked-input, .registration-input)):not(:has(.toggle-container)):has(:is(input:not([type="checkbox"]):not([type="hidden"]):focus, select:focus, textarea:focus, .searchable-select:focus-within, .under-section-autocomplete:focus-within, .locked-input:focus-within, .registration-input:focus-within)) > label,
+#caseModal .input-group:not(.permanent-label-group):has(> label + :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea, .searchable-select, .under-section-autocomplete, .locked-input, .registration-input)):not(:has(.toggle-container)):has(input:not([type="checkbox"]):not([type="hidden"]):not(:placeholder-shown)) > label,
 #caseModal .input-group:not(.permanent-label-group):has(> label + select option:checked:not([value=""])) > label,
 #caseModal .input-group:not(.permanent-label-group):has(> label + textarea) > label {
     top: 0;
@@ -485,6 +487,59 @@ select {
 
 #caseModal .permanent-label-group > select {
     padding-top: 10px;
+}
+
+#caseModal .io-select-with-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#caseModal .io-select-with-action > select {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-top: 10px;
+}
+
+#caseModal .io-manage-trigger {
+    flex: 0 0 42px;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--primary);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+#caseModal .io-manage-trigger[hidden] {
+    display: none;
+}
+
+#caseModal .io-manage-trigger:hover,
+#caseModal .io-manage-trigger:focus-visible {
+    border-color: var(--primary);
+    background: var(--surface-2);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.10);
+}
+
+body.light-theme #caseModal .io-manage-trigger {
+    border-color: #c9d8ef;
+    background: #ffffff;
+    color: #287cf3;
+}
+
+body.light-theme #caseModal .io-manage-trigger:hover,
+body.light-theme #caseModal .io-manage-trigger:focus-visible {
+    border-color: #287cf3;
+    background: #edf4ff;
 }
 
 #caseModal .toggle-label-group {
@@ -704,6 +759,63 @@ textarea:focus {
     font-size: 12px;
 }
 
+.under-section-autocomplete {
+    position: relative;
+}
+
+.under-section-autocomplete input {
+    width: 100%;
+}
+
+#caseModal .input-group:has(#undersection[aria-expanded="true"]) {
+    z-index: 3;
+}
+
+.under-section-options {
+    position: fixed;
+    z-index: 2000;
+    max-height: 240px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    background: var(--surface);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.under-section-options[hidden] {
+    display: none;
+}
+
+.under-section-option {
+    min-height: 38px;
+    padding: 9px 11px;
+    border-radius: 5px;
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.under-section-option:hover,
+.under-section-option[aria-selected="true"] {
+    background: var(--surface-2);
+}
+
+.under-section-option mark {
+    border-radius: 2px;
+    background: rgba(59, 130, 246, 0.28);
+    color: inherit;
+    font-weight: 700;
+}
+
+.under-section-empty {
+    padding: 10px 11px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
 .master-list-status:empty {
     display: none;
 }
@@ -900,6 +1012,25 @@ body.light-theme .searchable-select-option.add-master-option {
 }
 
 body.light-theme .searchable-select-empty {
+    color: #5f7187;
+}
+
+body.light-theme .under-section-options {
+    border-color: #c9d8ef;
+    background: #ffffff;
+    box-shadow: 0 10px 28px rgba(19, 37, 61, 0.18);
+}
+
+body.light-theme .under-section-option {
+    color: #13253d;
+}
+
+body.light-theme .under-section-option:hover,
+body.light-theme .under-section-option[aria-selected="true"] {
+    background: #edf4ff;
+}
+
+body.light-theme .under-section-empty {
     color: #5f7187;
 }
 

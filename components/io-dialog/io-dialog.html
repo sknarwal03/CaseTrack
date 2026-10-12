@@ -1,0 +1,49 @@
+<dialog class="judge-dialog" id="ioDialog" aria-labelledby="ioDialogTitle">
+    <form id="ioForm">
+        <header class="judge-dialog-header">
+            <div>
+                <p class="judges-kicker">OFFICER REGISTER</p>
+                <h2 id="ioDialogTitle">Add IO</h2>
+            </div>
+            <button class="judge-dialog-close" type="button" id="closeIoDialog" aria-label="Close">×</button>
+        </header>
+        <div class="judge-fields">
+            <label>IO Rank
+                <select name="ioRank">
+                    <option value="" selected>Select rank (optional)</option>
+                    <option value="ACP">ACP</option>
+                    <option value="DSP">DSP</option>
+                    <option value="Insp">Insp</option>
+                    <option value="SI">SI</option>
+                    <option value="LSI">L/SI</option>
+                    <option value="PSI">PSI</option>
+                    <option value="LPSI">L/PSI</option>
+                    <option value="ASI">ASI</option>
+                    <option value="LASI">L/ASI</option>
+                    <option value="HC">HC</option>
+                    <option value="LHC">L/HC</option>
+                </select>
+            </label>
+            <label>IO Name
+                <input type="text" name="ioName" placeholder="Enter officer name" autocomplete="name" required>
+            </label>
+            <label>Belt Number
+                <input type="text" name="ioBeltno" placeholder="Enter belt number" autocomplete="off">
+            </label>
+            <label>Mobile Number
+                <input type="tel" name="iomobileNo" placeholder="10 digit mobile number" inputmode="numeric"
+                    maxlength="10" pattern="[0-9]{10}" autocomplete="tel">
+            </label>
+            <label class="io-active-field" id="ioActiveField" hidden>
+                <input type="checkbox" name="active" checked>
+                Active for new case assignments
+            </label>
+        </div>
+        <p class="judge-form-status" id="ioFormStatus" role="status" aria-live="polite"></p>
+        <footer class="judge-dialog-actions">
+            <button class="judge-delete-action" type="button" id="deleteIoButton" hidden>Delete IO</button>
+            <button class="judge-cancel-button" type="button" id="cancelIoButton">Cancel</button>
+            <button class="judges-add-button" type="submit" id="saveIoButton">Save IO</button>
+        </footer>
+    </form>
+</dialog>

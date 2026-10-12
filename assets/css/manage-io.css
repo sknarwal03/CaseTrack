@@ -41,6 +41,10 @@ body.light-theme .io-book .judges-fab:hover {
     text-transform: uppercase;
 }
 
+#ioDialog select {
+    appearance: auto;
+}
+
 .io-active-field {
     grid-column: 1 / -1;
     display: flex;
