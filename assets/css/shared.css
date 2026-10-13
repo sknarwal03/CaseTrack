@@ -329,7 +329,7 @@ body.light-theme {
     width: 43px;
     height: 43px;
     color: #fff;
-    background: linear-gradient(135deg, #4178c6, #1e3554);
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
     border-radius: 50%;
     font-weight: 800;
 }
@@ -379,29 +379,8 @@ body.light-theme {
     }
 
     .mobile-brand {
-        display: inline-flex;
-        flex: 0 0 auto;
-        align-items: center;
-        gap: 6px;
-        color: var(--text-primary);
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 800;
-        white-space: nowrap;
-    }
-
-    .mobile-brand > span:not(.brand-mark) {
         display: none;
     }
-
-    .mobile-brand .brand-mark {
-        width: 30px;
-        height: 30px;
-        border-radius: 9px;
-        font-size: 17px;
-    }
-
-    .mobile-brand + .global-search-wrap { margin-left: auto; }
 
     .search {
         width: 100%;
@@ -1050,6 +1029,11 @@ body.light-theme .btn-primary {
     color: #fff;
     background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
     border-color: transparent;
+}
+
+/* Keep the shared profile avatar aligned with the primary button gradient. */
+body.light-theme .avatar {
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
 }
 
 body.light-theme .badge {

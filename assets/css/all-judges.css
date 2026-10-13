@@ -109,7 +109,7 @@
 }
 
 .judges-book .judges-fab {
-    background: linear-gradient(180deg, #0b1b30, #091728);
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
     color: #fff;
 }
 
@@ -120,16 +120,16 @@
 }
 
 .judges-book .judges-fab:hover {
-    background: #0b1b30;
+    filter: brightness(1.06);
 }
 
 body.light-theme .judges-book .judges-fab {
-    background: linear-gradient(180deg, #f9fbff 0%, #eef5fd 100%);
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
     color: #fff;
 }
 
 body.light-theme .judges-book .judges-fab:hover {
-    background: #eef5fd;
+    filter: brightness(1.06);
 }
 
 .judges-fab:focus-visible {

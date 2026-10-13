@@ -35,6 +35,7 @@ function applyCaseFilters() {
                 ? row.dataset.poDates
                 : isDisposedFilter ? row.dataset.judgement : row.dataset.caseStage;
             hearingCell.textContent = [firstValue, secondValue].filter(Boolean).join(' - ');
+            hearingCell.title = hearingCell.textContent.trim();
         }
 
         let matchesFilter = filter === 'po'
@@ -229,6 +230,11 @@ const renderCaseTable = () => {
             '<button class="icon-btn view-btn" title="View Details"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>' +
             '<button class="icon-btn edit-btn" title="Edit Case"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>' +
             '</div></td>';
+
+        row.querySelectorAll('td').forEach(cell => {
+            const fullValue = cell.textContent.trim();
+            if (fullValue) cell.title = fullValue;
+        });
 
         row.querySelector('.fir-trigger')?.addEventListener('click', event => {
             event.stopPropagation();
@@ -687,6 +693,32 @@ document.querySelectorAll('.cases-table th.sortable[data-sort]').forEach(header 
         });
         renderCaseTable();
     });
+});
+
+let mobileCellTooltip;
+document.addEventListener('click', event => {
+    if (!window.matchMedia('(max-width: 780px)').matches) return;
+    const cell = event.target.closest('.cases-table tbody td:not(:last-child)');
+    if (!cell) {
+        mobileCellTooltip?.remove();
+        mobileCellTooltip = null;
+        return;
+    }
+
+    const value = cell.title || cell.textContent.trim();
+    if (!value) return;
+    event.stopPropagation();
+    mobileCellTooltip?.remove();
+    mobileCellTooltip = document.createElement('div');
+    mobileCellTooltip.className = 'mobile-case-cell-tooltip';
+    mobileCellTooltip.setAttribute('role', 'tooltip');
+    mobileCellTooltip.textContent = value;
+    document.body.append(mobileCellTooltip);
+
+    const rect = cell.getBoundingClientRect();
+    const left = Math.max(12, Math.min(rect.left, window.innerWidth - 292));
+    mobileCellTooltip.style.left = `${left}px`;
+    mobileCellTooltip.style.top = `${Math.min(rect.bottom + 8, window.innerHeight - 72)}px`;
 });
 
 loadCases();

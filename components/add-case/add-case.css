@@ -1630,6 +1630,94 @@ option {
 
 }
 
+/* Keep the Add/Edit Case dialog clear of the fixed mobile topbar.
+   Its form is a wrapper between the modal and the scrollable body. */
+@media (max-width: 780px) {
+    #caseModal {
+        z-index: 30;
+        inset: calc(56px + env(safe-area-inset-top)) 0 0;
+        display: none;
+        align-items: stretch;
+        justify-items: center;
+        overflow-y: auto;
+        padding: 10px 10px max(10px, env(safe-area-inset-bottom));
+    }
+
+    #caseModal.show {
+        display: flex;
+    }
+
+    #caseModal > .modal {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        min-height: 0;
+        border-radius: var(--radius-md);
+    }
+
+    #caseModal > .modal > .modal-header {
+        flex: 0 0 auto;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 4px 12px;
+        padding: 12px 14px;
+    }
+
+    #caseModal .modal-header h2 {
+        font-size: clamp(18px, 5vw, 22px);
+        line-height: 1.15;
+    }
+
+    #caseModal .modal-header p {
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    #caseModal .modal-header .case-id {
+        grid-column: 1;
+        justify-self: start;
+        font-size: 10px;
+    }
+
+    #caseModal .modal-header .close {
+        grid-column: 2;
+        grid-row: 1;
+        align-self: start;
+        justify-self: end;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+    }
+
+    #caseModal > .modal > #caseForm {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #caseModal #caseForm > .modal-body {
+        flex: 0 0 auto;
+        min-height: auto;
+        max-height: none;
+        overflow: visible;
+    }
+
+    #caseModal #caseForm > .modal-footer {
+        flex: 0 0 auto;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px 12px;
+        position: static;
+    }
+
+    #caseModal .modal-footer .btn {
+        min-height: 44px;
+    }
+}
+
 #caseModal label.validation-error::after {
     content: " *";
     color: #dc2626;

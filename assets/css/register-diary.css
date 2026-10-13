@@ -185,14 +185,14 @@ body.light-theme .diary-book {
     padding: 0;
     border: 0;
     border-radius: 50%;
-    background: linear-gradient(145deg, #39466f, #202843 72%);
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
     color: #fff;
     font: 24px/35px Arial, sans-serif;
     text-align: center;
     box-shadow: 0 4px 14px rgba(20,28,48,.28), inset 0 1px 1px rgba(255,255,255,.3);
     cursor: pointer;
 }
-.diary-header-actions-toggle:hover { background: linear-gradient(145deg, #46557f, #283452 72%); }
+.diary-header-actions-toggle:hover { filter: brightness(1.06); }
 .diary-header-actions-toggle:focus-visible { outline: 3px solid #aab4ed; outline-offset: 3px; }
 .diary-header-actions-menu {
     position: absolute;
@@ -1081,7 +1081,7 @@ body.light-theme .diary-dialog-status { color: #93404a; }
     .diary-right-head { gap: 8px; }
     .diary-header-actions { --diary-actions-inset: 0px; }
     .diary-calendars { display: none; }
-    .diary-file-item { font-size: 16px; }
+    .diary-file-item { font-size: 12px; }
     .diary-x-status, .diary-disc-status, .diary-return-status, .diary-fir-number { min-height: 34px; }
     .diary-file-item { gap: 3px; }
     .diary-judge-name,
@@ -1099,7 +1099,11 @@ body.light-theme .diary-dialog-status { color: #93404a; }
     .diary-judge-card-empty { display: none; }
     .diary-lower-court { padding: 0 0 6px; }
     .diary-lower-heading-row { column-gap: 0; }
-    .diary-extra-line { font-size: 16px; }
+    .diary-extra-line { font-size: 12px; }
+    .diary-judge-column .diary-file-item,
+    .diary-file-item,
+    .diary-extra-row { height: auto; min-height: 42px; }
+    .diary-extra-line { height: auto; min-height: 41px; }
     .diary-nav-arrow { display: none; }
     .diary-swipe-hint {
         display: block;
