@@ -1,14 +1,10 @@
 import { db } from "@config/firebase-config.js";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { normalizeFirStatus } from './fir-status.mjs';
 
 /* Theme handled by shared-layout.js */
 
 const notificationsToggle = document.querySelector('#notificationsToggle');
 const autoSaveToggle = document.querySelector('#autoSaveToggle');
-const defaultCaseStatus = document.querySelector('#defaultCaseStatus');
-const defaultCourtType = document.querySelector('#defaultCourtType');
-const defaultCaseStage = document.querySelector('#defaultCaseStage');
 const saveSettingsBtn = document.querySelector('#saveSettingsBtn');
 
 // Firebase Preferences Logic
@@ -21,9 +17,6 @@ async function loadPreferences() {
             const data = snap.data();
             if (notificationsToggle) notificationsToggle.checked = data.notifications !== false; // default true
             if (autoSaveToggle) autoSaveToggle.checked = data.autoSave !== false;
-            if (defaultCaseStatus && data.defaultCaseStatus) defaultCaseStatus.value = normalizeFirStatus(data.defaultCaseStatus) || data.defaultCaseStatus;
-            if (defaultCourtType && data.defaultCourtType) defaultCourtType.value = data.defaultCourtType;
-            if (defaultCaseStage && data.defaultCaseStage) defaultCaseStage.value = data.defaultCaseStage;
         }
     } catch (e) {
         console.error("Error loading preferences:", e);
@@ -41,9 +34,6 @@ async function savePreferences() {
         await setDoc(PREF_DOC_REF, {
             notifications: notificationsToggle ? notificationsToggle.checked : true,
             autoSave: autoSaveToggle ? autoSaveToggle.checked : true,
-            defaultCaseStatus: defaultCaseStatus ? defaultCaseStatus.value : 'UI',
-            defaultCourtType: defaultCourtType ? defaultCourtType.value : 'SC',
-            defaultCaseStage: defaultCaseStage ? defaultCaseStage.value : 'App',
             updatedAt: new Date().toISOString()
         }, { merge: true });
 
