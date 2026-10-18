@@ -1,5 +1,6 @@
 import { db } from "@config/firebase-config.js";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { normalizeFirStatus } from './fir-status.mjs';
 
 /* Theme handled by shared-layout.js */
 
@@ -20,7 +21,7 @@ async function loadPreferences() {
             const data = snap.data();
             if (notificationsToggle) notificationsToggle.checked = data.notifications !== false; // default true
             if (autoSaveToggle) autoSaveToggle.checked = data.autoSave !== false;
-            if (defaultCaseStatus && data.defaultCaseStatus) defaultCaseStatus.value = data.defaultCaseStatus;
+            if (defaultCaseStatus && data.defaultCaseStatus) defaultCaseStatus.value = normalizeFirStatus(data.defaultCaseStatus) || data.defaultCaseStatus;
             if (defaultCourtType && data.defaultCourtType) defaultCourtType.value = data.defaultCourtType;
             if (defaultCaseStage && data.defaultCaseStage) defaultCaseStage.value = data.defaultCaseStage;
         }

@@ -1,6 +1,8 @@
 // Register Diary cases are loaded from the shared Firestore case collection.
 import { db } from '@config/firebase-config.js';
-import { collection, deleteField, doc, getDocs, runTransaction } from 'firebase/firestore';
+import { collection, deleteField, getDocs, runTransaction } from 'firebase/firestore';
+import { caseRecordRef, loadCaseRecords } from './fir-case-model.js';
+import { isCourtProceeding } from './fir-status.mjs';
 import { latestChargeDate } from './charge-date.js';
 import { normalizeTrialStage, populateTrialStageSelect, setTrialStageSelectValue } from './trial-stages.js';
 
@@ -167,7 +169,8 @@ async function persistHearingDateRecords(caseId, dateRecords) {
             .sort((a, b) => caseDateKey(a.date).localeCompare(caseDateKey(b.date)))[0];
         const nextDate = nextRecord ? formatDiaryDate(nextRecord.date) : '';
         const trialStage = String(nextRecord?.trialStage || '').trim();
-        const reference = doc(db, 'cases', caseId);
+        const caseItem = cases.find(item => item.id === caseId);
+        const reference = caseRecordRef(db, caseItem || { id: caseId });
         await runTransaction(db, async transaction => {
             const snapshot = await transaction.get(reference);
             if (!snapshot.exists()) throw new Error('This case no longer exists.');
@@ -180,7 +183,6 @@ async function persistHearingDateRecords(caseId, dateRecords) {
                 registerDiaryDateRecords: deleteField()
             });
         });
-        const caseItem = cases.find(item => item.id === caseId);
         if (caseItem) {
             caseItem.hearingDateRecord = dateRecords;
             caseItem.nextDate = nextDate;
@@ -286,9 +288,10 @@ function getLinkedNextDate(caseItem, diaryDate) {
 
 function publishHearingDateNotifications() {
     const today = keyDate(new Date());
-    const excludedStatuses = new Set(['ucr', 'untrace', 'untraced', 'cancellation', 'disposed', 'ui', 'under investigation']);
+    const excludedStatuses = new Set(['ucr', 'untrace', 'untraced', 'cancellation', 'disposed', 'committed', 'ui', 'under investigation']);
     const notifications = cases
-        .filter(caseItem => !excludedStatuses.has(String(caseItem.status || '').trim().toLowerCase()))
+        .filter(caseItem => isCourtProceeding(caseItem) && !caseItem.successorCaseId
+            && !excludedStatuses.has(String(caseItem.status || '').trim().toLowerCase()))
         .filter(caseItem => !getLinkedNextDate(caseItem, today))
         .map(caseItem => {
             const firNumber = [caseItem.firNo, caseItem.firYear]
@@ -296,6 +299,7 @@ function publishHearingDateNotifications() {
                 .join('/');
             return {
                 caseId: caseItem.id,
+                caseCollection: caseItem._collectionName || 'cases',
                 title: 'Next date update needed',
                 message: `FIR ${firNumber || 'number not assigned'} has no upcoming hearing date. Update the next date.`
             };
@@ -1145,11 +1149,7 @@ function clearNotes() {
 
 async function loadCases() {
     try {
-        const snapshot = await getDocs(collection(db, 'cases'));
-        cases = snapshot.docs.map(caseDocument => ({
-            id: caseDocument.id,
-            ...caseDocument.data()
-        }));
+        cases = (await loadCaseRecords(db)).filter(isCourtProceeding);
         casesLoadError = null;
     } catch (error) {
         console.error('Failed to load register diary cases from Firestore:', error);

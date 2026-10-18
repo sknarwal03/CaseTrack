@@ -1,6 +1,7 @@
 import { db } from '@config/firebase-config.js';
-import { deleteField, doc, getDoc, runTransaction } from 'firebase/firestore';
+import { deleteField, getDoc, runTransaction } from 'firebase/firestore';
 import { latestChargeDate } from './charge-date.js';
+import { caseRecordRef } from './fir-case-model.js';
 import { normalizeTrialStage, populateTrialStageSelect, setTrialStageSelectValue, TRIAL_STAGES } from './trial-stages.js';
 import '../css/notification-date-dialog.css';
 
@@ -307,7 +308,7 @@ async function saveMutation(mutation) {
     status.textContent = '';
     setBusy(true);
     try {
-        const reference = doc(db, 'cases', activeCase.id);
+        const reference = caseRecordRef(db, activeCase);
         const localStatuses = readLocalStatuses();
         const localCase = localStatuses[activeCase.id];
         const committedRecords = await runTransaction(db, async transaction => {
@@ -366,9 +367,9 @@ async function openNotificationDateDialog(caseItem) {
     renderRecords();
     if (!dialog.open) dialog.showModal();
     try {
-        const snapshot = await getDoc(doc(db, 'cases', caseItem.id));
+        const snapshot = await getDoc(caseRecordRef(db, caseItem));
         if (!snapshot.exists()) throw new Error('This case no longer exists.');
-        activeCase = { id: snapshot.id, ...snapshot.data() };
+        activeCase = { id: snapshot.id, ...snapshot.data(), _collectionName: caseItem._collectionName || 'cases' };
         const localStatuses = readLocalStatuses();
         const localCase = localStatuses[activeCase.id];
         dateStates = localCase?.dateStates || {};

@@ -8,6 +8,7 @@ export const TRIAL_STAGES = Object.freeze([
     'Consid.',
     'Argu.',
     'Final Order',
+    'Committed',
     'Disposed'
 ]);
 

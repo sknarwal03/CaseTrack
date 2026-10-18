@@ -2,7 +2,9 @@ import '../../components/add-case/add-case.js';
 import './notification-date-dialog.js';
 import { setupDropdown } from './shared-utils.js';
 import { db } from '@config/firebase-config.js';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
+import { loadCaseRecords } from './fir-case-model.js';
+import { isCourtProceeding } from './fir-status.mjs';
 /**
  * shared-layout.js
  * Injects shared sidebar + topbar into every app page.
@@ -231,13 +233,15 @@ function initNotifications() {
             if (notification.caseId) {
                 item.type = "button";
                 item.addEventListener("click", async () => {
-                    let caseItem = casesById.get(notification.caseId);
+                    const caseCollection = notification.caseCollection || 'cases';
+                    const caseKey = `${caseCollection}:${notification.caseId}`;
+                    let caseItem = casesById.get(caseKey);
                     if (!caseItem) {
                         try {
-                            const snapshot = await getDoc(doc(db, "cases", notification.caseId));
+                            const snapshot = await getDoc(doc(db, caseCollection, notification.caseId));
                             if (!snapshot.exists()) throw new Error("The case no longer exists.");
-                            caseItem = { id: snapshot.id, ...snapshot.data() };
-                            casesById.set(snapshot.id, caseItem);
+                            caseItem = { id: snapshot.id, _collectionName: caseCollection, ...snapshot.data() };
+                            casesById.set(caseKey, caseItem);
                         } catch (error) {
                             console.error(`Could not load case ${notification.caseId} from its hearing reminder:`, error);
                             return;
@@ -278,11 +282,9 @@ function initNotifications() {
         try {
             const today = new Date();
             const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-            const snapshot = await getDocs(collection(db, "cases"));
+            const records = await loadCaseRecords(db);
             casesById.clear();
-            snapshot.docs.forEach(caseDoc => {
-                casesById.set(caseDoc.id, { id: caseDoc.id, ...caseDoc.data() });
-            });
+            records.forEach(caseItem => casesById.set(`${caseItem._collectionName || 'cases'}:${caseItem.id}`, caseItem));
             let localStatuses = {};
             try {
                 const savedStatuses = JSON.parse(localStorage.getItem("register-diary-file-statuses") || "{}");
@@ -294,9 +296,10 @@ function initNotifications() {
             }
 
             const excludedStatuses = new Set(["ucr", "untrace", "untraced", "cancellation", "disposed", "ui", "under investigation"]);
-            const notifications = snapshot.docs
-                .map(caseDoc => casesById.get(caseDoc.id))
-                .filter(caseItem => !excludedStatuses.has(String(caseItem.status || "").trim().toLowerCase()))
+            const notifications = records
+                .filter(caseItem => isCourtProceeding(caseItem)
+                    && !caseItem.successorCaseId
+                    && !excludedStatuses.has(String(caseItem.status || "").trim().toLowerCase()))
                 .filter(caseItem => {
                     const records = Array.isArray(caseItem.hearingDateRecord)
                         ? caseItem.hearingDateRecord
@@ -326,6 +329,7 @@ function initNotifications() {
                         .join("/");
                     return {
                         caseId: caseItem.id,
+                        caseCollection: caseItem._collectionName || 'cases',
                         diaryDate: caseItem.notificationDiaryDate,
                         title: "Next date update needed",
                         message: `FIR ${firNumber || "number not assigned"} has no upcoming hearing date. Update the next date.`
@@ -491,6 +495,7 @@ function initGlobalSearch() {
     let cachedCases = null;
     let loadPromise = null;
     let requestId = 0;
+    window.addEventListener('caseAdded', () => { cachedCases = null; });
 
     const closeResults = () => { resultsBox.hidden = true; };
     const collectText = value => {
@@ -502,8 +507,8 @@ function initGlobalSearch() {
     const loadCases = async () => {
         if (cachedCases) return cachedCases;
         if (!loadPromise) {
-            loadPromise = getDocs(collection(db, 'cases')).then(snapshot => {
-                cachedCases = snapshot.docs.map(caseDoc => ({ id: caseDoc.id, ...caseDoc.data() }));
+            loadPromise = loadCaseRecords(db).then(records => {
+                cachedCases = records;
                 return cachedCases;
             }).finally(() => { loadPromise = null; });
         }
@@ -595,7 +600,10 @@ function initGlobalSearch() {
                     .filter(Boolean).join(' · ');
                 result.append(main, details);
                 result.addEventListener('click', () => {
-                    window.location.href = match.href || `cases.html?case=${encodeURIComponent(caseItem.id)}`;
+                    const collectionQuery = caseItem?._collectionName
+                        ? `&collection=${encodeURIComponent(caseItem._collectionName)}`
+                        : '';
+                    window.location.href = match.href || `cases.html?case=${encodeURIComponent(caseItem.id)}${collectionQuery}`;
                 });
                 resultsBox.appendChild(result);
             });

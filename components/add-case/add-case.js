@@ -1,8 +1,10 @@
-import { db } from '@config/firebase-config.js';
-import { collection, addDoc, updateDoc, doc, deleteField, getDocs, onSnapshot, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore';
+import { db, auth } from '@config/firebase-config.js';
+import { collection, addDoc, updateDoc, deleteDoc, doc, deleteField, getDoc, getDocs, onSnapshot, query, runTransaction, serverTimestamp, setDoc, where, writeBatch } from 'firebase/firestore';
 import { latestChargeDate } from '../../assets/js/charge-date.js';
 import { normalizeTrialStage, populateTrialStageSelect, setTrialStageSelectValue } from '../../assets/js/trial-stages.js';
 import { openIoDialog } from '../../assets/js/io-dialog.js';
+import { findFirMasterMatches, findLegacyFirGroups, LINKED_CASES_COLLECTION, loadRecordsForFir, saveFirMaster } from '../../assets/js/fir-case-model.js';
+import { deriveFirStatus } from '../../assets/js/fir-status.mjs';
 import addCaseHtml from './add-case.html?raw';
 
 const masterDefinitions = {
@@ -319,12 +321,100 @@ document.querySelector('#caseModal .modal-body')?.addEventListener('scroll', () 
 const modal = document.getElementById('caseModal');
 const form = document.getElementById('caseForm');
 if (form) form.noValidate = true;
+const caseRecordDrafts = [];
+let selectedFirMasterId = '';
+let editingFirMaster = false;
+let selectedFirMasterData = null;
+let activeCaseRecordIndex = -1;
+let firStatusLoadSequence = 0;
+let linkedFirStatusRecords = [];
+const caseRecordList = document.getElementById('caseRecordList');
+const caseRecordDetails = document.getElementById('caseRecordDetails');
+const caseRecordStatus = document.getElementById('caseRecordStatus');
+const caseRecordDetailTitle = document.getElementById('caseRecordDetailTitle');
+let caseRecordLoadSequence = 0;
+let policeStationLoadSequence = 0;
+
+function refreshDerivedFirStatus(proceedings = null) {
+    const statusSelect = document.getElementById('fir_Status');
+    if (!statusSelect) return '';
+    if (proceedings) linkedFirStatusRecords = proceedings;
+    const draftRecords = caseRecordDrafts.map(record => ({
+        id: record.id || record.localId,
+        recordType: record.type,
+        status: record.type === 'ucr' ? 'UCR' : record.fields.casestatus,
+        report_type: record.fields.report_type,
+        ucrNumber: record.fields.ucrNumber,
+        predecessorCaseId: record.predecessorCaseId,
+        successorCaseId: record.successorCaseId
+    }));
+    const draftIds = new Set(caseRecordDrafts.filter(record => record.id).map(record => record.id));
+    const records = proceedings || [
+        ...linkedFirStatusRecords.filter(record => !draftIds.has(record.id)),
+        ...draftRecords
+    ];
+    const status = deriveFirStatus(selectedFirMasterData || {}, records);
+    const statusLabels = {
+        UI: 'Under Investigation',
+        UT: 'Under Trial',
+        Disposed: 'Disposed',
+        UCR: 'Untraced',
+        Cancelled: 'Cancelled'
+    };
+    statusSelect.value = statusLabels[status] || statusLabels.UI;
+    return status;
+}
+
+async function loadDerivedFirStatusForMaster(masterId) {
+    const sequence = ++firStatusLoadSequence;
+    try {
+        const records = await loadRecordsForFir(db, masterId);
+        if (sequence !== firStatusLoadSequence || selectedFirMasterId !== masterId) return;
+        refreshDerivedFirStatus(records);
+    } catch (error) {
+        console.error('Could not calculate FIR status from linked records:', error);
+    }
+}
 const underSectionInput = document.getElementById('undersection');
 const underSectionOptions = document.getElementById('underSectionOptions');
 let savedUnderSections = [];
 let underSectionMenuOpen = false;
 let activeUnderSectionIndex = -1;
 let stopUnderSectionListener = null;
+
+async function getAssignedPoliceStation() {
+    const user = auth.currentUser;
+    if (!user) throw new Error('Your sign-in could not be verified. Sign in again or contact the administrator.');
+    let roleSnapshot;
+    try {
+        roleSnapshot = await getDoc(doc(db, 'userRoles', user.uid));
+    } catch (error) {
+        const assignmentError = new Error('Your police-station assignment could not be verified. Contact the administrator before saving.');
+        assignmentError.cause = error;
+        throw assignmentError;
+    }
+    const role = roleSnapshot.exists() ? roleSnapshot.data() : null;
+    const policeStationId = String(role?.policeStationId || '').trim();
+    if (!role || !['operator', 'admin'].includes(role.role) || role.status !== 'active' || !policeStationId) {
+        throw new Error('No active police-station assignment was found for your account. Contact the administrator before saving.');
+    }
+    return {
+        policeStationId,
+        policeStation: String(role.policeStationName || role.policeStation || role.stationName || policeStationId).trim()
+    };
+}
+
+function refreshUcrActionState() {
+    const button = document.getElementById('addUcrRecord');
+    if (!button) return;
+    const courtProceedingExists = caseRecordDrafts.some(record => record.type !== 'ucr')
+        || linkedFirStatusRecords.some(record => record.recordType !== 'ucr' && !record.ucrNumber
+            && !['ucr', 'untrace', 'untraced', 'cancelled', 'cancellation'].includes(String(record.status || '').toLowerCase()));
+    const ucrExists = caseRecordDrafts.some(record => record.type === 'ucr');
+    button.disabled = ucrExists || courtProceedingExists;
+    button.title = ucrExists ? 'This FIR already has its single UCR report.'
+        : courtProceedingExists ? 'A UCR report cannot be added after a court proceeding exists.' : '';
+}
 
 function closeUnderSectionSuggestions() {
     underSectionMenuOpen = false;
@@ -846,6 +936,35 @@ async function loadCaseJudges(caseItem, loadId) {
 
 judgeSelect?.addEventListener('change', () => selectJudge(judgeSelect.value));
 document.getElementById('courttype')?.addEventListener('change', () => {
+    const activeDraft = caseRecordDrafts[activeCaseRecordIndex];
+    const selectedCourtType = String(document.getElementById('courttype')?.value || '').trim();
+    const isJjbCourt = selectedCourtType.toLowerCase() === 'jjb';
+    if (registrationPrefixInput) {
+        if (isJjbCourt) {
+            if (!registrationPrefixInput.disabled && registrationPrefixInput.value.trim().toUpperCase() !== 'JJB') {
+                if (activeDraft) activeDraft.nonJjbRegPrefix = registrationPrefixInput.value.trim() || 'CHI';
+            }
+            registrationPrefixInput.value = 'JJB';
+            registrationPrefixInput.disabled = true;
+            closeRegistrationPrefixSuggestions();
+        } else {
+            if (registrationPrefixInput.disabled && registrationPrefixInput.value.trim().toUpperCase() === 'JJB') {
+                registrationPrefixInput.value = activeDraft?.nonJjbRegPrefix || 'CHI';
+            }
+            registrationPrefixInput.disabled = false;
+        }
+    }
+    if (activeDraft?.courtTypeDrivesType && activeDraft.type !== 'ucr') {
+        const courtType = selectedCourtType.toLowerCase();
+        if (courtType) {
+            activeDraft.type = courtType.includes('session')
+                ? 'session'
+                : courtType.includes('jjb')
+                    ? 'jjb'
+                    : 'lower';
+            renderCaseRecordList();
+        }
+    }
     populateCaseJudgeOptions();
     selectJudge('');
     if (judgeSelectStatus) {
@@ -943,6 +1062,19 @@ function populateCaseIoOptions(caseItem = {}) {
         }
     }
     syncIoEditButton();
+    syncUcrIoControls();
+}
+
+function syncUcrIoControls() {
+    const ucrSelect = document.getElementById('ucrIoSelect');
+    if (!ucrSelect || !caseIoSelect) return;
+    ucrSelect.replaceChildren(...Array.from(caseIoSelect.options, option => option.cloneNode(true)));
+    ucrSelect.value = caseIoSelect.value;
+    ucrSelect.disabled = caseIoSelect.disabled;
+    const status = document.getElementById('ucrIoSelectStatus');
+    if (status) status.textContent = ioSelectStatus?.textContent || '';
+    const editButton = document.getElementById('editUcrIO');
+    if (editButton) editButton.hidden = !caseIoRecords.has(ucrSelect.value);
 }
 
 function syncIoEditButton() {
@@ -967,6 +1099,7 @@ function subscribeCaseIOs(caseItem, loadId) {
         ]));
         populateCaseIoOptions(caseItem || {});
         caseIoSelect.disabled = false;
+        syncUcrIoControls();
     }, error => {
         if (loadId !== ioLoadSequence) return;
         console.error('Error loading IO register for case form:', error);
@@ -982,7 +1115,9 @@ function subscribeCaseIOs(caseItem, loadId) {
             applyCaseIoSnapshot(savedIo, savedIo.ioId);
         }
         caseIoSelect.disabled = false;
+        syncUcrIoControls();
         ioSelectStatus.textContent = 'Could not load IOs. Saved case details have been preserved; reopen the form to retry.';
+        syncUcrIoControls();
     });
 }
 
@@ -994,6 +1129,13 @@ caseIoSelect?.addEventListener('change', () => {
     applyCaseIoSnapshot(officer || {}, officer?.id || '');
     ioSelectStatus.textContent = '';
     syncIoEditButton();
+    syncUcrIoControls();
+});
+
+document.getElementById('ucrIoSelect')?.addEventListener('change', event => {
+    if (!caseIoSelect) return;
+    caseIoSelect.value = event.currentTarget.value;
+    caseIoSelect.dispatchEvent(new Event('change'));
 });
 
 function openCaseIoDialog(officer = null) {
@@ -1028,6 +1170,11 @@ document.getElementById('editManageIO')?.addEventListener('click', () => {
     const officer = caseIoRecords.get(caseIoSelect.value);
     if (officer) openCaseIoDialog(officer);
 });
+document.getElementById('openManageUcrIO')?.addEventListener('click', () => openCaseIoDialog());
+document.getElementById('editUcrIO')?.addEventListener('click', () => {
+    const officer = caseIoRecords.get(document.getElementById('ucrIoSelect')?.value);
+    if (officer) openCaseIoDialog(officer);
+});
 
 form.addEventListener('reset', () => {
     if (resettingFormForModalOpen) return;
@@ -1044,13 +1191,27 @@ function initDatePickers(container = document) {
     const dateInputs = container.querySelectorAll('input[type="date"], input.flatpickr-date');
     dateInputs.forEach(input => {
         input.setAttribute('autocomplete', 'off');
+        input.readOnly = true;
         if (input.getAttribute('type') === 'date') {
             input.setAttribute('type', 'text');
             input.classList.add('flatpickr-date');
         }
     });
     if (window.flatpickr) {
-        flatpickr(dateInputs, { dateFormat: 'd/m/Y', allowInput: true, disableMobile: true });
+        dateInputs.forEach(input => {
+            if (!input._flatpickr) {
+                window.flatpickr(input, {
+                    dateFormat: 'd/m/Y',
+                    allowInput: false,
+                    clickOpens: true,
+                    disableMobile: true
+                });
+            }
+            input.readOnly = true;
+            input.addEventListener('click', () => {
+                if (!input.disabled) input._flatpickr?.open();
+            });
+        });
     }
 }
 setTimeout(() => initDatePickers(modal), 50);
@@ -1058,8 +1219,24 @@ setTimeout(() => initDatePickers(modal), 50);
 // Helper for resetting form state
 function resetForm() {
     resettingFormForModalOpen = true;
+    closePoliceReportMenu();
+    caseRecordLoadSequence += 1;
     form.reset();
     resettingFormForModalOpen = false;
+    caseRecordDrafts.length = 0;
+    linkedFirStatusRecords = [];
+    selectedFirMasterId = '';
+    editingFirMaster = false;
+    selectedFirMasterData = null;
+    document.getElementById('fir_Status').value = 'Under Investigation';
+    firStatusLoadSequence += 1;
+    setFirMasterFieldsLocked(false);
+    setFirMasterEditingMode(false);
+    activeCaseRecordIndex = -1;
+    if (caseRecordDetails) caseRecordDetails.hidden = true;
+    if (caseRecordStatus) caseRecordStatus.textContent = '';
+    renderCaseRecordList();
+    setCaseRecordEditorVisibility(null);
     resetHearingRecords();
     masterComboboxes.forEach(({ close }) => close());
     closeUnderSectionSuggestions();
@@ -1152,6 +1329,12 @@ function updateCaseStatusFields() {
     const statusSelect = document.getElementById('casestatus');
     if (!statusSelect) return;
 
+    const activeDraft = caseRecordDrafts[activeCaseRecordIndex];
+    if (activeDraft) {
+        setCaseRecordEditorVisibility(activeDraft);
+        if (activeDraft.type === 'ucr') return;
+    }
+
     const status = statusSelect.value;
 
     const els = {
@@ -1160,8 +1343,7 @@ function updateCaseStatusFields() {
         chargeDate: document.getElementById('fieldChargedate'),
         nextDate: document.getElementById('sectionNextDate'),
         accused: document.getElementById('sectionAccused'),
-        witness: document.getElementById('sectionWitness'),
-        other: document.getElementById('sectionOther')
+        witness: document.getElementById('sectionWitness')
     };
 
     // Reset all to visible first
@@ -1205,13 +1387,13 @@ document.getElementById('casestatus')?.addEventListener('change', updateCaseStat
 document.getElementById('caseForm')?.addEventListener('reset', () => {
     setTimeout(() => {
         updateCaseStatusFields();
-        updateDecisionFields();
         renderNextDateStage();
     }, 10);
 });
 
 const nextDateStageDate = document.getElementById('nextDateStageDate');
 const nextDateStageTrial = document.getElementById('nextDateStageTrial');
+const hearingMarkAsInput = document.getElementById('hearingMarkAs');
 const nextDateValue = document.getElementById('caseNextDateValue');
 const trialStageValue = document.getElementById('caseTrialStageValue');
 const hearingRecordList = document.getElementById('hearingRecordList');
@@ -1222,6 +1404,17 @@ const deleteHearingRecordButton = document.getElementById('deleteHearingRecord')
 const HEARING_RECORD_STORAGE_KEY = 'register-diary-file-statuses';
 let hearingDateRecords = [];
 let editingHearingRecordId = null;
+
+function getHearingMarkAs(stage) {
+    const normalizedStage = normalizeTrialStage(stage).trim().toLowerCase();
+    if (normalizedStage === 'charge') return 'Date of Charge';
+    if (normalizedStage === 'committed' || normalizedStage === 'disposed') return 'Date of Disposed';
+    return 'Hearing';
+}
+
+function updateHearingMarkAs(stage = nextDateStageTrial?.value) {
+    if (hearingMarkAsInput) hearingMarkAsInput.value = getHearingMarkAs(stage);
+}
 
 function parseHearingDate(value) {
     const trimmed = String(value || '').trim();
@@ -1255,6 +1448,7 @@ function resetHearingRecords() {
     editingHearingRecordId = null;
     if (hearingRecordStatus) hearingRecordStatus.textContent = '';
     if (addHearingRecordButton) addHearingRecordButton.textContent = 'Add Hearing';
+    updateHearingMarkAs('');
     if (cancelHearingEditButton) cancelHearingEditButton.hidden = true;
     if (deleteHearingRecordButton) deleteHearingRecordButton.hidden = true;
     if (hearingRecordList) hearingRecordList.replaceChildren();
@@ -1298,6 +1492,7 @@ function renderHearingRecords() {
                     nextDateStageDate.value = formatHearingDate(record.date);
                 }
                 setTrialStageSelectValue(nextDateStageTrial, record.trialStage);
+                updateHearingMarkAs(record.trialStage);
                 if (addHearingRecordButton) addHearingRecordButton.textContent = 'Update Hearing';
                 if (cancelHearingEditButton) cancelHearingEditButton.hidden = false;
                 if (deleteHearingRecordButton) deleteHearingRecordButton.hidden = false;
@@ -1309,7 +1504,10 @@ function renderHearingRecords() {
                 event.preventDefault();
                 beginEdit();
             });
-            row.append(details);
+            const markAs = document.createElement('span');
+            markAs.className = 'hearing-record-mark-as';
+            markAs.textContent = record.markAs || getHearingMarkAs(record.trialStage);
+            row.append(details, markAs);
             hearingRecordList.append(row);
         });
 }
@@ -1319,6 +1517,7 @@ function cancelHearingRecordEdit() {
     if (addHearingRecordButton) addHearingRecordButton.textContent = 'Add Hearing';
     if (cancelHearingEditButton) cancelHearingEditButton.hidden = true;
     if (deleteHearingRecordButton) deleteHearingRecordButton.hidden = true;
+    updateHearingMarkAs('');
     if (nextDateStageDate?._flatpickr) nextDateStageDate._flatpickr.clear(false);
     else if (nextDateStageDate) nextDateStageDate.value = '';
     if (nextDateStageTrial) nextDateStageTrial.value = '';
@@ -1334,9 +1533,41 @@ function updateHearingDateSnapshot() {
         .filter(record => record.date > todayKey)
         .sort((a, b) => a.date.localeCompare(b.date))[0];
     nextDateValue.value = nextRecord ? formatHearingDate(nextRecord.date) : '';
-    trialStageValue.value = nextRecord?.trialStage || '';
+    const activeDraft = caseRecordDrafts[activeCaseRecordIndex];
+    trialStageValue.value = activeDraft?.successorCaseId
+        ? 'Committed'
+        : (nextRecord?.trialStage || '');
     renderNextDateStage();
+    const latestStage = activeDraft?.successorCaseId
+        ? 'Committed'
+        : [...hearingDateRecords]
+            .sort((left, right) => right.date.localeCompare(left.date))
+            .find(record => String(record.trialStage || '').trim())?.trialStage || trialStageValue.value;
+    syncCaseStatusFromTrialStage(latestStage);
 }
+
+function getCaseStatusFromTrialStage(stage) {
+    const normalizedStage = normalizeTrialStage(stage).trim().toLowerCase();
+    if (normalizedStage === 'committed' || normalizedStage === 'committed to sessions court') return 'Committed';
+    if (normalizedStage === 'disposed') return 'Disposed';
+    return 'UT';
+}
+
+function syncCaseStatusFromTrialStage(stage) {
+    const activeDraft = caseRecordDrafts[activeCaseRecordIndex];
+    if (activeDraft?.type === 'ucr') return;
+    const statusSelect = document.getElementById('casestatus');
+    if (!statusSelect) return;
+    const status = getCaseStatusFromTrialStage(stage);
+    statusSelect.value = status;
+    if (activeDraft) activeDraft.fields.casestatus = status;
+    updateCaseStatusFields();
+}
+
+nextDateStageTrial?.addEventListener('change', () => {
+    updateHearingMarkAs(nextDateStageTrial.value);
+    syncCaseStatusFromTrialStage(nextDateStageTrial.value);
+});
 
 function loadHearingRecords(caseItem) {
     resetHearingRecords();
@@ -1365,7 +1596,8 @@ function loadHearingRecords(caseItem) {
                     id: record.id,
                     kind: record.kind,
                     date: parseHearingDate(record.date),
-                    trialStage: String(record.trialStage || '').trim()
+                    trialStage: String(record.trialStage || '').trim(),
+                    markAs: getHearingMarkAs(record.trialStage)
                 }));
         }
 
@@ -1376,11 +1608,13 @@ function loadHearingRecords(caseItem) {
                 id: `case-next-${legacyDate}`,
                 kind: hearingDateKind(legacyDate),
                 date: legacyDate,
-                trialStage: String(caseItem.trialStage || '').trim()
+                trialStage: String(caseItem.trialStage || '').trim(),
+                markAs: getHearingMarkAs(caseItem.trialStage)
             });
         }
         updateChargeDate();
         renderHearingRecords();
+        updateHearingDateSnapshot();
     } catch (error) {
         console.error('Could not load hearing records:', error);
         if (hearingRecordStatus) hearingRecordStatus.textContent = 'Saved hearing records could not be loaded.';
@@ -1403,7 +1637,8 @@ function persistHearingRecords(caseId) {
                 id: record.id,
                 kind: record.kind,
                 date: record.date,
-                trialStage: record.trialStage
+                trialStage: record.trialStage,
+                markAs: getHearingMarkAs(record.trialStage)
             }))
         };
         localStorage.setItem(HEARING_RECORD_STORAGE_KEY, JSON.stringify(allCases));
@@ -1423,6 +1658,7 @@ function renderNextDateStage() {
         nextDateStageDate.value = savedDate;
     }
     setTrialStageSelectValue(nextDateStageTrial, trialStageValue.value.trim());
+    updateHearingMarkAs(nextDateStageTrial.value);
 }
 
 function syncNextDateStage() {
@@ -1438,14 +1674,38 @@ addHearingRecordButton?.addEventListener('click', () => {
     const today = new Date();
     const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const editedRecord = hearingDateRecords.find(record => record.id === editingHearingRecordId);
-    if (dateKey === todayKey && editedRecord?.date !== dateKey) {
-        if (hearingRecordStatus) hearingRecordStatus.textContent = 'Choose a date other than today.';
+    const trialStage = String(nextDateStageTrial?.value || '').trim();
+    if (!trialStage) {
+        if (hearingRecordStatus) hearingRecordStatus.textContent = 'Select a Trial Stage.';
         return;
     }
-
-    const trialStage = String(nextDateStageTrial?.value || '').trim();
+    const stageKey = normalizeTrialStage(trialStage).toLocaleLowerCase();
+    const isTerminalStage = stageKey === 'committed' || stageKey === 'disposed';
+    const currentCommitted = hearingDateRecords.some(record => normalizeTrialStage(record.trialStage).toLocaleLowerCase() === 'committed');
+    if (currentCommitted && stageKey !== 'committed') {
+        if (hearingRecordStatus) hearingRecordStatus.textContent = 'A Committed proceeding cannot be changed to another Trial Stage.';
+        return;
+    }
+    if (isTerminalStage && dateKey > todayKey) {
+        if (hearingRecordStatus) hearingRecordStatus.textContent = `${trialStage} must be recorded on a hearing date that has arrived.`;
+        return;
+    }
+    if (!isTerminalStage && dateKey === todayKey && editedRecord?.date !== dateKey) {
+        if (hearingRecordStatus) hearingRecordStatus.textContent = 'A next hearing date must be later than today.';
+        return;
+    }
+    if (isTerminalStage && hearingDateRecords.some(record => record.date > todayKey && record.id !== editingHearingRecordId)) {
+        if (hearingRecordStatus) hearingRecordStatus.textContent = 'Remove the next hearing date before recording a final Trial Stage.';
+        return;
+    }
     const id = editingHearingRecordId || `hearing-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-    const updatedRecord = { id, kind: hearingDateKind(dateKey), date: dateKey, trialStage };
+    const updatedRecord = {
+        id,
+        kind: hearingDateKind(dateKey),
+        date: dateKey,
+        trialStage,
+        markAs: getHearingMarkAs(trialStage)
+    };
     hearingDateRecords = hearingDateRecords.filter(record =>
         record.id !== editingHearingRecordId
         && !(updatedRecord.kind === 'next' && record.kind === 'next')
@@ -1472,25 +1732,560 @@ deleteHearingRecordButton?.addEventListener('click', () => {
     renderHearingRecords();
 });
 
-function updateDecisionFields() {
-    const decidedToggle = document.getElementById('is_decided');
-    const decisionFields = document.getElementById('decisionFields');
-    const decisionDate = document.getElementById('dod_date');
-    const judgement = document.getElementById('judgement');
-    const show = decidedToggle?.checked === true;
+const caseRecordFieldIds = [
+    'casestatus', 'courttype', 'regprefix', 'regnumber', 'regyear', 'regdate',
+    'caseJudgeSelect', 'caseJudgeId', 'caseJudgeDisplayName', 'caseCourtNumber',
+    'caseJudgeCourtType', 'caseJudgeName', 'courtnan', 'challandate', 'chargedate',
+    'caseNextDateValue', 'caseTrialStageValue', 'ucrNumber', 'ucrSerial', 'ucrYear', 'report_type', 'ucr_dod'
+];
+const caseRecordLabels = {
+    ucr: 'UCR Report',
+    chargesheet: 'Chargesheet',
+    lower: 'Lower Case Record',
+    session: 'Session Case Record',
+    jjb: 'JJB Case Record'
+};
+const caseRecordCourtTypes = {
+    lower: 'Lower Court',
+    session: 'Session Court',
+    jjb: 'JJB'
+};
 
-    if (decisionFields) decisionFields.style.display = show ? 'grid' : 'none';
+function createCaseRecordDraft(type, caseItem = null) {
+    const draft = {
+        type,
+        id: caseItem?.id || null,
+        collectionName: caseItem?._collectionName || LINKED_CASES_COLLECTION,
+        policeStationId: caseItem?.policeStationId || '',
+        policeStation: caseItem?.policeStation || '',
+        firMasterId: caseItem?.firMasterId || caseItem?.firId || '',
+        predecessorCaseId: caseItem?.predecessorCaseId || '',
+        successorCaseId: caseItem?.successorCaseId || '',
+        localId: caseItem?.id || `draft-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        courtTypeDrivesType: type === 'chargesheet',
+        fields: {},
+        hearingDateRecord: Array.isArray(caseItem?.hearingDateRecord) ? caseItem.hearingDateRecord : []
+    };
+    const firestoreFields = {
+        casestatus: 'status',
+        courttype: 'courtType',
+        regprefix: 'regPrefix',
+        regnumber: 'regNo',
+        regyear: 'regYear',
+        regdate: 'regDate',
+        caseJudgeSelect: 'judgeId',
+        caseJudgeId: 'judgeId',
+        caseJudgeDisplayName: 'judgeDisplayName',
+        caseCourtNumber: 'courtNumber',
+        caseJudgeCourtType: 'judgeCourtType',
+        caseJudgeName: 'judgeName',
+        courtnan: 'courtName',
+        challandate: 'challanDate',
+        chargedate: 'chargeDate',
+        caseNextDateValue: 'nextDate',
+        caseTrialStageValue: 'trialStage',
+        ucrNumber: 'ucrNumber',
+        report_type: 'report_type',
+        ucr_dod: 'ucr_dod'
+    };
+    caseRecordFieldIds.forEach(id => {
+        const key = firestoreFields[id];
+        const legacyKey = id === 'report_type' ? 'ucrType' : id === 'ucr_dod' ? 'ucrDisposedDate' : '';
+        const value = caseItem && key ? (caseItem[key] ?? (legacyKey ? caseItem[legacyKey] : '')) : '';
+        draft.fields[id] = String(value ?? '');
+    });
+    const ucrNumberParts = String(draft.fields.ucrNumber || '').trim().match(/^(?:UCR\/)?(\d+)\/(\d{4})$/i);
+    if (ucrNumberParts) {
+        draft.fields.ucrSerial = ucrNumberParts[1];
+        draft.fields.ucrYear = ucrNumberParts[2];
+    } else if (/^\d+$/.test(String(draft.fields.ucrNumber || '').trim())) {
+        draft.fields.ucrSerial = String(draft.fields.ucrNumber).trim();
+    }
+    if (!caseItem) {
+        draft.fields.casestatus = type === 'ucr' ? 'UCR' : 'UT';
+        draft.fields.courttype = caseRecordCourtTypes[type] || '';
+        draft.fields.regprefix = 'CHI';
+    }
+    draft.nonJjbRegPrefix = draft.fields.regprefix && draft.fields.regprefix.toUpperCase() !== 'JJB'
+        ? draft.fields.regprefix
+        : 'CHI';
+    return draft;
+}
 
-    [decisionDate, judgement].forEach(field => {
+function inferCaseRecordType(caseItem) {
+    if (['ucr', 'lower', 'session', 'jjb'].includes(caseItem?.recordType)) return caseItem.recordType;
+    if (['UCR', 'UNTRACE', 'UNTRACED', 'CANCELLATION', 'CANCELLED', 'CANCELED']
+        .includes(String(caseItem?.status || '').trim().toUpperCase()) || caseItem?.ucrNumber) return 'ucr';
+    const courtType = String(caseItem?.courtType || '').toLowerCase();
+    if (courtType.includes('session')) return 'session';
+    if (courtType.includes('jjb')) return 'jjb';
+    return 'lower';
+}
+
+function captureActiveCaseRecord() {
+    const draft = caseRecordDrafts[activeCaseRecordIndex];
+    if (!draft) return;
+    if (draft.type !== 'ucr') syncNextDateStage();
+    caseRecordFieldIds.forEach(id => {
+        const field = document.getElementById(id);
+        if (field) draft.fields[id] = field.value;
+    });
+    if (draft.type === 'ucr') {
+        const serial = String(draft.fields.ucrSerial || '').trim();
+        const year = String(draft.fields.ucrYear || '').trim();
+        draft.fields.ucrNumber = serial && year ? `UCR/${serial}/${year}` : '';
+    }
+    draft.hearingDateRecord = hearingDateRecords.map(record => ({ ...record }));
+    refreshDerivedFirStatus();
+    refreshUcrActionState();
+}
+
+function renderCaseRecordList() {
+    if (!caseRecordList) return;
+    caseRecordList.replaceChildren();
+    caseRecordDrafts.forEach((draft, index) => {
+        const item = document.createElement('div');
+        item.className = 'case-record-item';
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'case-record-select';
+        button.textContent = `${index + 1}. ${caseRecordLabels[draft.type] || 'Case Record'}`;
+        button.setAttribute('aria-pressed', String(index === activeCaseRecordIndex));
+        button.addEventListener('click', () => activateCaseRecord(index));
+        item.append(button);
+        caseRecordList.append(item);
+    });
+    const activeDraft = caseRecordDrafts[activeCaseRecordIndex];
+    if (caseRecordDetailTitle) {
+        caseRecordDetailTitle.textContent = activeDraft
+            ? `${caseRecordLabels[activeDraft.type] || 'Case Record'} Details`
+            : 'Case Record Details';
+    }
+    const removeActiveButton = document.getElementById('removeActiveCaseRecord');
+    if (removeActiveButton) removeActiveButton.hidden = !activeDraft;
+    const commitButton = document.getElementById('commitToSessions');
+    if (commitButton) {
+        commitButton.hidden = !activeDraft || activeDraft.type !== 'lower' || !activeDraft.id
+            || !selectedFirMasterId || Boolean(activeDraft.successorCaseId);
+    }
+    refreshUcrActionState();
+}
+
+async function removeCaseRecord(index) {
+    const draft = caseRecordDrafts[index];
+    if (!draft) return;
+    if (activeCaseRecordIndex === index) captureActiveCaseRecord();
+    if (draft.id) {
+        const confirmed = window.confirm(`Remove this ${caseRecordLabels[draft.type] || 'case record'}? Only this proceeding will be deleted; its linked FIR Master and other proceedings will remain.`);
+        if (!confirmed) return;
+        caseRecordLoadSequence += 1;
+        const removeButton = document.getElementById('removeActiveCaseRecord');
+        if (removeButton) removeButton.disabled = true;
+        try {
+            const assignedStation = await getAssignedPoliceStation();
+            const recordStationId = draft.policeStationId || selectedFirMasterData?.policeStationId || '';
+            const recordStationName = String(draft.policeStation || selectedFirMasterData?.policeStation || '').trim();
+            if (recordStationId
+                ? recordStationId !== assignedStation.policeStationId
+                : recordStationName.toLocaleLowerCase() !== assignedStation.policeStation.toLocaleLowerCase()) {
+                throw new Error('This proceeding is not assigned to your police station. Contact the administrator before removing it.');
+            }
+            const counterpartId = draft.successorCaseId || draft.predecessorCaseId;
+            if (counterpartId) {
+                const linkedRecords = await loadRecordsForFir(db, selectedFirMasterId || draft.firMasterId || draft.firId);
+                const counterpart = linkedRecords.find(record => record.id === counterpartId);
+                if (counterpart) {
+                    await updateDoc(doc(db, counterpart._collectionName || LINKED_CASES_COLLECTION, counterpart.id), {
+                        ...(draft.successorCaseId ? { predecessorCaseId: '' } : { successorCaseId: '' }),
+                        updatedAt: serverTimestamp()
+                    });
+                    const counterpartDraft = caseRecordDrafts.find(record => record.id === counterpart.id);
+                    if (counterpartDraft) {
+                        if (draft.successorCaseId) counterpartDraft.predecessorCaseId = '';
+                        else counterpartDraft.successorCaseId = '';
+                    }
+                }
+            }
+            await deleteDoc(doc(db, draft.collectionName || 'cases', draft.id));
+        } catch (error) {
+            console.error('Could not remove case record:', error);
+            if (caseRecordStatus) caseRecordStatus.textContent = error?.message || 'Could not remove the saved record. Please try again.';
+            renderCaseRecordList();
+            return;
+        }
+        try {
+            const saved = localStorage.getItem(HEARING_RECORD_STORAGE_KEY);
+            const allCases = saved ? JSON.parse(saved) : {};
+            if (!allCases || typeof allCases !== 'object' || Array.isArray(allCases)) {
+                throw new Error('Saved hearing records have an invalid format.');
+            }
+            delete allCases[draft.id];
+            localStorage.setItem(HEARING_RECORD_STORAGE_KEY, JSON.stringify(allCases));
+        } catch (error) {
+            console.error('Could not remove deleted case hearing records from local storage:', error);
+            if (caseRecordStatus) caseRecordStatus.textContent = 'Record removed, but old hearing data could not be cleaned up from this browser.';
+        }
+    }
+
+    caseRecordDrafts.splice(index, 1);
+    linkedFirStatusRecords = linkedFirStatusRecords.filter(record => record.id !== draft.id);
+    if (draft.id && selectedFirMasterId) {
+        try {
+            const remainingRecords = await loadRecordsForFir(db, selectedFirMasterId);
+            linkedFirStatusRecords = remainingRecords;
+            const status = deriveFirStatus(selectedFirMasterData || {}, remainingRecords);
+            await updateDoc(doc(db, 'firMasters', selectedFirMasterId), { firStatus: status, updatedAt: serverTimestamp() });
+            selectedFirMasterData = { ...selectedFirMasterData, firStatus: status };
+        } catch (error) {
+            console.error('Could not refresh FIR status after proceeding deletion:', error);
+            if (caseRecordStatus) caseRecordStatus.textContent = 'Proceeding removed, but FIR Status could not be refreshed. Retry saving or ask an administrator to review it.';
+        }
+    }
+    refreshDerivedFirStatus();
+    if (draft.id) window.dispatchEvent(new CustomEvent('caseAdded'));
+    if (caseRecordDrafts.length === 0) {
+        activeCaseRecordIndex = -1;
+        if (caseRecordDetails) caseRecordDetails.hidden = true;
+        renderCaseRecordList();
+        if (caseRecordStatus) caseRecordStatus.textContent = 'Proceeding removed. Save to keep the FIR Master without a proceeding, or add another record.';
+        return;
+    }
+    const nextIndex = index < activeCaseRecordIndex
+        ? activeCaseRecordIndex - 1
+        : Math.min(index, caseRecordDrafts.length - 1);
+    activateCaseRecord(nextIndex, false);
+}
+
+function setCaseRecordEditorVisibility(draft) {
+    const isUcr = draft?.type === 'ucr';
+    const isMasterOnly = !draft;
+    const statusSection = document.querySelector('.case-section-status');
+    const courtStatusSection = document.getElementById('sectionCourtStatus');
+    const courtSection = document.getElementById('sectionCourtReg');
+    const hearingSection = document.getElementById('sectionNextDate');
+    const ucrSection = document.getElementById('ucrRecordFields');
+    const statusSelect = document.getElementById('casestatus');
+    const courtTypeSelect = document.getElementById('courttype');
+    const accusedSection = document.getElementById('sectionAccused');
+    const witnessSection = document.getElementById('sectionWitness');
+
+    if (statusSection) statusSection.hidden = isUcr || isMasterOnly;
+    if (courtStatusSection) courtStatusSection.hidden = isUcr || isMasterOnly;
+    if (courtSection) courtSection.hidden = isUcr || isMasterOnly;
+    if (hearingSection) hearingSection.hidden = isUcr || isMasterOnly;
+    if (ucrSection) ucrSection.hidden = !isUcr;
+    if (accusedSection) accusedSection.hidden = isUcr || isMasterOnly;
+    if (witnessSection) witnessSection.hidden = isUcr || isMasterOnly;
+    if (statusSelect) statusSelect.disabled = isUcr || isMasterOnly;
+    if (courtTypeSelect) {
+        courtTypeSelect.disabled = isUcr || isMasterOnly;
+        courtTypeSelect.required = !isUcr && !isMasterOnly;
+    }
+    ['ucrNumber', 'ucrSerial', 'ucrYear', 'report_type', 'ucr_dod'].forEach(id => {
+        const field = document.getElementById(id);
         if (!field) return;
-        const group = field.closest('.input-group');
-        if (group) group.style.display = show ? '' : 'none';
-        field.disabled = !show;
-        field.required = show && field.id === 'dod_date';
+        field.disabled = !isUcr;
+        field.required = isUcr && ['ucrSerial', 'ucrYear', 'report_type', 'ucr_dod'].includes(id);
     });
 }
 
-document.getElementById('is_decided')?.addEventListener('change', updateDecisionFields);
+async function loadLinkedCaseRecords(caseItem, loadSequence) {
+    const firLinkId = caseItem?.firMasterId || caseItem?.firId;
+    if (!firLinkId) return;
+    try {
+        const linkedRecords = await loadRecordsForFir(db, firLinkId);
+        if (loadSequence !== caseRecordLoadSequence || form.dataset.editId !== caseItem.id) return;
+        linkedFirStatusRecords = linkedRecords;
+        if (!editingFirMaster && linkedRecords.length < 2) return;
+
+        captureActiveCaseRecord();
+        const currentDraftsById = new Map(
+            caseRecordDrafts.filter(record => record.id).map(record => [`${record.collectionName}:${record.id}`, record])
+        );
+        const localDrafts = caseRecordDrafts.filter(record => !record.id);
+        const activeLocalId = caseRecordDrafts[activeCaseRecordIndex]?.id
+            ? null
+            : caseRecordDrafts[activeCaseRecordIndex]?.localId;
+        const loadedDrafts = linkedRecords.map(record => {
+            const loadedDraft = createCaseRecordDraft(inferCaseRecordType(record), record);
+            const currentDraft = currentDraftsById.get(`${record._collectionName}:${record.id}`);
+            if (!currentDraft) return loadedDraft;
+            loadedDraft.fields = { ...loadedDraft.fields, ...currentDraft.fields };
+            loadedDraft.hearingDateRecord = currentDraft.hearingDateRecord.map(hearing => ({ ...hearing }));
+            return loadedDraft;
+        });
+        caseRecordDrafts.splice(
+            0,
+            caseRecordDrafts.length,
+            ...loadedDrafts,
+            ...localDrafts
+        );
+        const selectedIndex = activeLocalId
+            ? caseRecordDrafts.findIndex(record => record.localId === activeLocalId)
+            : caseRecordDrafts.findIndex(record => record.id === caseItem.id
+                && record.collectionName === (caseItem._collectionName || 'cases'));
+        activeCaseRecordIndex = selectedIndex >= 0 ? selectedIndex : 0;
+        renderCaseRecordList();
+        if (activeCaseRecordIndex >= 0) activateCaseRecord(activeCaseRecordIndex, false);
+        refreshDerivedFirStatus();
+    } catch (error) {
+        console.error('Could not load linked case records:', error);
+        if (loadSequence === caseRecordLoadSequence && caseRecordStatus) {
+            caseRecordStatus.textContent = 'Could not load all linked records. Reopen the form to retry.';
+        }
+    }
+}
+
+function activateCaseRecord(index, capture = true) {
+    if (capture && activeCaseRecordIndex >= 0) captureActiveCaseRecord();
+    const draft = caseRecordDrafts[index];
+    if (!draft) return;
+    activeCaseRecordIndex = index;
+    if (caseRecordDetails) caseRecordDetails.hidden = false;
+
+    caseRecordFieldIds.forEach(id => {
+        const field = document.getElementById(id);
+        if (!field) return;
+        const value = draft.fields[id] || '';
+        if (field._flatpickr) {
+            if (value) field._flatpickr.setDate(value, false, 'd/m/Y');
+            else field._flatpickr.clear(false);
+        } else {
+            field.value = value;
+        }
+    });
+
+    const courtTypeSelect = document.getElementById('courttype');
+    if (draft.type !== 'ucr' && caseRecordCourtTypes[draft.type] && !draft.id) {
+        courtTypeSelect.value = caseRecordCourtTypes[draft.type];
+    }
+    courtTypeSelect?.dispatchEvent(new Event('change', { bubbles: true }));
+    const judgeSelect = document.getElementById('caseJudgeSelect');
+    if (judgeSelect && draft.fields.caseJudgeSelect) {
+        populateCaseJudgeOptions(draft.fields.caseJudgeSelect);
+    }
+    ['caseJudgeId', 'caseJudgeDisplayName', 'caseCourtNumber', 'caseJudgeCourtType', 'caseJudgeName', 'courtnan']
+        .forEach(id => {
+            const field = document.getElementById(id);
+            if (field) field.value = draft.fields[id] || '';
+        });
+
+    setCaseRecordEditorVisibility(draft);
+    if (draft.type === 'ucr') {
+        resetHearingRecords();
+    } else {
+        loadHearingRecords({
+            id: draft.id || draft.localId,
+            hearingDateRecord: draft.hearingDateRecord
+        });
+        updateHearingDateSnapshot();
+    }
+    updateCaseStatusFields();
+    refreshDerivedFirStatus();
+    if (caseRecordStatus) caseRecordStatus.textContent = '';
+    renderCaseRecordList();
+}
+
+const policeReportMenu = document.getElementById('policeReportMenu');
+const policeReportKinds = document.getElementById('policeReportKinds');
+const addPoliceReportButton = document.getElementById('addPoliceReport');
+
+function closePoliceReportMenu() {
+    if (!policeReportMenu) return;
+    policeReportMenu.hidden = true;
+    addPoliceReportButton?.setAttribute('aria-expanded', 'false');
+}
+
+addPoliceReportButton?.addEventListener('click', () => {
+    const opening = policeReportMenu?.hidden === true;
+    if (opening) {
+        policeReportMenu.hidden = false;
+        addPoliceReportButton.setAttribute('aria-expanded', 'true');
+        policeReportKinds.querySelector('button:not(:disabled)')?.focus();
+    } else {
+        closePoliceReportMenu();
+    }
+});
+
+document.getElementById('chooseChargesheet')?.addEventListener('click', () => {
+    if (activeCaseRecordIndex >= 0) captureActiveCaseRecord();
+    closePoliceReportMenu();
+    caseRecordDrafts.push(createCaseRecordDraft('chargesheet'));
+    activateCaseRecord(caseRecordDrafts.length - 1, false);
+});
+
+document.addEventListener('click', event => {
+    if (!event.target.closest('.case-record-menu-host')) closePoliceReportMenu();
+});
+
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && policeReportMenu && !policeReportMenu.hidden) {
+        closePoliceReportMenu();
+        addPoliceReportButton?.focus();
+    }
+});
+
+document.querySelectorAll('[data-add-case-record]').forEach(button => {
+    button.addEventListener('click', async () => {
+        if (activeCaseRecordIndex >= 0) captureActiveCaseRecord();
+        const type = button.dataset.addCaseRecord;
+        if (type === 'ucr') {
+            const currentRecords = selectedFirMasterId
+                ? await loadRecordsForFir(db, selectedFirMasterId).catch(() => linkedFirStatusRecords)
+                : linkedFirStatusRecords;
+            const courtExists = caseRecordDrafts.some(record => record.type !== 'ucr')
+                || currentRecords.some(record => record.recordType !== 'ucr' && !record.ucrNumber
+                    && !['ucr', 'untrace', 'untraced', 'cancelled', 'cancellation'].includes(String(record.status || '').toLowerCase()));
+            if (caseRecordDrafts.some(record => record.type === 'ucr') || courtExists) {
+                if (caseRecordStatus) caseRecordStatus.textContent = courtExists
+                    ? 'A UCR report cannot be added after a court proceeding exists.'
+                    : 'This FIR already has its single UCR report.';
+                refreshUcrActionState();
+                return;
+            }
+        }
+        closePoliceReportMenu();
+        caseRecordDrafts.push(createCaseRecordDraft(type));
+        activateCaseRecord(caseRecordDrafts.length - 1, false);
+    });
+});
+
+function setFirMasterEditingMode(editing) {
+    if (editing && caseRecordDetails) caseRecordDetails.hidden = true;
+    const deleteButton = document.getElementById('deleteFirMaster');
+    if (deleteButton) deleteButton.hidden = !editing;
+}
+
+function setFirMasterFieldsLocked(locked) {
+    const alwaysReadOnly = new Set(['firdate', 'firyear', 'policestation', 'incident_date']);
+    ['firno', 'firdate', 'firyear', 'undersection', 'crimehead', 'policestation', 'incident_date',
+        'incident_place', 'beatDetails', 'complainant_name', 'complainant_father_name', 'complainant_mobile', 'complainant_address']
+        .forEach(name => {
+            const field = form.elements.namedItem(name);
+            if (field) field.readOnly = locked || alwaysReadOnly.has(name);
+        });
+    const status = document.getElementById('fir_Status');
+    if (status) status.readOnly = true;
+}
+
+async function linkLegacyFirGroup(group, existingMaster = null) {
+    const description = group.records.map(record =>
+        `${record.courtType || 'Court'} ${record.regNo || record.courtNumber || ''} (${record.status || 'status unknown'})`
+    ).join('\n');
+    const confirmed = window.confirm(
+        `Verify this legacy FIR before linking ${group.records.length} existing record(s):\n\n`
+        + `FIR ${group.firNo}/${group.firYear} · ${group.policeStation}\n${description}\n\n`
+        + 'This adds a FIR Master link and preserves every existing document ID and hearing history.'
+    );
+    if (!confirmed) return null;
+    let firMasterId = existingMaster?.id || '';
+    if (!firMasterId) {
+        firMasterId = await saveFirMaster(db, { ...group, firStatus: deriveFirStatus(group, group.records) }, '', { allowLegacyMatch: true });
+    }
+    const masterFields = existingMaster || group;
+    const initialStatus = deriveFirStatus(existingMaster || group, group.records);
+    for (let start = 0; start < group.records.length; start += 450) {
+        const batch = writeBatch(db);
+        group.records.slice(start, start + 450).forEach(record => {
+            batch.update(doc(db, 'cases', record.id), {
+                firMasterId,
+                fileNo: group.fileNo,
+                firNo: masterFields.firNo || record.firNo || '',
+                firYear: masterFields.firYear || record.firYear || '',
+                firDate: masterFields.firDate || record.firDate || '',
+                policeStation: masterFields.policeStation || record.policeStation || '',
+                policeStationId: masterFields.policeStationId || group.policeStationId || record.policeStationId || '',
+                underSection: masterFields.underSection || record.underSection || '',
+                crimeHead: masterFields.crimeHead || record.crimeHead || '',
+                incidentDate: masterFields.incidentDate || record.incidentDate || '',
+                incidentPlace: masterFields.incidentPlace || record.incidentPlace || '',
+                beatDetails: masterFields.beatDetails || record.beatDetails || '',
+                complainantName: masterFields.complainantName || record.complainantName || '',
+                complainantFatherName: masterFields.complainantFatherName || record.complainantFatherName || '',
+                complainantMobile: masterFields.complainantMobile || record.complainantMobile || '',
+                complainantAddress: masterFields.complainantAddress || record.complainantAddress || '',
+                legacyFirId: group.legacyFirId || record.firId || '',
+                firId: firMasterId,
+                firStatus: initialStatus,
+                updatedAt: serverTimestamp()
+            });
+        });
+        await batch.commit();
+    }
+    const linkedRecords = await loadRecordsForFir(db, firMasterId);
+    const status = deriveFirStatus(existingMaster || group, linkedRecords);
+    await updateDoc(doc(db, 'firMasters', firMasterId), {
+        fileNo: group.fileNo,
+        firStatus: status,
+        updatedAt: serverTimestamp()
+    });
+    for (let start = 0; start < group.records.length; start += 450) {
+        const batch = writeBatch(db);
+        group.records.slice(start, start + 450).forEach(record => {
+            batch.update(doc(db, 'cases', record.id), { firStatus: status, updatedAt: serverTimestamp() });
+        });
+        await batch.commit();
+    }
+    window.dispatchEvent(new CustomEvent('caseAdded'));
+    return {
+        ...(existingMaster || group),
+        id: firMasterId,
+        fileNo: group.fileNo,
+        firStatus: status
+    };
+}
+
+document.getElementById('removeActiveCaseRecord')?.addEventListener('click', () => {
+    if (activeCaseRecordIndex >= 0) void removeCaseRecord(activeCaseRecordIndex);
+});
+
+document.getElementById('deleteFirMaster')?.addEventListener('click', async event => {
+    if (!editingFirMaster || !selectedFirMasterId) return;
+    const button = event.currentTarget;
+    button.disabled = true;
+    try {
+        const linkedRecords = await loadRecordsForFir(db, selectedFirMasterId);
+        if (linkedRecords.length) {
+            if (caseRecordStatus) caseRecordStatus.textContent = 'This FIR Master has linked court proceedings or a UCR report. Remove those records before deleting the master.';
+            return;
+        }
+        const firNo = String(selectedFirMasterData?.firNo || document.getElementById('firno')?.value || '—');
+        const firYear = String(selectedFirMasterData?.firYear || document.getElementById('firyear')?.value || '—');
+        const station = String(selectedFirMasterData?.policeStation || document.getElementById('policestation')?.value || '—');
+        if (!window.confirm(`Delete this FIR Master?\n\nFIR Number: ${firNo}\nFIR Year: ${firYear}\nPolice Station: ${station}\n\nThis action cannot be undone.`)) return;
+        const assignedStation = await getAssignedPoliceStation();
+        if (selectedFirMasterData?.policeStationId
+            ? selectedFirMasterData.policeStationId !== assignedStation.policeStationId
+            : station.trim().toLocaleLowerCase() !== assignedStation.policeStation.toLocaleLowerCase()) {
+            throw new Error('This FIR Master is not assigned to your police station. Contact the administrator before deleting it.');
+        }
+        await deleteDoc(doc(db, 'firMasters', selectedFirMasterId));
+        window.dispatchEvent(new CustomEvent('caseAdded'));
+        closeModal();
+    } catch (error) {
+        console.error('Could not delete FIR Master:', error);
+        if (caseRecordStatus) caseRecordStatus.textContent = error?.message || 'The FIR Master could not be deleted. Check your access and try again.';
+    } finally {
+        button.disabled = false;
+    }
+});
+
+document.getElementById('commitToSessions')?.addEventListener('click', () => {
+    if (activeCaseRecordIndex < 0) return;
+    captureActiveCaseRecord();
+    const source = caseRecordDrafts[activeCaseRecordIndex];
+    if (!source?.id || source.type !== 'lower' || !selectedFirMasterId || source.successorCaseId) return;
+    source.fields.casestatus = 'Committed';
+    source.fields.caseTrialStageValue = 'Committed';
+    const successor = createCaseRecordDraft('session');
+    successor.predecessorCaseId = source.id;
+    successor.collectionName = LINKED_CASES_COLLECTION;
+    successor.fields.casestatus = 'UT';
+    successor.fields.courttype = 'Session Court';
+    caseRecordDrafts.push(successor);
+    activateCaseRecord(caseRecordDrafts.length - 1, false);
+    if (caseRecordStatus) caseRecordStatus.textContent = 'Sessions Court successor added. Complete its registration details and save both records.';
+});
 
 window.openAddCaseModal = (caseItem = null) => {
     resetForm();
@@ -1500,13 +2295,23 @@ window.openAddCaseModal = (caseItem = null) => {
     const stateLabel = document.getElementById('caseModalStateLabel');
     if (stateLabel) stateLabel.textContent = caseItem ? 'EDITING CASE' : 'NEW CASE';
     document.getElementById('caseModalState')?.classList.toggle('is-editing', Boolean(caseItem));
-
+    editingFirMaster = caseItem?.recordType === 'fir_master' || caseItem?._collectionName === 'firMasters';
+    setFirMasterEditingMode(editingFirMaster);
+    selectedFirMasterId = editingFirMaster
+        ? caseItem.id
+        : (caseItem?._collectionName === LINKED_CASES_COLLECTION ? (caseItem.firMasterId || caseItem.firId || '') : (caseItem?.firMasterId || ''));
+    if (selectedFirMasterId && caseItem) {
+        selectedFirMasterData = { ...caseItem };
+        if (!editingFirMaster) setFirMasterFieldsLocked(true);
+    }
     if (caseItem && caseItem.id) {
         form.dataset.editId = caseItem.id;
 
         // Map Firestore to Form Fields
         const mapping = {
             status: 'casestatus',
+            fileNo: 'fileNo',
+            firStatus: 'fir_Status',
             courtType: 'courttype',
             firNo: 'firno',
             firYear: 'firyear',
@@ -1528,8 +2333,6 @@ window.openAddCaseModal = (caseItem = null) => {
             chargeDate: 'chargedate',
             nextDate: 'nextdate',
             trialStage: 'trial_stage',
-            decisionDate: 'dod_date',
-            judgement: 'judgement',
             ioId: 'ioId',
             ioRank: 'iorank',
             ioName: 'ioname',
@@ -1537,6 +2340,7 @@ window.openAddCaseModal = (caseItem = null) => {
             iomobileNo: 'iomobileNo',
             incidentDate: 'incident_date',
             incidentPlace: 'incident_place',
+            beatDetails: 'beatDetails',
             complainantName: 'complainant_name',
             complainantFatherName: 'complainant_father_name',
             complainantMobile: 'complainant_mobile',
@@ -1559,15 +2363,7 @@ window.openAddCaseModal = (caseItem = null) => {
                 }
             }
         });
-        const decidedToggle = document.getElementById('is_decided');
-        if (decidedToggle) {
-            const hasLegacyDecision = Boolean(caseItem.decisionDate || caseItem.judgement);
-            decidedToggle.checked = caseItem.isDecided === undefined
-                ? hasLegacyDecision
-                : caseItem.isDecided === true;
-        }
-        updateDecisionFields();
-
+        updateFileNo();
         // Recreate Accused
         if (Array.isArray(caseItem.accused) && caseItem.accused.length > 0) {
             const container = document.getElementById('accusedContainer');
@@ -1658,17 +2454,40 @@ window.openAddCaseModal = (caseItem = null) => {
             }
         }
     }
-    if (!caseItem) updateDecisionFields();
+    if (caseItem && !editingFirMaster) {
+        caseRecordDrafts.push(createCaseRecordDraft(inferCaseRecordType(caseItem), caseItem));
+        activeCaseRecordIndex = 0;
+        if (caseRecordDetails) caseRecordDetails.hidden = false;
+    }
     loadHearingRecords(caseItem);
     renderNextDateStage();
+    if (caseItem && !editingFirMaster) {
+        caseRecordDrafts[0].hearingDateRecord = hearingDateRecords.map(record => ({ ...record }));
+        setCaseRecordEditorVisibility(caseRecordDrafts[0]);
+    } else if (editingFirMaster) {
+        setCaseRecordEditorVisibility(null);
+    }
+    renderCaseRecordList();
 
     const policeStationInput = document.getElementById('policestation');
-    if (policeStationInput) policeStationInput.value = 'OSM';
+    const stationLoadId = ++policeStationLoadSequence;
+    if (policeStationInput && !caseItem) policeStationInput.value = '';
+    void getAssignedPoliceStation().then(station => {
+        if (stationLoadId !== policeStationLoadSequence || !modal.classList.contains('show')) return;
+        if (policeStationInput) policeStationInput.value = station.policeStation;
+    }).catch(error => {
+        if (stationLoadId !== policeStationLoadSequence || !modal.classList.contains('show')) return;
+        if (caseRecordStatus) caseRecordStatus.textContent = error.message;
+    });
 
     const loadId = ++judgeLoadSequence;
     void loadCaseJudges(caseItem, loadId);
     const ioLoadId = ++ioLoadSequence;
     subscribeCaseIOs(caseItem, ioLoadId);
+    const caseRecordLoadId = ++caseRecordLoadSequence;
+    if (caseItem && selectedFirMasterId) void loadLinkedCaseRecords(caseItem, caseRecordLoadId);
+    if (selectedFirMasterId) void loadDerivedFirStatusForMaster(selectedFirMasterId);
+    else refreshDerivedFirStatus();
     updateCaseStatusFields();
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
@@ -1699,25 +2518,43 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal?.cla
 // FIR Year Auto calculation
 const firDate = document.getElementById('firdate');
 const firYear = document.getElementById('firyear');
-if (firDate && firYear) {
-    firDate.addEventListener('change', () => {
-        if (!firDate.value) { firYear.value = ''; return; }
-        if (firDate._flatpickr && firDate._flatpickr.selectedDates.length > 0) {
-            firYear.value = firDate._flatpickr.selectedDates[0].getFullYear();
-            clearRequiredFieldError(firYear);
-            return;
-        }
-        const parts = firDate.value.split('/');
-        if (parts.length === 3) {
-            const y = parseInt(parts[2], 10);
-            if (!isNaN(y)) {
-                firYear.value = y;
-                clearRequiredFieldError(firYear);
-                return;
-            }
-        }
-    });
+const firNumber = document.getElementById('firno');
+const fileNoInput = document.getElementById('fileNo');
+
+function updateFileNo() {
+    if (!fileNoInput) return;
+    const number = String(firNumber?.value || '').trim();
+    const year = String(firYear?.value || '').trim();
+    fileNoInput.value = number && year.length >= 2 ? `${number}/${year.slice(-2)}` : '';
 }
+
+function updateFirYear() {
+    if (!firDate || !firYear) return;
+    if (!firDate.value) {
+        firYear.value = '';
+        updateFileNo();
+        return;
+    }
+
+    let year = '';
+    if (firDate._flatpickr && firDate._flatpickr.selectedDates.length > 0) {
+        year = String(firDate._flatpickr.selectedDates[0].getFullYear());
+    } else {
+        const isoDate = firDate.value.match(/^(\d{4})-\d{2}-\d{2}$/);
+        const legacyDate = firDate.value.match(/^\d{1,2}\/\d{1,2}\/(\d{4})$/);
+        year = isoDate?.[1] || legacyDate?.[1] || '';
+    }
+
+    if (year) {
+        firYear.value = year;
+        clearRequiredFieldError(firYear);
+    }
+    updateFileNo();
+}
+
+firDate?.addEventListener('change', updateFirYear);
+firNumber?.addEventListener('input', updateFileNo);
+firYear?.addEventListener('input', updateFileNo);
 
 // Accused Logic
 const showField = (field) => {
@@ -2054,6 +2891,15 @@ form?.addEventListener('input', event => {
 form?.addEventListener('change', event => {
     const field = event.target.closest('[required]');
     if (field && form.contains(field)) clearRequiredFieldError(field);
+    if (caseRecordFieldIds.includes(event.target.id) && activeCaseRecordIndex >= 0) {
+        captureActiveCaseRecord();
+    }
+});
+
+form?.addEventListener('input', event => {
+    if (caseRecordFieldIds.includes(event.target.id) && activeCaseRecordIndex >= 0) {
+        captureActiveCaseRecord();
+    }
 });
 
 form?.addEventListener('reset', () => {
@@ -2065,7 +2911,51 @@ form?.addEventListener('reset', () => {
 
 form?.addEventListener('submit', async e => {
     e.preventDefault();
-    syncNextDateStage();
+    if (activeCaseRecordIndex >= 0) captureActiveCaseRecord();
+    if (editingFirMaster && selectedFirMasterId) {
+        try {
+            const linkedRecords = await loadRecordsForFir(db, selectedFirMasterId);
+            linkedFirStatusRecords = linkedRecords;
+            const loadedKeys = new Set(caseRecordDrafts.filter(record => record.id)
+                .map(record => `${record.collectionName}:${record.id}`));
+            linkedRecords.forEach(linkedRecord => {
+                const key = `${linkedRecord._collectionName}:${linkedRecord.id}`;
+                if (!loadedKeys.has(key)) caseRecordDrafts.push(createCaseRecordDraft(inferCaseRecordType(linkedRecord), linkedRecord));
+            });
+            refreshUcrActionState();
+        } catch (error) {
+            if (caseRecordStatus) caseRecordStatus.textContent = 'Linked proceedings and UCR could not be loaded, so the FIR Master was not saved. Reopen the modal and retry.';
+            return;
+        }
+    }
+    if (selectedFirMasterId && !editingFirMaster && !caseRecordDrafts.length) {
+        if (caseRecordStatus) caseRecordStatus.textContent = 'Add a proceeding before saving changes to the selected FIR.';
+        document.querySelector('.case-record-options')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+    for (const [index, record] of caseRecordDrafts.entries()) {
+        const fields = record.fields;
+        if (record.type === 'ucr') {
+            const missingUcrField = ['ucrSerial', 'ucrYear', 'report_type', 'ucr_dod']
+                .find(id => !String(fields[id] || '').trim());
+            if (missingUcrField) {
+                activateCaseRecord(index, false);
+                if (caseRecordStatus) caseRecordStatus.textContent = `Complete UCR details for record ${index + 1}.`;
+                document.getElementById(missingUcrField)?.focus();
+                return;
+            }
+            if (!/^\d{4}$/.test(String(fields.ucrYear || '').trim())) {
+                activateCaseRecord(index, false);
+                if (caseRecordStatus) caseRecordStatus.textContent = `Enter a four-digit UCR year for record ${index + 1}.`;
+                document.getElementById('ucrYear')?.focus();
+                return;
+            }
+        } else if (!String(fields.casestatus || '').trim() || !String(fields.courttype || '').trim()) {
+            activateCaseRecord(index, false);
+            if (caseRecordStatus) caseRecordStatus.textContent = `Complete case status and court type for record ${index + 1}.`;
+            return;
+        }
+    }
     if (!validateRequiredFields()) return;
 
     const submitBtn = form.querySelector('button[type="submit"]');
@@ -2076,59 +2966,46 @@ form?.addEventListener('submit', async e => {
     try {
         const formData = new FormData(form);
         const rawData = Object.fromEntries(formData.entries());
-        await persistMasterValue('crimeHead', String(rawData.crimehead || ''));
-
+        const assignedStation = await getAssignedPoliceStation();
+        if (selectedFirMasterData?.policeStationId
+            && selectedFirMasterData.policeStationId !== assignedStation.policeStationId) {
+            throw new Error('This FIR belongs to a different police station. Ask the administrator to assign the correct station before editing it.');
+        }
+        if (selectedFirMasterData && !selectedFirMasterData.policeStationId
+            && String(selectedFirMasterData.policeStation || '').trim().toLocaleLowerCase() !== assignedStation.policeStation.toLocaleLowerCase()) {
+            throw new Error('This FIR has no verifiable police-station ID. Ask the administrator to reconcile its station before editing it.');
+        }
         // Ensure firYear is recalculated
         const computedFirYear = (rawData.firdate) ? (rawData.firdate.split('/')[2] || '') : '';
 
         // Map Form to Firestore Schema
-        const caseData = {
-            status: String(rawData.casestatus || '').trim(),
-            courtType: String(rawData.courttype || '').trim(),
+        const enteredMasterData = {
             firNo: String(rawData.firno || '').trim(),
             firYear: String(computedFirYear || rawData.firyear || '').trim(),
+            fileNo: String(rawData.fileNo || '').trim(),
             firDate: String(rawData.firdate || '').trim(),
+            firStatus: String(document.getElementById('fir_Status')?.value || 'Under Investigation').trim(),
             underSection: String(rawData.undersection || '').trim(),
             crimeHead: String(rawData.crimehead || '').trim(),
-            policeStation: String(rawData.policestation || '').trim(),
-
-            regPrefix: String(rawData.regprefix || '').trim(),
-            regNo: String(rawData.regnumber || '').trim(),
-            regYear: String(rawData.regyear || '').trim(),
-            regDate: String(rawData.regdate || '').trim(),
-            courtName: String(rawData.courtnan || '').trim(),
-            courtNumber: String(rawData.courtNumber || '').trim(),
-            judgeCourtType: String(rawData.judgeCourtType || '').trim(),
-            judgeName: String(rawData.judgeName || '').trim(),
-            judgeId: String(rawData.judgeId || '').trim(),
-            judgeDisplayName: String(rawData.judgeDisplayName || '').trim(),
-            challanDate: String(rawData.challandate || '').trim(),
-            chargeDate: latestChargeDate(hearingDateRecords),
-            nextDate: String(rawData.nextdate || '').trim(),
-            trialStage: String(rawData.trial_stage || '').trim(),
-            hearingDateRecord: hearingDateRecords.map(record => ({
-                id: record.id,
-                kind: record.kind,
-                date: record.date,
-                trialStage: record.trialStage
-            })),
-            isDecided: document.getElementById('is_decided')?.checked === true,
-            decisionDate: String(document.getElementById('dod_date')?.value || '').trim(),
-            judgement: String(document.getElementById('judgement')?.value || '').trim(),
-
+            policeStation: assignedStation.policeStation,
+            policeStationId: assignedStation.policeStationId,
+            incidentDate: String(rawData.incident_date || '').trim(),
+            incidentPlace: String(rawData.incident_place || '').trim(),
+            beatDetails: String(rawData.beatDetails || '').trim(),
+            complainantName: String(rawData.complainant_name || '').trim(),
+            complainantFatherName: String(rawData.complainant_father_name || '').trim(),
+            complainantMobile: String(rawData.complainant_mobile || '').trim(),
+            complainantAddress: String(rawData.complainant_address || '').trim()
+        };
+        let masterData = selectedFirMasterId && !editingFirMaster
+            ? { ...selectedFirMasterData, fileNo: String(rawData.fileNo || '').trim() }
+            : enteredMasterData;
+        const courtFields = {
             ioRank: String(rawData.iorank || '').trim(),
             ioName: String(rawData.ioname || '').trim(),
             ioId: String(rawData.ioId || '').trim(),
             ioBeltno: String(rawData.ioBeltno || '').trim(),
             iomobileNo: String(rawData.iomobileNo || '').trim(),
-
-            incidentDate: String(rawData.incident_date || '').trim(),
-            incidentPlace: String(rawData.incident_place || '').trim(),
-            complainantName: String(rawData.complainant_name || '').trim(),
-            complainantFatherName: String(rawData.complainant_father_name || '').trim(),
-            complainantMobile: String(rawData.complainant_mobile || '').trim(),
-            complainantAddress: String(rawData.complainant_address || '').trim(),
-
             highlighted: Boolean(formData.get('highlightcase')),
             accused: [],
             witnesses: []
@@ -2148,7 +3025,7 @@ form?.addEventListener('submit', async e => {
         const poFlags = Array.from(document.querySelectorAll('input[name="po_status[]"]')).map(cb => cb.checked);
 
         for (let i = 0; i < accusedNames.length; i++) {
-            caseData.accused.push({
+            courtFields.accused.push({
                 name: String(accusedNames[i] || '').trim(),
                 fatherName: String(accusedFathers[i] || '').trim(),
                 mobile: String(accusedMobiles[i] || '').trim(),
@@ -2169,7 +3046,7 @@ form?.addEventListener('submit', async e => {
         const exFlags = Array.from(document.querySelectorAll('input[name="witness_examined[]"]')).map(cb => cb.checked);
 
         for (let i = 0; i < witnessNames.length; i++) {
-            caseData.witnesses.push({
+            courtFields.witnesses.push({
                 name: String(witnessNames[i] || '').trim(),
                 status: String(witnessStatus[i] || '').trim(),
                 examined: exFlags[i] || false,
@@ -2177,30 +3054,246 @@ form?.addEventListener('submit', async e => {
             });
         }
 
-        const casesCollection = collection(db, 'cases');
-        if (form.dataset.editId) {
-            await updateDoc(doc(db, 'cases', form.dataset.editId), {
-                ...caseData,
-                beltNo: deleteField(),
-                mobileNo: deleteField(),
-                registerDiaryDaterecords: deleteField(),
-                registerDiaryDateRecords: deleteField(),
+        const ucrDrafts = caseRecordDrafts.filter(record => record.type === 'ucr');
+        if (ucrDrafts.length > 1) throw new Error('Only one UCR report can be linked to an FIR. Remove the duplicate draft before saving.');
+        const existingRecords = selectedFirMasterId ? await loadRecordsForFir(db, selectedFirMasterId) : [];
+        const existingCourtProceedings = existingRecords.filter(record => record.recordType !== 'ucr' && !record.ucrNumber
+            && !['ucr', 'untrace', 'untraced', 'cancelled', 'cancellation'].includes(String(record.status || '').toLowerCase()));
+        const addingUcr = ucrDrafts.some(record => !record.id);
+        if (addingUcr && existingCourtProceedings.length) {
+            throw new Error('A UCR report cannot be added after a court proceeding already exists.');
+        }
+
+        let isEditingLegacyRecord = Boolean(form.dataset.editId && !selectedFirMasterId && !editingFirMaster);
+        let firMasterId = selectedFirMasterId;
+        let createdFirMasterInThisAttempt = false;
+        const hasNewProceedingDraft = caseRecordDrafts.some(record => !record.id);
+        if (!firMasterId && (!isEditingLegacyRecord || hasNewProceedingDraft)) {
+            const identity = {
+                firNo: enteredMasterData.firNo,
+                firYear: enteredMasterData.firYear,
+                policeStation: enteredMasterData.policeStation,
+                policeStationId: enteredMasterData.policeStationId
+            };
+            const [matches, legacyGroups] = await Promise.all([
+                findFirMasterMatches(db, identity),
+                findLegacyFirGroups(db, identity)
+            ]);
+            if (matches.length > 1) {
+                throw new Error('More than one FIR Master has this FIR number, year and police station. Resolve the duplicate records before saving.');
+            }
+            if (legacyGroups.length > 1) {
+                throw new Error('More than one unlinked legacy FIR group matches these details. Resolve the legacy records before saving.');
+            }
+
+            let matchedMaster = matches[0] || null;
+            if (addingUcr && legacyGroups.length === 1 && legacyGroups[0].records.some(record => inferCaseRecordType(record) !== 'ucr')) {
+                throw new Error('A UCR report cannot be added after a court proceeding already exists in the matching legacy FIR.');
+            }
+            if (addingUcr && legacyGroups.length === 1 && legacyGroups[0].records.some(record => inferCaseRecordType(record) === 'ucr')) {
+                throw new Error('The matching legacy FIR already has a UCR report. Link and edit that report instead.');
+            }
+            if (addingUcr && matchedMaster) {
+                const candidateRecords = await loadRecordsForFir(db, matchedMaster.id);
+                const hasCourtProceeding = candidateRecords.some(record => inferCaseRecordType(record) !== 'ucr');
+                const hasUcr = candidateRecords.some(record => inferCaseRecordType(record) === 'ucr');
+                if (hasCourtProceeding) throw new Error('A UCR report cannot be added after a court proceeding already exists.');
+                if (hasUcr) throw new Error('This FIR already has its single UCR report. Edit the saved report instead.');
+            }
+            if (legacyGroups.length === 1) {
+                const linkedExistingMaster = Boolean(matchedMaster);
+                matchedMaster = await linkLegacyFirGroup({
+                    ...legacyGroups[0],
+                    policeStation: assignedStation.policeStation,
+                    policeStationId: assignedStation.policeStationId
+                }, matchedMaster);
+                if (!matchedMaster) return;
+                createdFirMasterInThisAttempt = !linkedExistingMaster;
+            } else if (matchedMaster) {
+                if (!caseRecordDrafts.length) {
+                    const shouldOpenMaster = window.confirm(
+                        `An FIR Master already exists for FIR ${matchedMaster.firNo}/${matchedMaster.firYear} · ${matchedMaster.policeStation}.\n\nOpen that FIR Master instead of creating a duplicate?`
+                    );
+                    if (shouldOpenMaster) window.openAddCaseModal({ ...matchedMaster, id: matchedMaster.id, recordType: 'fir_master', _collectionName: 'firMasters' });
+                    return;
+                }
+                const confirmed = window.confirm(
+                    `An FIR Master already exists for FIR ${matchedMaster.firNo}/${matchedMaster.firYear} · ${matchedMaster.policeStation}.\n\n`
+                    + 'Add these proceeding records to that FIR? Existing FIR Master details will be retained.'
+                );
+                if (!confirmed) return;
+                masterData = { ...matchedMaster, fileNo: String(rawData.fileNo || matchedMaster.fileNo || '').trim() };
+            }
+
+            if (matchedMaster) {
+                firMasterId = matchedMaster.id;
+                isEditingLegacyRecord = false;
+            } else if (!isEditingLegacyRecord) {
+                firMasterId = await saveFirMaster(db, masterData);
+                createdFirMasterInThisAttempt = true;
+            }
+        } else if (editingFirMaster && firMasterId) {
+            firMasterId = await saveFirMaster(db, enteredMasterData, firMasterId);
+        }
+        if (firMasterId && !isEditingLegacyRecord && !selectedFirMasterId) {
+            selectedFirMasterId = firMasterId;
+            selectedFirMasterData = { ...masterData, id: firMasterId };
+            if (createdFirMasterInThisAttempt) {
+                editingFirMaster = true;
+                setFirMasterEditingMode(true);
+            }
+        }
+        await persistMasterValue('crimeHead', String(rawData.crimehead || ''));
+        const masterFieldsToPropagate = {
+            firNo: masterData.firNo || '',
+            firYear: masterData.firYear || '',
+            firDate: masterData.firDate || '',
+            policeStation: masterData.policeStation || assignedStation.policeStation,
+            policeStationId: masterData.policeStationId || assignedStation.policeStationId,
+            underSection: masterData.underSection || '',
+            crimeHead: masterData.crimeHead || '',
+            incidentDate: masterData.incidentDate || '',
+            incidentPlace: masterData.incidentPlace || '',
+            beatDetails: masterData.beatDetails || '',
+            complainantName: masterData.complainantName || '',
+            complainantFatherName: masterData.complainantFatherName || '',
+            complainantMobile: masterData.complainantMobile || '',
+            complainantAddress: masterData.complainantAddress || ''
+        };
+        const sharedLegacyFields = {
+            ...masterFieldsToPropagate,
+            ...masterData,
+            fileNo: String(rawData.fileNo || '').trim(),
+            firId: firMasterId || String(rawData.fileNo || '').trim(),
+            firMasterId: firMasterId || '',
+            ...courtFields
+        };
+        const linkedCasesCollection = collection(db, LINKED_CASES_COLLECTION);
+        const updatedRecordIds = new Set();
+        const saveFailures = [];
+        for (const [recordIndex, record] of caseRecordDrafts.entries()) {
+          try {
+            const fields = record.fields;
+            const recordHearings = record.hearingDateRecord.map(hearing => ({ ...hearing }));
+            const caseData = {
+                ...(record.collectionName === 'cases' ? sharedLegacyFields : { ...masterFieldsToPropagate, ...courtFields }),
+                fileNo: String(rawData.fileNo || '').trim(),
+                firId: firMasterId || String(rawData.fileNo || '').trim(),
+                firMasterId: firMasterId || '',
+                predecessorCaseId: record.predecessorCaseId || '',
+                successorCaseId: record.successorCaseId || '',
+                recordType: record.type,
+                status: record.type === 'ucr' ? 'UCR' : getCaseStatusFromTrialStage(
+                    record.successorCaseId
+                        ? 'Committed'
+                        : [...recordHearings]
+                            .sort((left, right) => String(right.date || '').localeCompare(String(left.date || '')))
+                            .find(hearing => String(hearing.trialStage || '').trim())?.trialStage
+                            || fields.caseTrialStageValue
+                ),
+                courtType: record.type === 'ucr' ? '' : String(fields.courttype || '').trim(),
+                regPrefix: String(fields.regprefix || '').trim(),
+                regNo: String(fields.regnumber || '').trim(),
+                regYear: String(fields.regyear || '').trim(),
+                regDate: String(fields.regdate || '').trim(),
+                courtName: String(fields.courtnan || '').trim(),
+                courtNumber: String(fields.caseCourtNumber || '').trim(),
+                judgeCourtType: String(fields.caseJudgeCourtType || '').trim(),
+                judgeName: String(fields.caseJudgeName || '').trim(),
+                judgeId: String(fields.caseJudgeId || '').trim(),
+                judgeDisplayName: String(fields.caseJudgeDisplayName || '').trim(),
+                challanDate: String(fields.challandate || '').trim(),
+                chargeDate: latestChargeDate(recordHearings),
+                nextDate: String(fields.caseNextDateValue || '').trim(),
+                trialStage: String(fields.caseTrialStageValue || '').trim(),
+                hearingDateRecord: recordHearings,
+                ucrNumber: record.type === 'ucr' ? String(fields.ucrNumber || '').trim() : '',
+                report_type: record.type === 'ucr' ? String(fields.report_type || '').trim() : '',
+                ucr_dod: record.type === 'ucr' ? String(fields.ucr_dod || '').trim() : ''
+            };
+
+            let recordId = record.id;
+            if (recordId) {
+                await updateDoc(doc(db, record.collectionName || 'cases', recordId), {
+                    ...caseData,
+                    beltNo: deleteField(),
+                    mobileNo: deleteField(),
+                    registerDiaryDaterecords: deleteField(),
+                    registerDiaryDateRecords: deleteField(),
+                    updatedAt: serverTimestamp()
+                });
+            } else {
+                const createdCase = await addDoc(linkedCasesCollection, {
+                    ...caseData,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+                recordId = createdCase.id;
+                record.id = recordId;
+                record.collectionName = LINKED_CASES_COLLECTION;
+            }
+            if (record.predecessorCaseId) {
+                const source = caseRecordDrafts.find(item => item.id === record.predecessorCaseId);
+                if (source) {
+                    source.successorCaseId = recordId;
+                    source.fields.casestatus = 'Committed';
+                    await updateDoc(doc(db, source.collectionName || 'cases', source.id), {
+                        status: 'Committed',
+                        successorCaseId: recordId,
+                        updatedAt: serverTimestamp()
+                    });
+                }
+            }
+            updatedRecordIds.add(recordId);
+            hearingDateRecords = recordHearings;
+            persistHearingRecords(recordId);
+          } catch (error) {
+            saveFailures.push({ recordIndex, record, error });
+          }
+        }
+
+        const linkedRecords = firMasterId
+            ? await loadRecordsForFir(db, firMasterId)
+            : (isEditingLegacyRecord ? await loadRecordsForFir(db, String(rawData.fileNo || '').trim()) : []);
+        if (isEditingLegacyRecord) {
+            const legacyLinkedRecords = linkedRecords.filter(item => item._collectionName === 'cases');
+            await Promise.all(legacyLinkedRecords
+                .filter(item => !updatedRecordIds.has(item.id))
+                .map(item => updateDoc(doc(db, 'cases', item.id), { ...sharedLegacyFields, updatedAt: serverTimestamp() })));
+        }
+        const firStatus = deriveFirStatus(masterData, linkedRecords);
+        const firStatusField = document.getElementById('fir_Status');
+        if (firStatusField) {
+            const statusLabels = { UI: 'Under Investigation', UT: 'Under Trial', Disposed: 'Disposed', UCR: 'Untraced', Cancelled: 'Cancelled' };
+            firStatusField.value = statusLabels[firStatus] || statusLabels.UI;
+        }
+        if (firMasterId && !isEditingLegacyRecord) {
+            await updateDoc(doc(db, 'firMasters', firMasterId), {
+                fileNo: String(rawData.fileNo || '').trim(),
+                policeStationId: assignedStation.policeStationId,
+                firStatus,
                 updatedAt: serverTimestamp()
             });
-            await persistHearingRecords(form.dataset.editId);
-        } else {
-            const createdCase = await addDoc(casesCollection, {
-                ...caseData,
-                createdAt: serverTimestamp(),
+        } else if (isEditingLegacyRecord) {
+            const legacyRecords = linkedRecords.filter(item => item._collectionName === 'cases');
+            await Promise.all(legacyRecords.map(item => updateDoc(doc(db, 'cases', item.id), {
+                firStatus,
                 updatedAt: serverTimestamp()
-            });
-            await persistHearingRecords(createdCase.id);
+            })));
+        }
+        if (saveFailures.length) {
+            const details = saveFailures.map(({ recordIndex, record, error }) =>
+                `${caseRecordLabels[record.type] || 'Record'} ${recordIndex + 1}: ${error?.message || 'Save failed.'}`
+            ).join('\n');
+            if (caseRecordStatus) caseRecordStatus.textContent = `Saved ${caseRecordDrafts.length - saveFailures.length} record(s); ${saveFailures.length} failed. Successful records are retained. Correct the failures and retry.\n${details}`;
+            return;
         }
         window.dispatchEvent(new CustomEvent('caseAdded'));
         closeModal();
+        window.alert('FIR and case records saved successfully.');
     } catch (err) {
-        console.error('Error saving case:', err);
-        alert('Failed to save case. Check console.');
+        console.error('Error saving FIR or proceeding:', err);
+        alert(err instanceof Error && err.message ? err.message : 'Failed to save FIR or proceeding. Check console.');
     } finally {
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;

@@ -1,14 +1,14 @@
 import { db } from '@config/firebase-config.js';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { parseCaseDate, setupModal } from './shared-utils.js';
 import { normalizeTrialStage } from './trial-stages.js';
+import { loadCaseRecords } from './fir-case-model.js';
 
 const detailsModal = document.querySelector('#caseDetailsModal');
 const modalHelper = setupModal(detailsModal);
 
 let casesCache = [];
 let activeCaseSort = { key: '', direction: '' };
-const casesCollection = collection(db, 'cases');
+let casesLoadError = null;
 const REGISTER_DIARY_FILE_STATUS_KEY = 'register-diary-file-statuses';
 
 function applyCaseFilters() {
@@ -42,7 +42,8 @@ function applyCaseFilters() {
             ? row.dataset.po === 'true'
             : row.dataset.poRowIndex === '0';
         if (filter === 'pending') {
-            matchesFilter = matchesFilter && row.dataset.status !== 'disposed' && row.dataset.status !== 'cancellation';
+            matchesFilter = matchesFilter && row.dataset.status !== 'disposed'
+                && row.dataset.status !== 'cancellation' && row.dataset.status !== 'committed';
         } else if (filter === 'disposed') {
             matchesFilter = matchesFilter && row.dataset.status === 'disposed';
         } else if (filter === 'po') {
@@ -58,7 +59,7 @@ function applyCaseFilters() {
     });
 
     const total = document.getElementById('caseTotalCount');
-    if (total) total.textContent = `Total Cases: ${visibleCount}`;
+    if (total) total.textContent = `Total Records: ${visibleCount}`;
 }
 
 function getCaseSortValue(caseItem, key) {
@@ -142,21 +143,19 @@ function getCaseHearingSummary(caseItem) {
 
 const loadCases = async () => {
     try {
-        const snapshot = await getDocs(query(casesCollection, orderBy('createdAt', 'desc')));
-        casesCache = snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
+        casesCache = await loadCaseRecords(db);
+        casesLoadError = null;
     } catch (error) {
-        try {
-            const snapshot = await getDocs(casesCollection);
-            casesCache = snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
-        } catch (fallbackError) {
-            console.error('Failed to load cases:', fallbackError);
-            casesCache = [];
-        }
+        console.error('Failed to load FIR and proceeding records:', error);
+        casesLoadError = error;
+        casesCache = [];
     }
     renderCaseTable();
     const requestedCaseId = new URLSearchParams(window.location.search).get('case');
     if (requestedCaseId) {
-        const requestedCase = casesCache.find(caseItem => caseItem.id === requestedCaseId);
+        const requestedCollection = new URLSearchParams(window.location.search).get('collection');
+        const requestedCase = casesCache.find(caseItem => caseItem.id === requestedCaseId
+            && (!requestedCollection || caseItem._collectionName === requestedCollection));
         if (requestedCase) {
             openDetailModal(requestedCase);
             window.history.replaceState({}, '', window.location.pathname);
@@ -170,7 +169,10 @@ const renderCaseTable = () => {
     const tableBody = document.querySelector('#casesTableBody');
     if (!tableBody) return;
     if (casesCache.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">No cases found.</td></tr>';
+        const message = casesLoadError
+            ? 'Could not load FIR and proceeding records. Check access and retry.'
+            : 'No cases found.';
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 2rem;">${message}</td></tr>`;
         applyCaseFilters();
         return;
     }

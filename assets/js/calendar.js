@@ -1,5 +1,6 @@
 import { db } from "@config/firebase-config.js";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { loadCaseRecords } from './fir-case-model.js';
+import { isCourtProceeding } from './fir-status.mjs';
 
 /* Theme handled by shared-layout.js */
 const dateFieldSelect = document.querySelector('#dateFieldSelect');
@@ -18,7 +19,7 @@ const state = {
 
 let casesCache = [];
 const getCases = () => casesCache;
-const casesCollection = collection(db, "cases");
+let casesLoadError = null;
 
 const getRegistrationDateValue = caseItem => caseItem?.registrationDate || caseItem?.putInCourtDate || caseItem?.firDate || '';
 
@@ -66,7 +67,7 @@ const renderSelectedDateCases = () => {
     selectedDateLabel.textContent = dateLabel;
 
     if (!dateCases.length) {
-        selectedDateCases.innerHTML = '<div class="empty-state">No cases scheduled for this date.</div>';
+        selectedDateCases.innerHTML = `<div class="empty-state">${casesLoadError ? 'Could not load FIR and proceeding records. Check access and retry.' : 'No cases scheduled for this date.'}</div>`;
         return;
     }
 
@@ -134,16 +135,12 @@ const renderCalendar = () => {
 
 const loadCases = async () => {
     try {
-        const snapshot = await getDocs(query(casesCollection, orderBy("createdAt", "desc")));
-        casesCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    } catch (e) {
-        try {
-            const snapshot = await getDocs(casesCollection);
-            casesCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        } catch (error) {
-            console.error("Error loading cases from Firebase:", error);
-            casesCache = [];
-        }
+        casesCache = (await loadCaseRecords(db)).filter(isCourtProceeding);
+        casesLoadError = null;
+    } catch (error) {
+        console.error("Error loading FIR and proceeding records:", error);
+        casesLoadError = error;
+        casesCache = [];
     }
     
     updateSelectedDateKey();
@@ -183,3 +180,4 @@ const init = () => {
 };
 
 init();
+window.addEventListener('caseAdded', loadCases);

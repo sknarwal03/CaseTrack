@@ -241,21 +241,12 @@ select {
     flex: 0 0 auto;
 }
 
-#caseModal .case-section-fir {
-    order: 1;
-}
-
-#caseModal .case-section-io {
-    order: 2;
-}
-
-#caseModal .case-section-complainant {
-    order: 3;
-}
-
-#caseModal .case-section-status {
+#caseModal .case-section-fir-master {
     order: 0;
-    justify-content: center;
+}
+
+#caseModal .fir-master-subsection + .fir-master-subsection {
+    border-top: 1px solid var(--border);
 }
 
 #caseModal .case-section-court-registration {
@@ -306,6 +297,189 @@ select {
     overflow: hidden;
 
     
+}
+
+.case-record-add-actions,
+.case-record-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 18px 22px 0;
+}
+
+#caseModal .case-record-options > .section-header {
+    position: relative;
+}
+
+#caseModal .case-record-options {
+    overflow: visible;
+}
+
+.case-record-menu-host {
+    position: relative;
+    margin-left: auto;
+    flex: 0 0 auto;
+}
+
+#caseModal .case-record-menu-trigger {
+    border: 1px solid var(--primary);
+    background: rgba(40, 124, 243, 0.12);
+    color: var(--primary);
+    white-space: nowrap;
+}
+
+#caseModal .case-record-menu-trigger:hover,
+#caseModal .case-record-menu-trigger[aria-expanded="true"] {
+    background: rgba(40, 124, 243, 0.2);
+}
+
+.police-report-menu {
+    position: absolute;
+    z-index: 80;
+    top: calc(100% + 8px);
+    right: 0;
+    width: min(260px, calc(100vw - 40px));
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+}
+
+#caseModal .police-report-menu[hidden],
+#caseModal .police-report-menu [hidden] {
+    display: none !important;
+}
+
+.police-report-menu-item,
+.police-report-menu-back {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.police-report-menu-item:hover,
+.police-report-menu-item:focus-visible,
+.police-report-menu-back:hover,
+.police-report-menu-back:focus-visible {
+    outline: none;
+    background: var(--surface-2);
+    color: var(--primary);
+}
+
+.police-report-menu-item:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.police-report-menu-back {
+    justify-content: flex-start;
+    color: var(--muted);
+}
+
+.case-record-list {
+    padding-top: 12px;
+}
+
+.case-record-item {
+    display: flex;
+    align-items: center;
+}
+
+.case-record-select {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.case-record-select[aria-pressed="true"] {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.case-record-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 22px;
+    border-bottom: 1px solid var(--border);
+}
+
+.case-record-detail-header h2 {
+    font-size: 15px;
+}
+
+.case-record-detail-header p {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.case-record-commit,
+.case-record-remove {
+    flex: 0 0 auto;
+}
+
+.case-record-commit {
+    border: 1px solid rgba(40, 124, 243, 0.5);
+    border-radius: 8px;
+    padding: 9px 12px;
+    background: rgba(40, 124, 243, 0.12);
+    color: var(--primary);
+    cursor: pointer;
+}
+
+.case-record-commit[hidden] {
+    display: none;
+}
+
+.case-record-remove {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+}
+
+.case-record-remove[hidden] {
+    display: none;
+}
+
+.case-record-remove:hover:not(:disabled) {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.case-record-remove:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
+
+.case-record-status {
+    min-height: 1em;
+    margin: 8px 22px 16px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+#caseRecordDetails[hidden],
+#caseRecordDetails [hidden] {
+    display: none !important;
 }
 
 
@@ -369,6 +543,16 @@ select {
     gap: 20px;
 }
 
+#caseModal .case-section-court-status .form-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#caseModal .case-section-court-status .toggle-card {
+    box-sizing: border-box;
+    min-height: 42px;
+    padding: 0 12px;
+}
+
 .decision-fields-grid {
     padding-top: 12px;
     padding-bottom: 12px;
@@ -380,6 +564,10 @@ select {
 
 .full-width {
     grid-column: 1 / -1;
+}
+
+#caseModal .case-section-complainant .input-group:has(#beatDetails) {
+    grid-column: span 1;
 }
 
 
@@ -462,6 +650,22 @@ select {
 
 #caseModal .registration-input input {
     padding-top: 10px;
+}
+
+#caseModal .input-group:has(> label + .ucr-number-input) > label {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 12px;
+    margin: 0;
+    padding: 0 4px;
+    transform: translateY(-50%);
+    background: var(--bg);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    pointer-events: none;
 }
 
 #caseModal .permanent-label-group {
@@ -917,7 +1121,7 @@ textarea:focus {
 
 #caseModal .date-stage-control {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
     min-width: 0;
     height: 42px;
@@ -929,6 +1133,10 @@ textarea:focus {
 
 #caseModal .date-stage-group {
     grid-column: 1 / -1;
+}
+
+#caseModal .flatpickr-date {
+    cursor: pointer;
 }
 
 #caseModal .date-stage-control:focus-within {
@@ -945,6 +1153,11 @@ textarea:focus {
     border-radius: 0;
     background: transparent;
     box-shadow: none;
+}
+
+#caseModal .date-stage-control #hearingMarkAs {
+    text-align: center;
+    font-size: 12px;
 }
 
 #caseModal .date-stage-control input:hover,
@@ -1054,6 +1267,7 @@ body.light-theme #caseModal .date-stage-control select:focus {
 #caseModal .hearing-record-row {
     display: flex;
     align-items: center;
+    gap: 8px;
     padding: 8px 10px;
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -1072,6 +1286,12 @@ body.light-theme #caseModal .date-stage-control select:focus {
     color: var(--text);
     font-size: 13px;
     overflow-wrap: anywhere;
+}
+
+#caseModal .hearing-record-mark-as {
+    flex: 0 0 auto;
+    color: var(--muted);
+    font-size: 12px;
 }
 
 body.light-theme .searchable-select-toggle {
@@ -1201,6 +1421,14 @@ body.light-theme .under-section-empty {
 }
 
 .registration-input #regprefix { text-transform: uppercase; }
+
+#caseModal .ucr-number-input .ucr-number-prefix {
+    display: block;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+}
 
 .registration-suggestions {
     position: absolute;
@@ -1561,6 +1789,10 @@ option {
         grid-template-columns: 1fr;
     }
 
+    #caseModal .case-section-court-status .form-grid {
+        grid-template-columns: 1fr;
+    }
+
     .span-2,
     .full-width {
         grid-column: auto;
@@ -1607,6 +1839,10 @@ option {
         display: none;
     }
 
+    #caseModal .date-stage-control {
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    }
+
     .registration-input {
         grid-template-columns:
             1fr 15px 1fr;
@@ -1618,6 +1854,14 @@ option {
 
     .registration-input span:nth-of-type(1) {
         display: none;
+    }
+
+    #caseModal .ucr-number-input {
+        grid-template-columns: 1fr 15px 1fr 15px 1fr;
+    }
+
+    #caseModal .ucr-number-input .ucr-number-prefix {
+        display: block;
     }
 
     .bottom-actions {
@@ -2011,6 +2255,10 @@ body.light-theme #caseModal .registration-input:focus-within {
 
 body.light-theme #caseModal .registration-input span {
     color: #5f7187;
+}
+
+body.light-theme #caseModal .ucr-number-input .ucr-number-prefix {
+    color: var(--text);
 }
 
 /* Toggle container (Arrested / PO mark labels) */

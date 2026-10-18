@@ -1,12 +1,13 @@
 import { db } from "@config/firebase-config.js";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { getFirSummaries, loadCaseRecords } from './fir-case-model.js';
+import { isCourtProceeding } from './fir-status.mjs';
 
 /* Theme handled by shared-layout.js */
 
 let casesCache = [];
 const getCases = () => casesCache;
 
-const casesCollection = collection(db, "cases");
+let casesLoadError = null;
 
 const countByKey = (items, key) => {
     const map = {};
@@ -21,12 +22,14 @@ const countByKey = (items, key) => {
 };
 
 const renderStatusChart = () => {
-    const rows = countByKey(getCases(), 'caseStatus');
+    const rows = countByKey(getFirSummaries(getCases()), 'caseStatus');
     const max = Math.max(...rows.map(([, count]) => count), 1);
     const wrapper = document.querySelector('#statusBarChart');
     if (!wrapper) return;
 
-    wrapper.innerHTML = rows.length ? rows.map(([label, count]) => `
+    wrapper.innerHTML = casesLoadError
+        ? '<p class="empty-state">Could not load FIR and proceeding records.</p>'
+        : rows.length ? rows.map(([label, count]) => `
         <div class="bar-row">
             <div class="bar-label">${label}</div>
             <div class="bar-track"><div class="bar-fill" style="width:${(count / max) * 100}%"></div></div>
@@ -36,12 +39,14 @@ const renderStatusChart = () => {
 };
 
 const renderStageChart = () => {
-    const rows = countByKey(getCases(), 'caseStage');
+    const rows = countByKey(getCases().filter(isCourtProceeding), 'caseStage');
     const max = Math.max(...rows.map(([, count]) => count), 1);
     const wrapper = document.querySelector('#stageBarChart');
     if (!wrapper) return;
 
-    wrapper.innerHTML = rows.length ? rows.map(([label, count]) => `
+    wrapper.innerHTML = casesLoadError
+        ? '<p class="empty-state">Could not load FIR and proceeding records.</p>'
+        : rows.length ? rows.map(([label, count]) => `
         <div class="bar-row">
             <div class="bar-label">${label}</div>
             <div class="bar-track"><div class="bar-fill" style="width:${(count / max) * 100}%"></div></div>
@@ -54,8 +59,13 @@ const renderList = (id, key) => {
     const wrapper = document.querySelector(`#${id}`);
     if (!wrapper) return;
 
-    const rows = countByKey(getCases(), key);
-    wrapper.innerHTML = rows.length ? rows.map(([label, count]) => `
+    const source = key === 'policeStation'
+        ? getFirSummaries(getCases())
+        : getCases().filter(isCourtProceeding);
+    const rows = countByKey(source, key);
+    wrapper.innerHTML = casesLoadError
+        ? '<li><span>Could not load records</span><span>—</span></li>'
+        : rows.length ? rows.map(([label, count]) => `
         <li>
             <span>${label}</span>
             <span>${count}</span>
@@ -65,10 +75,12 @@ const renderList = (id, key) => {
 
 const updateSummary = () => {
     const allCases = getCases();
-    document.querySelector('#reportTotalCases').textContent = allCases.length;
-    document.querySelector('#reportDisposed').textContent = allCases.filter(item => String(item.caseStatus || '').trim() === 'Disposed').length;
-    document.querySelector('#reportPending').textContent = allCases.filter(item => ['UI', 'UT', 'Untrace', 'Cancellation'].includes(String(item.caseStatus || '').trim())).length;
-    document.querySelector('#reportHearings').textContent = allCases.filter(item => item.nextDate).length;
+    const proceedings = allCases.filter(isCourtProceeding);
+    const firs = getFirSummaries(allCases);
+    document.querySelector('#reportTotalCases').textContent = casesLoadError ? '—' : firs.length;
+    document.querySelector('#reportDisposed').textContent = casesLoadError ? '—' : firs.filter(item => String(item.firStatus).toLowerCase() === 'disposed').length;
+    document.querySelector('#reportPending').textContent = casesLoadError ? '—' : firs.filter(item => ['UI', 'UT', 'UCR', 'Untrace', 'Cancelled', 'Cancellation'].includes(String(item.firStatus).trim())).length;
+    document.querySelector('#reportHearings').textContent = casesLoadError ? '—' : proceedings.filter(item => item.nextDate).length;
 };
 
 const renderAll = () => {
@@ -81,16 +93,12 @@ const renderAll = () => {
 
 const loadCases = async () => {
     try {
-        const snapshot = await getDocs(query(casesCollection, orderBy("createdAt", "desc")));
-        casesCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    } catch (e) {
-        try {
-            const snapshot = await getDocs(casesCollection);
-            casesCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        } catch (error) {
-            console.error("Error loading cases from Firebase:", error);
-            casesCache = [];
-        }
+        casesCache = await loadCaseRecords(db);
+        casesLoadError = null;
+    } catch (error) {
+        console.error("Error loading FIR and proceeding records:", error);
+        casesLoadError = error;
+        casesCache = [];
     }
     renderAll();
 };
@@ -101,3 +109,4 @@ const init = () => {
 };
 
 init();
+window.addEventListener('caseAdded', loadCases);

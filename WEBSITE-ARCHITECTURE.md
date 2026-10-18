@@ -120,18 +120,26 @@ flowchart LR
     subgraph Firebase["Firebase project: CaseTrack"]
         Auth
         Firestore[("Cloud Firestore")]
+        FIRMasters[("firMasters")]
+        LinkedCases[("linkedCases")]
         CasesData[("cases")]
         JudgesData[("judges")]
         IOData[("investigatingOfficers")]
         PrefsData[("settings / preferences")]
         Firestore --- CasesData
+        Firestore --- FIRMasters
+        Firestore --- LinkedCases
         Firestore --- JudgesData
         Firestore --- IOData
         Firestore --- PrefsData
     end
 
     Dashboard --> CasesData
+    Dashboard --> FIRMasters
+    Dashboard --> LinkedCases
     CasesPage["All Cases"] --> CasesData
+    CasesPage --> FIRMasters
+    CasesPage --> LinkedCases
     Calendar["Calendar"] --> CasesData
     Diary["Register Diary"] --> CasesData
     Diary --> JudgesData
@@ -153,13 +161,18 @@ flowchart LR
 ```mermaid
 flowchart LR
     User([Signed-in user]) --> Add["Add or update a case"]
-    Add --> Cases[("Firestore: cases")]
+    Add --> FIRMasters[("Firestore: firMasters")]
+    Add --> LinkedCases[("Firestore: linkedCases")]
+    Add -. "legacy edits retain original IDs" .-> Cases[("Firestore: cases")]
 
-    Cases --> Dashboard["Dashboard<br/>overview and upcoming work"]
-    Cases --> CaseList["All Cases<br/>search and case details"]
-    Cases --> Calendar["Calendar<br/>hearing dates"]
-    Cases --> Report["Reports<br/>case summaries"]
-    Cases --> Diary["Register Diary"]
+    FIRMasters --> Adapter["fir-case-model.js<br/>legacy compatibility adapter"]
+    LinkedCases --> Adapter
+    Cases --> Adapter
+    Adapter --> Dashboard["Dashboard<br/>unique FIR and proceeding counts"]
+    Adapter --> CaseList["All Cases<br/>search and case details"]
+    Adapter --> Calendar["Calendar<br/>hearing dates"]
+    Adapter --> Report["Reports<br/>FIR and proceeding summaries"]
+    Adapter --> Diary["Register Diary"]
 
     Judges[("Firestore: judges")] --> Diary
     Diary -->|Save hearing-date changes| Cases
@@ -185,4 +198,14 @@ flowchart LR
     Artifact --> Pages["GitHub Pages deployment"]
 ```
 
-CaseTrack is a static, multi-page Vite website. Page modules access Firebase directly; this project has no separate application server. GitHub Actions builds and deploys the contents of `dist/`. PO Cases currently filters the rows provided by its page in the browser.
+CaseTrack is a static, multi-page Vite website. Page modules access Firebase directly; this project has no separate application server. GitHub Actions builds and deploys the contents of `dist/`. The PO Cases page filters proclaimed-offender accused entries from court proceedings.
+
+## 6. FIR Master and proceeding data model
+
+- `firMasters/{firMasterId}` stores one verified FIR identity and FIR-level fields. New master IDs are Firestore document IDs and remain stable.
+- `linkedCases/{proceedingId}` stores new court proceedings and UCR reports. Each new record has one `firId` and `firMasterId` pointing to its FIR Master. Lower Court commitments create a separate Sessions Court record and predecessor/successor IDs; the source record remains in place.
+- `cases/{legacyId}` remains readable and editable for compatibility. Existing document IDs, hearing histories, and other references are retained. A user can explicitly verify and link an exact FIR number/year/police-station legacy group; that action adds relationship fields and preserves the prior `firId` in `legacyFirId`.
+- `assets/js/fir-case-model.js` combines master-only FIRs, linked records, and legacy cases for page readers. It keeps collection names with records so edits and hearing-date writes reach the original document. Failed collection reads surface as errors instead of being treated as an empty result.
+- `assets/js/fir-status.mjs` normalizes FIR status labels and calculates FIR status separately from proceeding status. Active proceedings yield `UT`; all applicable proceedings disposed yields `Disposed`; a committed predecessor is excluded only when its successor relationship exists. With no court proceeding, UCR details or the saved FIR status are retained, otherwise the status is `UI`.
+
+No bulk migration is part of the application flow. A verified migration of older records should be a separately reviewed and reversible operation. This repository contains emulator test rules but no production Firestore rules file; production access to `firMasters` and `linkedCases` must be verified before deployment.

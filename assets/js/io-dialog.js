@@ -42,8 +42,11 @@ function matchesOfficer(data, officer) {
 }
 
 async function getLinkedCases(officer) {
-    const casesSnapshot = await getDocs(collection(db, 'cases'));
-    return casesSnapshot.docs.filter(caseDocument => {
+    const [legacySnapshot, linkedSnapshot] = await Promise.all([
+        getDocs(collection(db, 'cases')),
+        getDocs(collection(db, 'linkedCases'))
+    ]);
+    return [...legacySnapshot.docs, ...linkedSnapshot.docs].filter(caseDocument => {
         const data = caseDocument.data();
         return data.ioId === officer.id || (!data.ioId && matchesOfficer(data, officer));
     });

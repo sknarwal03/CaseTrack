@@ -13,43 +13,30 @@
         </header>
         <form id="caseForm" novalidate>
             <div class="modal-body">
-                <section class="case-topbar case-section-status">
-
-                    <div class="top-field floating-label-group">
-                        <select id="casestatus" name="casestatus" form="caseForm" required>
-                            <option value="" disabled selected hidden></option>
-                            <option value="UT">Under Trail</option>
-                            <option value="UI">Under Investigation</option>
-                            <option value="Disposed">Disposed</option>
-                            <option value="UCR">Untrace</option>
-                            <option value="Cancellation">Cancellation</option>
-                        </select>
-                        <label for="casestatus">Case Status</label>
+                <section class="form-card case-section-fir-meta">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="fileNo">File No</label>
+                            <input type="text" id="fileNo" name="fileNo" placeholder="Auto-generated" readonly>
+                        </div>
+                        <div class="input-group permanent-label-group">
+                            <label for="fir_Status">FIR Status</label>
+                            <input type="text" id="fir_Status" name="fir_Status" value="Under Investigation" readonly>
+                        </div>
                     </div>
-
                 </section>
 
-
-                <!-- ================= FORM ================= -->
-
-                <!-- ================= FIR ================= -->
-
-                <section class="form-card case-section-fir">
-
-                    <div class="section-header">
-
-                        <div class="section-icon">01</div>
-
-                        <div>
-                            <h2>FIR Details</h2>
-                            <p>Basic First Information Report details</p>
+                <section class="form-card case-section-fir-master">
+                    <section class="fir-master-subsection case-section-fir">
+                        <div class="section-header">
+                            <div class="section-icon">A</div>
+                            <div>
+                                <h2>FIR Details</h2>
+                                <p>Basic First Information Report details</p>
+                            </div>
                         </div>
 
-                    </div>
-
-
-                    <div class="form-grid">
-
+                        <div class="form-grid">
                         <div class="input-group">
                             <label for="firno">FIR Number</label>
                             <input type="number" id="firno" name="firno" placeholder="Enter FIR number" required>
@@ -58,7 +45,7 @@
                         <div class="input-group">
                             <label for="firdate">Date of FIR</label>
 
-                            <input type="date" id="firdate" name="firdate" placeholder="Pick FIR Date" required>
+                            <input type="text" id="firdate" name="firdate" class="flatpickr-date" placeholder="Pick FIR Date" autocomplete="off" readonly required>
                         </div>
 
 
@@ -120,6 +107,112 @@
 
                     </div>
 
+                    </section>
+
+                    <section class="fir-master-subsection case-section-complainant">
+                        <div class="section-header">
+                            <div class="section-icon">B</div>
+                            <div>
+                                <h2>Complaint Details</h2>
+                                <p>Information regarding the complainant and incident</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Incident Date</label>
+                                <input type="text" name="incident_date" class="flatpickr-date" placeholder="Pick Incident Date" autocomplete="off" readonly>
+                            </div>
+                            <div class="input-group">
+                                <label>Incident Place</label>
+                                <input type="text" name="incident_place" placeholder="Enter incident location">
+                            </div>
+                            <div class="input-group full-width">
+                                <label for="beatDetails">Beat Details</label>
+                                <input type="text" id="beatDetails" name="beatDetails" placeholder="Enter beat details">
+                            </div>
+                            <div class="input-group">
+                                <label>Complainant Name</label>
+                                <input type="text" name="complainant_name" placeholder="Enter full name">
+                            </div>
+                            <div class="input-group">
+                                <label>Complainant Father's Name</label>
+                                <input type="text" name="complainant_father_name" placeholder="Enter full name">
+                            </div>
+                            <div class="input-group">
+                                <label>Mobile Number</label>
+                                <input type="tel" name="complainant_mobile" placeholder="10 digit mobile number"
+                                    maxlength="10">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Complainant Address</label>
+                                <textarea name="complainant_address" rows="3"
+                                    placeholder="Enter complete address"></textarea>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+
+                <section class="form-card case-record-options">
+                    <div class="section-header">
+                        <div class="section-icon">PR</div>
+                        <div>
+                            <h2>Case Records</h2>
+                            <p>Add one or more records linked to this FIR</p>
+                        </div>
+                        <div class="case-record-menu-host">
+                            <button class="btn case-record-menu-trigger" type="button" id="addPoliceReport" aria-haspopup="menu" aria-expanded="false" aria-controls="policeReportMenu">+ Police Report</button>
+                            <div class="police-report-menu" id="policeReportMenu" role="menu" hidden>
+                                <div id="policeReportKinds">
+                                    <button type="button" class="police-report-menu-item" id="addUcrRecord" data-add-case-record="ucr" role="menuitem">UCR Report</button>
+                                    <button type="button" class="police-report-menu-item" id="chooseChargesheet" role="menuitem">Chargesheet</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="case-record-list" id="caseRecordList" aria-live="polite"></div>
+                    <p class="case-record-status" id="caseRecordStatus" role="status" aria-live="polite"></p>
+                </section>
+
+                <section class="form-card case-record-detail-card" id="caseRecordDetails" hidden>
+                    <div class="case-record-detail-header">
+                        <div>
+                            <h2 id="caseRecordDetailTitle">Case Record Details</h2>
+                            <p>Edit the selected record details below</p>
+                        </div>
+                        <button class="case-record-remove" type="button" id="removeActiveCaseRecord">Remove Record</button>
+                        <button class="case-record-commit" type="button" id="commitToSessions" hidden>Commit to Sessions Court</button>
+                    </div>
+
+                <section class="form-card case-section-court-status" id="sectionCourtStatus">
+                    <div class="form-grid">
+                        <div class="input-group permanent-label-group">
+                            <label for="courttype">Court Type</label>
+                            <select id="courttype" name="courttype" form="caseForm" required disabled>
+                                <option value="" disabled selected hidden></option>
+                                <option value="Lower Court">Lower Court</option>
+                                <option value="Session Court">Session Court</option>
+                                <option value="JJB">JJB</option>
+                            </select>
+                        </div>
+                        <div class="input-group permanent-label-group case-section-status">
+                            <label for="casestatus">Case Status</label>
+                            <select id="casestatus" name="casestatus" form="caseForm" required disabled>
+                                <option value="UT" selected>Under Trial</option>
+                                <option value="Disposed">Disposed</option>
+                                <option value="Committed">Committed</option>
+                            </select>
+                        </div>
+                        <div class="toggle-card">
+                            <div>
+                                <strong>Highlighted Case</strong>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="highlightcase" name="highlightcase" value="yes" form="caseForm">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
                 </section>
 
 
@@ -129,7 +222,7 @@
 
                     <div class="section-header">
 
-                        <div class="section-icon">04</div>
+                        <div class="section-icon">01</div>
 
                         <div>
                             <h2>Court Registration</h2>
@@ -140,17 +233,6 @@
 
 
                     <div class="form-grid">
-
-                        <div class="input-group permanent-label-group">
-                            <label for="courttype">Court Type</label>
-                            <select id="courttype" name="courttype" form="caseForm" required>
-                                <option value="" disabled selected hidden></option>
-                                <option value="Lower Court">Lower Court</option>
-                                <option value="Session Court">Session Court</option>
-                                <option value="JJB">JJB</option>
-                                <option value="High Court">High Court</option>
-                            </select>
-                        </div>
 
                         <!-- REGISTRATION NUMBER -->
 
@@ -185,7 +267,7 @@
                                 Registration Date
                             </label>
 
-                            <input type="date" id="regdate" name="regdate" placeholder="Pick Registration/PC Date">
+                            <input type="text" id="regdate" name="regdate" class="flatpickr-date" placeholder="Pick Registration/PC Date" autocomplete="off" readonly>
 
                         </div>
                         <div class="input-group permanent-label-group">
@@ -220,68 +302,11 @@
                                 Date of Charge
                             </label>
 
-                            <input type="date" id="chargedate" name="chargedate" placeholder="Pick Charge-sheet Date"
-                                readonly aria-readonly="true">
+                            <input type="text" id="chargedate" name="chargedate" class="flatpickr-date" placeholder="Pick Charge-sheet Date"
+                                autocomplete="off" readonly aria-readonly="true">
 
                         </div>
-                    </div>
 
-                </section>
-
-                <!-- ================= HEARINGS RECORDS ================= -->
-
-                <section class="form-card case-section-next-date" id="sectionNextDate">
-                    <div class="section-header">
-                        <div class="section-icon">05</div>
-                        <div>
-                            <h2>Hearings Records</h2>
-                            <p>Add, edit, and manage court dates and trial stages</p>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="input-group date-stage-group">
-                            <label for="nextDateStageDate">Hearing Date — Trial Stage</label>
-                            <div class="date-stage-control">
-                                <input type="text" id="nextDateStageDate" class="flatpickr-date"
-                                    placeholder="Select date" aria-label="Hearing Date">
-                                <span class="date-stage-separator" aria-hidden="true">-</span>
-                                <select id="nextDateStageTrial" aria-label="Trial Stage">
-                                    <option value="" selected>Select Trial Stage</option>
-                                </select>
-                            </div>
-                            <input type="hidden" id="caseNextDateValue" name="nextdate">
-                            <input type="hidden" id="caseTrialStageValue" name="trial_stage">
-                            <h3 class="hearing-records-label">Saved Hearings</h3>
-                            <div class="hearing-record-actions">
-                                <button type="button" class="hearing-record-add" id="addHearingRecord">Add Hearing</button>
-                                <button type="button" class="hearing-record-cancel" id="cancelHearingEdit" hidden>Cancel edit</button>
-                                <button type="button" class="hearing-record-delete" id="deleteHearingRecord" hidden>Delete Hearing</button>
-                            </div>
-                            <p class="hearing-record-status" id="hearingRecordStatus" role="status" aria-live="polite"></p>
-                            <div class="hearing-record-list" id="hearingRecordList" aria-live="polite"></div>
-                        </div>
-                    </div>
-                </section>
-
-
-                <!-- ================= IO DETAILS ================= -->
-
-                <section class="form-card case-section-io">
-
-                    <div class="section-header">
-
-                        <div class="section-icon">02</div>
-
-                        <div>
-                            <h2>Investigating Officer</h2>
-                            <p>Details of the assigned investigating officer</p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="form-grid">
                         <div class="input-group permanent-label-group">
                             <label for="caseIoSelect">Investigating Officer</label>
                             <div class="io-select-with-action">
@@ -304,68 +329,91 @@
 
                 </section>
 
+                <!-- ================= HEARINGS RECORDS ================= -->
 
-                <!-- ================= COMPLAINANT ================= -->
-
-                <section class="form-card case-section-complainant">
-
+                <section class="form-card case-section-next-date" id="sectionNextDate">
                     <div class="section-header">
-
-                        <div class="section-icon">03</div>
-
+                        <div class="section-icon">02</div>
                         <div>
-                            <h2>Complainant Details</h2>
-                            <p>Information regarding the complainant and incident</p>
+                            <h2>Hearings Records</h2>
+                            <p>Add, edit, and manage court dates and trial stages</p>
                         </div>
-
                     </div>
-
 
                     <div class="form-grid">
-
-                        <div class="input-group">
-                            <label>Incident Date</label>
-                            <input type="date" name="incident_date" placeholder="Pick Incident Date">
+                        <div class="input-group date-stage-group">
+                            <label for="nextDateStageDate">Hearing Date — Trial Stage — Mark As</label>
+                            <div class="date-stage-control">
+                                <input type="text" id="nextDateStageDate" class="flatpickr-date"
+                                    placeholder="Select date" autocomplete="off" readonly aria-label="Hearing Date">
+                                <span class="date-stage-separator" aria-hidden="true">-</span>
+                                <select id="nextDateStageTrial" aria-label="Trial Stage">
+                                    <option value="" selected>Select Trial Stage</option>
+                                </select>
+                                <span class="date-stage-separator" aria-hidden="true">-</span>
+                                <input type="text" id="hearingMarkAs" value="Hearing" readonly aria-label="Mark As" aria-live="polite">
+                            </div>
+                            <input type="hidden" id="caseNextDateValue" name="nextdate">
+                            <input type="hidden" id="caseTrialStageValue" name="trial_stage">
+                            <h3 class="hearing-records-label">Saved Hearings</h3>
+                            <div class="hearing-record-actions">
+                                <button type="button" class="hearing-record-add" id="addHearingRecord">Add Hearing</button>
+                                <button type="button" class="hearing-record-cancel" id="cancelHearingEdit" hidden>Cancel edit</button>
+                                <button type="button" class="hearing-record-delete" id="deleteHearingRecord" hidden>Delete Hearing</button>
+                            </div>
+                            <p class="hearing-record-status" id="hearingRecordStatus" role="status" aria-live="polite"></p>
+                            <div class="hearing-record-list" id="hearingRecordList" aria-live="polite"></div>
                         </div>
-
-
-                        <div class="input-group">
-                            <label>Incident Place</label>
-                            <input type="text" name="incident_place" placeholder="Enter incident location">
-                        </div>
-
-
-                        <div class="input-group">
-                            <label>Complainant Name</label>
-                            <input type="text" name="complainant_name" placeholder="Enter full name">
-                        </div>
-
-                        <div class="input-group">
-                            <label>Complainant Father's Name</label>
-                            <input type="text" name="complainant_father_name" placeholder="Enter full name">
-                        </div>
-
-
-                        <div class="input-group">
-                            <label>Mobile Number</label>
-                            <input type="tel" name="complainant_mobile" placeholder="10 digit mobile number"
-                                maxlength="10">
-                        </div>
-
-
-                        <div class="input-group full-width">
-
-                            <label>Complainant Address</label>
-
-                            <textarea name="complainant_address" rows="3"
-                                placeholder="Enter complete address"></textarea>
-
-                        </div>
-
                     </div>
-
                 </section>
 
+                <section class="form-card" id="ucrRecordFields" hidden>
+                    <div class="section-header">
+                        <div class="section-icon">UCR</div>
+                        <div>
+                            <h2>UCR Report Details</h2>
+                            <p>Untraced case report information</p>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="input-group permanent-label-group">
+                            <label for="ucrSerial">UCR Number</label>
+                            <div class="registration-input ucr-number-input">
+                                <span class="ucr-number-prefix">UCR</span>
+                                <span>/</span>
+                                <input type="number" id="ucrSerial" inputmode="numeric" min="0" step="1" placeholder="Number" aria-label="UCR number" disabled>
+                                <span>/</span>
+                                <input type="text" id="ucrYear" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="Year" aria-label="UCR year" disabled>
+                            </div>
+                            <input type="hidden" id="ucrNumber" name="ucrNumber" disabled>
+                        </div>
+                        <div class="input-group permanent-label-group">
+                            <label for="report_type">Report Type</label>
+                            <select id="report_type" name="report_type" disabled>
+                                <option value="">Select Report Type</option>
+                                <option value="Untraced">Untraced</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="ucr_dod">Date of Disposed</label>
+                            <input type="text" id="ucr_dod" name="ucr_dod" class="flatpickr-date" placeholder="Select date" autocomplete="off" readonly disabled>
+                        </div>
+                        <div class="input-group permanent-label-group">
+                            <label for="ucrIoSelect">Investigating Officer</label>
+                            <div class="io-select-with-action">
+                                <select id="ucrIoSelect" aria-describedby="ucrIoSelectStatus" disabled>
+                                    <option value="" selected>Select Investigating Officer</option>
+                                </select>
+                                <button type="button" id="editUcrIO" class="io-manage-trigger"
+                                    aria-label="Edit selected Investigating Officer" title="Edit selected IO" hidden>✎</button>
+                                <button type="button" id="openManageUcrIO" class="io-manage-trigger"
+                                    aria-label="Add or Manage Investigating Officer" title="Add or Manage IO">+</button>
+                            </div>
+                            <small class="master-list-status" id="ucrIoSelectStatus" aria-live="polite"></small>
+                        </div>
+                    </div>
+                </section>
 
                 <!-- ================= ACCUSED ================= -->
 
@@ -373,7 +421,7 @@
 
                     <div class="section-header">
 
-                        <div class="section-icon">06</div>
+                        <div class="section-icon">03</div>
 
                         <div>
                             <h2>Accused Details</h2>
@@ -431,11 +479,11 @@
 
                                 <div class="input-group">
                                     <label>Arrest Date</label>
-                                    <input type="date" name="arrestingdate[]" class="arrestingdate"
-                                        placeholder="Pick Arresting Date" disabled>
+                                    <input type="text" name="arrestingdate[]" class="arrestingdate flatpickr-date"
+                                        placeholder="Pick Arresting Date" autocomplete="off" readonly disabled>
                                 </div>
 
-                                <div class="input-group">
+                                <div class="input-group permanent-label-group">
                                     <label>Custody Status</label>
                                     <select name="custody_status[]" class="custody-status" disabled>
                                         <option value="" disabled selected hidden></option>
@@ -448,8 +496,8 @@
 
                                 <div class="input-group">
                                     <label>Bail Date</label>
-                                    <input type="date" name="baildate[]" class="baildate" placeholder="Pick Bail Date"
-                                        disabled>
+                                    <input type="text" name="baildate[]" class="baildate flatpickr-date" placeholder="Pick Bail Date"
+                                        autocomplete="off" readonly disabled>
                                 </div>
 
                                 <div class="input-group toggle-label-group">
@@ -466,8 +514,8 @@
 
                                 <div class="input-group">
                                     <label>PO V.O.D</label>
-                                    <input type="date" name="po_date[]" class="po-date" placeholder="Pick PO V.O.D"
-                                        disabled>
+                                    <input type="text" name="po_date[]" class="po-date flatpickr-date" placeholder="Pick PO V.O.D"
+                                        autocomplete="off" readonly disabled>
                                 </div>
 
                                 <div class="input-group full-width">
@@ -498,7 +546,7 @@
 
                     <div class="section-header">
 
-                        <div class="section-icon">07</div>
+                        <div class="section-icon">04</div>
 
                         <div>
                             <h2>Witness Details</h2>
@@ -536,8 +584,8 @@
                                         <input type="checkbox" name="witness_examined[]" class="examined-checkbox"
                                             value="yes">
                                     </td>
-                                    <td><input type="date" name="witness_examined_date[]" class="examined-date"
-                                            placeholder="Pick Examined Date" disabled></td>
+                                    <td><input type="text" name="witness_examined_date[]" class="examined-date flatpickr-date"
+                                            placeholder="Pick Examined Date" autocomplete="off" readonly disabled></td>
                                     <td class="text-center witness-action">
                                         —
                                     </td>
@@ -571,62 +619,6 @@
                 </section>
 
 
-                <!-- ================= OTHER DETAILS ================= -->
-
-
-                <section class="form-card case-section-other" id="sectionOther">
-
-                    <div class="section-header">
-
-                        <div class="section-icon">08</div>
-
-
-                        <div>
-                            <h2>Other Details</h2>
-                            <p>Additional case classification</p>
-                        </div>
-
-                    </div>
-
-                    <div class="toggle-grid" style="grid-template-columns: 1fr;">
-                        <div class="toggle-card">
-                            <div>
-                                <strong>Is this case decided?</strong>
-                                <span>Enable to enter the decision date and judgement</span>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" id="is_decided" name="is_decided" value="yes">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-grid decision-fields-grid" id="decisionFields" style="display: none;">
-                        <div class="input-group" id="fieldDecisionDate" style="display: none;">
-                            <label for="dod_date">Date of Decision</label>
-                            <input type="date" id="dod_date" name="dod_date" placeholder="Pick Decision Date" disabled>
-                        </div>
-
-                        <div class="input-group" id="fieldJudgement" style="display: none;">
-                            <label for="judgement">Judgement</label>
-                            <input type="text" id="judgement" name="judgement"
-                                placeholder="Enter judgement or decision" maxlength="500" disabled>
-                        </div>
-                    </div>
-
-                    <div class="toggle-grid" style="grid-template-columns: 1fr;">
-                        <div class="toggle-card">
-                            <div>
-                                <strong>Highlighted Case</strong>
-                                <span>Show on priority list</span>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" id="highlightcase" name="highlightcase" value="yes">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-
                 </section>
 
 
@@ -635,6 +627,7 @@
 
             </div>
             <footer class="modal-footer">
+                <button class="btn danger" type="button" id="deleteFirMaster" hidden>Delete FIR Master</button>
                 <button class="btn" type="reset">Reset</button>
                 <button class="btn" type="button" id="cancelModal">Cancel</button>
                 <button class="btn primary" type="submit">Save Case</button>

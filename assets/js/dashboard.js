@@ -1,34 +1,24 @@
 import { db } from '@config/firebase-config.js';
 import { parseCaseDate, setupDropdown } from './shared-utils.js';
 import { normalizeTrialStage } from './trial-stages.js';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { countUniqueFirs, loadCaseRecords } from './fir-case-model.js';
+import { isCourtProceeding } from './fir-status.mjs';
 
 let casesCache = [];
 let activePcRange = 'thisMonth';
+let casesLoadError = null;
 
 /* =========================
    FIRESTORE
 ========================= */
-const casesCollection = collection(db, 'cases');
-
 const loadCases = async () => {
     try {
-        const snapshot = await getDocs(query(casesCollection, orderBy('createdAt', 'desc')));
-        casesCache = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
+        casesCache = await loadCaseRecords(db);
+        casesLoadError = null;
     } catch (error) {
-        try {
-            const snapshot = await getDocs(casesCollection);
-            casesCache = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-        } catch (fallbackError) {
-            console.error('Failed to load cases from Firestore:', fallbackError);
-            casesCache = [];
-        }
+        console.error('Failed to load FIR and proceeding records:', error);
+        casesLoadError = error;
+        casesCache = [];
     }
     renderDashboard();
 };
@@ -210,6 +200,7 @@ const renderDonut = (cases) => {
 ========================= */
 const renderDashboard = () => {
     const totalCasesEl = document.getElementById('totalCases');
+    const proceedingCountEl = document.getElementById('totalProceedings');
     const activeCasesEl = document.getElementById('activeCases');
     const closedCasesEl = document.getElementById('closedCases');
     const pendingHearingsEl = document.getElementById('pendingHearings');
@@ -219,7 +210,9 @@ const renderDashboard = () => {
     const pcThisMonthList = document.getElementById('pcThisMonthList');
 
     if (!casesCache || casesCache.length === 0) {
-        if (totalCasesEl) totalCasesEl.textContent = '0';
+        const emptyValue = casesLoadError ? '—' : '0';
+        if (totalCasesEl) totalCasesEl.textContent = emptyValue;
+        if (proceedingCountEl) proceedingCountEl.textContent = emptyValue;
         if (activeCasesEl) activeCasesEl.textContent = '0';
         if (closedCasesEl) closedCasesEl.textContent = '0';
         if (pendingHearingsEl) pendingHearingsEl.textContent = '0';
@@ -228,16 +221,18 @@ const renderDashboard = () => {
         if (donutChartEl) donutChartEl.style.setProperty('--cl-deg', '0deg');
         if (donutChartEl) donutChartEl.style.setProperty('--pd-deg', '0deg');
         
-        if (hearingList) hearingList.innerHTML = '<p class="empty">No upcoming hearing dates yet.</p>';
-        if (pcThisMonthList) pcThisMonthList.innerHTML = '<p class="empty">Add a case to see it here.</p>';
+        if (hearingList) hearingList.innerHTML = `<p class="empty">${casesLoadError ? 'Could not load FIR and proceeding records. Check access and retry.' : 'No upcoming hearing dates yet.'}</p>`;
+        if (pcThisMonthList) pcThisMonthList.innerHTML = `<p class="empty">${casesLoadError ? 'Could not load FIR and proceeding records.' : 'Add a case to see it here.'}</p>`;
         return;
     }
 
-    const total = casesCache.length;
+    const proceedings = casesCache.filter(isCourtProceeding);
+    const total = countUniqueFirs(casesCache);
     let active = 0, closed = 0, pending = 0;
 
-    casesCache.forEach(c => {
+    proceedings.forEach(c => {
         const st = (c.status || '').toLowerCase();
+        if (st === 'committed') return;
         if (st === 'disposed' || st === 'cancellation') closed++;
         else if (st === 'ut' || st === 'ui') active++;
         else pending++;
@@ -246,24 +241,27 @@ const renderDashboard = () => {
     // Calculate Pending Hearings strictly based on nextDate
     const nowZero = new Date();
     nowZero.setHours(0,0,0,0);
-    const pendingHearingsCount = casesCache.filter(c => {
+    const pendingHearingsCount = proceedings.filter(c => {
+        if (String(c.status || '').trim().toLowerCase() === 'committed' || c.successorCaseId) return false;
         if (!c.nextDate) return false;
         const d = parseCaseDate(c.nextDate);
         return d && d >= nowZero;
     }).length;
 
     if (totalCasesEl) totalCasesEl.textContent = String(total);
+    if (proceedingCountEl) proceedingCountEl.textContent = String(proceedings.length);
     if (activeCasesEl) activeCasesEl.textContent = String(active);
     if (closedCasesEl) closedCasesEl.textContent = String(closed);
     if (pendingHearingsEl) pendingHearingsEl.textContent = String(pendingHearingsCount);
 
     // ── Donut chart is rendered separately via renderDonut() ──
-    renderDonut(casesCache);
+    renderDonut(proceedings);
 
 
     // Render Upcoming Hearings
     if (hearingList) {
-        let hearings = casesCache.filter(c => {
+        let hearings = proceedings.filter(c => {
+            if (String(c.status || '').trim().toLowerCase() === 'committed' || c.successorCaseId) return false;
             if (!c.nextDate) return false;
             const d = parseCaseDate(c.nextDate);
             return d && d >= nowZero; // Future or today
@@ -285,7 +283,7 @@ const renderDashboard = () => {
 
     // Render PC List (Put In Court)
     if (pcThisMonthList) {
-        let pcs = casesCache.filter(c => {
+        let pcs = proceedings.filter(c => {
             if (!c.regDate) return false; // Using regDate for Put in Court
             const d = parseCaseDate(c.regDate);
             if (!d) return false;
@@ -365,7 +363,7 @@ const init = async () => {
 
     // Re-render donut when the breakdown dropdown changes
     document.querySelector('.status-filter')?.addEventListener('change', () => {
-        renderDonut(casesCache);
+        renderDonut(casesCache.filter(isCourtProceeding));
     });
 };
 init();
