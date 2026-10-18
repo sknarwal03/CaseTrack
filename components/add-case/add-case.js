@@ -2471,7 +2471,7 @@ window.openAddCaseModal = (caseItem = null) => {
 
     const policeStationInput = document.getElementById('policestation');
     const stationLoadId = ++policeStationLoadSequence;
-    if (policeStationInput && !caseItem) policeStationInput.value = '';
+    if (policeStationInput && !caseItem) policeStationInput.value = 'OSM';
     void getAssignedPoliceStation().then(station => {
         if (stationLoadId !== policeStationLoadSequence || !modal.classList.contains('show')) return;
         if (policeStationInput) policeStationInput.value = station.policeStation;

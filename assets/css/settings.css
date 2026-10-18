@@ -184,8 +184,42 @@
     color: #9bb2d3;
 }
 
+.password-modal {
+    width: min(520px, 100%);
+}
+
+.password-modal .config-form {
+    margin: 0;
+    padding: 20px 24px;
+}
+
+.password-modal .config-form label {
+    display: block;
+    margin-bottom: -10px;
+}
+
+.password-modal .config-form input {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid #294a6d;
+    border-radius: 10px;
+    background: #0d1d2e;
+    color: #ebf4ff;
+}
+
+.password-modal .config-form input:focus-visible {
+    outline: 2px solid #7ea9db;
+    outline-offset: 2px;
+}
+
+.password-modal #passwordChangeStatus {
+    min-height: 18px;
+}
+
 body.light-theme .setting-row,
 body.light-theme .config-form select,
+body.light-theme .password-modal .config-form input,
 body.light-theme .security-card {
     background: #fff;
     border-color: var(--line);
@@ -206,6 +240,10 @@ body.light-theme .security-card small,
 body.light-theme .settings-header h1,
 body.light-theme .settings-header .eyebrow,
 body.light-theme .settings-panel .panel-title h2 {
+    color: var(--text);
+}
+
+body.light-theme .password-modal .config-form input {
     color: var(--text);
 }
 
