@@ -1,10 +1,7 @@
 import { db } from '@config/firebase-config.js';
 import {
     collection,
-    deleteField,
-    getDocs,
-    onSnapshot,
-    writeBatch
+    onSnapshot
 } from 'firebase/firestore';
 import { normalize, officerName, openIoDialog } from './io-dialog.js';
 
@@ -13,7 +10,6 @@ const ioList = document.getElementById('ioList');
 const ioStatus = document.getElementById('ioStatus');
 let officers = [];
 let loadingError = false;
-let legacyMigrationStarted = false;
 const rankOrder = ['ACP', 'DSP', 'Insp', 'SI', 'LSI', 'PSI', 'LPSI', 'ASI', 'LASI', 'HC', 'LHC'];
 
 function rankPriority(rank) {
@@ -111,10 +107,6 @@ onSnapshot(ioCollection, snapshot => {
     loadingError = false;
     renderOfficers();
     setStatus('');
-    if (!legacyMigrationStarted) {
-        legacyMigrationStarted = true;
-        void migrateLegacyIoFields(snapshot);
-    }
 }, error => {
     console.error('Error loading IO register:', error);
     loadingError = true;
@@ -125,48 +117,3 @@ onSnapshot(ioCollection, snapshot => {
     ioList.replaceChildren(errorState);
     setStatus('Could not load investigating officers.', true);
 });
-
-async function migrateLegacyIoFields(officerSnapshot) {
-    const updates = [];
-    officerSnapshot.docs.forEach(officerDocument => {
-        const data = officerDocument.data();
-        if (Object.hasOwn(data, 'mobileNo') || Object.hasOwn(data, 'beltNo')) {
-            updates.push({
-                ref: officerDocument.ref,
-                fields: {
-                    ioBeltno: data.ioBeltno ?? data.beltNo ?? '',
-                    iomobileNo: data.iomobileNo ?? data.mobileNo ?? '',
-                    beltNo: deleteField(),
-                    mobileNo: deleteField()
-                }
-            });
-        }
-    });
-
-    try {
-        const casesSnapshot = await getDocs(collection(db, 'cases'));
-        casesSnapshot.docs.forEach(caseDocument => {
-            const data = caseDocument.data();
-            if (Object.hasOwn(data, 'mobileNo') || Object.hasOwn(data, 'beltNo')) {
-                updates.push({
-                    ref: caseDocument.ref,
-                    fields: {
-                        ioBeltno: data.ioBeltno ?? data.beltNo ?? '',
-                        iomobileNo: data.iomobileNo ?? data.mobileNo ?? '',
-                        beltNo: deleteField(),
-                        mobileNo: deleteField()
-                    }
-                });
-            }
-        });
-
-        for (let start = 0; start < updates.length; start += 450) {
-            const batch = writeBatch(db);
-            updates.slice(start, start + 450).forEach(({ ref, fields }) => batch.update(ref, fields));
-            await batch.commit();
-        }
-    } catch (error) {
-        console.error('Error migrating legacy IO fields:', error);
-        setStatus('IO data loaded, but legacy IO fields could not be migrated. Check connection and Firestore permissions.', true);
-    }
-}

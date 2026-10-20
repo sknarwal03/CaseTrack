@@ -7,9 +7,9 @@ import {
     doc,
     onSnapshot,
     serverTimestamp,
-    updateDoc,
-    writeBatch
+    updateDoc
 } from 'firebase/firestore';
+import { getCaseAccessContext, isLocalRoleAdminProject } from './fir-case-model.js';
 
 const judgesCollection = collection(db, 'judges');
 const judgesList = document.getElementById('judgesList');
@@ -25,38 +25,11 @@ const deleteJudgeButton = document.getElementById('judgeDeleteActions');
 const judgeFormStatus = document.getElementById('judgeFormStatus');
 let judges = [];
 let editingJudge = null;
-let designationMigrationRunning = false;
 
-async function migrateJudgeDesignations(snapshot) {
-    if (designationMigrationRunning) return;
-    const legacyDocs = snapshot.docs.filter(judgeDocument => {
-        const data = judgeDocument.data();
-        return (!data.designation && (data.judicialDesignation || data.courtType))
-            || (data.designation && (data.judicialDesignation || data.courtType));
-    });
-    if (!legacyDocs.length) return;
-
-    designationMigrationRunning = true;
-    try {
-        for (let start = 0; start < legacyDocs.length; start += 450) {
-            const batch = writeBatch(db);
-            legacyDocs.slice(start, start + 450).forEach(judgeDocument => {
-                const data = judgeDocument.data();
-                batch.update(judgeDocument.ref, {
-                    ...(!data.designation && (data.judicialDesignation || data.courtType)
-                        ? { designation: data.judicialDesignation || data.courtType }
-                        : {}),
-                    judicialDesignation: deleteField(),
-                    courtType: deleteField()
-                });
-            });
-            await batch.commit();
-        }
-    } catch (error) {
-        console.error('Could not migrate judge designation fields:', error);
-    } finally {
-        designationMigrationRunning = false;
-    }
+async function ensureJudgeWriteAccess() {
+    if (!isLocalRoleAdminProject(db)) return;
+    const { role } = await getCaseAccessContext(db);
+    if (role.role !== 'admin') throw new Error('Only an active Admin can manage the shared judges register.');
 }
 
 document.getElementById('closeJudgesPage')?.addEventListener('click', () => {
@@ -193,6 +166,7 @@ async function removeJudge(judge) {
     if (!window.confirm(`Delete ${formatJudge(judge)} from the judges register? Existing cases will keep their saved judge and court details.`)) return;
     deleteJudgeButton.disabled = true;
     try {
+        await ensureJudgeWriteAccess();
         await deleteDoc(doc(db, 'judges', judge.id));
         judgeDialog.close();
         setStatus('Judge deleted.');
@@ -239,6 +213,7 @@ judgeForm.addEventListener('submit', async event => {
     saveJudgeButton.disabled = true;
     judgeFormStatus.textContent = '';
     try {
+        await ensureJudgeWriteAccess();
         const now = serverTimestamp();
         if (editingId) {
             await updateDoc(doc(db, 'judges', editingId), {
@@ -269,7 +244,6 @@ judgeForm.addEventListener('submit', async event => {
 
 setStatus('Loading judges…');
 onSnapshot(judgesCollection, snapshot => {
-    migrateJudgeDesignations(snapshot);
     judges = snapshot.docs.map(judgeDoc => ({ id: judgeDoc.id, ...judgeDoc.data() }))
         .sort((left, right) =>
             String(left.courtNumber || '').localeCompare(String(right.courtNumber || ''), undefined, { numeric: true }) ||

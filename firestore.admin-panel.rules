@@ -1,0 +1,184 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function rolePath(uid) {
+      return /databases/$(database)/documents/userRoles/$(uid);
+    }
+
+    function stationPath(stationId) {
+      return /databases/$(database)/documents/policeStations/$(stationId);
+    }
+
+    function masterPath(masterId) {
+      return /databases/$(database)/documents/firMasters/$(masterId);
+    }
+
+    function identityClaimPath(claimId) {
+      return /databases/$(database)/documents/firIdentityClaims/$(claimId);
+    }
+
+    function hasRoleRecord() {
+      return signedIn() && exists(rolePath(request.auth.uid));
+    }
+
+    function callerRole() {
+      return get(rolePath(request.auth.uid)).data;
+    }
+
+    function isActiveAdmin() {
+      return hasRoleRecord()
+        && callerRole().get('role', '') == 'admin'
+        && callerRole().get('status', '') == 'active'
+        && (!callerRole().keys().hasAny(['policeStationId'])
+          || callerRole().policeStationId == null);
+    }
+
+    function validStationId(stationId) {
+      return stationId is string
+        && stationId.matches('^[A-Za-z0-9_-]{1,128}$')
+        && exists(stationPath(stationId))
+        && get(stationPath(stationId)).data.name is string
+        && get(stationPath(stationId)).data.name.size() > 0;
+    }
+
+    function isActiveOperatorFor(stationId) {
+      return hasRoleRecord()
+        && callerRole().get('role', '') == 'operator'
+        && callerRole().get('status', '') == 'active'
+        && callerRole().get('policeStationId', '') == stationId
+        && validStationId(callerRole().get('policeStationId', ''));
+    }
+
+    function isActiveOperator() {
+      return hasRoleRecord()
+        && callerRole().get('role', '') == 'operator'
+        && callerRole().get('status', '') == 'active'
+        && validStationId(callerRole().get('policeStationId', ''));
+    }
+
+    function hasValidStationOwner(data) {
+      return data is map
+        && data.keys().hasAll(['policeStationId'])
+        && validStationId(data.policeStationId);
+    }
+
+    function canAccessStation(stationId) {
+      return isActiveAdmin() || isActiveOperatorFor(stationId);
+    }
+
+    function hasLinkedMaster(data) {
+      return data is map
+        && data.keys().hasAll(['firMasterId'])
+        && data.firMasterId is string
+        && data.firMasterId.size() > 0
+        && exists(masterPath(data.firMasterId))
+        && get(masterPath(data.firMasterId)).data.policeStationId
+          == data.policeStationId;
+    }
+
+    function validLegacyMasterReference(data) {
+      return !data.keys().hasAny(['firMasterId'])
+        || (data.firMasterId is string
+          && (data.firMasterId == '' || hasLinkedMaster(data)));
+    }
+
+    match /userRoles/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
+      allow list, create, update, delete: if false;
+
+      match /{nested=**} {
+        allow read, write: if false;
+      }
+    }
+
+    match /policeStations/{stationId} {
+      allow get: if canAccessStation(stationId);
+      allow list: if isActiveAdmin();
+      allow create, update, delete: if false;
+    }
+
+    match /crimeHeads/{crimeHeadId} {
+      allow get, list: if isActiveAdmin() || isActiveOperator();
+      allow create: if (isActiveAdmin() || isActiveOperator())
+        && request.resource.data.keys().hasAll(['value', 'label', 'normalized'])
+        && request.resource.data.value is string
+        && request.resource.data.value.size() > 0
+        && request.resource.data.label is string
+        && request.resource.data.label.size() > 0
+        && request.resource.data.normalized is string
+        && request.resource.data.normalized.size() > 0;
+      allow update, delete: if false;
+    }
+
+    match /judges/{judgeId} {
+      allow get, list: if isActiveAdmin() || isActiveOperator();
+      allow create, update, delete: if isActiveAdmin();
+    }
+
+    match /investigatingOfficers/{officerId} {
+      allow get, list: if isActiveAdmin() || isActiveOperator();
+      allow create, update, delete: if isActiveAdmin();
+    }
+
+    match /firMasters/{masterId} {
+      allow get, list: if hasValidStationOwner(resource.data)
+        && canAccessStation(resource.data.policeStationId);
+      allow create, update, delete: if false;
+    }
+
+    match /firIdentityClaims/{claimId} {
+      allow get: if isActiveAdmin()
+        || (isActiveOperator()
+          && (!exists(identityClaimPath(claimId))
+            || canAccessStation(resource.data.policeStationId)));
+      allow list: if isActiveAdmin()
+        || (isActiveOperator() && canAccessStation(resource.data.policeStationId));
+      allow create, update, delete: if false;
+    }
+
+    match /linkedCases/{caseId} {
+      allow get, list: if hasValidStationOwner(resource.data)
+        && hasLinkedMaster(resource.data)
+        && canAccessStation(resource.data.policeStationId);
+      allow create: if hasValidStationOwner(request.resource.data)
+        && hasLinkedMaster(request.resource.data)
+        && canAccessStation(request.resource.data.policeStationId);
+      allow update: if hasValidStationOwner(resource.data)
+        && hasValidStationOwner(request.resource.data)
+        && resource.data.policeStationId == request.resource.data.policeStationId
+        && hasLinkedMaster(resource.data)
+        && hasLinkedMaster(request.resource.data)
+        && canAccessStation(resource.data.policeStationId)
+        && canAccessStation(request.resource.data.policeStationId);
+      allow delete: if hasValidStationOwner(resource.data)
+        && hasLinkedMaster(resource.data)
+        && canAccessStation(resource.data.policeStationId);
+    }
+
+    match /cases/{caseId} {
+      allow get, list: if hasValidStationOwner(resource.data)
+        && canAccessStation(resource.data.policeStationId);
+      allow create: if hasValidStationOwner(request.resource.data)
+        && validLegacyMasterReference(request.resource.data)
+        && canAccessStation(request.resource.data.policeStationId);
+      allow update: if hasValidStationOwner(resource.data)
+        && hasValidStationOwner(request.resource.data)
+        && resource.data.policeStationId == request.resource.data.policeStationId
+        && validLegacyMasterReference(resource.data)
+        && validLegacyMasterReference(request.resource.data)
+        && canAccessStation(resource.data.policeStationId)
+        && canAccessStation(request.resource.data.policeStationId);
+      allow delete: if hasValidStationOwner(resource.data)
+        && validLegacyMasterReference(resource.data)
+        && canAccessStation(resource.data.policeStationId);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

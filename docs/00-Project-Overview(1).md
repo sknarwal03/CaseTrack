@@ -359,6 +359,12 @@ The following are future directions, not current-user requirements:
 Future expansion will require separate decisions about user roles,
 permissions, station-level data isolation, administration, and security.
 
+The Admin Panel role and access boundaries confirmed for future planning
+are recorded in
+[`20-Admin-Panel-Architecture-Decisions.md`](./20-Admin-Panel-Architecture-Decisions.md).
+Those decisions do not change the current single-user scope or verify an
+implementation.
+
 ## 14. Out of Scope for the Initial Version
 
 The following are not part of the current initial scope:
@@ -394,7 +400,10 @@ treated as confirmed implementation details.
 -   Duplicate-write prevention and retry behavior.
 -   Backup frequency, retention period, and restoration procedure.
 -   Data migration and recovery procedures.
--   Future user roles and permission boundaries.
+-   SP/Senior Officer role identifier, jurisdiction representation, and
+    secure aggregate-report mechanism; see
+    `20-Admin-Panel-Architecture-Decisions.md` for the confirmed access
+    boundary. Other future permission details remain to be specified.
 
 ### 15.3 Security and operational verification
 

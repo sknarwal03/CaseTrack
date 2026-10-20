@@ -135,5 +135,5 @@ test('stable police station IDs define FIR identity even when display names matc
     assert.equal(sameFirIdentity(
         { firNo: ' 42 ', firYear: '2025', policeStationId: 'station-a' },
         { firNo: '42', firYear: '2025', policeStationId: 'STATION-A' }
-    ), true);
+    ), false);
 });

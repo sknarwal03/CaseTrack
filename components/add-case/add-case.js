@@ -1,9 +1,10 @@
 import { db, auth } from '@config/firebase-config.js';
-import { collection, addDoc, updateDoc, deleteDoc, doc, deleteField, getDoc, getDocs, onSnapshot, query, runTransaction, serverTimestamp, setDoc, where, writeBatch } from 'firebase/firestore';
-import { latestChargeDate } from '../../assets/js/charge-date.js';
+import { collection, updateDoc, deleteDoc, doc, deleteField, getDoc, getDocs, onSnapshot, query, runTransaction, serverTimestamp, Timestamp, where, writeBatch } from 'firebase/firestore';
+import { latestChargeDate, latestTrialStage } from '../../assets/js/charge-date.js';
 import { normalizeTrialStage, populateTrialStageSelect, setTrialStageSelectValue } from '../../assets/js/trial-stages.js';
 import { openIoDialog } from '../../assets/js/io-dialog.js';
-import { findFirMasterMatches, findLegacyFirGroups, LINKED_CASES_COLLECTION, loadRecordsForFir, saveFirMaster } from '../../assets/js/fir-case-model.js';
+import { findFirMasterMatches, findLegacyFirGroups, getCaseAccessContext, isLocalRoleAdminProject, LINKED_CASES_COLLECTION, loadCaseRecords, loadRecordsForFir, saveFirMaster } from '../../assets/js/fir-case-model.js';
+import { normalizeProceedingFields, proceedingFieldsFromForm, proceedingPayload } from '../../assets/js/proceeding-fields.mjs';
 import { deriveFirStatus } from '../../assets/js/fir-status.mjs';
 import addCaseHtml from './add-case.html?raw';
 
@@ -23,6 +24,7 @@ const masterValues = {
     crimeHead: [...masterDefinitions.crimeHead.initialValues]
 };
 const pendingMasterWrites = new Map();
+let savedUnderSectionsLoad = null;
 
 if (!document.getElementById('caseModal')) {
     document.body.insertAdjacentHTML('beforeend', addCaseHtml);
@@ -53,30 +55,8 @@ async function loadMasterList(type) {
                 : null;
         })
         .filter(Boolean);
-    const storedIds = new Set(snapshot.docs.map(masterDoc => masterDoc.id));
-
-    await Promise.all(definition.initialValues.map(({ value, label }) => {
-        const id = masterDocumentId(value);
-        if (storedIds.has(id)) return Promise.resolve();
-        return setDoc(doc(db, definition.collectionName, id), {
-            value,
-            label,
-            normalized: normalizeMasterValue(value),
-            createdAt: serverTimestamp()
-        });
-    }));
-
-    const refreshedSnapshot = await getDocs(listRef);
     const valuesByNormalized = new Map();
-    const refreshedValues = refreshedSnapshot.docs
-        .map(masterDoc => {
-            const data = masterDoc.data();
-            return typeof data.value === 'string' && data.value.trim()
-                ? { value: data.value.trim(), label: data.label || data.value.trim() }
-                : null;
-        })
-        .filter(Boolean);
-    [...definition.initialValues, ...storedValues, ...refreshedValues]
+    [...definition.initialValues, ...storedValues]
         .forEach(item => {
             const normalized = normalizeMasterValue(item.value);
             if (!valuesByNormalized.has(normalized)) valuesByNormalized.set(normalized, item);
@@ -380,11 +360,20 @@ const underSectionOptions = document.getElementById('underSectionOptions');
 let savedUnderSections = [];
 let underSectionMenuOpen = false;
 let activeUnderSectionIndex = -1;
-let stopUnderSectionListener = null;
 
-async function getAssignedPoliceStation() {
+async function getAssignedPoliceStation(selectedStationId = '') {
     const user = auth.currentUser;
     if (!user) throw new Error('Your sign-in could not be verified. Sign in again or contact the administrator.');
+    if (isLocalRoleAdminProject(db)) {
+        const context = await getCaseAccessContext(db);
+        if (context.role.role === 'operator') {
+            const station = context.stations[0];
+            return { policeStationId: station.id, policeStation: station.name };
+        }
+        const station = context.stations.find(item => item.id === selectedStationId);
+        if (!station) throw new Error('Select an authorized police station before saving this FIR or proceeding.');
+        return { policeStationId: station.id, policeStation: station.name };
+    }
     let roleSnapshot;
     try {
         roleSnapshot = await getDoc(doc(db, 'userRoles', user.uid));
@@ -393,6 +382,7 @@ async function getAssignedPoliceStation() {
         assignmentError.cause = error;
         throw assignmentError;
     }
+
     const role = roleSnapshot.exists() ? roleSnapshot.data() : null;
     const policeStationId = String(role?.policeStationId || '').trim();
     if (!role || !['operator', 'admin'].includes(role.role) || role.status !== 'active' || !policeStationId) {
@@ -401,6 +391,38 @@ async function getAssignedPoliceStation() {
     return {
         policeStationId,
         policeStation: String(role.policeStationName || role.policeStation || role.stationName || policeStationId).trim()
+    };
+}
+
+async function preparePoliceStationSelector(caseItem) {
+    const stationInput = document.getElementById('policestation');
+    const stationSelect = document.getElementById('policeStationId');
+    if (!stationInput || !stationSelect) return;
+    if (!isLocalRoleAdminProject(db)) {
+        stationSelect.hidden = true;
+        const station = await getAssignedPoliceStation();
+        stationInput.value = station.policeStation;
+        return;
+    }
+
+    const context = await getCaseAccessContext(db);
+    if (context.role.role === 'operator') {
+        stationSelect.hidden = true;
+        stationSelect.value = context.stations[0].id;
+        stationInput.value = context.stations[0].name;
+        return;
+    }
+
+    stationSelect.replaceChildren(new Option('Select a police station', ''));
+    context.stations.forEach(station => stationSelect.add(new Option(station.name, station.id)));
+    stationSelect.hidden = false;
+    stationSelect.disabled = Boolean(caseItem?.id);
+    stationSelect.value = context.stations.some(station => station.id === caseItem?.policeStationId)
+        ? caseItem.policeStationId
+        : '';
+    stationInput.value = context.stations.find(station => station.id === stationSelect.value)?.name || '';
+    stationSelect.onchange = () => {
+        stationInput.value = context.stations.find(station => station.id === stationSelect.value)?.name || '';
     };
 }
 
@@ -506,19 +528,19 @@ function renderUnderSectionSuggestions() {
 }
 
 function loadSavedUnderSections() {
-    if (stopUnderSectionListener) return;
-    stopUnderSectionListener = onSnapshot(collection(db, 'cases'), snapshot => {
+    if (savedUnderSectionsLoad) return;
+    savedUnderSectionsLoad = loadCaseRecords(db).then(records => {
         const uniqueSections = new Map();
-        snapshot.docs.forEach(caseDocument => {
-            const value = caseDocument.data().underSection;
+        records.forEach(record => {
+            const value = record.underSection;
             if (typeof value !== 'string' || !value.trim()) return;
             const normalized = value.trim().toLowerCase();
             if (!uniqueSections.has(normalized)) uniqueSections.set(normalized, value);
         });
         savedUnderSections = [...uniqueSections.values()];
         if (underSectionMenuOpen) renderUnderSectionSuggestions();
-    }, error => {
-        stopUnderSectionListener = null;
+    }).catch(error => {
+        savedUnderSectionsLoad = null;
         console.error('Error loading saved case sections:', error);
     });
 }
@@ -1540,9 +1562,7 @@ function updateHearingDateSnapshot() {
     renderNextDateStage();
     const latestStage = activeDraft?.successorCaseId
         ? 'Committed'
-        : [...hearingDateRecords]
-            .sort((left, right) => right.date.localeCompare(left.date))
-            .find(record => String(record.trialStage || '').trim())?.trialStage || trialStageValue.value;
+        : latestTrialStage(hearingDateRecords, trialStageValue.value);
     syncCaseStatusFromTrialStage(latestStage);
 }
 
@@ -1755,6 +1775,8 @@ function createCaseRecordDraft(type, caseItem = null) {
     const draft = {
         type,
         id: caseItem?.id || null,
+        isPersisted: Boolean(caseItem?.id),
+        createdAt: caseItem?.createdAt || null,
         collectionName: caseItem?._collectionName || LINKED_CASES_COLLECTION,
         policeStationId: caseItem?.policeStationId || '',
         policeStation: caseItem?.policeStation || '',
@@ -1764,6 +1786,7 @@ function createCaseRecordDraft(type, caseItem = null) {
         localId: caseItem?.id || `draft-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         courtTypeDrivesType: type === 'chargesheet',
         fields: {},
+        courtFields: normalizeProceedingFields(caseItem || {}),
         hearingDateRecord: Array.isArray(caseItem?.hearingDateRecord) ? caseItem.hearingDateRecord : []
     };
     const firestoreFields = {
@@ -1822,6 +1845,96 @@ function inferCaseRecordType(caseItem) {
     return 'lower';
 }
 
+function setProceedingDate(input, value) {
+    if (!input) return;
+    if (input._flatpickr) {
+        if (value) input._flatpickr.setDate(value, false, 'd/m/Y');
+        else input._flatpickr.clear(false);
+    } else {
+        input.value = value || '';
+    }
+}
+
+function applyProceedingFields(fields) {
+    const values = normalizeProceedingFields(fields);
+    caseIoSelectionTouched = false;
+    applyCaseIoSnapshot(values, values.ioId);
+    populateCaseIoOptions(values);
+
+    const highlighted = form.elements.namedItem('highlightcase');
+    if (highlighted) highlighted.checked = values.highlighted;
+
+    const accusedContainer = document.getElementById('accusedContainer');
+    if (accusedContainer) {
+        let cards = [...accusedContainer.querySelectorAll('.accused-card')];
+        const requiredCount = Math.max(values.accused.length, 1);
+        while (cards.length > requiredCount) {
+            cards.pop().remove();
+        }
+        while (cards.length < requiredCount) {
+            addAccusedCard();
+            cards = [...accusedContainer.querySelectorAll('.accused-card')];
+        }
+        cards.forEach((card, index) => {
+            resetAccusedCard(card);
+            const accused = values.accused[index];
+            if (!accused) return;
+            card.querySelector('input[name="accused_name[]"]').value = accused.name;
+            card.querySelector('input[name="accused_father_name[]"]').value = accused.fatherName;
+            card.querySelector('input[name="accused_mobile[]"]').value = accused.mobile;
+            card.querySelector('textarea[name="accused_address[]"]').value = accused.address;
+            const arrested = card.querySelector('input[name="arrested[]"]');
+            const arrestDate = card.querySelector('input[name="arrestingdate[]"]');
+            const custody = card.querySelector('select[name="custody_status[]"]');
+            const bailDate = card.querySelector('input[name="baildate[]"]');
+            arrested.checked = accused.arrested;
+            arrestDate.disabled = !accused.arrested;
+            custody.disabled = !accused.arrested;
+            arrestDate.closest('.input-group')?.style.setProperty('display', accused.arrested ? '' : 'none');
+            custody.closest('.input-group')?.style.setProperty('display', accused.arrested ? '' : 'none');
+            setProceedingDate(arrestDate, accused.arrestDate);
+            custody.value = accused.custodyStatus;
+            const needsBailDate = accused.arrested
+                && ['bailed_police', 'bailed_court'].includes(accused.custodyStatus);
+            bailDate.disabled = !needsBailDate;
+            bailDate.closest('.input-group')?.style.setProperty('display', needsBailDate ? '' : 'none');
+            setProceedingDate(bailDate, accused.bailDate);
+            const poStatus = card.querySelector('input[name="po_status[]"]');
+            const poDate = card.querySelector('input[name="po_date[]"]');
+            poStatus.checked = accused.poStatus;
+            poDate.disabled = !accused.poStatus;
+            poDate.closest('.input-group')?.style.setProperty('display', accused.poStatus ? '' : 'none');
+            setProceedingDate(poDate, accused.poDate);
+        });
+    }
+
+    const witnessContainer = document.getElementById('witnessTableBody');
+    if (witnessContainer) {
+        let rows = [...witnessContainer.querySelectorAll('tr')];
+        const requiredCount = Math.max(values.witnesses.length, 1);
+        while (rows.length > requiredCount) {
+            rows.pop().remove();
+        }
+        while (rows.length < requiredCount) {
+            addWitnessRow();
+            rows = [...witnessContainer.querySelectorAll('tr')];
+        }
+        rows.forEach((row, index) => {
+            resetWitnessRow(row);
+            const witness = values.witnesses[index];
+            if (!witness) return;
+            row.querySelector('input[name="witness_name[]"]').value = witness.name;
+            row.querySelector('select[name="witness_status[]"]').value = witness.status;
+            const examined = row.querySelector('input[name="witness_examined[]"]');
+            const examinedDate = row.querySelector('input[name="witness_examined_date[]"]');
+            examined.checked = witness.examined;
+            examinedDate.disabled = !witness.examined;
+            setProceedingDate(examinedDate, witness.examinedDate);
+        });
+        updateWitnessCounts();
+    }
+}
+
 function captureActiveCaseRecord() {
     const draft = caseRecordDrafts[activeCaseRecordIndex];
     if (!draft) return;
@@ -1830,6 +1943,7 @@ function captureActiveCaseRecord() {
         const field = document.getElementById(id);
         if (field) draft.fields[id] = field.value;
     });
+    draft.courtFields = proceedingFieldsFromForm(form);
     if (draft.type === 'ucr') {
         const serial = String(draft.fields.ucrSerial || '').trim();
         const year = String(draft.fields.ucrYear || '').trim();
@@ -1882,9 +1996,9 @@ async function removeCaseRecord(index) {
         const removeButton = document.getElementById('removeActiveCaseRecord');
         if (removeButton) removeButton.disabled = true;
         try {
-            const assignedStation = await getAssignedPoliceStation();
             const recordStationId = draft.policeStationId || selectedFirMasterData?.policeStationId || '';
             const recordStationName = String(draft.policeStation || selectedFirMasterData?.policeStation || '').trim();
+            const assignedStation = await getAssignedPoliceStation(recordStationId);
             if (recordStationId
                 ? recordStationId !== assignedStation.policeStationId
                 : recordStationName.toLocaleLowerCase() !== assignedStation.policeStation.toLocaleLowerCase()) {
@@ -2011,6 +2125,7 @@ async function loadLinkedCaseRecords(caseItem, loadSequence) {
             const currentDraft = currentDraftsById.get(`${record._collectionName}:${record.id}`);
             if (!currentDraft) return loadedDraft;
             loadedDraft.fields = { ...loadedDraft.fields, ...currentDraft.fields };
+            loadedDraft.courtFields = normalizeProceedingFields(currentDraft.courtFields);
             loadedDraft.hearingDateRecord = currentDraft.hearingDateRecord.map(hearing => ({ ...hearing }));
             return loadedDraft;
         });
@@ -2054,6 +2169,7 @@ function activateCaseRecord(index, capture = true) {
             field.value = value;
         }
     });
+    applyProceedingFields(draft.courtFields);
 
     const courtTypeSelect = document.getElementById('courttype');
     if (draft.type !== 'ucr' && caseRecordCourtTypes[draft.type] && !draft.id) {
@@ -2253,7 +2369,7 @@ document.getElementById('deleteFirMaster')?.addEventListener('click', async even
         const firYear = String(selectedFirMasterData?.firYear || document.getElementById('firyear')?.value || '—');
         const station = String(selectedFirMasterData?.policeStation || document.getElementById('policestation')?.value || '—');
         if (!window.confirm(`Delete this FIR Master?\n\nFIR Number: ${firNo}\nFIR Year: ${firYear}\nPolice Station: ${station}\n\nThis action cannot be undone.`)) return;
-        const assignedStation = await getAssignedPoliceStation();
+        const assignedStation = await getAssignedPoliceStation(selectedFirMasterData?.policeStationId || '');
         if (selectedFirMasterData?.policeStationId
             ? selectedFirMasterData.policeStationId !== assignedStation.policeStationId
             : station.trim().toLocaleLowerCase() !== assignedStation.policeStation.toLocaleLowerCase()) {
@@ -2472,9 +2588,8 @@ window.openAddCaseModal = (caseItem = null) => {
     const policeStationInput = document.getElementById('policestation');
     const stationLoadId = ++policeStationLoadSequence;
     if (policeStationInput && !caseItem) policeStationInput.value = 'OSM';
-    void getAssignedPoliceStation().then(station => {
+    void preparePoliceStationSelector(caseItem).then(() => {
         if (stationLoadId !== policeStationLoadSequence || !modal.classList.contains('show')) return;
-        if (policeStationInput) policeStationInput.value = station.policeStation;
     }).catch(error => {
         if (stationLoadId !== policeStationLoadSequence || !modal.classList.contains('show')) return;
         if (caseRecordStatus) caseRecordStatus.textContent = error.message;
@@ -2965,8 +3080,9 @@ form?.addEventListener('submit', async e => {
 
     try {
         const formData = new FormData(form);
+        captureActiveCaseRecord();
         const rawData = Object.fromEntries(formData.entries());
-        const assignedStation = await getAssignedPoliceStation();
+        const assignedStation = await getAssignedPoliceStation(document.getElementById('policeStationId')?.value || '');
         if (selectedFirMasterData?.policeStationId
             && selectedFirMasterData.policeStationId !== assignedStation.policeStationId) {
             throw new Error('This FIR belongs to a different police station. Ask the administrator to assign the correct station before editing it.');
@@ -3000,60 +3116,6 @@ form?.addEventListener('submit', async e => {
         let masterData = selectedFirMasterId && !editingFirMaster
             ? { ...selectedFirMasterData, fileNo: String(rawData.fileNo || '').trim() }
             : enteredMasterData;
-        const courtFields = {
-            ioRank: String(rawData.iorank || '').trim(),
-            ioName: String(rawData.ioname || '').trim(),
-            ioId: String(rawData.ioId || '').trim(),
-            ioBeltno: String(rawData.ioBeltno || '').trim(),
-            iomobileNo: String(rawData.iomobileNo || '').trim(),
-            highlighted: Boolean(formData.get('highlightcase')),
-            accused: [],
-            witnesses: []
-        };
-
-        // Process Accused array
-        const accusedNames = formData.getAll('accused_name[]');
-        const accusedFathers = formData.getAll('accused_father_name[]');
-        const accusedMobiles = formData.getAll('accused_mobile[]');
-        const accusedArrestingDates = formData.getAll('arrestingdate[]');
-        const accusedCustody = formData.getAll('custody_status[]');
-        const accusedBailDates = formData.getAll('baildate[]');
-        const accusedPoDates = formData.getAll('po_date[]');
-        const accusedAddresses = formData.getAll('accused_address[]');
-
-        const arrestedFlags = Array.from(document.querySelectorAll('input[name="arrested[]"]')).map(cb => cb.checked);
-        const poFlags = Array.from(document.querySelectorAll('input[name="po_status[]"]')).map(cb => cb.checked);
-
-        for (let i = 0; i < accusedNames.length; i++) {
-            courtFields.accused.push({
-                name: String(accusedNames[i] || '').trim(),
-                fatherName: String(accusedFathers[i] || '').trim(),
-                mobile: String(accusedMobiles[i] || '').trim(),
-                arrested: arrestedFlags[i] || false,
-                arrestDate: String(accusedArrestingDates[i] || '').trim(),
-                custodyStatus: String(accusedCustody[i] || '').trim(),
-                bailDate: String(accusedBailDates[i] || '').trim(),
-                poStatus: poFlags[i] || false,
-                poDate: String(accusedPoDates[i] || '').trim(),
-                address: String(accusedAddresses[i] || '').trim()
-            });
-        }
-
-        // Process Witness array
-        const witnessNames = formData.getAll('witness_name[]');
-        const witnessStatus = formData.getAll('witness_status[]');
-        const witnessExDates = formData.getAll('witness_examined_date[]');
-        const exFlags = Array.from(document.querySelectorAll('input[name="witness_examined[]"]')).map(cb => cb.checked);
-
-        for (let i = 0; i < witnessNames.length; i++) {
-            courtFields.witnesses.push({
-                name: String(witnessNames[i] || '').trim(),
-                status: String(witnessStatus[i] || '').trim(),
-                examined: exFlags[i] || false,
-                examinedDate: String(witnessExDates[i] || '').trim()
-            });
-        }
-
         const ucrDrafts = caseRecordDrafts.filter(record => record.type === 'ucr');
         if (ucrDrafts.length > 1) throw new Error('Only one UCR report can be linked to an FIR. Remove the duplicate draft before saving.');
         const existingRecords = selectedFirMasterId ? await loadRecordsForFir(db, selectedFirMasterId) : [];
@@ -3160,26 +3222,21 @@ form?.addEventListener('submit', async e => {
             complainantMobile: masterData.complainantMobile || '',
             complainantAddress: masterData.complainantAddress || ''
         };
-        const sharedLegacyFields = {
-            ...masterFieldsToPropagate,
-            ...masterData,
-            fileNo: String(rawData.fileNo || '').trim(),
-            firId: firMasterId || String(rawData.fileNo || '').trim(),
-            firMasterId: firMasterId || '',
-            ...courtFields
-        };
         const linkedCasesCollection = collection(db, LINKED_CASES_COLLECTION);
-        const updatedRecordIds = new Set();
         const saveFailures = [];
         for (const [recordIndex, record] of caseRecordDrafts.entries()) {
           try {
             const fields = record.fields;
             const recordHearings = record.hearingDateRecord.map(hearing => ({ ...hearing }));
+            const proceedingFields = proceedingPayload(masterFieldsToPropagate, record.courtFields);
+            const legacyProceedingFields = proceedingPayload({
+                ...masterFieldsToPropagate,
+                ...masterData,
+                fileNo: String(rawData.fileNo || '').trim()
+            }, record.courtFields);
             const caseData = {
-                ...(record.collectionName === 'cases' ? sharedLegacyFields : { ...masterFieldsToPropagate, ...courtFields }),
+                ...(record.collectionName === 'cases' ? legacyProceedingFields : proceedingFields),
                 fileNo: String(rawData.fileNo || '').trim(),
-                firId: firMasterId || String(rawData.fileNo || '').trim(),
-                firMasterId: firMasterId || '',
                 predecessorCaseId: record.predecessorCaseId || '',
                 successorCaseId: record.successorCaseId || '',
                 recordType: record.type,
@@ -3211,40 +3268,52 @@ form?.addEventListener('submit', async e => {
                 report_type: record.type === 'ucr' ? String(fields.report_type || '').trim() : '',
                 ucr_dod: record.type === 'ucr' ? String(fields.ucr_dod || '').trim() : ''
             };
+            if (record.collectionName === 'cases' && record.id) {
+                delete caseData.firId;
+                delete caseData.firMasterId;
+            } else {
+                caseData.firId = firMasterId || String(rawData.fileNo || '').trim();
+                caseData.firMasterId = firMasterId || '';
+            }
 
             let recordId = record.id;
-            if (recordId) {
-                await updateDoc(doc(db, record.collectionName || 'cases', recordId), {
+            if (!recordId) {
+                recordId = doc(linkedCasesCollection).id;
+                record.id = recordId;
+                record.collectionName = LINKED_CASES_COLLECTION;
+                record.createdAt = Timestamp.now();
+            }
+            const recordReference = doc(db, record.collectionName || LINKED_CASES_COLLECTION, recordId);
+            const batch = writeBatch(db);
+            if (record.isPersisted) {
+                batch.update(recordReference, {
                     ...caseData,
-                    beltNo: deleteField(),
-                    mobileNo: deleteField(),
-                    registerDiaryDaterecords: deleteField(),
-                    registerDiaryDateRecords: deleteField(),
                     updatedAt: serverTimestamp()
                 });
             } else {
-                const createdCase = await addDoc(linkedCasesCollection, {
+                record.createdAt = record.createdAt || Timestamp.now();
+                batch.set(recordReference, {
                     ...caseData,
-                    createdAt: serverTimestamp(),
+                    createdAt: record.createdAt,
                     updatedAt: serverTimestamp()
                 });
-                recordId = createdCase.id;
-                record.id = recordId;
-                record.collectionName = LINKED_CASES_COLLECTION;
             }
             if (record.predecessorCaseId) {
                 const source = caseRecordDrafts.find(item => item.id === record.predecessorCaseId);
-                if (source) {
-                    source.successorCaseId = recordId;
-                    source.fields.casestatus = 'Committed';
-                    await updateDoc(doc(db, source.collectionName || 'cases', source.id), {
-                        status: 'Committed',
-                        successorCaseId: recordId,
-                        updatedAt: serverTimestamp()
-                    });
-                }
+                if (!source?.id) throw new Error('The predecessor proceeding is unavailable. Reload the FIR before saving this transfer.');
+                batch.update(doc(db, source.collectionName || 'cases', source.id), {
+                    status: 'Committed',
+                    successorCaseId: recordId,
+                    updatedAt: serverTimestamp()
+                });
             }
-            updatedRecordIds.add(recordId);
+            await batch.commit();
+            record.isPersisted = true;
+            if (record.predecessorCaseId) {
+                const source = caseRecordDrafts.find(item => item.id === record.predecessorCaseId);
+                source.successorCaseId = recordId;
+                source.fields.casestatus = 'Committed';
+            }
             hearingDateRecords = recordHearings;
             persistHearingRecords(recordId);
           } catch (error) {
@@ -3252,40 +3321,43 @@ form?.addEventListener('submit', async e => {
           }
         }
 
-        const linkedRecords = firMasterId
-            ? await loadRecordsForFir(db, firMasterId)
-            : (isEditingLegacyRecord ? await loadRecordsForFir(db, String(rawData.fileNo || '').trim()) : []);
-        if (isEditingLegacyRecord) {
-            const legacyLinkedRecords = linkedRecords.filter(item => item._collectionName === 'cases');
-            await Promise.all(legacyLinkedRecords
-                .filter(item => !updatedRecordIds.has(item.id))
-                .map(item => updateDoc(doc(db, 'cases', item.id), { ...sharedLegacyFields, updatedAt: serverTimestamp() })));
+        let statusRefreshFailure = null;
+        try {
+            const linkedRecords = firMasterId
+                ? await loadRecordsForFir(db, firMasterId)
+                : (isEditingLegacyRecord ? await loadRecordsForFir(db, String(rawData.fileNo || '').trim()) : []);
+            const firStatus = deriveFirStatus(masterData, linkedRecords);
+            const firStatusField = document.getElementById('fir_Status');
+            if (firStatusField) {
+                const statusLabels = { UI: 'Under Investigation', UT: 'Under Trial', Disposed: 'Disposed', UCR: 'Untraced', Cancelled: 'Cancelled' };
+                firStatusField.value = statusLabels[firStatus] || statusLabels.UI;
+            }
+            if (firMasterId && !isEditingLegacyRecord) {
+                await saveFirMaster(db, {
+                    ...masterData,
+                    fileNo: String(rawData.fileNo || '').trim(),
+                    policeStationId: assignedStation.policeStationId,
+                    firStatus
+                }, firMasterId);
+            } else if (isEditingLegacyRecord) {
+                const legacyRecords = linkedRecords.filter(item => item._collectionName === 'cases');
+                await Promise.all(legacyRecords.map(item => updateDoc(doc(db, 'cases', item.id), {
+                    firStatus,
+                    updatedAt: serverTimestamp()
+                })));
+            }
+        } catch (error) {
+            statusRefreshFailure = error;
         }
-        const firStatus = deriveFirStatus(masterData, linkedRecords);
-        const firStatusField = document.getElementById('fir_Status');
-        if (firStatusField) {
-            const statusLabels = { UI: 'Under Investigation', UT: 'Under Trial', Disposed: 'Disposed', UCR: 'Untraced', Cancelled: 'Cancelled' };
-            firStatusField.value = statusLabels[firStatus] || statusLabels.UI;
-        }
-        if (firMasterId && !isEditingLegacyRecord) {
-            await updateDoc(doc(db, 'firMasters', firMasterId), {
-                fileNo: String(rawData.fileNo || '').trim(),
-                policeStationId: assignedStation.policeStationId,
-                firStatus,
-                updatedAt: serverTimestamp()
-            });
-        } else if (isEditingLegacyRecord) {
-            const legacyRecords = linkedRecords.filter(item => item._collectionName === 'cases');
-            await Promise.all(legacyRecords.map(item => updateDoc(doc(db, 'cases', item.id), {
-                firStatus,
-                updatedAt: serverTimestamp()
-            })));
-        }
-        if (saveFailures.length) {
+        if (saveFailures.length || statusRefreshFailure) {
             const details = saveFailures.map(({ recordIndex, record, error }) =>
                 `${caseRecordLabels[record.type] || 'Record'} ${recordIndex + 1}: ${error?.message || 'Save failed.'}`
-            ).join('\n');
-            if (caseRecordStatus) caseRecordStatus.textContent = `Saved ${caseRecordDrafts.length - saveFailures.length} record(s); ${saveFailures.length} failed. Successful records are retained. Correct the failures and retry.\n${details}`;
+            );
+            if (statusRefreshFailure) {
+                details.push(`FIR status refresh failed: ${statusRefreshFailure?.message || 'The status could not be refreshed.'} Proceeding writes that already succeeded are retained; retry after correcting the issue.`);
+            }
+            if (caseRecordStatus) caseRecordStatus.textContent = `Saved ${caseRecordDrafts.length - saveFailures.length} record(s); ${saveFailures.length} proceeding save(s) failed.${details.length ? `\n${details.join('\n')}` : ''}`;
+            else if (details.length) alert(details.join('\n'));
             return;
         }
         window.dispatchEvent(new CustomEvent('caseAdded'));

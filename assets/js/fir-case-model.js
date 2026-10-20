@@ -4,15 +4,88 @@ import {
     getDoc,
     getDocs,
     query,
-    setDoc,
-    updateDoc,
     where
 } from 'firebase/firestore';
+import { getAuth, getIdToken, onAuthStateChanged } from 'firebase/auth';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 import { deriveFirStatus } from './fir-status.mjs';
+import {
+    LOCAL_ROLE_ADMIN_FUNCTIONS_ROOT,
+    LOCAL_ROLE_ADMIN_PROJECT_ID
+} from './local-role-admin-endpoints.js';
 
 export const FIR_MASTERS_COLLECTION = 'firMasters';
+export const FIR_IDENTITY_CLAIMS_COLLECTION = 'firIdentityClaims';
 export const LINKED_CASES_COLLECTION = 'linkedCases';
 export const LEGACY_CASES_COLLECTION = 'cases';
+export function isLocalRoleAdminProject(db) {
+    return db.app.options.projectId === LOCAL_ROLE_ADMIN_PROJECT_ID;
+}
+
+function waitForCurrentUser(auth) {
+    if (auth.currentUser) return Promise.resolve(auth.currentUser);
+    return new Promise((resolve, reject) => {
+        let unsubscribe = () => {};
+        unsubscribe = onAuthStateChanged(auth, user => {
+            unsubscribe();
+            resolve(user);
+        }, error => {
+            unsubscribe();
+            reject(error);
+        });
+    });
+}
+
+export async function getCaseAccessContext(db) {
+    if (!isLocalRoleAdminProject(db)) {
+        throw new Error('Station-scoped access context is available only in local role-admin mode.');
+    }
+    const user = await waitForCurrentUser(getAuth(db.app));
+    if (!user) throw new Error('Sign in is required to access case data.');
+    const roleSnapshot = await getDoc(doc(db, 'userRoles', user.uid));
+    const role = roleSnapshot.exists() ? roleSnapshot.data() : null;
+    if (role?.status !== 'active' || !['admin', 'operator'].includes(role.role)) {
+        throw new Error('An active Admin or assigned Operator role is required to access case data.');
+    }
+
+    let stations;
+    if (role.role === 'admin') {
+        const response = await fetch(`${LOCAL_ROLE_ADMIN_FUNCTIONS_ROOT}/policeStations`, {
+            headers: { Authorization: `Bearer ${await getIdToken(user)}` }
+        });
+        if (!response.ok) {
+            throw new Error(`Could not load authorized police stations (HTTP ${response.status}).`);
+        }
+        const payload = await response.json();
+        if (!Array.isArray(payload?.stations)
+            || payload.stations.some(station => !station || typeof station.id !== 'string'
+                || !/^[A-Za-z0-9_-]{1,128}$/.test(station.id)
+                || typeof station.name !== 'string' || !station.name.trim())) {
+            throw new Error('The authorized police station response is invalid.');
+        }
+        stations = payload.stations;
+    } else {
+        const stationId = role.policeStationId;
+        if (typeof stationId !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(stationId)) {
+            throw new Error('The active Operator role has no valid police station assignment.');
+        }
+        const stationSnapshot = await getDoc(doc(db, 'policeStations', stationId));
+        const stationName = stationSnapshot.exists()
+            ? String(stationSnapshot.data().name || '').trim()
+            : '';
+        if (!stationName) {
+            throw new Error('The assigned police station could not be verified. Contact an administrator.');
+        }
+        stations = [{ id: stationId, name: stationName }];
+    }
+
+    return {
+        user,
+        role,
+        stations,
+        stationIds: [...new Set(stations.map(station => station.id))]
+    };
+}
 
 function fileNumberFor(record = {}) {
     const firNo = String(record.firNo ?? '').trim();
@@ -20,19 +93,29 @@ function fileNumberFor(record = {}) {
     return String(record.fileNo || (firNo && firYear.length >= 2 ? `${firNo}/${firYear.slice(-2)}` : ''));
 }
 
+function normalizeIdentityValue(value) {
+    return String(value ?? '').normalize('NFKC').trim().replace(/\s+/g, '').toLocaleLowerCase();
+}
+
 export function sameFirIdentity(left = {}, right = {}) {
-    const normalize = value => String(value ?? '').normalize('NFKC').trim().replace(/\s+/g, '').toLocaleLowerCase();
-    const firNoMatches = normalize(left.firNo) && normalize(right.firNo)
-        && normalize(left.firNo) === normalize(right.firNo);
-    const firYearMatches = normalize(left.firYear) && normalize(right.firYear)
-        && normalize(left.firYear) === normalize(right.firYear);
-    const leftStationId = normalize(left.policeStationId);
-    const rightStationId = normalize(right.policeStationId);
+    const firNoMatches = normalizeIdentityValue(left.firNo) && normalizeIdentityValue(right.firNo)
+        && normalizeIdentityValue(left.firNo) === normalizeIdentityValue(right.firNo);
+    const firYearMatches = normalizeIdentityValue(left.firYear) && normalizeIdentityValue(right.firYear)
+        && normalizeIdentityValue(left.firYear) === normalizeIdentityValue(right.firYear);
+    const leftStationId = String(left.policeStationId ?? '').trim();
+    const rightStationId = String(right.policeStationId ?? '').trim();
     const stationMatches = leftStationId && rightStationId
         ? leftStationId === rightStationId
-        : normalize(left.policeStation) && normalize(right.policeStation)
-            && normalize(left.policeStation) === normalize(right.policeStation);
+        : normalizeIdentityValue(left.policeStation) && normalizeIdentityValue(right.policeStation)
+            && normalizeIdentityValue(left.policeStation) === normalizeIdentityValue(right.policeStation);
     return Boolean(firNoMatches && firYearMatches && stationMatches);
+}
+
+function duplicateIdentityError(matches = []) {
+    const error = new Error('A matching FIR Master already exists. Select it after verifying its details.');
+    error.code = 'fir-master/duplicate-match';
+    error.matches = matches;
+    return error;
 }
 
 function normalizeDocument(snapshot, collectionName, data) {
@@ -50,17 +133,12 @@ function normalizeDocument(snapshot, collectionName, data) {
     };
 }
 
-export async function loadCaseRecords(db) {
-    const [masterSnapshot, linkedSnapshot, legacySnapshot] = await Promise.all([
-        getDocs(collection(db, FIR_MASTERS_COLLECTION)),
-        getDocs(collection(db, LINKED_CASES_COLLECTION)),
-        getDocs(collection(db, LEGACY_CASES_COLLECTION))
-    ]);
-    const linked = linkedSnapshot.docs.map(item => normalizeDocument(item, LINKED_CASES_COLLECTION, item.data()));
-    const legacy = legacySnapshot.docs.map(item => normalizeDocument(item, LEGACY_CASES_COLLECTION, item.data()));
+function mergeCaseRecords(masterDocs, linkedDocs, legacyDocs) {
+    const linked = linkedDocs.map(item => normalizeDocument(item, LINKED_CASES_COLLECTION, item.data()));
+    const legacy = legacyDocs.map(item => normalizeDocument(item, LEGACY_CASES_COLLECTION, item.data()));
     const legacyIds = new Set(linked.map(item => item.legacyCaseId).filter(Boolean));
     const records = [...linked, ...legacy.filter(item => !legacyIds.has(item.id))];
-    const mastersById = new Map(masterSnapshot.docs.map(item => [item.id, item.data()]));
+    const mastersById = new Map(masterDocs.map(item => [item.id, item.data()]));
     records.forEach(record => {
         const master = mastersById.get(record.firMasterId || record.firId);
         if (!master) return;
@@ -72,7 +150,7 @@ export async function loadCaseRecords(db) {
         record.firMasterId = record.firMasterId || record.firId;
     });
     const representedFirIds = new Set(records.map(item => item.firMasterId || item.firId).filter(Boolean));
-    const masters = masterSnapshot.docs
+    const masters = masterDocs
         .filter(item => !representedFirIds.has(item.id))
         .map(item => ({
             id: item.id,
@@ -87,13 +165,128 @@ export async function loadCaseRecords(db) {
     return [...records, ...masters];
 }
 
+export async function loadCaseRecords(db) {
+    if (db.app.options.projectId === LOCAL_ROLE_ADMIN_PROJECT_ID) {
+        return loadLocalRoleAdminCaseRecords(db);
+    }
+
+    const [masterSnapshot, linkedSnapshot, legacySnapshot] = await Promise.all([
+        getDocs(collection(db, FIR_MASTERS_COLLECTION)),
+        getDocs(collection(db, LINKED_CASES_COLLECTION)),
+        getDocs(collection(db, LEGACY_CASES_COLLECTION))
+    ]);
+    return mergeCaseRecords(masterSnapshot.docs, linkedSnapshot.docs, legacySnapshot.docs);
+}
+
+async function loadLocalRoleAdminCaseRecords(db) {
+    const { stationIds } = await getCaseAccessContext(db);
+    const uniqueStationIds = [...new Set(stationIds)];
+    if (uniqueStationIds.length === 0) return [];
+
+    const masterSnapshots = await Promise.all(uniqueStationIds.map(stationId =>
+        getDocs(query(
+            collection(db, FIR_MASTERS_COLLECTION),
+            where('policeStationId', '==', stationId)
+        ))
+    ));
+    const mastersByStation = new Map(uniqueStationIds.map(stationId => [stationId, []]));
+    masterSnapshots.flatMap(snapshot => snapshot.docs).forEach(master => {
+        mastersByStation.get(master.data().policeStationId)?.push(master);
+    });
+    const linkedSnapshots = [];
+    const legacySnapshots = await Promise.all(uniqueStationIds.map(stationId =>
+        getDocs(query(
+            collection(db, LEGACY_CASES_COLLECTION),
+            where('policeStationId', '==', stationId)
+        ))
+    ));
+
+    await Promise.all(uniqueStationIds.flatMap(stationId => {
+        const stationMasters = mastersByStation.get(stationId) || [];
+        return stationMasters.map(master =>
+            getDocs(query(
+                collection(db, LINKED_CASES_COLLECTION),
+                where('policeStationId', '==', stationId),
+                where('firMasterId', '==', master.id)
+            )).then(snapshot => linkedSnapshots.push(snapshot))
+        );
+    }));
+
+    const uniqueDocuments = snapshots => {
+        const documents = new Map();
+        snapshots.forEach(snapshot => snapshot.docs.forEach(item => {
+            documents.set(item.ref.path, item);
+        }));
+        return [...documents.values()];
+    };
+    const masterDocs = uniqueDocuments(masterSnapshots);
+    const linkedDocs = uniqueDocuments(linkedSnapshots);
+    const legacyDocs = uniqueDocuments(legacySnapshots);
+    return mergeCaseRecords(masterDocs, linkedDocs, legacyDocs);
+}
+
 export async function loadFirMasters(db) {
+    if (isLocalRoleAdminProject(db)) {
+        const { stationIds } = await getCaseAccessContext(db);
+        const snapshots = await Promise.all(stationIds.map(stationId => getDocs(query(
+            collection(db, FIR_MASTERS_COLLECTION),
+            where('policeStationId', '==', stationId)
+        ))));
+        return snapshots.flatMap(snapshot => snapshot.docs.map(item => ({ id: item.id, ...item.data() })));
+    }
     const snapshot = await getDocs(collection(db, FIR_MASTERS_COLLECTION));
     return snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
 }
 
 export async function loadRecordsForFir(db, firId) {
     if (!firId) return [];
+    if (isLocalRoleAdminProject(db)) {
+        const { stationIds } = await getCaseAccessContext(db);
+        const masterSnapshots = await Promise.all(stationIds.map(stationId => getDocs(query(
+            collection(db, FIR_MASTERS_COLLECTION),
+            where('policeStationId', '==', stationId)
+        ))));
+        const masterDocs = masterSnapshots.flatMap(snapshot => snapshot.docs);
+        const masterSnapshot = masterDocs.find(item => item.id === firId) || null;
+        const master = masterSnapshot ? { id: masterSnapshot.id, ...masterSnapshot.data() } : null;
+        const stationQueries = stationIds.flatMap(stationId => {
+            const linkedQuery = master && master.policeStationId === stationId
+                ? getDocs(query(
+                    collection(db, LINKED_CASES_COLLECTION),
+                    where('policeStationId', '==', stationId),
+                    where('firMasterId', '==', master.id)
+                ))
+                : Promise.resolve(null);
+            return [
+                linkedQuery,
+                getDocs(query(
+                    collection(db, LEGACY_CASES_COLLECTION),
+                    where('policeStationId', '==', stationId)
+                ))
+            ];
+        });
+        const snapshots = await Promise.all(stationQueries);
+        const linkedSnapshots = snapshots.filter((snapshot, index) => index % 2 === 0 && snapshot);
+        const legacySnapshots = snapshots.filter((snapshot, index) => index % 2 === 1);
+        const linked = linkedSnapshots.flatMap(snapshot =>
+            snapshot.docs.map(item => normalizeDocument(item, LINKED_CASES_COLLECTION, item.data()))
+        );
+        const legacy = legacySnapshots.flatMap(snapshot => snapshot.docs
+            .filter(item => {
+                const data = item.data();
+                return data.firMasterId === firId || data.firId === firId
+                    || item.id === firId || fileNumberFor(data) === firId
+                    || (master && sameFirIdentity(data, master));
+            })
+            .map(item => normalizeDocument(item, LEGACY_CASES_COLLECTION, item.data()))
+        );
+        const records = [...linked, ...legacy];
+        if (!master || !masterSnapshot) return records;
+        const matchedLegacySnapshots = legacySnapshots.flatMap(snapshot =>
+            snapshot.docs.filter(item => legacy.some(record => record.id === item.id))
+        );
+        return mergeCaseRecords([masterSnapshot], linkedSnapshots.flatMap(snapshot => snapshot.docs), matchedLegacySnapshots);
+    }
     const [linkedByFirId, linkedByMasterId, legacyByFirId, legacyByMasterId, masterSnapshot] = await Promise.all([
         getDocs(query(collection(db, LINKED_CASES_COLLECTION), where('firId', '==', firId))),
         getDocs(query(collection(db, LINKED_CASES_COLLECTION), where('firMasterId', '==', firId))),
@@ -132,10 +325,26 @@ export async function findFirMasterMatches(db, identity) {
 }
 
 export async function findLegacyFirGroups(db, identity) {
+    if (isLocalRoleAdminProject(db)) {
+        const { stationIds } = await getCaseAccessContext(db);
+        const requestedStationId = String(identity.policeStationId || '').trim();
+        const scopedStationIds = requestedStationId
+            ? stationIds.filter(stationId => stationId === requestedStationId)
+            : stationIds;
+        const snapshots = await Promise.all(scopedStationIds.map(stationId => getDocs(query(
+            collection(db, LEGACY_CASES_COLLECTION),
+            where('policeStationId', '==', stationId)
+        ))));
+        return legacyFirGroups(snapshots.flatMap(snapshot => snapshot.docs), identity);
+    }
     const snapshot = await getDocs(collection(db, LEGACY_CASES_COLLECTION));
+    return legacyFirGroups(snapshot.docs, identity);
+}
+
+function legacyFirGroups(documents, identity) {
     if (!identity.firNo || !identity.firYear || !identity.policeStation) return [];
     const groups = new Map();
-    snapshot.docs.forEach(item => {
+    documents.forEach(item => {
         const data = item.data();
         if (data.firMasterId) return;
         if (!sameFirIdentity(data, identity)) return;
@@ -165,36 +374,54 @@ export async function findLegacyFirGroups(db, identity) {
     }));
 }
 
-export async function saveFirMaster(db, fields, firMasterId = '', { allowLegacyMatch = false } = {}) {
+export async function saveFirMaster(
+    db,
+    fields,
+    firMasterId = '',
+    { allowLegacyMatch = false, createMasterId = '' } = {}
+) {
     const reference = firMasterId
         ? doc(db, FIR_MASTERS_COLLECTION, firMasterId)
-        : doc(collection(db, FIR_MASTERS_COLLECTION));
+        : createMasterId
+            ? doc(db, FIR_MASTERS_COLLECTION, createMasterId)
+            : doc(collection(db, FIR_MASTERS_COLLECTION));
     const identity = {
         firNo: String(fields.firNo || '').trim(),
         firYear: String(fields.firYear || '').trim(),
         policeStation: String(fields.policeStation || '').trim(),
         policeStationId: String(fields.policeStationId || '').trim()
     };
-    const matches = await findFirMasterMatches(db, identity);
-    const duplicate = matches.find(item => item.id !== reference.id);
-    if (!firMasterId && duplicate) {
-        const error = new Error('A matching FIR Master already exists. Select it after verifying its details.');
-        error.code = 'fir-master/duplicate-match';
-        error.matches = matches;
+    if (!identity.firNo || !identity.firYear || !identity.policeStationId) {
+        const error = new Error('FIR number, FIR year and stable police station ID are required for a unique FIR identity.');
+        error.code = 'fir-master/identity-required';
         throw error;
     }
-    if (!firMasterId && !allowLegacyMatch) {
-        const legacyMatches = await findLegacyFirGroups(db, identity);
-        if (legacyMatches.length) {
-            const error = new Error('Matching legacy records exist. Search, verify, and link them before creating a new FIR Master.');
-            error.code = 'fir-master/legacy-match';
-            error.matches = legacyMatches;
-            throw error;
+
+    try {
+        const save = httpsCallable(getFunctions(db.app), 'saveFirMaster');
+        await save({
+            masterId: reference.id,
+            isUpdate: Boolean(firMasterId),
+            fields: { ...fields, ...identity },
+            allowLegacyMatch
+        });
+    } catch (error) {
+        if (error.code === 'functions/already-exists'
+            && error.details?.reason === 'duplicate-identity') {
+            throw duplicateIdentityError(error.details.matches || []);
         }
+        if (error.code === 'functions/failed-precondition'
+            && error.details?.reason === 'legacy-match') {
+            const legacyError = new Error('Matching legacy records exist. Search, verify, and link them before creating a new FIR Master.');
+            legacyError.code = 'fir-master/legacy-match';
+            legacyError.matches = error.details.matches || [];
+            throw legacyError;
+        }
+        if (error.code === 'functions/not-found' && firMasterId) {
+            throw new Error('The FIR Master no longer exists. Reload it before saving.');
+        }
+        throw error;
     }
-    const data = { ...fields, ...identity, updatedAt: new Date() };
-    if (firMasterId) await updateDoc(reference, data);
-    else await setDoc(reference, { ...data, createdAt: new Date() });
     return reference.id;
 }
 

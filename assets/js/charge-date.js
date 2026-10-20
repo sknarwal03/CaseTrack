@@ -12,6 +12,22 @@ function parseCalendarDate(value) {
     return date;
 }
 
+export function latestTrialStage(records, fallback = '') {
+    let latest = null;
+
+    (Array.isArray(records) ? records : []).forEach(record => {
+        const stage = record?.trialStage;
+        if (!String(stage || '').trim()) return;
+
+        const date = parseCalendarDate(record?.date);
+        if (date && (!latest || date.getTime() > latest.date.getTime())) {
+            latest = { date, stage };
+        }
+    });
+
+    return latest?.stage || fallback;
+}
+
 export function latestChargeDate(records) {
     let latestDate = null;
 

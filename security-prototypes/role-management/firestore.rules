@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Initial prototype baseline: deny every client read and write.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

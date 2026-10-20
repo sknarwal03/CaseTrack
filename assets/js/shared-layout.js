@@ -2,7 +2,8 @@ import '../../components/add-case/add-case.js';
 import './notification-date-dialog.js';
 import { setupDropdown } from './shared-utils.js';
 import { db } from '@config/firebase-config.js';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDocFromServer } from 'firebase/firestore';
+import { isActiveAdmin } from './admin-access.js';
 import { loadCaseRecords } from './fir-case-model.js';
 import { isCourtProceeding } from './fir-status.mjs';
 /**
@@ -31,6 +32,7 @@ const SIDEBAR_HTML = /* html */ `
         <a class="nav-item" data-page="register-diary" href="register-diary.html"><span>✎</span>Register Diary</a>
         <a class="nav-item" data-page="report"     href="report.html"><span>▥</span>Report</a>
         <a class="nav-item" data-page="settings"   href="settings.html"><span>⚙</span>Settings</a>
+        <a class="nav-item" data-page="admin-panel" href="admin-panel.html" id="adminPanelNav" hidden><span>♙</span>Admin Panel</a>
     </nav>
     <div class="side-quote"><b>⚖</b>"Justice delayed<br>is not justice denied,<br>when it is tracked."</div>
 </aside>
@@ -362,9 +364,9 @@ function initNotifications() {
 async function initUserInfo() {
     try {
         const { auth } = await import("@config/firebase-config.js");
-        const { onAuthStateChanged } = await import("firebase/auth");
+        const { onAuthStateChanged, signOut } = await import("firebase/auth");
 
-        const updateUI = (name, email) => {
+        const updateUI = (name, email, roleName) => {
             const initials = name.split(" ").map(w => w[0]).join("").substring(0, 2).toUpperCase();
             
             const avatar = document.getElementById("userAvatar");
@@ -373,26 +375,68 @@ async function initUserInfo() {
             const pdAvatar = document.querySelector(".pd-avatar");
             const pdName = document.querySelector(".pd-name");
             const pdEmail = document.querySelector(".pd-email");
+            const dashboardWelcome = document.getElementById("dashboardWelcome");
 
             if (avatar) avatar.textContent = initials;
             if (displayName) displayName.textContent = name;
-            if (role) role.textContent = "Administrator";
+            if (role) role.textContent = roleName;
             if (pdAvatar) pdAvatar.textContent = initials;
             if (pdName) pdName.textContent = name;
             if (pdEmail && email) pdEmail.textContent = email;
+            if (dashboardWelcome) dashboardWelcome.textContent = `Welcome Back, ${name}!`;
         };
 
-        const savedName = localStorage.getItem("caseTrackUserName");
-        if (savedName) updateUI(savedName, "");
-
-        onAuthStateChanged(auth, user => {
+        onAuthStateChanged(auth, async user => {
+            const adminPanelNav = document.getElementById("adminPanelNav");
+            if (adminPanelNav) adminPanelNav.hidden = true;
             if (!user) {
                 window.location.href = "login.html";
                 return;
             }
             const name = user.displayName || "User";
-            localStorage.setItem("caseTrackUserName", name);
-            updateUI(name, user.email || "");
+            if (auth.app.options.projectId === "demo-casetrack-role-prototype") {
+                try {
+                    const roleSnapshot = await getDocFromServer(doc(db, "userRoles", user.uid));
+                    const roleRecord = roleSnapshot.exists() ? roleSnapshot.data() : null;
+                    const validOperator = roleRecord?.role === "operator"
+                        && typeof roleRecord.policeStationId === "string"
+                        && /^[A-Za-z0-9_-]{1,128}$/.test(roleRecord.policeStationId);
+                    if (roleRecord?.status !== "active"
+                        || (roleRecord.role !== "admin" && !validOperator)) {
+                        try {
+                            await signOut(auth);
+                        } catch (error) {
+                            console.error("Could not clear an unauthorized local session:", error?.code || "unknown");
+                        }
+                        window.location.replace("login.html?reason=access-denied");
+                        return;
+                    }
+                    if (auth.currentUser?.uid !== user.uid) return;
+                    updateUI(name, user.email || "", roleRecord.role === "admin" ? "Administrator" : "Operator");
+                    if (adminPanelNav) adminPanelNav.hidden = roleRecord.role !== "admin";
+                } catch (error) {
+                    console.error("Could not verify local role access:", error?.code || "unknown");
+                    try {
+                        await signOut(auth);
+                    } catch (signOutError) {
+                        console.error("Could not clear the session after local role verification failed:", signOutError?.code || "unknown");
+                    }
+                    window.location.replace("login.html?reason=verification-failed");
+                }
+                return;
+            }
+            updateUI(name, user.email || "", "User");
+            if (adminPanelNav) {
+                try {
+                    const authorized = await isActiveAdmin(user);
+                    if (auth.currentUser?.uid === user.uid) {
+                        adminPanelNav.hidden = !authorized;
+                        if (authorized) updateUI(name, user.email || "", "Administrator");
+                    }
+                } catch (error) {
+                    console.error("Could not verify Admin Panel navigation access:", error);
+                }
+            }
         });
     } catch (e) {
         console.warn("Firebase auth not available:", e);

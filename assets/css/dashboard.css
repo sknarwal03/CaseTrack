@@ -149,6 +149,10 @@ nav {
     font-weight: 600;
 }
 
+.nav-item[hidden] {
+    display: none;
+}
+
 .nav-item span {
     width: 20px;
     text-align: center;

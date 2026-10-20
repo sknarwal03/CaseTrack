@@ -254,3 +254,26 @@ body.light-theme .status-pill.review {
         padding: 8px 10px;
     }
 }
+
+.admin-users-table {
+    table-layout: fixed;
+}
+
+.admin-users-table th:nth-child(1),
+.admin-users-table td:nth-child(1) {
+    width: 40%;
+    overflow-wrap: anywhere;
+}
+
+.admin-users-table th:nth-child(2),
+.admin-users-table td:nth-child(2),
+.admin-users-table th:nth-child(3),
+.admin-users-table td:nth-child(3) {
+    width: 16%;
+}
+
+.admin-users-table th:nth-child(4),
+.admin-users-table td:nth-child(4) {
+    width: 28%;
+    overflow-wrap: anywhere;
+}

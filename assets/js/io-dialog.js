@@ -3,13 +3,17 @@ import {
     addDoc,
     collection,
     deleteDoc,
-    deleteField,
     doc,
-    getDocs,
     serverTimestamp,
     updateDoc,
     writeBatch
 } from 'firebase/firestore';
+import {
+    caseRecordRef,
+    getCaseAccessContext,
+    isLocalRoleAdminProject,
+    loadCaseRecords
+} from './fir-case-model.js';
 import ioDialogHtml from '../../components/io-dialog/io-dialog.html?raw';
 import '../css/all-judges.css';
 import '../css/manage-io.css';
@@ -42,14 +46,20 @@ function matchesOfficer(data, officer) {
 }
 
 async function getLinkedCases(officer) {
-    const [legacySnapshot, linkedSnapshot] = await Promise.all([
-        getDocs(collection(db, 'cases')),
-        getDocs(collection(db, 'linkedCases'))
-    ]);
-    return [...legacySnapshot.docs, ...linkedSnapshot.docs].filter(caseDocument => {
-        const data = caseDocument.data();
+    const records = await loadCaseRecords(db);
+    return records.filter(record => {
+        if (!['cases', 'linkedCases'].includes(record._collectionName)) return false;
+        const data = record;
         return data.ioId === officer.id || (!data.ioId && matchesOfficer(data, officer));
     });
+}
+
+async function ensureOfficerWriteAccess() {
+    if (!isLocalRoleAdminProject(db)) return;
+    const { role } = await getCaseAccessContext(db);
+    if (role.role !== 'admin') {
+        throw new Error('Only an active Admin can manage the shared investigating officer register.');
+    }
 }
 
 function isDuplicate(candidate, excludeId = '') {
@@ -66,6 +76,7 @@ async function safelyDeleteOfficer(officer) {
     const { onDeleted } = session;
     elements.deleteButton.disabled = true;
     try {
+        await ensureOfficerWriteAccess();
         const linkedCases = await getLinkedCases(officer);
         if (linkedCases.length) {
             const confirmed = window.confirm(
@@ -94,6 +105,7 @@ async function safelyDeleteOfficer(officer) {
 }
 
 async function saveOfficer(data, editingId) {
+    await ensureOfficerWriteAccess();
     const now = serverTimestamp();
     if (!editingId) {
         const created = await addDoc(ioCollection, {
@@ -112,22 +124,18 @@ async function saveOfficer(data, editingId) {
         ioRank: data.ioRank,
         ioName: data.ioName,
         ioBeltno: data.ioBeltno,
-        beltNo: deleteField(),
         iomobileNo: data.iomobileNo,
-        mobileNo: deleteField(),
         updatedAt: now
     };
 
     for (let start = 0; start < linkedCases.length; start += 449) {
         const batch = writeBatch(db);
         linkedCases.slice(start, start + 449).forEach(caseDocument => {
-            batch.update(caseDocument.ref, caseSnapshot);
+            batch.update(caseRecordRef(db, caseDocument), caseSnapshot);
         });
         if (start + 449 >= linkedCases.length) {
             batch.update(doc(db, 'investigatingOfficers', editingId), {
                 ...data,
-                beltNo: deleteField(),
-                mobileNo: deleteField(),
                 updatedAt: now
             });
         }
@@ -136,8 +144,6 @@ async function saveOfficer(data, editingId) {
     if (!linkedCases.length) {
         await updateDoc(doc(db, 'investigatingOfficers', editingId), {
             ...data,
-            beltNo: deleteField(),
-            mobileNo: deleteField(),
             updatedAt: now
         });
     }

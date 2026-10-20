@@ -1,0 +1,25 @@
+{
+  "name": "casetrack-role-management-security-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Isolated local Firebase Emulator Rules feasibility prototype for CaseTrack",
+  "scripts": {
+    "emulators": "npx --yes --package=node@22 -- node node_modules/firebase-tools/lib/bin/firebase.js emulators:start --only auth,firestore,functions --project demo-casetrack-role-prototype",
+    "test:rules:baseline": "npx --yes --package=node@22 -- node node_modules/firebase-tools/lib/bin/firebase.js emulators:exec --only firestore --config ../../firebase.baseline.test.json --project demo-casetrack-role-rules \"node --test --test-concurrency=1 tests/role-management.rules.test.js tests/station-isolation.rules.test.js\"",
+    "test:rules:admin-panel": "node node_modules/firebase-tools/lib/bin/firebase.js emulators:exec --only firestore --config ../../firebase.admin-panel.test.json --project demo-casetrack-admin-panel-rules \"node --test --test-concurrency=1 tests/case-data.rules.test.js\"",
+    "test:fir-integrity": "node node_modules/firebase-tools/lib/bin/firebase.js emulators:exec --only auth,firestore,functions --config ../../firebase.phase2.test.json --project demo-casetrack-phase2-integrity \"node --test --test-concurrency=1 ../../test/fir-master-integrity.integration.test.mjs\"",
+    "test:rules": "npm run test:rules:baseline && npm run test:rules:admin-panel",
+    "test:users": "npx --yes --package=node@22 -- node node_modules/firebase-tools/lib/bin/firebase.js emulators:exec --only auth,firestore,functions --project demo-casetrack-role-prototype \"node --test functions/tests/users-list.test.js\"",
+    "test:stations": "npx --yes --package=node@22 -- node node_modules/firebase-tools/lib/bin/firebase.js emulators:exec --only auth,firestore,functions --project demo-casetrack-role-prototype \"node --test functions/tests/police-stations.test.js\"",
+    "test:operators": "npx --yes --package=node@22 -- node node_modules/firebase-tools/lib/bin/firebase.js emulators:exec --only auth,firestore,functions --project demo-casetrack-role-prototype \"node --test functions/tests/operator-creation.test.js\"",
+    "test:transitions": "npx --yes --package=node@22 -- node node_modules/firebase-tools/lib/bin/firebase.js emulators:exec --only auth,firestore,functions --project demo-casetrack-role-prototype \"node --test functions/tests/role-transitions.test.js\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.1",
+    "firebase-tools": "^14.0.0"
+  },
+  "dependencies": {
+    "firebase": "^11.0.0"
+  }
+}

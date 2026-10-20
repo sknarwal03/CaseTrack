@@ -1,12 +1,12 @@
 # ADR: Role Management & Authorization
 
-> Reconciled on 2026-10-18 with `13-Police-Station-Isolation-ADR.md`. Planning decision: admin has all-station FIR/proceeding access; implementation and security validation remain pending.
+> Reconciled on 2026-10-18 with `13-Police-Station-Isolation-ADR.md`. Admin has all-station FIR/proceeding access. Local implementation and emulator validation are recorded in §10; production verification remains pending. For Admin, SP/Senior Officer, and approved-role boundaries, see [`20-Admin-Panel-Architecture-Decisions.md`](./20-Admin-Panel-Architecture-Decisions.md).
 
--   **Status:** Approved design direction; implementation and security
-    validation pending
+-   **Status:** Approved design; local implementation and isolated
+    security validation complete in part; production verification pending
 -   **Document:** `12-Role-Management-ADR.md`
 -   **Project:** CaseTrack
--   **Scope:** Role management for `operator` and `admin`; SP-level viewer role remains pending an explicit role-name/jurisdiction decision
+-   **Scope:** Role management for the approved `operator` and `admin` roles. SP/Senior Officer overview-only access is a separate confirmed access direction; its role identifier and jurisdiction representation remain pending. A separate Read-Only User role is not approved at this stage.
 
 ## 1. Objective
 
@@ -78,20 +78,26 @@ implementation review and tests are complete.
                                       access across all police stations.
 
   Operator permissions                Operator can use normal FIR/proceeding
-                                      workflows and authorized
-                                      identity-correction workflows.
+                                      workflows and correct FIR identity only
+                                      for FIR Masters owned by their assigned
+                                      police station.
 
   Station-scoped authorization        Required. Operators are restricted to
                                       their single admin-assigned station.
                                       Admin has all-station FIR/proceeding
-                                      access. SP-level read-only access and
-                                      jurisdiction remain pending a separate
-                                      role/jurisdiction decision.
+                                      access. SP/Senior Officer access is
+                                      limited to aggregate overview/statistics
+                                      within an authorized jurisdiction; its
+                                      role identifier, jurisdiction
+                                      representation, authorization model,
+                                      and secure aggregation mechanism remain
+                                      pending.
 
-  Current implementation state        No production code, Firestore Security
-                                      Rules, data, or deployment has been
-                                      changed as part of these planning
-                                      decisions.
+  Current implementation state        Root Functions source includes Admin-
+                                      authorized station/user management
+                                      and role-transition endpoints. Deployed
+                                      state remains unverified; see §10 and
+                                      the production-readiness report.
   --------------------------------------------------------------------------
 
 ### 2.1 Role permission boundary
@@ -101,10 +107,28 @@ implementation review and tests are complete.
 - `admin`: role management and Police Station Master management, plus
   FIR/proceeding access across all stations. This is the user's approved
   design choice; it is not evidence that current code or Rules enforce it.
+- **Approved FIR identity-correction policy (2026-10-20):** Admin may
+  correct FIR number/year identity for any FIR Master across all police
+  stations, subject to the existing active-role and station validity
+  checks. An Operator may correct identity only for an FIR Master whose
+  existing `policeStationId` equals that Operator's active, admin-assigned
+  `policeStationId`. The corrected identity must retain that same stable
+  station ID; identity correction does not transfer station ownership.
+- **Security constraints:** The trusted callable must authorize from the
+  current `userRoles/{uid}` record and existing FIR Master inside the
+  Firestore transaction, derive the identity claim key server-side, reject
+  duplicate claims, and atomically update the Master and old/new claims.
+  Operators cannot create, update, or delete claim documents directly.
+  Frontend checks are usability only and are not an authorization boundary.
 - SP-level read-only viewer: required as a product direction for authorized
-  overview reports, but the exact role identifier and jurisdiction model
+  aggregated overview reports/statistics only within an explicitly
+  authorized jurisdiction. It must not provide individual FIR or
+  proceeding details or writes. The exact role identifier, jurisdiction
+  representation, authorization model, and secure aggregation mechanism
   remain unresolved. Do not silently grant this access to `admin` or
-  assume an SP viewer can access every station.
+  assume an SP/Senior Officer can access every station.
+- A separate multi-station `Read-Only User` role is not approved; the
+  currently approved role identifiers remain `operator` and `admin`.
 
 Station-scoped authorization is an approved design requirement. Any older
 statement that it is deferred is superseded by this decision. Enforcement
@@ -366,8 +390,13 @@ on Rules to protect its writes.
 
 ### Approved design direction
 
--   `operator` and `admin` are the existing approved roles; the SP-level
-    read-only viewer role name and jurisdiction remain pending.
+-   `operator` and `admin` are the only currently approved role
+    identifiers. SP/Senior Officer access is limited to aggregate
+    overview reports/statistics within an authorized jurisdiction; its
+    role identifier, jurisdiction representation, and secure aggregation
+    mechanism remain pending. A separate Read-Only User role is not
+    approved. See
+    [`20-Admin-Panel-Architecture-Decisions.md`](./20-Admin-Panel-Architecture-Decisions.md).
 -   Protected `userRoles/{uid}` documents.
 -   Revocation by setting `status: "revoked"`.
 -   Append-only role-change history.
@@ -394,6 +423,15 @@ release.
 
 ------------------------------------------------------------------------
 
-**Document status:** Architecture decision record for planning. It is
-not evidence that code, Security Rules, Emulator tests, or deployment
-have been completed.
+**Document status:** Architecture decision record. The approved policy
+remains authoritative; current source implementation and test status are
+recorded in §10 and the Production Readiness and Security Report. No
+deployed production state is asserted.
+
+## 10. Implementation status update (2026-10-20)
+
+Root `functions/` now contains trusted Admin Panel endpoints for access resolution, user-role listing, station listing/creation, Operator provisioning, invitation resend, recovery, and role transitions. The website uses Functions endpoints for the owner-approved `casetrack-97a4e` in normal mode; emulator routing remains explicit.
+
+**Approved Operator credential decision:** Admins do not select, view, store, or receive Operator passwords. The trusted Function provisions an Operator without a password, creates a cryptographically random 256-bit setup token, stores only its SHA-256 hash, and delivers a 24-hour, one-time link through SendGrid. The token is carried in the URL fragment so browsers do not send it in the page request or Referer header. The setup page submits it to a trusted Function; that Function verifies the current active/enabled Operator role, atomically claims the token, and sets the password with Firebase Admin SDK. Resend replaces the hash and revokes the prior link. Recovery uses the same non-enumerating, rate-limited flow. Firebase Auth's native password-reset endpoint cannot consume the custom token, preventing it from bypassing resend revocation. The plaintext token is not stored or logged; only the intended email recipient and setup page receive it. The implementation and emulator/browser evidence are recorded in [the Production Readiness and Security Report](./25-Production-Readiness-and-Security-Report.md).
+
+The owner-approved Firebase project is `casetrack-97a4e`, and the Functions region is `us-central1`. Live read-only verification found GitHub Pages in Firebase Auth's authorized domains, but the currently published Admin Panel and setup pages return 404. The live Firestore Rules are broader than the candidate policy. Production Functions/Secret Manager APIs, SendGrid credentials/sender, recoverable backups and Rules compatibility must be resolved before release. The project owner authorized the production release; the current deployment gate and evidence are in the Production Readiness and Security Report.

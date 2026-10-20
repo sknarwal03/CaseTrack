@@ -1,0 +1,29 @@
+{
+  "firestore": {
+    "rules": "firestore.admin-panel.rules",
+    "predeploy": ["node scripts/assert-firebase-project.cjs"]
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs22",
+    "predeploy": ["node scripts/assert-firebase-project.cjs"]
+  },
+  "emulators": {
+    "auth": {
+      "host": "127.0.0.1",
+      "port": 9099
+    },
+    "firestore": {
+      "host": "127.0.0.1",
+      "port": 8080
+    },
+    "functions": {
+      "host": "127.0.0.1",
+      "port": 5001
+    },
+    "ui": {
+      "enabled": false
+    },
+    "singleProjectMode": true
+  }
+}

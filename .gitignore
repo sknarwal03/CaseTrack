@@ -5,3 +5,31 @@ temp_modal_content.txt
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
+functions/.secret.local
+functions/.env*
+!functions/.env.*.example
+
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p8
+*.p12
+*.pfx
+*.jks
+*.keystore
+*firebase-adminsdk*.json
+*service-account*.json
+*serviceaccount*.json
+*.credentials.json
+.runtimeconfig.json
+
+# Generated test and emulator output
+coverage/
+playwright-report/
+test-results/
+firebase-export/
+emulator-data/
