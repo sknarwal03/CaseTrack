@@ -4,18 +4,22 @@ on:
   push:
     branches:
       - main
-      - '**'
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
-    if: github.ref_name != 'gh-pages'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
 
     steps:
@@ -32,26 +36,16 @@ jobs:
         run: npm ci
 
       - name: Build Project
-        shell: bash
-        env:
-          BRANCH_NAME: ${{ github.ref_name }}
-        run: |
-          if [[ "$BRANCH_NAME" == "main" ]]; then
-            npm run build -- --base=/CaseTrack/
-          else
-            PREVIEW_NAME="${BRANCH_NAME//\//--}"
-            PREVIEW_NAME="${PREVIEW_NAME//[^a-zA-Z0-9._-]/-}"
-            npm run build -- --base="/CaseTrack/previews/${PREVIEW_NAME}/"
-            mv dist "$RUNNER_TEMP/casetrack-preview"
-            mkdir -p "dist/previews/${PREVIEW_NAME}"
-            cp -a "$RUNNER_TEMP/casetrack-preview/." "dist/previews/${PREVIEW_NAME}/"
-          fi
+        run: npm run build
 
-      - name: Publish to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Dist
+        uses: actions/upload-pages-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./dist
-          keep_files: true
-          enable_jekyll: false
+          path: ./dist
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
