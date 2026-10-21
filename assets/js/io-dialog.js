@@ -11,7 +11,7 @@ import {
 import {
     caseRecordRef,
     getCaseAccessContext,
-    isLocalRoleAdminProject,
+    usesStationScopedAccess,
     loadCaseRecords
 } from './fir-case-model.js';
 import ioDialogHtml from '../../components/io-dialog/io-dialog.html?raw';
@@ -55,7 +55,7 @@ async function getLinkedCases(officer) {
 }
 
 async function ensureOfficerWriteAccess() {
-    if (!isLocalRoleAdminProject(db)) return;
+    if (!usesStationScopedAccess(db)) return;
     const { role } = await getCaseAccessContext(db);
     if (role.role !== 'admin') {
         throw new Error('Only an active Admin can manage the shared investigating officer register.');

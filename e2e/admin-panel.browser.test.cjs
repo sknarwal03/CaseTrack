@@ -5,6 +5,10 @@ const { existsSync } = require("node:fs");
 const path = require("node:path");
 const { chromium } = require("playwright");
 const http = require("node:http");
+// Fail a stalled emulator request instead of hanging the release verification.
+const fetch = (url, options = {}) => globalThis.fetch(url, {
+    ...options, signal: options.signal || AbortSignal.timeout(30_000)
+});
 
 const PROJECT_ID = "demo-casetrack-role-prototype";
 const EXPECTED_AUTH_EMULATOR = "127.0.0.1:9198";
@@ -21,6 +25,41 @@ const functionsRequire = createRequire(path.join(__dirname, "../functions/packag
 const { initializeApp } = functionsRequire("firebase-admin/app");
 const { getAuth } = functionsRequire("firebase-admin/auth");
 const { getFirestore, FieldValue } = functionsRequire("firebase-admin/firestore");
+const { createSetupCodeRegistry } = require("../functions/operator-email.cjs");
+
+async function verifyConcurrentSetupClaims(db, auth) {
+    const uid = `setup-race-${randomUUID()}`;
+    const registry = createSetupCodeRegistry({ db, auth });
+    const token = "a".repeat(43);
+    try {
+        await db.collection("userRoles").doc(uid).set({ role: "operator", status: "active" });
+        await registry.register(uid, token);
+        const claims = await Promise.all([
+            registry.claim(uid, token, "attempt-a"),
+            registry.claim(uid, token, "attempt-b")
+        ]);
+        assert.equal(claims.filter(Boolean).length, 1);
+        await assert.rejects(registry.register(uid, "b".repeat(43)), { code: "setup/in-progress" });
+        const winner = claims[0] ? "attempt-a" : "attempt-b";
+        assert.equal(await registry.markUsed(uid, winner), true);
+        await registry.register(uid, token);
+        const race = await Promise.allSettled([
+            registry.claim(uid, token, "attempt-c"),
+            registry.register(uid, "b".repeat(43))
+        ]);
+        if (race[0].status === "fulfilled" && race[0].value) {
+            assert.equal(race[1].status, "rejected");
+            assert.equal(race[1].reason.code, "setup/in-progress");
+        } else {
+            assert.equal(race[0].status, "fulfilled");
+            assert.equal(race[0].value, false);
+            assert.equal(race[1].status, "fulfilled");
+        }
+    } finally {
+        await db.collection("operatorSetupActionCodes").doc(uid).delete();
+        await db.collection("userRoles").doc(uid).delete();
+    }
+}
 
 function assertIsolatedEnvironment() {
     if (process.env.GCLOUD_PROJECT !== PROJECT_ID
@@ -60,6 +99,7 @@ async function main() {
     });
 
     try {
+        await verifyConcurrentSetupClaims(db, auth);
         await new Promise((resolve, reject) => mailServer.once("error", reject).listen(7077, "127.0.0.1", resolve));
         const admin = await auth.createUser({ email: adminEmail, password: TEST_PASSWORD });
         adminUid = admin.uid;
@@ -96,7 +136,12 @@ async function main() {
         } catch {
             throw new Error(`Admin login did not route to the panel. URL=${page.url()} status=${await page.locator("#loginError").textContent()}`);
         }
-        await page.locator("#adminPanelContent:not([hidden])").waitFor({ timeout: 20_000 });
+        try {
+            await page.locator("#adminPanelContent:not([hidden])").waitFor({ timeout: 20_000 });
+        } catch {
+            const status = await page.locator("#adminPanelAccessStatus").textContent().catch(() => "unavailable");
+            throw new Error(`Admin access did not finish: ${status}; browser error count=${pageErrors.length}`);
+        }
 
         const unauthenticated = await page.evaluate(async url => {
             const response = await fetch(url);

@@ -1,6 +1,7 @@
 import { auth } from "@config/firebase-config.js";
 import { getIdToken, onAuthStateChanged } from "firebase/auth";
 import { functionsEndpoint } from "./firebase-functions.js";
+import { showOperatorTemporaryCredentials } from "./operator-credentials.js";
 
 const STATIONS_ENDPOINT = functionsEndpoint("policeStations");
 const CREATE_OPERATOR_ENDPOINT = functionsEndpoint("createOperator");
@@ -20,6 +21,10 @@ let stationsLoaded = false;
 
 function setStatus(message) {
     status.textContent = message;
+}
+
+function canCreateOperator() {
+    return Boolean(activeUser && stationsLoaded && stationSelect.options.length > 1);
 }
 
 function isCurrentSession(user, generation) {
@@ -89,7 +94,7 @@ async function loadStationOptions(user, generation) {
 }
 
 form.addEventListener("input", () => {
-    createButton.disabled = requestInProgress || !activeUser || !stationsLoaded;
+    createButton.disabled = requestInProgress || !canCreateOperator();
     resetRequestButton.hidden = true;
 });
 
@@ -123,7 +128,7 @@ form.addEventListener("submit", async event => {
     requestInProgress = true;
     createButton.disabled = true;
     resetRequestButton.hidden = true;
-    setStatus("Creating the local Operator account…");
+    setStatus("Creating Operator credentials…");
     try {
         const response = await authorizedFetch(user, generation, CREATE_OPERATOR_ENDPOINT, {
             method: "POST",
@@ -148,9 +153,12 @@ form.addEventListener("submit", async event => {
         }
 
         if (!payload?.operator || typeof payload.operator.uid !== "string"
+            || payload.operator.email !== email
             || payload.operator.role !== "operator" || payload.operator.status !== "active"
-            || payload.operator.policeStationId !== policeStationId) {
-            setStatus("The endpoint response did not confirm an active Operator assigned to the selected station. Check Users before retrying.");
+            || payload.operator.policeStationId !== policeStationId
+            || payload.operator.mustChangePassword !== true
+            || typeof payload.temporaryPassword !== "string" || payload.temporaryPassword.length < 12) {
+            setStatus("The service did not confirm the Operator credentials. Check Users before retrying.");
             return;
         }
 
@@ -158,7 +166,12 @@ form.addEventListener("submit", async event => {
         sessionStorage.removeItem(REQUEST_STORAGE_KEY);
         form.reset();
         stationSelect.value = "";
-        setStatus(`Created Operator ${payload.operator.uid}, assigned ${selectedStationName}, and sent the password setup email.`);
+        setStatus(`Created Operator login ${email}, assigned ${selectedStationName}. Copy the temporary password from the credentials dialog.`);
+        showOperatorTemporaryCredentials({
+            email,
+            operatorUid: payload.operator.uid,
+            temporaryPassword: payload.temporaryPassword
+        });
         window.dispatchEvent(new CustomEvent("caseTrackOperatorCreated", {
             detail: { uid: payload.operator.uid, policeStationId }
         }));
@@ -168,7 +181,7 @@ form.addEventListener("submit", async event => {
     } finally {
         if (isCurrentSession(user, generation)) {
             requestInProgress = false;
-            createButton.disabled = !stationsLoaded;
+            createButton.disabled = !canCreateOperator();
         }
     }
 });

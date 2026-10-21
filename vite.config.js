@@ -31,7 +31,7 @@ export default defineConfig(({ mode, command }) => {
         report: resolve(projectRoot, "pages/report.html"),
         settings: resolve(projectRoot, "pages/settings.html"),
         adminPanel: resolve(projectRoot, "pages/admin-panel.html"),
-        passwordSetup: resolve(projectRoot, "pages/password-setup.html"),
+        passwordChange: resolve(projectRoot, "pages/password-change.html"),
         registerDiary: resolve(projectRoot, "pages/register-diary.html"),
         allJudges: resolve(projectRoot, "pages/all-judges.html"),
         manageIo: resolve(projectRoot, "pages/manage-io.html")

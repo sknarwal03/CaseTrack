@@ -92,6 +92,26 @@ function proceeding(policeStationId, firMasterId, extra = {}) {
   };
 }
 
+test('signed-in users can read settings while only active Admins can change them', async () => {
+  await seed([
+    ['settings/preferences', { theme: 'dark' }],
+    ['userRoles/admin-1', role('admin')],
+    ['userRoles/operator-1', role('operator', 'active', 'station-a')],
+    ['policeStations/station-a', station('Station A')]
+  ]);
+
+  const anonymousDb = unauthenticated();
+  const operatorDb = client('operator-1');
+  const adminDb = client('admin-1');
+  const settings = db => doc(db, 'settings/preferences');
+
+  await assertFails(getDoc(settings(anonymousDb)));
+  await assertSucceeds(getDoc(settings(operatorDb)));
+  await assertSucceeds(getDoc(settings(adminDb)));
+  await assertFails(updateDoc(settings(operatorDb), { theme: 'light' }));
+  await assertSucceeds(updateDoc(settings(adminDb), { theme: 'light' }));
+});
+
 test('Admin can read across stations but FIR Master writes require trusted Functions', async () => {
   await seed([
     ['policeStations/station-a', station('Station A')],

@@ -9,19 +9,13 @@ import {
 import { getAuth, getIdToken, onAuthStateChanged } from 'firebase/auth';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { deriveFirStatus } from './fir-status.mjs';
-import {
-    LOCAL_ROLE_ADMIN_FUNCTIONS_ROOT,
-    LOCAL_ROLE_ADMIN_PROJECT_ID
-} from './local-role-admin-endpoints.js';
+import { usesStationScopedAccess, projectFunctionsEndpoint } from './firebase-project-policy.js';
+export { usesStationScopedAccess } from './firebase-project-policy.js';
 
 export const FIR_MASTERS_COLLECTION = 'firMasters';
 export const FIR_IDENTITY_CLAIMS_COLLECTION = 'firIdentityClaims';
 export const LINKED_CASES_COLLECTION = 'linkedCases';
 export const LEGACY_CASES_COLLECTION = 'cases';
-export function isLocalRoleAdminProject(db) {
-    return db.app.options.projectId === LOCAL_ROLE_ADMIN_PROJECT_ID;
-}
-
 function waitForCurrentUser(auth) {
     if (auth.currentUser) return Promise.resolve(auth.currentUser);
     return new Promise((resolve, reject) => {
@@ -37,8 +31,8 @@ function waitForCurrentUser(auth) {
 }
 
 export async function getCaseAccessContext(db) {
-    if (!isLocalRoleAdminProject(db)) {
-        throw new Error('Station-scoped access context is available only in local role-admin mode.');
+    if (!usesStationScopedAccess(db)) {
+        throw new Error('The Firebase project is not approved for station-scoped application access.');
     }
     const user = await waitForCurrentUser(getAuth(db.app));
     if (!user) throw new Error('Sign in is required to access case data.');
@@ -47,10 +41,13 @@ export async function getCaseAccessContext(db) {
     if (role?.status !== 'active' || !['admin', 'operator'].includes(role.role)) {
         throw new Error('An active Admin or assigned Operator role is required to access case data.');
     }
+    if (role.role === 'operator' && role.mustChangePassword === true) {
+        throw new Error('Change your temporary password before accessing case data.');
+    }
 
     let stations;
     if (role.role === 'admin') {
-        const response = await fetch(`${LOCAL_ROLE_ADMIN_FUNCTIONS_ROOT}/policeStations`, {
+        const response = await fetch(projectFunctionsEndpoint(db.app.options.projectId, 'policeStations', import.meta.env?.MODE === 'role-admin-local'), {
             headers: { Authorization: `Bearer ${await getIdToken(user)}` }
         });
         if (!response.ok) {
@@ -166,8 +163,8 @@ function mergeCaseRecords(masterDocs, linkedDocs, legacyDocs) {
 }
 
 export async function loadCaseRecords(db) {
-    if (db.app.options.projectId === LOCAL_ROLE_ADMIN_PROJECT_ID) {
-        return loadLocalRoleAdminCaseRecords(db);
+    if (usesStationScopedAccess(db)) {
+        return loadStationScopedCaseRecords(db);
     }
 
     const [masterSnapshot, linkedSnapshot, legacySnapshot] = await Promise.all([
@@ -178,7 +175,7 @@ export async function loadCaseRecords(db) {
     return mergeCaseRecords(masterSnapshot.docs, linkedSnapshot.docs, legacySnapshot.docs);
 }
 
-async function loadLocalRoleAdminCaseRecords(db) {
+async function loadStationScopedCaseRecords(db) {
     const { stationIds } = await getCaseAccessContext(db);
     const uniqueStationIds = [...new Set(stationIds)];
     if (uniqueStationIds.length === 0) return [];
@@ -226,7 +223,7 @@ async function loadLocalRoleAdminCaseRecords(db) {
 }
 
 export async function loadFirMasters(db) {
-    if (isLocalRoleAdminProject(db)) {
+    if (usesStationScopedAccess(db)) {
         const { stationIds } = await getCaseAccessContext(db);
         const snapshots = await Promise.all(stationIds.map(stationId => getDocs(query(
             collection(db, FIR_MASTERS_COLLECTION),
@@ -240,7 +237,7 @@ export async function loadFirMasters(db) {
 
 export async function loadRecordsForFir(db, firId) {
     if (!firId) return [];
-    if (isLocalRoleAdminProject(db)) {
+    if (usesStationScopedAccess(db)) {
         const { stationIds } = await getCaseAccessContext(db);
         const masterSnapshots = await Promise.all(stationIds.map(stationId => getDocs(query(
             collection(db, FIR_MASTERS_COLLECTION),
@@ -325,7 +322,7 @@ export async function findFirMasterMatches(db, identity) {
 }
 
 export async function findLegacyFirGroups(db, identity) {
-    if (isLocalRoleAdminProject(db)) {
+    if (usesStationScopedAccess(db)) {
         const { stationIds } = await getCaseAccessContext(db);
         const requestedStationId = String(identity.policeStationId || '').trim();
         const scopedStationIds = requestedStationId

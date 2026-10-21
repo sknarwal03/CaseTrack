@@ -43,6 +43,7 @@ function createMemoryDb(initialDocuments = {}) {
         async runTransaction(callback) {
             return callback({
                 get: reference => reference.get(),
+                set: (reference, fields) => reference.set(fields),
                 update: (reference, fields) => reference.update(fields)
             });
         }
@@ -144,6 +145,9 @@ test("custom setup token is replaced on resend, expires, cannot be replayed, and
     assert.equal(await registry.isCurrentActiveToken(UID, TOKEN_TWO), true);
 
     assert.equal(await registry.claim(UID, TOKEN_TWO, "attempt-1"), true);
+    await assert.rejects(registry.register(UID, TOKEN_ONE), { code: "setup/in-progress" });
+    assert.equal(documents.get(`operatorSetupActionCodes/${UID}`).attemptId, "attempt-1",
+        "resend cannot replace an in-flight password write");
     assert.equal(await registry.isCurrentActiveToken(UID, TOKEN_TWO), false, "a claimed token cannot be submitted twice");
     assert.equal(await registry.releaseAfterRejectedPassword(UID, "attempt-1"), true);
     assert.equal(await registry.isCurrentActiveToken(UID, TOKEN_TWO), true, "a rejected password can be retried");

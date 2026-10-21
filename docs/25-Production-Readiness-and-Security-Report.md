@@ -1,10 +1,10 @@
 ﻿# CaseTrack — Production Readiness and Security Report
 
-**Assessment date:** 2026-10-20\
+**Assessment date:** 2026-10-21 (India time)\
 **Assessment scope:** Current worktree, candidate Firestore Rules, Functions source, local emulator suites, build/deployment configuration, and the shared local Login page\
 **Release outcome:** **NOT READY**
 
-> Sections 8–14 preserve earlier assessment snapshots. Their references to an unapproved project, unavailable live metadata, Firebase Auth reset-action handling, or missing deployment authorization are historical and are superseded by the live release inspection in §15.
+> Section 16 is the current release assessment. Earlier inspection snapshots are historical, including §15's Spark-plan inference, absence of a backup, and Node 22 limitation. Billing is now verified enabled, a managed export and isolated restore have succeeded, and Node 22 checks have run. Production application deployment remains blocked.
 
 ## 1. Executive summary
 
@@ -12,7 +12,7 @@ The FIR identity-claim bypass is closed locally. The trusted callable derives th
 
 The Admin Panel and email onboarding work locally against isolated emulators. The current browser workflow covers Admin login, station creation/listing, password-free Operator provisioning, custom setup email, resend revocation, failed-delivery recovery, duplicate rejection, recovery anti-enumeration/rate limit, server-side one-time password setup, native Firebase password-reset bypass rejection, role transitions, and Operator Admin Panel denial. Phase 2 FIR integrity tests cover identity uniqueness, station ownership and failure recovery.
 
-**NOT READY.** Live read-only checks confirmed the approved project and IAM grants, but found that the Cloud Functions API is disabled, Secret Manager is unavailable on the Spark plan, production Firestore Rules permit any authenticated user to read/write all documents, no backup schedule/bucket/PITR is configured, and the deployed Admin Panel/setup pages return 404. No production writes or deploys were made. The current production release blockers are detailed in §15.
+**NOT READY.** The approved backup stage is complete; existing production records were preserved. Cloud Functions and Secret Manager APIs remain disabled, the default database still has permissive Rules, initial Admin identity and verified email sender are unresolved, and frontend publication and live workflows are pending. See §16 for current evidence and approval boundaries.
 
 ## 2. Production target and configuration evidence
 
@@ -255,3 +255,62 @@ The prior local onboarding implementation generated native Firebase Auth passwor
 - Live inspection read project/configuration metadata and Rules text only. No production user, FIR, proceeding, hearing, role, or station-assignment document was read or changed. No production backup, API enablement, Auth change, Functions deploy, Rules deploy, index deploy, migration, staging, or commit occurred.
 
 **Final status: NOT READY.** Release is blocked by the Spark-plan/API gate, absent recoverable backup and rollback rehearsal, permissive live Rules plus unverified legacy-data compatibility, unconfigured/unverified SendGrid delivery, and unpublished Admin/setup pages. The owner has authorized release to `casetrack-97a4e`; that authorization does not remove these safeguards. Do not deploy Functions or replace Rules until they are resolved.
+
+## 16. Current release work — 2026-10-21 India time
+
+### Verified live state and compatibility
+
+- Cloud Billing API reports `billingEnabled: true` for approved project `casetrack-97a4e` (number `468015953153`). Earlier inference that `freeTier: true` proved Spark was incorrect. The default Native Standard database is in `asia-south2`; PITR and deletion protection remain disabled for that database.
+- Cloud Functions and Secret Manager APIs were absent from enabled services; their metadata endpoints returned 403. No secret values were retrieved. Project IAM tests returned Functions create/update, database export/import/create, Rules release update, service-account actAs, API enablement, bucket creation and secret-version access permissions. These do not replace per-resource deployment checks.
+- Full recursive read-only inventory found 29 documents: crimeHeads 6, investigatingOfficers 3, judges 19, settings 1. No nested collections or missing parent documents were found. No FIR Masters, linked/legacy cases, role records or station records currently exist. This is observed inventory, not proof that earlier clients never stored data elsewhere.
+- No active Admin role exists. The approved ADR requires owner-selected first-admin bootstrap; the owner has not identified an account. Do not promote a guessed account. Firebase Auth email/password is enabled and authorized domains include `sknarwal03.github.io`.
+- The shared `settings/preferences` path is not covered by candidate Rules. A proposal for active-user reads and Admin-only changes is awaiting owner decision. No settings migration or new access grant was made.
+- Production Rules remain critically permissive. Historical ruleset: `576003c3-55bb-407f-b183-38adf0f29a5f`, source SHA-256 `67e516d2c05f980cfb40f5eba63cd673b94054122fdaa102f7bdf838028830b0`. No default-database Rules change was authorized or made during this stage.
+
+### Approved backup stage — completed
+
+The owner explicitly approved backup storage, full export and isolated restore rehearsal in this session. These are the only production infrastructure writes performed.
+
+- Private bucket: `gs://casetrack-97a4e-firestore-backups`, `ASIA-SOUTH2`, uniform bucket access enabled, public access prevention enforced, object versioning enabled. No automatic deletion lifecycle was configured.
+- Full managed export: `gs://casetrack-97a4e-firestore-backups/full-2026-10-20T17-50-12-131Z`. No collection filter was supplied: all collections/subcollections are included. Operation state `SUCCESSFUL`, completed documents **29/29**.
+- Verified objects: overall export metadata (95 bytes, CRC32C `1In7IA==`), all-namespaces/all-kinds metadata (89 bytes, `Z3yCMg==`) and output-0 (8970 bytes, `sEmlMg==`). No backup contents were written into Git or printed.
+- Isolated import destination: `restore-check-20261020` in the same project/region. This is not the application's default database. Delete protection is enabled. Deny-all client Rules were released and re-read before import: ruleset `4ff88dee-8be3-4e32-b52c-75b16f2c758b`.
+- Import completed **29/29**. At `2026-10-20T23:41:37.564Z`, recursive comparison confirmed all document paths and canonical field hashes match the default database, with collection counts 6/3/19/1. Comparison used memory only and logged aggregates. No original document was changed.
+- Commands: `node scripts/production-backup.cjs --approved-backup-only`; repeat to poll; `node scripts/production-backup.cjs --approved-backup-only --rehearse`; repeat to poll; `node scripts/verify-backup-restore.cjs`. All completed successfully. Local operation state is ignored under `.release-local/`.
+- Retain both bucket and rehearsal database until the owner approves cleanup; storage charges continue. No scheduled backup/PITR was enabled. Managed export covers Firestore documents, not Firebase Auth credentials, Rules, Functions or index configuration. The current default database has no composite indexes. A new export is required if relevant data changes before release.
+
+Recovery procedure: preserve this export and its metadata; create a new isolated database, apply deny-all client Rules, import the full prefix, and compare document paths/fields before any owner-approved cutover. Do not import into `(default)`, delete it, or overwrite live records. Managed exports are not an application-wide transactional snapshot; the successful comparison establishes equality at verification time. Official mechanism: [Firestore managed export/import](https://firebase.google.com/docs/firestore/manage-data/export-import).
+
+### Local fixes in this worktree
+
+- Shared project policy selects only approved production HTTP endpoints or explicit demo emulator endpoints, rejecting mismatched project/mode combinations. Production case queries, FIR station selectors, judge/IO write checks, and shared-layout role checks now use the same station authorization path as the emulator application. Trusted Functions and Rules remain the authorization boundary.
+- Setup-token registration now uses a Firestore transaction and rejects resend while a password redemption is consuming the token. This prevents overwriting an in-flight authorization with a newer invitation. Used tokens can be replaced; weak-password retry retains existing handling. A new test checks the lock, and browser harness includes real Firestore competing-claim/resend assertions.
+- An indeterminate Auth write or process crash can leave a token consuming. It fails closed: resend does not unlock it. Recovery requires an administrator to reconcile Auth completion and retire the stuck attempt through a separately reviewed support procedure; automatic time-based unlock would reintroduce overlapping password writes. This operational recovery gap remains a release blocker. Error guidance now directs the user to an administrator.
+- Browser harness HTTP requests now have a 30-second timeout, so stalled emulator requests fail instead of hanging indefinitely.
+- Read-only metadata/compatibility scripts and explicitly gated backup/recovery scripts were added. `.gitignore` excludes local release operation state. No passwords, provider keys, Auth tokens or backup document contents are source-controlled.
+
+### Verification executed for these changes
+
+Node runtime acquired with `npm exec --yes --package=node@22 -- node --version`: **v22.23.3**.
+
+| Command | Actual result |
+|---|---|
+| `npm exec --yes --package=node@22 -- node --test test/fir-status.test.mjs test/hearing-date.test.mjs test/proceeding-fields.test.mjs test/firebase-project-policy.test.mjs functions/tests/operator-email.test.cjs` | **31 passed, 0 failed** (26 application/project-policy, 5 Functions). |
+| `npm exec --yes --package=node@22 -- node node_modules/vite/bin/vite.js build` | **Passed**, Admin/setup and existing pages emitted; informational Vite plugin-timing warning. |
+| From `security-prototypes/role-management`: `npm exec --yes --package=node@22 -- node node_modules/firebase-tools/lib/bin/firebase.js emulators:exec --only firestore --config ../../firebase.admin-panel.test.json --project demo-casetrack-admin-panel-rules "node --test --test-concurrency=1 tests/case-data.rules.test.js"` | **11 passed, 0 failed**, CLI exit 0. Expected permission-denied diagnostics, fallback local hub/logging ports, optional VS Code endpoint warning. |
+| `npm audit --omit=dev`; `npm audit --omit=dev --prefix functions` | **0 vulnerabilities** each. |
+| `node --check scripts/production-backup.cjs`; `node --check scripts/inspect-production-compatibility.cjs`; `node --check scripts/inspect-production-readiness.cjs`; `node scripts/assert-firebase-project.cjs`; `git diff --check` | **Passed**. Git warns about LF-to-CRLF conversion. |
+| Node 22 FIR emulator integration command using `firebase.phase2.test.json` and `test/fir-master-integrity.integration.test.mjs` | **Not run:** command execution permission was denied. Earlier 15/15 result is historical, not verification of this worktree. |
+| Node 22 browser suite, same isolated configuration as §15 | **Failed / incomplete.** The rerun started the required Auth, Firestore and Functions emulators (Functions runtime reported Node 22), exercised setup-token concurrency and proceeded through login to `admin-panel.html`. It then timed out waiting 20 seconds for `#adminPanelContent:not([hidden])` at `e2e/admin-panel.browser.test.cjs:139`. Functions logs show `listUserRoles` requests were accepted and finished, but omit HTTP statuses. The E2E harness did not capture the access-status text in that failing run, so 200 vs 403 vs server error is unresolved. A later diagnostic-only rerun was interrupted because no emulator ports came up. No real email was sent. |
+
+### Remaining release gate and rollback
+
+Do not merge to main or publish Pages yet. `.github/workflows/deploy.yml` triggers only on pushes to main; the feature branch does not publish. Owner approved only backup/rehearsal at this gate.
+
+Before application deployment: resolve settings policy, owner-selected first Admin/bootstrap governance and history, SendGrid sender verification and secret provisioning, indeterminate setup-write recovery procedure, and remaining test gaps. The owner did not know which initial account/sender to use; no identity or credential was invented.
+
+Prepare an explicit later change set: required API enablement; sender and setup URL configuration; `SENDGRID_API_KEY` secret and narrowly scoped runtime access; only the ten reviewed Functions (`saveFirMaster`, `listUserRoles`, `policeStations`, `createOperator`, `resendOperatorInvitation`, `requestPasswordRecovery`, `validateOperatorSetupCode`, `completeOperatorPasswordSetup`, `manageUserRole`, `getMyAccess`) in `us-central1` on Node 22; reviewed default-database Rules; only indexes justified by real queries; and Pages publication from an approved commit. Re-list live resources immediately before deployment and never delete unrelated resources.
+
+Rollback must not restore the insecure historical Rules. If secure authorization deployment fails, suspend affected UI writes and apply a separately reviewed restrictive emergency Rules policy while fixing forward. Preserve source artifacts and any existing Function revisions; revert frontend only to a version compatible with secure Rules. Data recovery uses a separate verified database and explicit cutover approval, not an in-place import. No production Auth user, role, station, case record, Function, index or Pages release was modified in this stage.
+
+**Current final release status: NOT READY.** A verified Firestore backup is available; a working secure live Admin Panel and real email delivery are not yet established.

@@ -45,12 +45,21 @@ function createSetupCodeRegistry({ db, auth, now = Date.now, hashToken = hashSet
             throw new Error("Invalid password setup token registration.");
         }
         const issuedAt = now();
-        await tokenReference(uid).set({
-            tokenHash: hashToken(token),
-            status: "issued",
-            issuedAt,
-            expiresAt: issuedAt + SETUP_TOKEN_LIFETIME_MS,
-            updatedAt: fieldValue.serverTimestamp()
+        const reference = tokenReference(uid);
+        await db.runTransaction(async transaction => {
+            const current = await transaction.get(reference);
+            if (current.exists && current.data().status === "consuming") {
+                const error = new Error("Password setup is in progress. Retry after completion; contact support if it remains unavailable.");
+                error.code = "setup/in-progress";
+                throw error;
+            }
+            transaction.set(reference, {
+                tokenHash: hashToken(token),
+                status: "issued",
+                issuedAt,
+                expiresAt: issuedAt + SETUP_TOKEN_LIFETIME_MS,
+                updatedAt: fieldValue.serverTimestamp()
+            });
         });
     }
 

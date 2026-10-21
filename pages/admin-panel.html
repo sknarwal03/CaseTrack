@@ -105,16 +105,16 @@
                                 <h2 id="operatorManagementTitle">Create Operator</h2>
                             </div>
                         </div>
-                        <p>Create an Operator account and send a one-time password setup link to their email.</p>
+                        <p>Create an Operator with their email as the login ID. The temporary password is shown once and must be changed on first sign-in.</p>
                         <form id="operatorForm" class="operator-form" novalidate>
-                            <label for="operatorEmail">Email</label>
+                            <label for="operatorEmail">Operator login ID (email)</label>
                             <input id="operatorEmail" name="email" type="email" maxlength="254"
                                 autocomplete="off" required>
                             <label for="operatorPoliceStation">Police station</label>
                             <select id="operatorPoliceStation" name="policeStationId" required>
                                 <option value="">Loading police stations…</option>
                             </select>
-                            <button id="operatorCreate" class="po-filter" type="submit" disabled>Create Operator and send setup email</button>
+                            <button id="operatorCreate" class="po-filter" type="submit" disabled>Create Operator credentials</button>
                         </form>
                         <p id="operatorStatus" role="status" aria-live="polite"></p>
                         <button type="button" class="po-filter" id="operatorResetRequest" hidden>
@@ -156,6 +156,32 @@
             </section>
         </main>
     </div>
+
+    <dialog id="operatorCredentialsDialog" aria-labelledby="operatorCredentialsTitle">
+        <section class="operator-credentials">
+            <h2 id="operatorCredentialsTitle">Operator credentials</h2>
+            <p>Copy these credentials now and share them privately. The temporary password is shown once; the Operator must change it after signing in.</p>
+            <label for="operatorCredentialLoginId">Login ID</label>
+            <div class="credential-copy-row">
+                <input id="operatorCredentialLoginId" type="text" readonly>
+                <button class="po-filter" type="button" data-copy-credential="operatorCredentialLoginId">Copy</button>
+            </div>
+            <label for="operatorCredentialUid">Account UID</label>
+            <div class="credential-copy-row">
+                <input id="operatorCredentialUid" type="text" readonly>
+                <button class="po-filter" type="button" data-copy-credential="operatorCredentialUid">Copy</button>
+            </div>
+            <label for="operatorCredentialPassword">Temporary password</label>
+            <div class="credential-copy-row">
+                <input id="operatorCredentialPassword" type="text" readonly autocomplete="off">
+                <button class="po-filter" type="button" data-copy-credential="operatorCredentialPassword">Copy</button>
+            </div>
+            <p id="operatorCredentialStatus" role="status" aria-live="polite"></p>
+            <form method="dialog" class="credential-dialog-actions">
+                <button class="po-filter" type="submit">Close</button>
+            </form>
+        </section>
+    </dialog>
 
     <script type="module" src="../assets/js/shared-layout.js"></script>
     <script type="module" src="../assets/js/admin-panel.js"></script>

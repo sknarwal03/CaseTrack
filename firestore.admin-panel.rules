@@ -33,6 +33,7 @@ service cloud.firestore {
       return hasRoleRecord()
         && callerRole().get('role', '') == 'admin'
         && callerRole().get('status', '') == 'active'
+        && callerRole().get('mustChangePassword', false) != true
         && (!callerRole().keys().hasAny(['policeStationId'])
           || callerRole().policeStationId == null);
     }
@@ -49,6 +50,7 @@ service cloud.firestore {
       return hasRoleRecord()
         && callerRole().get('role', '') == 'operator'
         && callerRole().get('status', '') == 'active'
+        && callerRole().get('mustChangePassword', false) != true
         && callerRole().get('policeStationId', '') == stationId
         && validStationId(callerRole().get('policeStationId', ''));
     }
@@ -57,6 +59,7 @@ service cloud.firestore {
       return hasRoleRecord()
         && callerRole().get('role', '') == 'operator'
         && callerRole().get('status', '') == 'active'
+        && callerRole().get('mustChangePassword', false) != true
         && validStationId(callerRole().get('policeStationId', ''));
     }
 
@@ -121,6 +124,11 @@ service cloud.firestore {
 
     match /investigatingOfficers/{officerId} {
       allow get, list: if isActiveAdmin() || isActiveOperator();
+      allow create, update, delete: if isActiveAdmin();
+    }
+
+    match /settings/{settingId} {
+      allow get, list: if signedIn();
       allow create, update, delete: if isActiveAdmin();
     }
 

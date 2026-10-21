@@ -4,7 +4,7 @@ import { setupDropdown } from './shared-utils.js';
 import { db } from '@config/firebase-config.js';
 import { doc, getDocFromServer } from 'firebase/firestore';
 import { isActiveAdmin } from './admin-access.js';
-import { loadCaseRecords } from './fir-case-model.js';
+import { loadCaseRecords, usesStationScopedAccess } from './fir-case-model.js';
 import { isCourtProceeding } from './fir-status.mjs';
 /**
  * shared-layout.js
@@ -394,7 +394,7 @@ async function initUserInfo() {
                 return;
             }
             const name = user.displayName || "User";
-            if (auth.app.options.projectId === "demo-casetrack-role-prototype") {
+            if (usesStationScopedAccess(db)) {
                 try {
                     const roleSnapshot = await getDocFromServer(doc(db, "userRoles", user.uid));
                     const roleRecord = roleSnapshot.exists() ? roleSnapshot.data() : null;
@@ -406,20 +406,24 @@ async function initUserInfo() {
                         try {
                             await signOut(auth);
                         } catch (error) {
-                            console.error("Could not clear an unauthorized local session:", error?.code || "unknown");
+                            console.error("Could not clear an unauthorized session:", error?.code || "unknown");
                         }
                         window.location.replace("login.html?reason=access-denied");
+                        return;
+                    }
+                    if (roleRecord.mustChangePassword === true) {
+                        window.location.replace("password-change.html");
                         return;
                     }
                     if (auth.currentUser?.uid !== user.uid) return;
                     updateUI(name, user.email || "", roleRecord.role === "admin" ? "Administrator" : "Operator");
                     if (adminPanelNav) adminPanelNav.hidden = roleRecord.role !== "admin";
                 } catch (error) {
-                    console.error("Could not verify local role access:", error?.code || "unknown");
+                    console.error("Could not verify role access:", error?.code || "unknown");
                     try {
                         await signOut(auth);
                     } catch (signOutError) {
-                        console.error("Could not clear the session after local role verification failed:", signOutError?.code || "unknown");
+                        console.error("Could not clear the session after role verification failed:", signOutError?.code || "unknown");
                     }
                     window.location.replace("login.html?reason=verification-failed");
                 }

@@ -436,3 +436,9 @@ No browser case workflow, production Firebase test, deployment, migration, or ba
 - The current CLI account has the relevant IAM grants for Functions, Firestore, Rules, and Secret Manager operations. The project is nevertheless on Spark; Firebase reports that enabling Secret Manager requires the Blaze plan. No billing change, secret change, backup, Rules update, Functions deployment, or production data operation was performed.
 - Firebase Auth email/password is enabled, and `sknarwal03.github.io` is an authorized domain. The public login page returns HTTP 200, but the Admin Panel and password setup routes return HTTP 404. No GitHub Pages publication occurred.
 - Latest test results and the current `NOT READY` decision are in the Production Readiness and Security Report. Emulator tests run on host Node 24.22.0 because Node 22 is not installed; Node 22 remains the declared Functions runtime.
+
+## 2026-10-21 release follow-up
+
+Production station query/selector checks now share the emulator authorization path, with explicit project/mode endpoint validation. Node 22.23.3 application/project-policy and Functions tests passed 31/31; Rules emulator passed 11/11; production build passed. The requested Node 22 FIR integration rerun was denied execution permission, so earlier 15/15 evidence is historical. Browser rerun results and exact commands are maintained in production-readiness report §16.
+
+A full managed production export and isolated deny-all restore completed, with 29/29 document paths and field values matching at verification. No FIR/linked/legacy case documents currently exist in the inventoried production database; synthetic emulator regression coverage remains essential. Do not deploy until settings compatibility, bootstrap identity, email configuration, setup-write recovery, test gaps and the application release gate are resolved.

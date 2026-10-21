@@ -9,7 +9,7 @@ import {
     serverTimestamp,
     updateDoc
 } from 'firebase/firestore';
-import { getCaseAccessContext, isLocalRoleAdminProject } from './fir-case-model.js';
+import { getCaseAccessContext, usesStationScopedAccess } from './fir-case-model.js';
 
 const judgesCollection = collection(db, 'judges');
 const judgesList = document.getElementById('judgesList');
@@ -27,7 +27,7 @@ let judges = [];
 let editingJudge = null;
 
 async function ensureJudgeWriteAccess() {
-    if (!isLocalRoleAdminProject(db)) return;
+    if (!usesStationScopedAccess(db)) return;
     const { role } = await getCaseAccessContext(db);
     if (role.role !== 'admin') throw new Error('Only an active Admin can manage the shared judges register.');
 }

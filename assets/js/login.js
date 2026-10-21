@@ -1,6 +1,5 @@
 import { auth } from "@config/firebase-config.js";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { LOCAL_ROLE_ADMIN_PROJECT_ID } from "./local-role-admin-endpoints.js";
 import { functionsEndpoint } from "./firebase-functions.js";
 import { getIdToken } from "firebase/auth";
 const STATION_ID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
@@ -14,7 +13,9 @@ const redirectReason = new URLSearchParams(window.location.search).get("reason")
 if (redirectReason === "access-denied") {
     loginError.textContent = "This account does not have an active Admin or assigned Operator role.";
 } else if (redirectReason === "verification-failed") {
-    loginError.textContent = "Access could not be verified. Please sign in again when the local service is available.";
+    loginError.textContent = "Access could not be verified. Please sign in again when the service is available.";
+} else if (redirectReason === "password-changed") {
+    loginError.textContent = "Password changed. Sign in with your new password.";
 }
 
 loginForm?.addEventListener("submit", async (e) => {
@@ -39,6 +40,11 @@ loginForm?.addEventListener("submit", async (e) => {
             headers: { Authorization: `Bearer ${token}` }
         });
         const access = accessResponse.ok ? await accessResponse.json() : null;
+        if (access?.mustChangePassword === true) {
+            roleVerificationPending = false;
+            window.location.href = "password-change.html";
+            return;
+        }
         if (access?.role === "admin") {
             roleVerificationPending = false;
             window.location.href = "admin-panel.html";
@@ -88,24 +94,5 @@ loginForm?.addEventListener("submit", async (e) => {
 
 forgotLink?.addEventListener("click", async event => {
     event.preventDefault();
-    const email = document.querySelector("#email").value.trim().toLowerCase();
-    if (!email) {
-        loginError.textContent = "Enter your email address first, then select Forgot password.";
-        return;
-    }
-    forgotLink.setAttribute("aria-disabled", "true");
-    loginError.textContent = "Requesting password recovery…";
-    try {
-        const response = await fetch(functionsEndpoint("requestPasswordRecovery"), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email })
-        });
-        if (!response.ok) throw new Error("recovery-unavailable");
-        loginError.textContent = "If this email belongs to an active Operator, a password setup email will be sent.";
-    } catch {
-        loginError.textContent = "Password recovery is temporarily unavailable. Try again later.";
-    } finally {
-        forgotLink.removeAttribute("aria-disabled");
-    }
+    loginError.textContent = "Contact an active Admin to reset your password.";
 });

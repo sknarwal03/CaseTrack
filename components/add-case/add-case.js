@@ -3,7 +3,7 @@ import { collection, updateDoc, deleteDoc, doc, deleteField, getDoc, getDocs, on
 import { latestChargeDate, latestTrialStage } from '../../assets/js/charge-date.js';
 import { normalizeTrialStage, populateTrialStageSelect, setTrialStageSelectValue } from '../../assets/js/trial-stages.js';
 import { openIoDialog } from '../../assets/js/io-dialog.js';
-import { findFirMasterMatches, findLegacyFirGroups, getCaseAccessContext, isLocalRoleAdminProject, LINKED_CASES_COLLECTION, loadCaseRecords, loadRecordsForFir, saveFirMaster } from '../../assets/js/fir-case-model.js';
+import { findFirMasterMatches, findLegacyFirGroups, getCaseAccessContext, usesStationScopedAccess, LINKED_CASES_COLLECTION, loadCaseRecords, loadRecordsForFir, saveFirMaster } from '../../assets/js/fir-case-model.js';
 import { normalizeProceedingFields, proceedingFieldsFromForm, proceedingPayload } from '../../assets/js/proceeding-fields.mjs';
 import { deriveFirStatus } from '../../assets/js/fir-status.mjs';
 import addCaseHtml from './add-case.html?raw';
@@ -364,7 +364,7 @@ let activeUnderSectionIndex = -1;
 async function getAssignedPoliceStation(selectedStationId = '') {
     const user = auth.currentUser;
     if (!user) throw new Error('Your sign-in could not be verified. Sign in again or contact the administrator.');
-    if (isLocalRoleAdminProject(db)) {
+    if (usesStationScopedAccess(db)) {
         const context = await getCaseAccessContext(db);
         if (context.role.role === 'operator') {
             const station = context.stations[0];
@@ -398,7 +398,7 @@ async function preparePoliceStationSelector(caseItem) {
     const stationInput = document.getElementById('policestation');
     const stationSelect = document.getElementById('policeStationId');
     if (!stationInput || !stationSelect) return;
-    if (!isLocalRoleAdminProject(db)) {
+    if (!usesStationScopedAccess(db)) {
         stationSelect.hidden = true;
         const station = await getAssignedPoliceStation();
         stationInput.value = station.policeStation;

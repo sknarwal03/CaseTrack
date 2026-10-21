@@ -1,7 +1,7 @@
 const { initializeApp } = require("firebase-admin/app");
 const { getAuth } = require("firebase-admin/auth");
 const { FieldPath, FieldValue, getFirestore } = require("firebase-admin/firestore");
-const { randomUUID } = require("node:crypto");
+const { randomBytes, randomUUID } = require("node:crypto");
 
 const DEFAULT_PAGE_SIZE = 50;
 const MAX_PAGE_SIZE = 100;
@@ -41,8 +41,9 @@ if (process.env.FUNCTIONS_EMULATOR === "true" && process.env.FIREBASE_DEBUG_MODE
 }
 
 const { onRequest } = require("firebase-functions/v2/https");
-const { defineSecret } = require("firebase-functions/params");
-const { createSetupCodeRegistry, sendOperatorSetupEmail, isSetupToken } = require("./operator-email.cjs");
+const OPERATOR_PASSWORD_MIN_LENGTH = 12;
+const OPERATOR_PASSWORD_MAX_LENGTH = 128;
+const temporaryPassword = () => randomBytes(24).toString("base64url");
 
 const app = initializeApp();
 const db = getFirestore(app);
@@ -84,7 +85,8 @@ function approvedRoleRecord(snapshot) {
         uid: snapshot.id,
         role: typeof data.role === "string" ? data.role : null,
         status: typeof data.status === "string" ? data.status : null,
-        policeStationId: typeof data.policeStationId === "string" ? data.policeStationId : null
+        policeStationId: typeof data.policeStationId === "string" ? data.policeStationId : null,
+        mustChangePassword: data.mustChangePassword === true
     };
 }
 
@@ -174,6 +176,7 @@ async function authorizeActiveAdmin(req, res, { verifyIdToken, getRole, roleErro
 function isActiveAdminRole(role) {
     return role?.role === "admin"
         && role.status === "active"
+        && role.mustChangePassword !== true
         && (role.policeStationId === undefined || role.policeStationId === null);
 }
 
@@ -284,8 +287,6 @@ function createPoliceStationsHandler({ verifyIdToken, getRole, listStations, cre
     };
 }
 
-const OPERATOR_PASSWORD_MIN_LENGTH = 12;
-const OPERATOR_PASSWORD_MAX_LENGTH = 128;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function validateOperatorRequest(body) {
@@ -381,6 +382,7 @@ function createOperatorProvisioningStore({ db, auth, now = Date.now, uuid = rand
                 if (roleSnapshot.exists && historySnapshot.exists
                     && role.role === "operator" && role.status === "active"
                     && role.policeStationId === operation.policeStationId
+                    && role.mustChangePassword === true
                     && role.createdBy === actorUid
                     && history.action === "assigned" && history.previousRole === null
                     && history.newRole === "operator" && history.actorUid === actorUid) {
@@ -394,6 +396,7 @@ function createOperatorProvisioningStore({ db, auth, now = Date.now, uuid = rand
                 role: "operator",
                 status: "active",
                 policeStationId: operation.policeStationId,
+                mustChangePassword: true,
                 createdAt: timestamp,
                 createdBy: actorUid,
                 updatedAt: timestamp,
@@ -439,12 +442,13 @@ function createOperatorProvisioningStore({ db, auth, now = Date.now, uuid = rand
     return { reserve, updateOperation, commitRoleAndHistory, release, ownsLease, auth, db };
 }
 
-function createOperatorHandler({ verifyIdToken, getRole, stationExists, store, auth, sendSetupInvitation }) {
+function createOperatorHandler({ verifyIdToken, getRole, stationExists, store, auth, passwordFactory = temporaryPassword }) {
     return async (req, res) => {
         if (!applyCorsAndPreflight(req, res, {
             methods: ["POST"],
             allowedHeaders: ["authorization", "content-type", "idempotency-key"]
         })) return;
+        res.set("Cache-Control", "no-store, max-age=0");
         if (req.method !== "POST") {
             res.status(405).json({ error: "Method not allowed." });
             return;
@@ -499,23 +503,46 @@ function createOperatorHandler({ verifyIdToken, getRole, stationExists, store, a
             return;
         }
         if (reservation.kind === "completed") {
+            const issuedPassword = passwordFactory();
             try {
-                await sendSetupInvitation(reservation.operation.email, reservation.operation.targetUid);
+                const roleRef = store.db.collection("userRoles").doc(reservation.operation.targetUid);
+                const account = await auth.getUser(reservation.operation.targetUid);
+                if (account.email?.toLowerCase() !== input.email) throw new Error("Conflicting Auth account state.");
+                const canReset = await store.db.runTransaction(async transaction => {
+                    const roleSnapshot = await transaction.get(roleRef);
+                    if (!roleSnapshot.exists || roleSnapshot.data().role !== "operator"
+                        || roleSnapshot.data().status !== "active"
+                        || roleSnapshot.data().policeStationId !== input.policeStationId) return false;
+                    transaction.update(roleRef, {
+                        mustChangePassword: true,
+                        updatedAt: FieldValue.serverTimestamp()
+                    });
+                    return true;
+                });
+                if (!canReset) {
+                    res.status(409).json({ error: "This Operator account has changed. Refresh Users and review its current status." });
+                    return;
+                }
+                await auth.updateUser(reservation.operation.targetUid, { disabled: true });
+                await auth.updateUser(reservation.operation.targetUid, { password: issuedPassword, disabled: false });
             } catch (error) {
-                console.error("Operator setup invitation resend failed.", error?.code || "unknown");
-                res.status(503).json({ error: "The Operator account exists, but its setup email could not be sent. Use Resend invitation." });
+                console.error("Operator temporary password rotation failed.", error?.code || "unknown");
+                res.status(503).json({ error: "A temporary password could not be issued. Retry with the same request ID." });
                 return;
             }
             res.status(200).json({ operator: {
                 uid: reservation.operation.targetUid,
+                email: input.email,
                 role: "operator",
                 status: "active",
-                policeStationId: reservation.operation.policeStationId
-            } });
+                policeStationId: reservation.operation.policeStationId,
+                mustChangePassword: true
+            }, temporaryPassword: issuedPassword });
             return;
         }
 
         const { operation, leaseToken, reference } = reservation;
+        const issuedPassword = passwordFactory();
         let accountTouched = false;
         let currentPhase = operation.phase;
         let stage = "auth-account";
@@ -537,6 +564,7 @@ function createOperatorHandler({ verifyIdToken, getRole, stationExists, store, a
                     account = await auth.createUser({
                         uid: operation.targetUid,
                         email: input.email,
+                        password: issuedPassword,
                         disabled: true
                     });
                 } catch (error) {
@@ -550,7 +578,7 @@ function createOperatorHandler({ verifyIdToken, getRole, stationExists, store, a
                 }
             }
             accountTouched = true;
-            if (!account.disabled) await auth.updateUser(operation.targetUid, { disabled: true });
+            await auth.updateUser(operation.targetUid, { password: issuedPassword, disabled: true });
             await store.updateOperation(reference, leaseToken, { phase: "auth_created" });
             currentPhase = "auth_created";
 
@@ -561,14 +589,6 @@ function createOperatorHandler({ verifyIdToken, getRole, stationExists, store, a
             stage = "enable-account";
             await auth.updateUser(operation.targetUid, { disabled: false });
 
-            stage = "setup-invitation";
-            await sendSetupInvitation(input.email, operation.targetUid);
-
-            await db.collection("operatorSetupInvitations").doc(operation.targetUid).set({
-                pendingEnable: false,
-                updatedAt: FieldValue.serverTimestamp()
-            });
-
             stage = "complete-journal";
             await store.updateOperation(reference, leaseToken, {
                 phase: "completed",
@@ -578,10 +598,12 @@ function createOperatorHandler({ verifyIdToken, getRole, stationExists, store, a
             await store.release(reference, leaseToken);
             res.status(reservation.operation.phase === "reserved" ? 201 : 200).json({ operator: {
                 uid: operation.targetUid,
+                email: input.email,
                 role: "operator",
                 status: "active",
-                policeStationId: operation.policeStationId
-            } });
+                policeStationId: operation.policeStationId,
+                mustChangePassword: true
+            }, temporaryPassword: issuedPassword });
         } catch (error) {
             let accountDisabled = !accountTouched;
             let leaseIsOwned = false;
@@ -612,18 +634,10 @@ function createOperatorHandler({ verifyIdToken, getRole, stationExists, store, a
                     lastFailedStage: stage
                 });
             }
-            if (accountDisabled && currentPhase === "role_committed") {
-                await db.collection("operatorSetupInvitations").doc(operation.targetUid).set({
-                    pendingEnable: true,
-                    updatedAt: FieldValue.serverTimestamp()
-                }).catch(() => {});
-            }
             console.error("Operator provisioning stage failed.", stage, error?.code || "unknown");
             res.status(503).json({ error: accountDisabled
                 ? "Operator creation is incomplete. Retry with the same request ID."
-                : stage === "setup-invitation"
-                    ? "The Operator account exists, but its setup email could not be sent. Use Resend invitation."
-                    : "Operator creation needs local admin reconciliation before retry." });
+                : "Operator creation needs local admin reconciliation before retry." });
         }
     };
 }
@@ -1008,7 +1022,7 @@ async function getCallerRole(uid) {
 
 async function listRolePage({ limit, cursor }) {
     let query = db.collection("userRoles")
-        .select("role", "status", "policeStationId")
+            .select("role", "status", "policeStationId", "mustChangePassword")
         .orderBy(FieldPath.documentId());
     if (cursor) query = query.startAfter(cursor);
 
@@ -1043,19 +1057,7 @@ async function policeStationExists(stationId) {
 }
 
 const operatorAuth = getAuth(app);
-const sendgridApiKey = defineSecret("SENDGRID_API_KEY");
-const setupCodeRegistry = createSetupCodeRegistry({ db, auth: operatorAuth });
-const sendSetupInvitation = (email, uid) => sendOperatorSetupEmail({
-    email,
-    uid,
-    apiKey: process.env.SENDGRID_API_KEY || sendgridApiKey.value(),
-    from: process.env.OPERATOR_EMAIL_FROM,
-    registerSetupToken: setupCodeRegistry.register
-});
-const operatorStore = createOperatorProvisioningStore({
-    db,
-    auth: operatorAuth
-});
+const operatorStore = createOperatorProvisioningStore({ db, auth: operatorAuth });
 
 exports.ALLOWED_BROWSER_ORIGINS = ALLOWED_BROWSER_ORIGINS;
 exports.createListUserRolesHandler = createListUserRolesHandler;
@@ -1065,8 +1067,6 @@ exports.createOperatorProvisioningStore = createOperatorProvisioningStore;
 exports.createManageUserRoleHandler = createManageUserRoleHandler;
 exports.createRoleTransitionStore = createRoleTransitionStore;
 exports.policeStationExists = policeStationExists;
-exports.sendSetupInvitation = sendSetupInvitation;
-exports.setupCodeRegistry = setupCodeRegistry;
 exports.validateOperatorRequest = validateOperatorRequest;
 exports.validateRoleTransitionRequest = validateRoleTransitionRequest;
 exports.manageUserRole = onRequest(
@@ -1089,10 +1089,15 @@ exports.getMyAccess = onRequest(
             const claims = await verifyIdToken(match[1]);
             const role = await getCallerRole(claims.uid);
             if (role?.status !== "active" || !["admin", "operator"].includes(role.role)
-                || (role.role === "operator" && (typeof role.policeStationId !== "string" || !/^[A-Za-z0-9_-]{1,128}$/.test(role.policeStationId)))) {
+                || (role.role === "operator" && (typeof role.policeStationId !== "string"
+                    || !/^[A-Za-z0-9_-]{1,128}$/.test(role.policeStationId)))) {
                 return res.status(403).json({ error: "Forbidden." });
             }
-            return res.status(200).json({ role: role.role, policeStationId: role.policeStationId || null });
+            return res.status(200).json({
+                role: role.role,
+                policeStationId: role.policeStationId || null,
+                mustChangePassword: role.mustChangePassword === true
+            });
         } catch (error) {
             if (INVALID_TOKEN_CODES.has(error?.code)) return res.status(401).json({ error: "Unauthorized." });
             console.error("Access role verification failed.", error?.code || "unknown");
@@ -1118,158 +1123,132 @@ exports.policeStations = onRequest(
     })
 );
 exports.createOperator = onRequest(
-    { region: "us-central1", secrets: [sendgridApiKey] },
+    { region: "us-central1" },
     createOperatorHandler({
         verifyIdToken,
         getRole: getCallerRole,
         stationExists: policeStationExists,
         store: operatorStore,
-        auth: operatorAuth,
-        sendSetupInvitation
+        auth: operatorAuth
     })
 );
-
-exports.resendOperatorInvitation = onRequest(
-    { region: "us-central1", secrets: [sendgridApiKey] },
+exports.resetOperatorPassword = onRequest(
+    { region: "us-central1" },
     async (req, res) => {
-        if (!applyCorsAndPreflight(req, res, { methods: ["POST"], allowedHeaders: ["authorization", "content-type"] })) return;
+        if (!applyCorsAndPreflight(req, res, {
+            methods: ["POST"],
+            allowedHeaders: ["authorization", "content-type"]
+        })) return;
+        res.set("Cache-Control", "no-store, max-age=0");
         if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed." });
-        const actorUid = await authorizeActiveAdmin(req, res, { verifyIdToken, getRole: getCallerRole, roleErrorMessage: "Unable to resend invitation." });
+        const actorUid = await authorizeActiveAdmin(req, res, {
+            verifyIdToken,
+            getRole: getCallerRole,
+            roleErrorMessage: "Unable to reset Operator password."
+        });
         if (!actorUid) return;
         const uid = typeof req.body?.uid === "string" ? req.body.uid : "";
-        if (!uid || uid.length > 128 || uid.includes("/")) return res.status(400).json({ error: "Invalid Operator account." });
+        if (Object.keys(req.body || {}).sort().join(",") !== "uid"
+            || !/^[A-Za-z0-9_-]{1,128}$/.test(uid)) {
+            return res.status(400).json({ error: "Invalid Operator account." });
+        }
+
+        const roleRef = db.collection("userRoles").doc(uid);
         try {
-            const [role, user] = await Promise.all([db.collection("userRoles").doc(uid).get(), operatorAuth.getUser(uid)]);
-            if (!role.exists || role.data().role !== "operator" || role.data().status !== "active" || !user.email) {
+            const [roleSnapshot, user] = await Promise.all([roleRef.get(), operatorAuth.getUser(uid)]);
+            const role = roleSnapshot.exists ? roleSnapshot.data() : null;
+            if (!role || role.role !== "operator" || role.status !== "active"
+                || typeof user.email !== "string") {
                 return res.status(404).json({ error: "An active Operator account was not found." });
             }
-            const invitationState = await db.collection("operatorSetupInvitations").doc(uid).get();
-            if (user.disabled && invitationState.data()?.pendingEnable !== true) {
-                return res.status(409).json({ error: "This Operator account is disabled. An Admin must review its status before resending." });
-            }
-            await sendSetupInvitation(user.email, uid);
-            if (user.disabled) {
-                await operatorAuth.updateUser(uid, { disabled: false });
-                await invitationState.ref.set({ pendingEnable: false, updatedAt: FieldValue.serverTimestamp() });
-            }
-            return res.status(200).json({ sent: true });
-        } catch (error) {
-            console.error("Operator invitation resend failed.", error?.code || "unknown");
-            return res.status(503).json({ error: "The invitation could not be sent. Retry later." });
-        }
-    }
-);
-
-exports.requestPasswordRecovery = onRequest(
-    { region: "us-central1", secrets: [sendgridApiKey] },
-    async (req, res) => {
-        if (!applyCorsAndPreflight(req, res, { methods: ["POST"], allowedHeaders: ["content-type"] })) return;
-        if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed." });
-        const email = typeof req.body?.email === "string" ? req.body.email.trim().toLowerCase() : "";
-        if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-            || Object.keys(req.body || {}).sort().join(",") !== "email") return res.status(400).json({ error: "Enter a valid email address." });
-        try {
-            const user = await operatorAuth.getUserByEmail(email);
-            const role = await db.collection("userRoles").doc(user.uid).get();
-            if (role.exists && role.data().role === "operator" && role.data().status === "active" && !user.disabled) {
-                const recoveryRef = db.collection("operatorPasswordRecoveryRequests").doc(user.uid);
-                const now = Date.now();
-                const maySend = await db.runTransaction(async transaction => {
-                    const snapshot = await transaction.get(recoveryRef);
-                    if (snapshot.exists && snapshot.data().nextAllowedAt > now) return false;
-                    transaction.set(recoveryRef, {
-                        nextAllowedAt: now + 60_000,
-                        updatedAt: FieldValue.serverTimestamp()
-                    });
-                    return true;
+            const issuedPassword = temporaryPassword();
+            await operatorAuth.updateUser(uid, { disabled: true });
+            const mayReset = await db.runTransaction(async transaction => {
+                const current = await transaction.get(roleRef);
+                if (!current.exists || current.data().role !== "operator"
+                    || current.data().status !== "active"
+                    || current.data().policeStationId !== role.policeStationId) return false;
+                transaction.update(roleRef, {
+                    mustChangePassword: true,
+                    updatedAt: FieldValue.serverTimestamp()
                 });
-                if (maySend) await sendSetupInvitation(email, user.uid);
+                return true;
+            });
+            if (!mayReset) return res.status(409).json({ error: "The Operator account changed. Refresh Users and try again." });
+            await operatorAuth.updateUser(uid, { password: issuedPassword, disabled: false });
+            const currentRole = await roleRef.get();
+            if (!currentRole.exists || currentRole.data().role !== "operator"
+                || currentRole.data().status !== "active") {
+                await operatorAuth.updateUser(uid, { disabled: true });
+                return res.status(409).json({ error: "The Operator account changed during reset. Review its current status." });
             }
+            return res.status(200).json({
+                operator: { uid, email: user.email, role: "operator", status: "active", policeStationId: role.policeStationId },
+                temporaryPassword: issuedPassword
+            });
         } catch (error) {
-            if (error?.code !== "auth/user-not-found") {
-                console.error("Password recovery request failed.", error?.code || "unknown");
-                return res.status(200).json({ accepted: true });
-            }
+            console.error("Operator temporary password reset failed.", error?.code || "unknown");
+            return res.status(503).json({ error: "A temporary password could not be issued. Retry after refreshing Users." });
         }
-        return res.status(200).json({ accepted: true });
     }
 );
-
-exports.validateOperatorSetupCode = onRequest(
+exports.completeOperatorFirstPasswordChange = onRequest(
     { region: "us-central1" },
     async (req, res) => {
-        if (!applyCorsAndPreflight(req, res, { methods: ["POST"], allowedHeaders: ["content-type"] })) return;
-        if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed." });
+        if (!applyCorsAndPreflight(req, res, {
+            methods: ["POST"],
+            allowedHeaders: ["authorization", "content-type"]
+        })) return;
         res.set("Cache-Control", "no-store, max-age=0");
-        res.set("Referrer-Policy", "no-referrer");
-        const uid = typeof req.body?.uid === "string" ? req.body.uid : "";
-        const token = typeof req.body?.token === "string" ? req.body.token : "";
-        if (Object.keys(req.body || {}).sort().join(",") !== "token,uid"
-            || !/^[A-Za-z0-9_-]{1,128}$/.test(uid) || !isSetupToken(token)) {
-            return res.status(200).json({ valid: false });
-        }
-        const valid = await setupCodeRegistry.isCurrentActiveToken(uid, token);
-        return res.status(200).json({ valid });
-    }
-);
-
-exports.completeOperatorPasswordSetup = onRequest(
-    { region: "us-central1" },
-    async (req, res) => {
-        if (!applyCorsAndPreflight(req, res, { methods: ["POST"], allowedHeaders: ["content-type"] })) return;
         if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed." });
-        res.set("Cache-Control", "no-store, max-age=0");
-        res.set("Referrer-Policy", "no-referrer");
-
-        const uid = typeof req.body?.uid === "string" ? req.body.uid : "";
-        const token = typeof req.body?.token === "string" ? req.body.token : "";
+        const header = req.headers?.authorization;
+        const match = typeof header === "string" ? /^Bearer ([^\s]+)$/i.exec(header) : null;
+        if (!match) return res.status(401).json({ error: "Unauthorized." });
         const password = typeof req.body?.password === "string" ? req.body.password : "";
         const passwordLength = Array.from(password).length;
-        if (Object.keys(req.body || {}).sort().join(",") !== "password,token,uid"
-            || !/^[A-Za-z0-9_-]{1,128}$/.test(uid) || !isSetupToken(token)
+        if (Object.keys(req.body || {}).sort().join(",") !== "password"
             || passwordLength < OPERATOR_PASSWORD_MIN_LENGTH
             || passwordLength > OPERATOR_PASSWORD_MAX_LENGTH) {
-            return res.status(400).json({ error: "The setup link or password is invalid." });
+            return res.status(400).json({ error: "Choose a password between 12 and 128 characters." });
         }
 
-        const attemptId = randomUUID();
-        let claimed;
+        let uid;
         try {
-            claimed = await setupCodeRegistry.claim(uid, token, attemptId);
+            const claims = await verifyIdToken(match[1]);
+            uid = claims.uid;
+            const role = await getCallerRole(uid);
+            if (!['admin', 'operator'].includes(role?.role) || role.status !== "active"
+                || role.mustChangePassword !== true) {
+                return res.status(403).json({ error: "This account does not require an initial password change." });
+            }
         } catch (error) {
-            console.error("Operator password setup authorization failed.", error?.code || "unknown");
-            return res.status(503).json({ error: "Password setup is temporarily unavailable. Request a new link if the problem continues." });
-        }
-        if (!claimed) return res.status(400).json({ error: "The setup link is expired, invalid, used, or revoked." });
-
-        try {
-            const user = await operatorAuth.getUser(uid);
-            if (user.disabled) return res.status(400).json({ error: "This Operator account is unavailable." });
-        } catch (error) {
-            console.error("Operator account verification for password setup failed.", error?.code || "unknown");
-            return res.status(400).json({ error: "This Operator account is unavailable." });
+            if (INVALID_TOKEN_CODES.has(error?.code)) return res.status(401).json({ error: "Unauthorized." });
+            console.error("Initial Operator password authorization failed.", error?.code || "unknown");
+            return res.status(503).json({ error: "Password change is temporarily unavailable." });
         }
 
         try {
             await operatorAuth.updateUser(uid, { password });
+            const roleRef = db.collection("userRoles").doc(uid);
+            const completed = await db.runTransaction(async transaction => {
+                const current = await transaction.get(roleRef);
+                if (!current.exists || !["admin", "operator"].includes(current.data().role)
+                    || current.data().status !== "active"
+                    || current.data().mustChangePassword !== true) return false;
+                transaction.update(roleRef, {
+                    mustChangePassword: false,
+                    updatedAt: FieldValue.serverTimestamp()
+                });
+                return true;
+            });
+            if (!completed) return res.status(409).json({ error: "This account changed during password setup. Sign in again or contact an Admin." });
+            return res.status(200).json({ changed: true });
         } catch (error) {
             if (["auth/invalid-password", "auth/weak-password"].includes(error?.code)) {
-                await setupCodeRegistry.releaseAfterRejectedPassword(uid, attemptId).catch(releaseError => {
-                    console.error("Rejected password setup token recovery failed.", releaseError?.code || "unknown");
-                });
                 return res.status(400).json({ error: "Choose a stronger password and try again." });
             }
-            console.error("Operator password update failed.", error?.code || "unknown");
-            return res.status(503).json({ error: "Password setup could not be completed. Request a new link if the problem continues." });
+            console.error("Initial Operator password change failed.", error?.code || "unknown");
+            return res.status(503).json({ error: "Password change could not be confirmed. Retry or contact an Admin." });
         }
-
-        try {
-            await setupCodeRegistry.markUsed(uid, attemptId);
-        } catch (error) {
-            // The token stays in its consuming state, so it cannot be replayed.
-            // The Auth password update succeeded and the original link remains unusable.
-            console.error("Operator password setup finalization failed.", error?.code || "unknown");
-        }
-        return res.status(200).json({ completed: true });
     }
 );

@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test test/fir-status.test.mjs test/hearing-date.test.mjs test/proceeding-fields.test.mjs"
+    "test": "node --test test/fir-status.test.mjs test/hearing-date.test.mjs test/proceeding-fields.test.mjs test/firebase-project-policy.test.mjs"
   },
   "keywords": [],
   "author": "",

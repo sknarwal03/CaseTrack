@@ -1,11 +1,12 @@
 import { auth } from "@config/firebase-config.js";
 import { getIdToken, onAuthStateChanged } from "firebase/auth";
 import { functionsEndpoint } from "./firebase-functions.js";
+import { showOperatorTemporaryCredentials } from "./operator-credentials.js";
 
 const USERS_ENDPOINT = functionsEndpoint("listUserRoles");
 const STATIONS_ENDPOINT = functionsEndpoint("policeStations");
 const ROLE_TRANSITION_ENDPOINT = functionsEndpoint("manageUserRole");
-const RESEND_INVITATION_ENDPOINT = functionsEndpoint("resendOperatorInvitation");
+const RESET_OPERATOR_PASSWORD_ENDPOINT = functionsEndpoint("resetOperatorPassword");
 const PAGE_SIZE = 50;
 const PENDING_TRANSITIONS_KEY = "caseTrackPendingRoleTransitions";
 
@@ -64,7 +65,10 @@ function appendUserRecords(records) {
     const fragment = document.createDocumentFragment();
     for (const record of records) {
         const row = document.createElement("tr");
-        for (const value of [record.uid, record.role, record.status, record.policeStationId]) {
+        const displayStatus = record.status === "active" && record.mustChangePassword === true
+            ? "active · temporary password"
+            : record.status;
+        for (const value of [record.uid, record.role, displayStatus, record.policeStationId]) {
             const cell = document.createElement("td");
             cell.textContent = value === null || value === undefined || value === ""
                 ? "—"
@@ -84,13 +88,13 @@ function appendUserRecords(records) {
             manageButton.addEventListener("click", () => void openRoleDialog(record));
             actionCell.appendChild(manageButton);
             if (record.role === "operator" && record.status === "active") {
-                const inviteButton = document.createElement("button");
-                inviteButton.type = "button";
-                inviteButton.className = "po-filter admin-user-manage";
-                inviteButton.textContent = "Resend setup email";
-                inviteButton.setAttribute("aria-label", `Resend password setup email to ${record.uid}`);
-                inviteButton.addEventListener("click", () => void resendOperatorInvitation(record.uid, inviteButton));
-                actionCell.appendChild(inviteButton);
+                const resetButton = document.createElement("button");
+                resetButton.type = "button";
+                resetButton.className = "po-filter admin-user-manage";
+                resetButton.textContent = "Reset temporary password";
+                resetButton.setAttribute("aria-label", `Reset temporary password for ${record.uid}`);
+                resetButton.addEventListener("click", () => void resetOperatorPassword(record.uid, resetButton));
+                actionCell.appendChild(resetButton);
             }
         } else {
             actionCell.textContent = record.uid === activeUser?.uid ? "Current account" : "—";
@@ -101,24 +105,34 @@ function appendUserRecords(records) {
     usersTableBody.appendChild(fragment);
 }
 
-async function resendOperatorInvitation(uid, button) {
+async function resetOperatorPassword(uid, button) {
     if (!activeUser || button.disabled) return;
     button.disabled = true;
     const priorText = button.textContent;
-    button.textContent = "Sending…";
+    button.textContent = "Resetting…";
     try {
         const token = await getIdToken(activeUser);
-        const response = await fetch(RESEND_INVITATION_ENDPOINT, {
+        const response = await fetch(RESET_OPERATOR_PASSWORD_ENDPOINT, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             body: JSON.stringify({ uid })
         });
         if (response.status === 401) throw new Error("Session expired. Sign in again.");
-        if (response.status === 403) throw new Error("Only an active Admin can resend setup email.");
-        if (!response.ok) throw new Error("The setup email could not be sent. Retry later.");
-        usersStatus.textContent = "Password setup email sent.";
+        if (response.status === 403) throw new Error("Only an active Admin can reset an Operator password.");
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok || payload?.operator?.uid !== uid
+            || typeof payload.operator.email !== "string"
+            || typeof payload.temporaryPassword !== "string") {
+            throw new Error(payload.error || "A temporary password could not be issued. Retry later.");
+        }
+        showOperatorTemporaryCredentials({
+            email: payload.operator.email,
+            operatorUid: uid,
+            temporaryPassword: payload.temporaryPassword
+        });
+        usersStatus.textContent = "Temporary password issued. Copy it from the credentials dialog and share it privately.";
     } catch (error) {
-        usersStatus.textContent = error.message || "The setup email could not be sent.";
+        usersStatus.textContent = error.message || "A temporary password could not be issued.";
     } finally {
         button.disabled = false;
         button.textContent = priorText;

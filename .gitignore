@@ -33,3 +33,4 @@ playwright-report/
 test-results/
 firebase-export/
 emulator-data/
+.release-local/

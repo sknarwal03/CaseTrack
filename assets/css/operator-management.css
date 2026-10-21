@@ -38,6 +38,54 @@
     border-radius: 16px;
 }
 
+#operatorCredentialsDialog {
+    box-sizing: border-box;
+    width: min(600px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+}
+
+#operatorCredentialsDialog::backdrop {
+    background: rgb(0 0 0 / 65%);
+}
+
+.operator-credentials {
+    display: grid;
+    gap: 10px;
+}
+
+.operator-credentials h2,
+.operator-credentials p {
+    margin: 0;
+}
+
+.operator-credentials label {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.credential-copy-row {
+    display: flex;
+    gap: 8px;
+}
+
+.credential-copy-row input {
+    box-sizing: border-box;
+    flex: 1;
+    min-width: 0;
+}
+
+.credential-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
 #roleManagementDialog::backdrop {
     background: rgb(0 0 0 / 65%);
 }
@@ -83,9 +131,19 @@ body.light-theme #roleManagementDialog {
     border-color: var(--line);
 }
 
+body.light-theme #operatorCredentialsDialog {
+    color: var(--text);
+    background: var(--panel);
+    border-color: var(--line);
+}
+
 @media (max-width: 480px) {
     .role-management-actions {
         align-items: stretch;
         flex-direction: column-reverse;
+    }
+    .credential-copy-row {
+        align-items: stretch;
+        flex-direction: column;
     }
 }
