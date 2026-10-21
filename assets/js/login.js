@@ -8,6 +8,16 @@ document.body.classList.toggle("light-theme", localStorage.getItem("caseTrackThe
 
 const loginForm = document.querySelector("#loginForm");
 const loginError = document.querySelector("#loginError");
+const passwordInput = document.querySelector("#password");
+const togglePassword = document.querySelector("#togglePassword");
+
+togglePassword?.addEventListener("click", () => {
+    const showingPassword = passwordInput.type === "password";
+    passwordInput.type = showingPassword ? "text" : "password";
+    togglePassword.textContent = showingPassword ? "Hide" : "Show";
+    togglePassword.setAttribute("aria-label", showingPassword ? "Hide password" : "Show password");
+    togglePassword.setAttribute("aria-pressed", String(showingPassword));
+});
 const forgotLink = document.querySelector(".forgot-link");
 const redirectReason = new URLSearchParams(window.location.search).get("reason");
 if (redirectReason === "access-denied") {

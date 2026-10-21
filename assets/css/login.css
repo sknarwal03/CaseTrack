@@ -118,6 +118,41 @@ body {
     box-shadow: 0 0 0 3px rgba(59, 141, 255, 0.15);
 }
 
+.password-input-wrap {
+    position: relative;
+}
+
+.password-input-wrap input {
+    padding-right: 68px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    min-width: 48px;
+    min-height: 36px;
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #9cb1d0;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.password-toggle:hover {
+    color: #fff;
+}
+
+.password-toggle:focus-visible {
+    outline: 2px solid #3b8dff;
+    outline-offset: 1px;
+}
+
 .actions {
     display: flex;
     justify-content: space-between;
@@ -207,6 +242,14 @@ body.light-theme .input-group input {
 body.light-theme .input-group input:focus {
     border-color: var(--brand-primary);
     box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+body.light-theme .password-toggle {
+    color: var(--text-secondary);
+}
+
+body.light-theme .password-toggle:hover {
+    color: var(--text-primary);
 }
 
 body.light-theme .forgot-link {
