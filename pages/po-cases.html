@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CaseTrack PO cases page">
+    <title>CaseTrack | PO Cases</title>
+  <script type="module" crossorigin src="/CaseTrack/assets/poCases-DPPVY_73.js"></script>
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/index.esm-CMMpLTlb.js">
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/firebase-functions-D3hq5K6S.js">
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/shared-layout-QhUR6W1D.js">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/shared-layout-BK3cueCb.css">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/po-cases-D3ec2n4X.css">
+</head>
+
+<body data-page="po-cases">
+    <div class="layout">
+        
+
+        <main class="main">
+            
+
+            <section class="content po-shell">
+                <div class="welcome">
+                    <div>
+                        <h1>PO Cases</h1>
+                        <p>Police officer assigned matters and their current review status.</p>
+                    </div>
+                    <button class="new-case" type="button">＋&nbsp; New PO Case</button>
+                </div>
+
+                <div class="po-summary">
+                    <article class="summary-card">
+                        <p>Total PO Cases</p>
+                                <strong id="totalPoCases">0</strong>
+                        <span>+12% this month</span>
+                    </article>
+                    <article class="summary-card">
+                        <p>Pending Review</p>
+                                <strong id="pendingPoCases">0</strong>
+                        <span>8 urgent</span>
+                    </article>
+                    <article class="summary-card">
+                        <p>Hearing Due</p>
+                                <strong id="hearingDuePoCases">0</strong>
+                        <span>3 today</span>
+                    </article>
+                    <article class="summary-card">
+                        <p>Closed</p>
+                                <strong id="closedPoCases">0</strong>
+                        <span>+5 this week</span>
+                    </article>
+                </div>
+
+                <section class="panel">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <div class="mini-icon">⚑</div>
+                            <h2>Assigned PO Matters</h2>
+                        </div>
+                        <div class="case-actions">
+                            <button class="btn" type="button">Export</button>
+                            <button class="btn primary" type="button">Assign PO</button>
+                        </div>
+                    </div>
+
+                    <div class="po-toolbar">
+                        <div class="po-filters">
+                            <button class="po-filter active" data-filter="all" type="button">All</button>
+                            <button class="po-filter" data-filter="pending" type="button">Pending</button>
+                            <button class="po-filter" data-filter="review" type="button">In Review</button>
+                            <button class="po-filter" data-filter="active" type="button">Active</button>
+                        </div>
+                    </div>
+
+                    <div class="po-table-wrap">
+                        <table class="po-table">
+                            <thead>
+                                <tr>
+                                    <th>Case ID</th>
+                                    <th>Assigned Officer</th>
+                                    <th>Police Station</th>
+                                    <th>Next Hearing</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="poCasesTableBody">
+                                <tr class="po-row" data-status="pending">
+                                    <td>
+                                        <span class="case-id">PO-104/2026</span>
+                                        <span class="case-meta">Section 323/324 IPC</span>
+                                    </td>
+                                    <td>Inspector R. Verma</td>
+                                    <td>OSM</td>
+                                    <td>14 Sep 2026</td>
+                                    <td><span class="priority-badge high">High</span></td>
+                                    <td><span class="status-pill pending">Pending</span></td>
+                                    <td>
+                                        <button class="icon-btn" type="button" aria-label="Open">↗</button>
+                                    </td>
+                                </tr>
+                                <tr class="po-row" data-status="review">
+                                    <td>
+                                        <span class="case-id">PO-118/2026</span>
+                                        <span class="case-meta">Section 420 IPC</span>
+                                    </td>
+                                    <td>SI N. Sharma</td>
+                                    <td>Civil Lines</td>
+                                    <td>18 Sep 2026</td>
+                                    <td><span class="priority-badge medium">Medium</span></td>
+                                    <td><span class="status-pill review">In Review</span></td>
+                                    <td>
+                                        <button class="icon-btn" type="button" aria-label="Open">↗</button>
+                                    </td>
+                                </tr>
+                                <tr class="po-row" data-status="active">
+                                    <td>
+                                        <span class="case-id">PO-126/2025</span>
+                                        <span class="case-meta">Section 307 IPC</span>
+                                    </td>
+                                    <td>Inspector A. Singh</td>
+                                    <td>R/City</td>
+                                    <td>09 Sep 2026</td>
+                                    <td><span class="priority-badge high">High</span></td>
+                                    <td><span class="status-pill active">Active</span></td>
+                                    <td>
+                                        <button class="icon-btn" type="button" aria-label="Open">↗</button>
+                                    </td>
+                                </tr>
+                                <tr class="po-row" data-status="pending">
+                                    <td>
+                                        <span class="case-id">PO-132/2026</span>
+                                        <span class="case-meta">Section 279 IPC</span>
+                                    </td>
+                                    <td>DSP P. Nair</td>
+                                    <td>U/E</td>
+                                    <td>12 Sep 2026</td>
+                                    <td><span class="priority-badge low">Low</span></td>
+                                    <td><span class="status-pill pending">Pending</span></td>
+                                    <td>
+                                        <button class="icon-btn" type="button" aria-label="Open">↗</button>
+                                    </td>
+                                </tr>
+                                <tr class="po-row" data-status="active">
+                                    <td>
+                                        <span class="case-id">PO-141/2026</span>
+                                        <span class="case-meta">Section 498A IPC</span>
+                                    </td>
+                                    <td>SI K. Meena</td>
+                                    <td>OSM</td>
+                                    <td>22 Sep 2026</td>
+                                    <td><span class="priority-badge medium">Medium</span></td>
+                                    <td><span class="status-pill active">Active</span></td>
+                                    <td>
+                                        <button class="icon-btn" type="button" aria-label="Open">↗</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CaseTrack register diary view">
+    <title>CaseTrack | Register Diary</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script type="module" crossorigin src="/CaseTrack/assets/registerDiary-CnjVyg7u.js"></script>
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/index.esm-CMMpLTlb.js">
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/firebase-functions-D3hq5K6S.js">
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/shared-layout-QhUR6W1D.js">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/shared-layout-BK3cueCb.css">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/registerDiary-qGiZtpmm.css">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/add-case-DXGaGMNq.css">
+</head>
+
+<body data-page="register-diary">
+    <div class="layout">
+        <main class="main">
+            <section class="content diary-shell">
+                <div class="diary-book" id="diaryPage">
+                    <div class="diary-page">
+                        <header class="diary-header">
+                            <div class="diary-left-head">
+                                <button type="button" class="diary-date-num" id="diaryDateNum"
+                                    aria-label="Go to today"></button>
+                                <div class="diary-date-info">
+                                    <button type="button" class="diary-month" id="diaryMonth" aria-label="Choose month"
+                                        aria-expanded="false" aria-haspopup="true"
+                                        aria-controls="diaryMonthPicker"></button>
+                                    <div class="diary-month-picker" id="diaryMonthPicker" role="group"
+                                        aria-label="Select month" aria-hidden="true"></div>
+                                    <div class="diary-weekday" id="diaryWeekday"></div>
+                                </div>
+                            </div>
+                            <div class="diary-right-head">
+                                <div class="diary-calendars">
+                                    <div class="diary-mini-cal">
+                                        <div class="diary-mini-title" id="diaryCurrentTitle"></div>
+                                        <div class="diary-grid" id="diaryCurrentGrid"></div>
+                                    </div>
+                                </div>
+                                <div class="diary-year-control">
+                                    <button type="button" class="diary-year-box" id="diaryYearBox"
+                                        aria-label="Choose year" aria-expanded="false" aria-haspopup="true"
+                                        aria-controls="diaryYearPicker"></button>
+                                    <div class="diary-year-picker" id="diaryYearPicker" role="group"
+                                        aria-label="Select year" aria-hidden="true"></div>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="diary-header-actions">
+                            <button type="button" class="diary-header-actions-toggle" id="diaryHeaderActionsToggle"
+                                aria-label="Open diary actions" aria-expanded="false"
+                                aria-controls="diaryHeaderActionsMenu" title="Open diary actions">+</button>
+                            <div class="diary-header-actions-menu" id="diaryHeaderActionsMenu" hidden>
+                                <button type="button" class="diary-action diary-action-share" id="diaryShareBtn"
+                                    aria-label="Share Register Diary" title="Share">
+                                    <span class="diary-action-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24">
+                                            <circle cx="18" cy="5" r="3"></circle>
+                                            <circle cx="6" cy="12" r="3"></circle>
+                                            <circle cx="18" cy="19" r="3"></circle>
+                                            <path d="m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4"></path>
+                                        </svg>
+                                    </span>
+                                </button>
+                                <button type="button" class="diary-action diary-action-print" id="diaryPrintBtn"
+                                    aria-label="Print Register Diary" title="Print">
+                                    <span class="diary-action-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24">
+                                            <path
+                                                d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2">
+                                            </path>
+                                            <path d="M7 14h10v7H7zM17 11h.01"></path>
+                                        </svg>
+                                    </span>
+                                </button>
+                                <a class="diary-action diary-action-judges" href="all-judges.html" aria-label="Judges"
+                                    title="Judges">
+                                    <span class="diary-action-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24">
+                                            <circle cx="9" cy="8" r="3.5"></circle>
+                                            <path
+                                                d="M2.5 20v-1.5a6.5 6.5 0 0 1 13 0V20zM16 5.2a3.5 3.5 0 0 1 0 6.8M18 14a5.5 5.5 0 0 1 3.5 5.1V20h-4">
+                                            </path>
+                                        </svg>
+                                    </span>
+                                </a>
+                                <a class="diary-action diary-action-disposed" href="cases.html?filter=disposed"
+                                    aria-label="Disposed cases" title="Disposed">
+                                    <span class="diary-action-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24">
+                                            <path
+                                                d="M3 7.5h7l2 2h9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7.5v-2a2 2 0 0 1 2-2h5l2 2h6">
+                                            </path>
+                                            <path d="m9 15 2 2 4-4"></path>
+                                        </svg>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <button class="diary-nav-arrow diary-prev-arrow" id="diaryPrevDay"
+                            aria-label="Previous day">‹</button>
+                        <button class="diary-nav-arrow diary-next-arrow" id="diaryNextDay"
+                            aria-label="Next day">›</button>
+                        <section class="time-grid" id="diaryTimeGrid"></section>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="diary-swipe-hint">Swipe left/right to change date</div>
+    <dialog class="diary-date-dialog" id="diaryDateDialog" aria-labelledby="diaryDialogTitle">
+        <header class="diary-dialog-header">
+            <h2 id="diaryDialogTitle">FIR date management</h2>
+            <button type="button" class="diary-dialog-close" id="diaryDialogClose" aria-label="Close">×</button>
+        </header>
+        <p class="diary-dialog-fir" id="diaryDialogFir"></p>
+        <form class="diary-date-form" id="diaryDateForm">
+            <label>Date
+                <input type="date" name="date" required>
+            </label>
+            <label>Trial Stage
+                <select name="trialStage" aria-label="Trial Stage">
+                    <option value="" selected>Select Trial Stage</option>
+                </select>
+            </label>
+            <div class="diary-date-form-actions">
+                <button type="submit" id="diaryDateSubmit">Add Date</button>
+                <button type="button" id="diaryDateCancelEdit" hidden>Cancel edit</button>
+            </div>
+        </form>
+        <section class="diary-saved-dates" aria-labelledby="diarySavedDatesTitle">
+            <h3 id="diarySavedDatesTitle">Saved dates</h3>
+            <div id="diarySavedDateList"></div>
+        </section>
+        <p class="diary-dialog-status" id="diaryDialogStatus" role="status" aria-live="polite"></p>
+    </dialog>
+    <div class="modal-backdrop" id="caseDetailsModal" aria-hidden="true">
+        <section class="modal case-details-modal" role="dialog" aria-modal="true" aria-labelledby="caseDetailsTitle">
+            <header class="modal-header">
+                <div>
+                    <h2 id="caseDetailsTitle">FIR Details</h2>
+                    <p>Complete case information and date timeline.</p>
+                </div>
+                <button class="close" type="button" data-close-detail-modal aria-label="Close">×</button>
+            </header>
+            <div class="modal-body detail-modal-body">
+                <div class="detail-header-card">
+                    <div><span class="detail-label">FIR Number</span>
+                        <h3 id="detailFIRLabel">—</h3>
+                    </div>
+                    <span class="detail-status" id="detailStatusBadge">—</span>
+                    <div><span class="detail-label">Next Date &amp; Stage</span>
+                        <h3></h3>
+                    </div>
+                </div>
+                <div class="detail-grid" id="caseDetailFields"></div>
+            </div>
+        </section>
+    </div>
+
+</body>
+
+</html>

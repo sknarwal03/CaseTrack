@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CaseTrack settings page">
+    <title>CaseTrack | Settings</title>
+  <script type="module" crossorigin src="/CaseTrack/assets/settings-CHq57k36.js"></script>
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/index.esm-CMMpLTlb.js">
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/firebase-functions-D3hq5K6S.js">
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/shared-layout-QhUR6W1D.js">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/shared-layout-BK3cueCb.css">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/settings-Dlg4wuPv.css">
+</head>
+
+<body data-page="settings">
+    <div class="layout">
+        
+
+        <main class="main">
+            
+
+            <section class="content settings-shell">
+                <div class="welcome settings-header">
+                    <div>
+                        <p class="eyebrow">Settings</p>
+                        <h1>System Preferences</h1>
+                    </div>
+                    <button class="new-case" type="button" id="saveSettingsBtn">Save Changes</button>
+                </div>
+
+                <div class="settings-grid">
+                    <section class="panel settings-panel">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon">⚙</div>
+                                <h2>General</h2>
+                            </div>
+                        </div>
+
+                        <div class="settings-list">
+                            <div class="setting-row">
+                                <div>
+                                    <strong>Theme</strong>
+                                    <small>Switch between dark and light mode</small>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="themeSwitch">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="setting-row">
+                                <div>
+                                    <strong>Notifications</strong>
+                                    <small>Enable reminder alerts for hearings</small>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="notificationsToggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="setting-row">
+                                <div>
+                                    <strong>Auto Save</strong>
+                                    <small>Backup case data automatically</small>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="autoSaveToggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="panel settings-panel">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon">⚖</div>
+                                <h2>Information</h2>
+                            </div>
+                        </div>
+
+                        <div class="settings-list">
+                            <a class="setting-row setting-link" href="all-judges.html">
+                                <div>
+                                    <strong>Manage Judges</strong>
+                                    <small>View court assignments and maintain the judges register</small>
+                                </div>
+                                <span class="setting-link-arrow" aria-hidden="true">›</span>
+                            </a>
+                            <a class="setting-row setting-link" href="manage-io.html">
+                                <div>
+                                    <strong>Manage IO</strong>
+                                    <small>Maintain investigating officer details used across cases</small>
+                                </div>
+                                <span class="setting-link-arrow" aria-hidden="true">›</span>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="panel settings-panel wide-panel">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <div class="mini-icon">✓</div>
+                            <h2>Account & Security</h2>
+                        </div>
+                    </div>
+
+                    <div class="security-boxes">
+                        <div class="security-card">
+                            <strong>Profile</strong>
+                            <p>Shivkumar Narwal</p>
+                            <small>Administrator</small>
+                        </div>
+                        <div class="security-card">
+                            <strong>Last Backup</strong>
+                            <p>13 Sep 2026</p>
+                            <small>Synced successfully</small>
+                        </div>
+                        <div class="security-card">
+                            <strong>Password</strong>
+                            <p>Update your account password</p>
+                            <button type="button" class="new-case" id="openPasswordChange">Change Password</button>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+        </main>
+    </div>
+
+    <div class="modal-backdrop" id="passwordChangeModal" aria-hidden="true">
+        <section class="modal password-modal" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
+            <div class="modal-header">
+                <div>
+                    <h2 id="passwordModalTitle">Change Password</h2>
+                    <p>Verify your current password, then choose a new one.</p>
+                </div>
+                <button type="button" class="close" id="closePasswordChange" aria-label="Close">×</button>
+            </div>
+            <form id="passwordChangeForm">
+                <div class="modal-body config-form">
+                    <label for="currentPassword">Current password</label>
+                    <input type="password" id="currentPassword" autocomplete="current-password" required>
+                    <label for="newPassword">New password</label>
+                    <input type="password" id="newPassword" autocomplete="new-password" minlength="6" required>
+                    <label for="confirmPassword">Confirm new password</label>
+                    <input type="password" id="confirmPassword" autocomplete="new-password" minlength="6" required>
+                    <small id="passwordChangeStatus" role="status" aria-live="polite"></small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" id="cancelPasswordChange">Cancel</button>
+                    <button type="submit" class="btn primary" id="submitPasswordChange">Update Password</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+</body>
+
+</html>

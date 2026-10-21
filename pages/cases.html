@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CaseTrack all cases page">
+    <title>CaseTrack | All Cases</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script type="module" crossorigin src="/CaseTrack/assets/index.esm-CMMpLTlb.js"></script>
+  <script type="module" crossorigin src="/CaseTrack/assets/firebase-functions-D3hq5K6S.js"></script>
+  <script type="module" crossorigin src="/CaseTrack/assets/shared-layout-QhUR6W1D.js"></script>
+  <script type="module" crossorigin src="/CaseTrack/assets/cases-BE_dL_L2.js"></script>
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/shared-layout-BK3cueCb.css">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/cases-R7jtaCwr.css">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/add-case-DXGaGMNq.css">
+</head>
+
+<body data-page="cases">
+    <div class="layout">
+        
+
+        <main class="main">
+
+            <section class="content cases-shell">
+                <!-- <div class="welcome">
+                    <div>
+                        <h1>All Cases</h1>
+                        <p>Complete overview of every registered matter and hearing.</p>
+                    </div>
+                    <button class="new-case" data-open-add-case type="button">＋&nbsp; New Case</button>
+                </div> -->
+
+                <section class="panel">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <div class="mini-icon">▧</div>
+                            <h2>Registered Cases</h2>
+                        </div>
+                        <div class="case-actions">
+                            <button class="btn" type="button">Export</button>
+                            <button class="btn primary" data-open-add-case type="button">Add Case</button>
+                        </div>
+                    </div>
+
+                    <div class="cases-toolbar">
+                        <div class="case-filters">
+                            <button class="case-filter active" data-filter="all" type="button">All Cases</button>
+                            <button class="case-filter" data-filter="pending" type="button">Pending Cases</button>
+                            <button class="case-filter" data-filter="disposed" type="button">Disposed Cases</button>
+                            <button class="case-filter" data-filter="po" type="button">PO Cases</button>
+                            <button class="case-filter" data-filter="star" type="button">Star Cases</button>
+                        </div>
+                        <div class="case-total-count" id="caseTotalCount" aria-live="polite">Total Records: 0</div>
+                    </div>
+
+                    <div class="cases-table-wrap">
+                        <table class="cases-table">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" data-sort="firNo" data-direction="none">FIR No.</th>
+                                    <th class="sortable" data-sort="firDate" data-direction="none">Date of FIR</th>
+                                    <th class="sortable" data-sort="underSection" data-direction="none">Under Section</th>
+                                    <th class="sortable" data-sort="courtNumber" data-direction="none">In the court of</th>
+                                    <th class="sortable" data-sort="nextDate" data-direction="none">Next Hearing</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="casesTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal-backdrop" id="caseDetailsModal" aria-hidden="true">
+        <section class="modal case-details-modal" role="dialog" aria-modal="true" aria-labelledby="caseDetailsTitle">
+            <header class="modal-header">
+                <div>
+                    <h2 id="caseDetailsTitle">FIR Details</h2>
+                    <p>Complete case information and date timeline.</p>
+                </div>
+                <button class="close" type="button" data-close-detail-modal aria-label="Close">×</button>
+            </header>
+            <div class="modal-body detail-modal-body">
+                <div class="detail-header-card">
+                    <div>
+                        <span class="detail-label">FIR Number</span>
+                        <h3 id="detailFIRLabel">—</h3>
+                    </div>
+                    <span class="detail-status" id="detailStatusBadge">—</span>
+                    <div>
+                        <span class="detail-label">Next Date & Stage</span>
+                        <h3></h3>
+                    </div>
+                </div>
+                <div class="detail-grid" id="caseDetailFields"></div>
+            </div>
+        </section>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</body>
+
+</html>

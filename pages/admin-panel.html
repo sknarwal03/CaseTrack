@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CaseTrack administration for roles, Operators, and police stations">
+    <title>CaseTrack | Admin Panel</title>
+  <script type="module" crossorigin src="/CaseTrack/assets/adminPanel-CXP7pyxf.js"></script>
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/index.esm-CMMpLTlb.js">
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/firebase-functions-D3hq5K6S.js">
+  <link rel="modulepreload" crossorigin href="/CaseTrack/assets/shared-layout-QhUR6W1D.js">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/shared-layout-BK3cueCb.css">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/adminPanel-CVwc6y-B.css">
+  <link rel="stylesheet" crossorigin href="/CaseTrack/assets/po-cases-D3ec2n4X.css">
+</head>
+
+<body data-page="admin-panel">
+    <div class="layout">
+        <main class="main">
+            <section class="content">
+                <p class="panel" id="adminPanelAccessStatus" role="status" aria-live="polite">
+                    Verifying admin access…
+                </p>
+                <button type="button" class="po-filter" id="adminPanelAccessRetry" hidden>
+                    Retry Admin verification
+                </button>
+
+                <div id="adminPanelContent" hidden>
+                    <div class="welcome">
+                        <div>
+                            <p class="eyebrow">Administration</p>
+                            <h1>Admin Panel</h1>
+                            <p>Manage Admin and Operator access, provision Operators, and maintain Police Station records.</p>
+                        </div>
+                    </div>
+
+                    <section class="panel" aria-labelledby="adminPanelOverviewTitle">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon">♙</div>
+                                        <h2 id="adminPanelOverviewTitle">Administration overview</h2>
+                            </div>
+                        </div>
+                        <p>Police Station creation, Operator provisioning, and Users listing use trusted Firebase
+                            Functions. The Functions endpoints verify the active Admin
+                            role and validate each Operator station assignment server-side. Admins can also promote,
+                            demote, revoke, and reactivate accounts through the role-transition endpoint.</p>
+                        <p>Role changes are server-authorized, recorded in role history, and protected by
+                            last-Admin governance. Station IDs remain stable; station rename and deletion are not supported.</p>
+                    </section>
+
+                    <section class="panel" aria-labelledby="adminUsersTitle">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon">▤</div>
+                                <h2 id="adminUsersTitle">Users</h2>
+                            </div>
+                        </div>
+                        <p>Role records only. Firebase Authentication profiles without a role are not listed.</p>
+                        <div class="po-table-wrap">
+                            <table class="po-table admin-users-table" aria-describedby="adminUsersStatus">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">UID</th>
+                                        <th scope="col">Role</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Police Station ID</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminUsersTableBody"></tbody>
+                            </table>
+                        </div>
+                        <p id="adminUsersStatus" role="status" aria-live="polite"></p>
+                        <div class="po-toolbar">
+                            <button type="button" class="po-filter" id="adminUsersRetry" hidden>Retry</button>
+                            <button type="button" class="po-filter" id="adminUsersRefresh">Refresh users</button>
+                            <button type="button" class="po-filter" id="adminUsersLoadMore" hidden>Load more</button>
+                        </div>
+
+                        <dialog id="roleManagementDialog" aria-labelledby="roleManagementDialogTitle">
+                            <form id="roleManagementForm" class="role-management-form" novalidate>
+                                <h2 id="roleManagementDialogTitle">Manage account access</h2>
+                                <p id="roleManagementTarget"></p>
+                                <label for="roleManagementAction">Action</label>
+                                <select id="roleManagementAction" name="action" required></select>
+                                <div id="roleManagementStationField" hidden>
+                                    <label for="roleManagementStation">Destination police station</label>
+                                    <select id="roleManagementStation" name="policeStationId"></select>
+                                </div>
+                                <label for="roleManagementReason">Reason (required)</label>
+                                <textarea id="roleManagementReason" name="reason" maxlength="500" required></textarea>
+                                <p id="roleManagementStatus" role="status" aria-live="polite"></p>
+                                <div class="role-management-actions">
+                                    <button type="button" class="po-filter" id="roleManagementCancel">Cancel</button>
+                                    <button type="submit" class="po-filter" id="roleManagementSubmit">Apply change</button>
+                                </div>
+                            </form>
+                        </dialog>
+                    </section>
+
+                    <section class="panel operator-management" aria-labelledby="operatorManagementTitle">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon" aria-hidden="true">OP</div>
+                                <h2 id="operatorManagementTitle">Create Operator</h2>
+                            </div>
+                        </div>
+                        <p>Create an Operator with their email as the login ID. The temporary password is shown once and must be changed on first sign-in.</p>
+                        <form id="operatorForm" class="operator-form" novalidate>
+                            <label for="operatorEmail">Operator login ID (email)</label>
+                            <input id="operatorEmail" name="email" type="email" maxlength="254"
+                                autocomplete="off" required>
+                            <label for="operatorPoliceStation">Police station</label>
+                            <select id="operatorPoliceStation" name="policeStationId" required>
+                                <option value="">Loading police stations…</option>
+                            </select>
+                            <button id="operatorCreate" class="po-filter" type="submit" disabled>Create Operator credentials</button>
+                        </form>
+                        <p id="operatorStatus" role="status" aria-live="polite"></p>
+                        <button type="button" class="po-filter" id="operatorResetRequest" hidden>
+                            Start a new request after reviewing the prior conflict
+                        </button>
+                    </section>
+
+                    <section class="panel station-master" aria-labelledby="stationMasterTitle">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <div class="mini-icon" aria-hidden="true">PS</div>
+                                <h2 id="stationMasterTitle">Police Station Master</h2>
+                            </div>
+                        </div>
+                        <p>Create and view canonical police station records.</p>
+                        <form id="policeStationForm" class="station-master-form">
+                            <label for="policeStationName">Canonical station name</label>
+                            <div class="station-master-form-row">
+                                <input id="policeStationName" name="name" type="text" maxlength="120"
+                                    autocomplete="off" required>
+                                <button id="policeStationSave" class="po-filter" type="submit">Create station</button>
+                            </div>
+                        </form>
+                        <p id="policeStationStatus" role="status" aria-live="polite"></p>
+                        <div class="station-master-table-wrap">
+                            <table class="station-master-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Station ID</th>
+                                        <th scope="col">Canonical Name</th>
+                                        <th scope="col">Created</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="policeStationTableBody"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <dialog id="operatorCredentialsDialog" aria-labelledby="operatorCredentialsTitle">
+        <section class="operator-credentials">
+            <h2 id="operatorCredentialsTitle">Operator credentials</h2>
+            <p>Copy these credentials now and share them privately. The temporary password is shown once; the Operator must change it after signing in.</p>
+            <label for="operatorCredentialLoginId">Login ID</label>
+            <div class="credential-copy-row">
+                <input id="operatorCredentialLoginId" type="text" readonly>
+                <button class="po-filter" type="button" data-copy-credential="operatorCredentialLoginId">Copy</button>
+            </div>
+            <label for="operatorCredentialUid">Account UID</label>
+            <div class="credential-copy-row">
+                <input id="operatorCredentialUid" type="text" readonly>
+                <button class="po-filter" type="button" data-copy-credential="operatorCredentialUid">Copy</button>
+            </div>
+            <label for="operatorCredentialPassword">Temporary password</label>
+            <div class="credential-copy-row">
+                <input id="operatorCredentialPassword" type="text" readonly autocomplete="off">
+                <button class="po-filter" type="button" data-copy-credential="operatorCredentialPassword">Copy</button>
+            </div>
+            <p id="operatorCredentialStatus" role="status" aria-live="polite"></p>
+            <form method="dialog" class="credential-dialog-actions">
+                <button class="po-filter" type="submit">Close</button>
+            </form>
+        </section>
+    </dialog>
+
+</body>
+
+</html>

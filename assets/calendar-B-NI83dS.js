@@ -1,0 +1,19 @@
+import{a as e}from"./firebase-functions-D3hq5K6S.js";import{f as t,p as n}from"./shared-layout-QhUR6W1D.js";var r=document.querySelector(`#dateFieldSelect`),i=document.querySelector(`#monthLabel`),a=document.querySelector(`#calendarGrid`),o=document.querySelector(`#selectedDateLabel`),s=document.querySelector(`#selectedDateCases`),c=document.querySelector(`#prevMonthBtn`),l=document.querySelector(`#nextMonthBtn`),u={currentDate:new Date,activeKey:`registrationDate`,selectedDateKey:``},d=[],f=()=>d,p=null,m=e=>e?.registrationDate||e?.putInCourtDate||e?.firDate||``,h=e=>{if(!e)return``;let t=new Date(e+`T00:00:00`);return Number.isNaN(t.getTime())?``:`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,`0`)}-${String(t.getDate()).padStart(2,`0`)}`},g=(e,t)=>f().filter(n=>{let r=t===`registrationDate`?m(n):n[t];return!!r&&h(r)===e}),_=()=>{u.selectedDateKey||=h(new Date(u.currentDate.getFullYear(),u.currentDate.getMonth(),1))},v=()=>{let e=g(u.selectedDateKey,u.activeKey);if(o.textContent=new Intl.DateTimeFormat(`en-GB`,{day:`2-digit`,month:`short`,year:`numeric`}).format(new Date(u.selectedDateKey+`T00:00:00`)),!e.length){s.innerHTML=`<div class="empty-state">${p?`Could not load FIR and proceeding records. Check access and retry.`:`No cases scheduled for this date.`}</div>`;return}s.innerHTML=e.map(e=>{let t=`FIR-${e.firNo||`—`}/${e.firYear||`—`}`,n=e.courtNumber||e.courtType||`Court not assigned`;return`
+            <article class="case-calendar-item">
+                <div>
+                    <h3>${t}</h3>
+                    <p><strong>Section:</strong> ${e.underSection||`—`}</p>
+                    <p><strong>Court:</strong> ${n}</p>
+                    <p><strong>Stage:</strong> ${e.caseStage||`—`}</p>
+                </div>
+                <span class="case-status-tag">${e.caseStatus||`Active`}</span>
+            </article>
+        `}).join(``)},y=()=>{let e=u.currentDate.getFullYear(),t=u.currentDate.getMonth();i.textContent=new Intl.DateTimeFormat(`en-US`,{month:`long`,year:`numeric`}).format(u.currentDate);let n=new Date(e,t,1).getDay(),r=new Date(e,t,1-n),o=[];for(let e=0;e<42;e+=1){let n=new Date(r);n.setDate(r.getDate()+e);let i=h(n),a=g(i,u.activeKey),s=a.slice(0,3),c=a.length-s.length;o.push(`
+            <button type="button" class="day-cell ${n.getMonth()===t?`in-month`:`out-month`} ${a.length?`has-events`:``} ${i===u.selectedDateKey?`selected`:``}" data-date="${i}">
+                <span class="day-number">${n.getDate()}</span>
+                <div class="day-events">
+                    ${s.map(e=>`<span class="event-pill">${e.caseStatus||`Case`}</span>`).join(``)}
+                    ${c>0?`<span class="more-pill">+${c}</span>`:``}
+                </div>
+            </button>
+        `)}a.innerHTML=o.join(``),document.querySelectorAll(`.day-cell`).forEach(e=>{e.addEventListener(`click`,()=>{u.selectedDateKey=e.dataset.date,y(),v()})})},b=async()=>{try{d=(await t(e)).filter(n),p=null}catch(e){console.error(`Error loading FIR and proceeding records:`,e),p=e,d=[]}_(),y(),v()};r&&(r.value=u.activeKey,r.addEventListener(`change`,e=>{u.activeKey=e.target.value,u.selectedDateKey=h(new Date(u.currentDate.getFullYear(),u.currentDate.getMonth(),1)),y(),v()})),c?.addEventListener(`click`,()=>{u.currentDate=new Date(u.currentDate.getFullYear(),u.currentDate.getMonth()-1,1),u.selectedDateKey=h(new Date(u.currentDate.getFullYear(),u.currentDate.getMonth(),1)),y(),v()}),l?.addEventListener(`click`,()=>{u.currentDate=new Date(u.currentDate.getFullYear(),u.currentDate.getMonth()+1,1),u.selectedDateKey=h(new Date(u.currentDate.getFullYear(),u.currentDate.getMonth(),1)),y(),v()}),b(),window.addEventListener(`caseAdded`,b);
