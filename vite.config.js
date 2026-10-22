@@ -19,6 +19,24 @@ export default defineConfig(({ mode, command }) => {
     }
   },
 
+  server: command === "serve" && mode !== "role-admin-local"
+    ? {
+        proxy: {
+          "/__production-functions": {
+            target: "https://us-central1-casetrack-97a4e.cloudfunctions.net",
+            changeOrigin: true,
+            secure: true,
+            rewrite: path => path.replace(/^\/__production-functions/, ""),
+            configure: proxy => {
+              proxy.on("proxyReq", proxyReq => {
+                proxyReq.setHeader("origin", "https://sknarwal03.github.io");
+              });
+            }
+          }
+        }
+      }
+    : undefined,
+
   build: {
     rollupOptions: {
       input: {

@@ -357,7 +357,7 @@ async function requestUserPage(user, generation, cursor, forceRefresh = false) {
     const token = await getIdToken(user, forceRefresh);
     if (!isCurrentSession(user, generation)) return null;
 
-    const url = new URL(USERS_ENDPOINT);
+    const url = new URL(USERS_ENDPOINT, window.location.origin);
     url.searchParams.set("limit", String(PAGE_SIZE));
     if (cursor) url.searchParams.set("pageToken", cursor);
 
