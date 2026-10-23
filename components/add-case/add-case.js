@@ -1393,7 +1393,8 @@ function updateCaseStatusFields() {
             hide(els.chargeDate, els.nextDate, els.accused, els.witness, els.other);
             break;
         case 'Disposed':
-            hide(els.nextDate);
+            // Keep hearing history visible so the user can add or edit the
+            // terminal Disposed stage and its date before saving the case.
             break;
         case 'UI': // Under Investigation
             hide(els.courtTypeWrap, els.courtReg, els.nextDate, els.accused, els.witness, els.other);
@@ -1726,6 +1727,23 @@ addHearingRecordButton?.addEventListener('click', () => {
         trialStage,
         markAs: getHearingMarkAs(trialStage)
     };
+    const candidateRecords = hearingDateRecords.filter(record =>
+        record.id !== editingHearingRecordId
+        && !(updatedRecord.kind === 'next' && record.kind === 'next')
+        && record.date !== dateKey
+    ).concat(updatedRecord);
+    const disposedDates = candidateRecords
+        .filter(record => normalizeTrialStage(record.trialStage).toLocaleLowerCase() === 'disposed')
+        .map(record => record.date)
+        .filter(Boolean)
+        .sort();
+    const disposedDate = disposedDates[0];
+    if (disposedDate && candidateRecords.some(record => record.date > disposedDate)) {
+        if (hearingRecordStatus) {
+            hearingRecordStatus.textContent = `No trial-stage date can be later than the Disposed date (${formatHearingDate(disposedDate)}).`;
+        }
+        return;
+    }
     hearingDateRecords = hearingDateRecords.filter(record =>
         record.id !== editingHearingRecordId
         && !(updatedRecord.kind === 'next' && record.kind === 'next')
@@ -3118,10 +3136,12 @@ form?.addEventListener('submit', async e => {
             : enteredMasterData;
         const ucrDrafts = caseRecordDrafts.filter(record => record.type === 'ucr');
         if (ucrDrafts.length > 1) throw new Error('Only one UCR report can be linked to an FIR. Remove the duplicate draft before saving.');
-        const existingRecords = selectedFirMasterId ? await loadRecordsForFir(db, selectedFirMasterId) : [];
+        const addingUcr = ucrDrafts.some(record => !record.id);
+        const existingRecords = selectedFirMasterId && addingUcr
+            ? await loadRecordsForFir(db, selectedFirMasterId)
+            : [];
         const existingCourtProceedings = existingRecords.filter(record => record.recordType !== 'ucr' && !record.ucrNumber
             && !['ucr', 'untrace', 'untraced', 'cancelled', 'cancellation'].includes(String(record.status || '').toLowerCase()));
-        const addingUcr = ucrDrafts.some(record => !record.id);
         if (addingUcr && existingCourtProceedings.length) {
             throw new Error('A UCR report cannot be added after a court proceeding already exists.');
         }

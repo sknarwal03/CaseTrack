@@ -44,6 +44,7 @@ export default defineConfig(({ mode, command }) => {
         login: resolve(projectRoot, "pages/login.html"),
         dashboard: resolve(projectRoot, "pages/dashboard.html"),
         cases: resolve(projectRoot, "pages/cases.html"),
+        disposedCases: resolve(projectRoot, "pages/disposed-cases.html"),
         calendar: resolve(projectRoot, "pages/calendar.html"),
         poCases: resolve(projectRoot, "pages/po-cases.html"),
         report: resolve(projectRoot, "pages/report.html"),

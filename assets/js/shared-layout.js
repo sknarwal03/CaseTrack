@@ -26,6 +26,7 @@ const SIDEBAR_HTML = /* html */ `
         <div><strong>CaseTrack</strong><small>Case Management System</small></div>
     </a>
     <nav id="sidebarNav">
+        <a class="nav-item" data-page="disposed-cases" href="disposed-cases.html"><span>✓</span>Disposed Cases</a>
         <a class="nav-item" data-page="cases"      href="cases.html"><span>▧</span>All Cases</a>
         <a class="nav-item" data-page="po-cases"   href="po-cases.html"><span>⚑</span>PO Cases</a>
         <a class="nav-item" data-page="calendar"   href="calendar.html"><span>▣</span>Calendar</a>
