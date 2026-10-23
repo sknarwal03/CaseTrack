@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Month-wise register of disposed CaseTrack proceedings">
+    <title>CaseTrack | Disposed Cases Register</title>
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/shared.css">
+    <link rel="stylesheet" href="../assets/css/disposed-cases.css">
+</head>
+<body data-page="disposed-cases">
+    <div class="layout">
+        <main class="main">
+            <section class="content disposed-shell">
+                <section class="disposed-register" aria-labelledby="disposedRegisterTitle">
+                    <div class="panel-heading disposed-heading">
+                        <div class="panel-title">
+                            <div class="register-seal" aria-hidden="true">D</div>
+                            <div class="register-heading-copy">
+                                <h1 id="disposedRegisterTitle">Disposed Cases</h1>
+                                <div class="month-picker">
+                                    <label class="visually-hidden" for="disposedMonth">Register month</label>
+                                    <button class="month-picker-trigger" id="openDisposedMonthPicker" type="button" aria-expanded="false" aria-controls="disposedMonthPicker">Month</button>
+                                    <div class="disposed-month-picker" id="disposedMonthPicker" role="group" aria-label="Select month" aria-hidden="true"></div>
+                                    <input id="disposedMonth" type="month" tabindex="-1" aria-hidden="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="register-controls">
+                            <button class="print-register" id="printDisposedRegister" type="button" aria-label="Print register" title="Print register">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/></svg>
+                            </button>
+                        </div>
+                        <div class="register-year-control">
+                            <button class="register-year" id="disposedYear" type="button" aria-label="Choose year" aria-expanded="false" aria-controls="disposedYearPicker"></button>
+                            <div class="disposed-year-picker" id="disposedYearPicker" role="group" aria-label="Select year" aria-hidden="true"></div>
+                        </div>
+                    </div>
+                    <div class="register-meta">
+                        <span>Register: <strong>Disposed Proceedings</strong></span>
+                        <span>Entries: <strong id="disposedCount" aria-live="polite">0 cases</strong></span>
+                    </div>
+                    <div class="disposed-table-wrap">
+                        <table class="disposed-table">
+                            <thead><tr>
+                                <th class="serial-column">Sr. No.</th><th>FIR No.</th><th>Date of FIR</th><th>Under Section</th><th>Court of</th><th>Date of Disposal</th><th>Judgement / Order</th>
+                            </tr></thead>
+                            <tbody id="disposedCasesBody"><tr><td colspan="7" class="empty-state">Loading register entries…</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="../assets/js/disposed-cases.js"></script>
+    <script type="module" src="../assets/js/shared-layout.js"></script>
+</body>
+</html>
