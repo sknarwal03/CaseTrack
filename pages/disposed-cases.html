@@ -3,56 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Month-wise register of disposed CaseTrack proceedings">
-    <title>CaseTrack | Disposed Cases Register</title>
+    <meta name="description" content="Month-wise archive of disposed CaseTrack proceedings">
+    <title>CaseTrack | Disposed Cases</title>
     <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/css/shared.css">
+    <link rel="stylesheet" href="../assets/css/cases.css">
+    <link rel="stylesheet" href="../components/add-case/add-case.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="../assets/css/disposed-cases.css">
 </head>
 <body data-page="disposed-cases">
     <div class="layout">
         <main class="main">
-            <section class="content disposed-shell">
-                <section class="disposed-register" aria-labelledby="disposedRegisterTitle">
-                    <div class="panel-heading disposed-heading">
-                        <div class="panel-title">
-                            <div class="register-seal" aria-hidden="true">D</div>
-                            <div class="register-heading-copy">
-                                <h1 id="disposedRegisterTitle">Disposed Cases</h1>
+            <section class="content disposed-shell" aria-labelledby="disposedRegisterTitle">
+                <header class="archive-hero">
+                    <div class="hero-copy">
+                        <div class="hero-eyebrow"><span class="hero-rule"></span> CLOSED PROCEEDINGS</div>
+                        <h1 id="disposedRegisterTitle">Disposed <em>Cases</em></h1>
+                        <p>A clear record of concluded proceedings, organized by month.</p>
+                    </div>
+                    <div class="archive-orbit" aria-hidden="true"><span>&#10003;</span><i></i><i></i><i></i></div>
+                    <div class="hero-actions">
+                        <div class="period-control">
+                            <div class="period-buttons">
                                 <div class="month-picker">
                                     <label class="visually-hidden" for="disposedMonth">Register month</label>
                                     <button class="month-picker-trigger" id="openDisposedMonthPicker" type="button" aria-expanded="false" aria-controls="disposedMonthPicker">Month</button>
                                     <div class="disposed-month-picker" id="disposedMonthPicker" role="group" aria-label="Select month" aria-hidden="true"></div>
                                     <input id="disposedMonth" type="month" tabindex="-1" aria-hidden="true">
                                 </div>
+                                <div class="register-year-control">
+                                    <button class="register-year" id="disposedYear" type="button" aria-label="Choose year" aria-expanded="false" aria-controls="disposedYearPicker"></button>
+                                    <div class="disposed-year-picker" id="disposedYearPicker" role="group" aria-label="Select year" aria-hidden="true"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="register-controls">
-                            <button class="print-register" id="printDisposedRegister" type="button" aria-label="Print register" title="Print register">
-                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/></svg>
-                            </button>
-                        </div>
-                        <div class="register-year-control">
-                            <button class="register-year" id="disposedYear" type="button" aria-label="Choose year" aria-expanded="false" aria-controls="disposedYearPicker"></button>
-                            <div class="disposed-year-picker" id="disposedYearPicker" role="group" aria-label="Select year" aria-hidden="true"></div>
-                        </div>
+                        <button class="print-register" id="printDisposedRegister" type="button" aria-label="Print register" title="Print register">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/></svg><span>Print</span>
+                        </button>
                     </div>
-                    <div class="register-meta">
-                        <span>Register: <strong>Disposed Proceedings</strong></span>
-                        <span>Entries: <strong id="disposedCount" aria-live="polite">0 cases</strong></span>
-                    </div>
+                </header>
+                <section class="archive-summary" aria-label="Archive summary">
+                    <div class="summary-card summary-total"><span class="summary-icon" aria-hidden="true">&#10003;</span><div><span class="summary-label">Disposed this month</span><strong id="disposedCount" aria-live="polite">0 cases</strong></div><span class="summary-index">01</span></div>
+                    <div class="summary-card"><span class="summary-label">Record type</span><strong class="summary-detail">Court proceedings</strong><span class="summary-note">Final orders &amp; judgements</span></div>
+                    <div class="summary-card"><span class="summary-label">Archive view</span><strong class="summary-detail">Monthly register</strong><span class="summary-note">Sorted by disposal date</span></div>
+                </section>
+                <section class="archive-table-panel" aria-label="Disposed proceeding records">
+                    <div class="table-panel-heading"><div><h2>Concluded proceedings</h2></div><div class="table-period"><span class="table-period-dot"></span><span class="selected-month-count" id="selectedMonthCount" aria-live="polite">0 cases</span></div></div>
                     <div class="disposed-table-wrap">
                         <table class="disposed-table">
                             <thead><tr>
-                                <th class="serial-column">Sr. No.</th><th>FIR No.</th><th>Date of FIR</th><th>Under Section</th><th>Court of</th><th>Date of Disposal</th><th>Judgement / Order</th>
+                                <th class="serial-column">#</th><th>FIR No.</th><th>Court of</th><th>PC Date</th><th>Duration</th><th>Charge</th><th>Date disposed</th><th>Disposal Type</th><th>Reason of Acquittal</th>
                             </tr></thead>
-                            <tbody id="disposedCasesBody"><tr><td colspan="7" class="empty-state">Loading register entries…</td></tr></tbody>
+                            <tbody id="disposedCasesBody"><tr><td colspan="9" class="empty-state">Loading register entries…</td></tr></tbody>
                         </table>
                     </div>
+                    <footer class="table-footer"><span><span class="footer-lock">●</span> Case records are shown for the selected month.</span><span>CASETRACK <b>·</b> DISPOSAL REGISTER</span></footer>
                 </section>
             </section>
         </main>
     </div>
+    <div class="modal-backdrop" id="caseDetailsModal" aria-hidden="true">
+        <section class="modal case-details-modal" role="dialog" aria-modal="true" aria-labelledby="caseDetailsTitle">
+            <header class="modal-header">
+                <div><h2 id="caseDetailsTitle">FIR Details</h2><p>Complete case information and date timeline.</p></div>
+                <button class="close" type="button" data-close-detail-modal aria-label="Close">×</button>
+            </header>
+            <div class="modal-body detail-modal-body">
+                <div class="detail-header-card"><div><span class="detail-label">FIR Number</span><h3 id="detailFIRLabel">—</h3></div><span class="detail-status" id="detailStatusBadge">—</span><div><span class="detail-label">Next Date &amp; Stage</span><h3></h3></div></div>
+                <div class="detail-grid" id="caseDetailFields"></div>
+            </div>
+        </section>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script type="module" src="../assets/js/disposed-cases.js"></script>
     <script type="module" src="../assets/js/shared-layout.js"></script>
 </body>

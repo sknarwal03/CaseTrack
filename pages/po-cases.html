@@ -12,18 +12,22 @@
 <body data-page="po-cases">
     <div class="layout">
         <main class="main">
-            <section class="content po-shell">
-                <section class="panel po-panel" aria-labelledby="poCasesTitle">
-                    <div class="panel-heading">
-                        <div class="panel-title">
-                            <div class="mini-icon" aria-hidden="true">§</div>
-                            <div>
-                                <h1 id="poCasesTitle">PO Cases</h1>
-                                <p>Proclaimed offender accused linked to court proceedings</p>
-                            </div>
-                        </div>
+            <section class="content po-shell" aria-labelledby="poCasesTitle">
+                <header class="po-hero">
+                    <div class="po-hero-copy">
+                        <div class="po-eyebrow"><span class="po-eyebrow-line"></span> ACCUSED TRACKING</div>
+                        <h1 id="poCasesTitle">PO <em>Cases</em></h1>
+                        <p>Proclaimed offender accused linked to court proceedings.</p>
                     </div>
-
+                    <div class="po-hero-mark" aria-hidden="true"><span>PO</span><i></i><i></i><i></i></div>
+                </header>
+                <section class="po-summary" aria-label="PO case overview">
+                    <div class="po-summary-card po-summary-primary"><span class="po-summary-icon" aria-hidden="true">◎</span><div><span class="po-summary-label">Showing in view</span><strong id="poCaseCount" aria-live="polite">Loading PO cases…</strong></div><span class="po-summary-corner">RECORDS</span></div>
+                    <div class="po-summary-card"><span class="po-summary-label">Register type</span><strong>Proclaimed offenders</strong><span class="po-summary-note">Accused linked to court cases</span></div>
+                    <div class="po-summary-card"><span class="po-summary-label">Case information</span><strong>Live case records</strong><span class="po-summary-note">Open a FIR to view full details</span></div>
+                </section>
+                <section class="po-panel" aria-label="Proclaimed offender case register">
+                    <div class="po-panel-heading"><div><span class="po-overline">CASE REGISTER</span><h2>Offender proceedings</h2></div><span class="po-record-note"><span class="po-record-dot"></span> Connected case records</span></div>
                     <div class="po-toolbar">
                         <div class="po-filters" role="group" aria-label="Filter PO cases">
                             <button class="po-filter active" data-filter="all" type="button" aria-pressed="true">All PO Cases</button>
@@ -32,28 +36,15 @@
                             <button class="po-filter" data-filter="active" type="button" aria-pressed="false">Active</button>
                             <button class="po-filter" data-filter="closed" type="button" aria-pressed="false">Disposed</button>
                         </div>
-                        <div class="po-count" id="poCaseCount" aria-live="polite">Loading PO cases…</div>
+                        <span class="po-filter-hint">FILTER BY STATUS</span>
                     </div>
-
                     <div class="po-table-wrap">
                         <table class="po-table">
-                            <thead>
-                                <tr>
-                                    <th>FIR No.</th>
-                                    <th>Date of FIR</th>
-                                    <th>Under Section</th>
-                                    <th>Accused</th>
-                                    <th>Court of</th>
-                                    <th>Next Hearing</th>
-                                    <th>Case Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="poCasesTableBody">
-                                <tr><td colspan="8" class="table-empty">Loading PO cases…</td></tr>
-                            </tbody>
+                            <thead><tr><th>FIR No.</th><th>Date of FIR</th><th>Under section</th><th>Accused</th><th>Court</th><th>Next hearing</th><th>Case status</th><th>Action</th></tr></thead>
+                            <tbody id="poCasesTableBody"><tr><td colspan="8" class="table-empty">Loading PO cases…</td></tr></tbody>
                         </table>
                     </div>
+                    <footer class="po-panel-footer"><span><span class="po-footer-dot"></span> Select a case number to open the case record.</span><span>CASETRACK <b>·</b> PO REGISTER</span></footer>
                 </section>
             </section>
         </main>
