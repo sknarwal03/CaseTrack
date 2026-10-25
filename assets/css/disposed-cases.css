@@ -174,3 +174,15 @@
     .disposed-table th { background: #f1f4f7 !important; }
     .disposed-table tr { break-inside: avoid; }
 }
+
+/* Match the disposed status accent used in the FIR index. */
+.archive-hero { border-color: rgba(224,82,100,.22); background: radial-gradient(ellipse at 82% 2%,rgba(224,82,100,.13),transparent 38%),linear-gradient(125deg,#0b1a2c 0%,#10243a 54%,#112c43 100%); }
+.hero-eyebrow,.hero-copy h1 em { color: #ee929d; }
+.archive-orbit { border-color: rgba(224,82,100,.28); color: #ee929d; background: radial-gradient(circle,rgba(224,82,100,.16),rgba(224,82,100,.025) 68%); }
+.archive-orbit::before { border-color: rgba(224,82,100,.18); }
+.archive-orbit::after { border-color: rgba(224,82,100,.22); }
+.archive-orbit i { background: #ee929d; }
+.live-dot,.table-period-dot { background: #ee929d; box-shadow: 0 0 0 3px rgba(224,82,100,.12); }
+.month-picker-trigger:hover,.register-year:hover,.disposed-period-trigger:hover { border-color: rgba(224,82,100,.6); color: #ee929d; }
+.disposed-month-picker button:hover,.disposed-month-picker button[aria-pressed="true"],.disposed-year-picker button:hover,.disposed-year-picker button[aria-pressed="true"] { color: #fff; background: #a94755; }
+.disposed-table td:nth-child(7) { color: #ee929d; }

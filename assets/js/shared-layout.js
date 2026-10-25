@@ -29,8 +29,8 @@ const SIDEBAR_HTML = /* html */ `
         <a class="nav-item" data-page="fir-register" href="fir-register.html"><span>&#9638;</span>FIR Register</a>
         <a class="nav-item" data-page="cases" href="cases.html"><span>&#9647;</span>All Cases</a>
         <a class="nav-item" data-page="register-diary" href="register-diary.html"><span>&#9998;</span>Register Diary</a>
-        <a class="nav-item" data-page="po-cases" href="po-cases.html"><span>&#9878;</span>PO Cases</a>
-        <a class="nav-item" data-page="disposed-cases" href="disposed-cases.html"><span>&#10003;</span>Disposed Cases</a>
+        <a class="nav-item" data-page="po-cases" href="po-cases.html"><span><svg class="po-sidebar-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path class="po-speed-lines" d="M5 11h10M3 18h9M6 25h7"/><path d="M26 8c.8-3.8 6.7-5.3 10-2.4l2.2 3.2-3.5 3.1"/><circle class="po-runner-head" cx="29" cy="10" r="3.5"/><path class="po-runner-body" d="m27 14-6 7 6 4 5-2 4-8m-8 2-7-2-6 3m12 9-6 6-6 1-3 4m15-10 7 4-2 6 5 3"/></svg></span>PO <b class="po-nav-label">Cases</b></a>
+        <a class="nav-item" data-page="disposed-cases" href="disposed-cases.html"><span>&#10003;</span>Disposed <b class="disposed-nav-label">Cases</b></a>
         <a class="nav-item" data-page="calendar" href="calendar.html"><span>&#9635;</span>Calendar</a>
         <a class="nav-item" data-page="report" href="report.html"><span>&#9645;</span>Report</a>
         <a class="nav-item" data-page="settings" href="settings.html"><span>&#9881;</span>Settings</a>

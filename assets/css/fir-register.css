@@ -178,3 +178,29 @@
     .fir-register-actions .fir-register-controls { grid-column: 2; grid-row: 1; }
     .fir-register-search { grid-column: 1 / -1; grid-row: 2; width: 100%; min-width: 0; }
 }
+
+@media screen {
+    .fir-register-kicker { font-size: 11px; }
+    .fir-register-hero p { font-size: 14px; }
+    .fir-register-location { font-size: 10px; }
+    .fir-register-search input,.layout .content .fir-register-toolbar .fir-register-search input { font-size: 13px; }
+    .fir-index-open,.fir-print-button,.fir-page-navigation button { font-size: 13px; }
+    .fir-index-heading span { font-size: 9px; }
+    .fir-index-heading h2 { font-size: 17px; }
+    .fir-index-number { font-size: 11px; }
+    .fir-index-main strong { font-size: 13px; }
+    .fir-index-main small { font-size: 11px; }
+    .fir-index-empty { font-size: 13px; }
+    .fir-record-overline { font-size: 10px; }
+    .fir-record-cover p { font-size: 13px; }
+    .fir-record-status { font-size: 11px; }
+    .fir-record-section-title h3 { font-size: 15px; }
+    .fir-record-section-title span { font-size: 10px; }
+    .fir-detail label { font-size: 11px; }
+    .fir-detail strong { font-size: 14px; line-height: 1.5; }
+    .fir-subrecord-head strong,.fir-person-content strong { font-size: 13px; }
+    .fir-subrecord-head span { font-size: 11px; }
+    .fir-person-content p { font-size: 12px; }
+    .fir-timeline-item { font-size: 12px; }
+    .fir-page-navigation>span { font-size: 12px; }
+}

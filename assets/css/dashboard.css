@@ -159,6 +159,40 @@ nav {
     font-size: 18px;
 }
 
+.nav-item[data-page="disposed-cases"] span {
+    color: #ee929d;
+}
+
+.nav-item[data-page="disposed-cases"] .disposed-nav-label {
+    color: #ee929d;
+    font-weight: inherit;
+}
+
+.nav-item[data-page="po-cases"] span {
+    color: #a69bff;
+}
+
+.nav-item[data-page="po-cases"] .po-nav-label {
+    color: #aaa0ff;
+    font-weight: inherit;
+}
+
+.nav-item[data-page="po-cases"] .po-sidebar-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.8;
+}
+
+.nav-item[data-page="po-cases"] .po-speed-lines {
+    opacity: .58;
+    stroke-width: 1.8;
+}
+
 .nav-item:hover,
 .nav-item.active {
     color: #fff;
@@ -1539,6 +1573,25 @@ body.light-theme .nav-item.active {
     border: 1px solid #bfd8ff;
     box-shadow: 0 8px 20px rgba(58, 104, 183, 0.12);
 }
+
+#sidebarNav .nav-item[data-page="fir-register"],
+#sidebarNav .nav-item[data-page="cases"] { --nav-accent: #55d1aa; }
+#sidebarNav .nav-item[data-page="register-diary"] { --nav-accent: #aab4ed; }
+#sidebarNav .nav-item[data-page="po-cases"] { --nav-accent: #a69bff; }
+#sidebarNav .nav-item[data-page="disposed-cases"] { --nav-accent: #ee929d; }
+#sidebarNav .nav-item[data-page="calendar"],
+#sidebarNav .nav-item[data-page="report"],
+#sidebarNav .nav-item[data-page="settings"],
+#sidebarNav .nav-item[data-page="admin-panel"] { --nav-accent: #7ea9db; }
+#sidebarNav .nav-item span { color: var(--nav-accent, #b9c9e4); }
+#sidebarNav .nav-item .po-nav-label,
+#sidebarNav .nav-item .disposed-nav-label { color: var(--nav-accent); font-weight: inherit; }
+#sidebarNav .nav-item:hover { background: radial-gradient(ellipse at 88% 0,color-mix(in srgb,var(--nav-accent) 15%,transparent),transparent 68%),linear-gradient(110deg,color-mix(in srgb,var(--nav-accent) 9%,#0d1d31),#10243a 72%,color-mix(in srgb,var(--nav-accent) 7%,#112c43)); box-shadow: inset 3px 0 var(--nav-accent); }
+#sidebarNav .nav-item.active { color: #fff; background: radial-gradient(ellipse at 88% 0,color-mix(in srgb,var(--nav-accent) 15%,transparent),transparent 68%),linear-gradient(110deg,color-mix(in srgb,var(--nav-accent) 9%,#0d1d31),#10243a 72%,color-mix(in srgb,var(--nav-accent) 7%,#112c43)); box-shadow: inset 3px 0 var(--nav-accent); }
+#sidebarNav .nav-item:active,#sidebarNav .nav-item:focus-visible { background: radial-gradient(ellipse at 88% 0,color-mix(in srgb,var(--nav-accent) 26%,transparent),transparent 68%),linear-gradient(110deg,color-mix(in srgb,var(--nav-accent) 17%,#0b1a2c),#10243a 60%,color-mix(in srgb,var(--nav-accent) 13%,#112c43)); }
+body.light-theme #sidebarNav .nav-item:hover { color: #18314d; background: radial-gradient(ellipse at 88% 0,color-mix(in srgb,var(--nav-accent) 13%,transparent),transparent 68%),linear-gradient(110deg,color-mix(in srgb,var(--nav-accent) 8%,#fff),#f7f9fc 72%,color-mix(in srgb,var(--nav-accent) 12%,#fff)); box-shadow: inset 3px 0 var(--nav-accent); }
+body.light-theme #sidebarNav .nav-item.active { color: #18314d; background: radial-gradient(ellipse at 88% 0,color-mix(in srgb,var(--nav-accent) 13%,transparent),transparent 68%),linear-gradient(110deg,color-mix(in srgb,var(--nav-accent) 8%,#fff),#f7f9fc 72%,color-mix(in srgb,var(--nav-accent) 12%,#fff)); box-shadow: inset 3px 0 var(--nav-accent); }
+body.light-theme #sidebarNav .nav-item:active,body.light-theme #sidebarNav .nav-item:focus-visible { background: radial-gradient(ellipse at 88% 0,color-mix(in srgb,var(--nav-accent) 22%,transparent),transparent 68%),linear-gradient(110deg,color-mix(in srgb,var(--nav-accent) 16%,#fff),#f6f8fb 60%,color-mix(in srgb,var(--nav-accent) 23%,#fff)); }
 
 body.light-theme .stat,
 body.light-theme .panel,

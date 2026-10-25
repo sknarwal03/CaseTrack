@@ -20,26 +20,28 @@
         <main class="main">
 
             <section class="content cases-shell">
-                <!-- <div class="welcome">
-                    <div>
-                        <h1>All Cases</h1>
-                        <p>Complete overview of every registered matter and hearing.</p>
+                <header class="cases-hero">
+                    <div class="cases-hero-copy">
+                        <span class="cases-hero-kicker"><i></i> CASE MANAGEMENT</span>
+                        <h1>All <em>Cases</em></h1>
+                        <p>Review registered matters, upcoming hearings, and case status.</p>
                     </div>
-                    <button class="new-case" data-open-add-case type="button">＋&nbsp; New Case</button>
-                </div> -->
-
-                <section class="panel">
+                    <div class="cases-hero-mark" aria-hidden="true"><span>&#167;</span><i></i><i></i><i></i></div>
+                </header>
+                <div class="cases-page-toolbar">
+                    <div class="cases-location"><span>CASE FILES</span><b>/</b><strong>ALL CASES</strong></div>
+                    <div class="case-actions">
+                        <button class="btn" type="button">Export</button>
+                        <button class="btn primary" data-open-add-case type="button">Add Case</button>
+                    </div>
+                </div>
+                <section class="panel cases-panel">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <div class="mini-icon">▧</div>
+                            <div class="mini-icon">&#9647;</div>
                             <h2>Registered Cases</h2>
                         </div>
-                        <div class="case-actions">
-                            <button class="btn" type="button">Export</button>
-                            <button class="btn primary" data-open-add-case type="button">Add Case</button>
-                        </div>
                     </div>
-
                     <div class="cases-toolbar">
                         <div class="case-filters">
                             <button class="case-filter active" data-filter="all" type="button">All Cases</button>
