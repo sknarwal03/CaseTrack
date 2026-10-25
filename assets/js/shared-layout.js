@@ -26,15 +26,15 @@ const SIDEBAR_HTML = /* html */ `
         <div><strong>CaseTrack</strong><small>Case Management System</small></div>
     </a>
     <nav id="sidebarNav">
-        <a class="nav-item" data-page="disposed-cases" href="disposed-cases.html"><span>✓</span>Disposed Cases</a>
-        <a class="nav-item" data-page="cases"      href="cases.html"><span>▧</span>All Cases</a>
-        <a class="nav-item" data-page="po-cases"   href="po-cases.html"><span>⚑</span>PO Cases</a>
-        <a class="nav-item" data-page="fir-register" href="fir-register.html"><span>▤</span>FIR Register</a>
-        <a class="nav-item" data-page="calendar"   href="calendar.html"><span>▣</span>Calendar</a>
-        <a class="nav-item" data-page="register-diary" href="register-diary.html"><span>✎</span>Register Diary</a>
-        <a class="nav-item" data-page="report"     href="report.html"><span>▥</span>Report</a>
-        <a class="nav-item" data-page="settings"   href="settings.html"><span>⚙</span>Settings</a>
-        <a class="nav-item" data-page="admin-panel" href="admin-panel.html" id="adminPanelNav" hidden><span>♙</span>Admin Panel</a>
+        <a class="nav-item" data-page="fir-register" href="fir-register.html"><span>&#9638;</span>FIR Register</a>
+        <a class="nav-item" data-page="cases" href="cases.html"><span>&#9647;</span>All Cases</a>
+        <a class="nav-item" data-page="register-diary" href="register-diary.html"><span>&#9998;</span>Register Diary</a>
+        <a class="nav-item" data-page="po-cases" href="po-cases.html"><span>&#9878;</span>PO Cases</a>
+        <a class="nav-item" data-page="disposed-cases" href="disposed-cases.html"><span>&#10003;</span>Disposed Cases</a>
+        <a class="nav-item" data-page="calendar" href="calendar.html"><span>&#9635;</span>Calendar</a>
+        <a class="nav-item" data-page="report" href="report.html"><span>&#9645;</span>Report</a>
+        <a class="nav-item" data-page="settings" href="settings.html"><span>&#9881;</span>Settings</a>
+        <a class="nav-item" data-page="admin-panel" href="admin-panel.html" id="adminPanelNav" hidden><span>&#9826;</span>Admin Panel</a>
     </nav>
     <div class="side-quote"><b>⚖</b>"Justice delayed<br>is not justice denied,<br>when it is tracked."</div>
 </aside>

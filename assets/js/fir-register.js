@@ -292,6 +292,7 @@ function syncYearPicker(years = []) {
         yearPicker.append(option);
     });
     yearButton.textContent = yearSelect.value || (years.length ? 'Select year' : 'No years');
+    yearButton.setAttribute('aria-label', `Select FIR register year, currently ${yearButton.textContent}`);
     yearButton.disabled = !years.length;
 }
 
@@ -326,8 +327,19 @@ yearButton.addEventListener('click', () => {
     yearPicker.setAttribute('aria-hidden', String(!open));
     yearButton.setAttribute('aria-expanded', String(open));
 });
+document.querySelector('.fir-register-hero')?.addEventListener('dblclick', () => {
+    const currentYear = String(new Date().getFullYear());
+    if (![...yearSelect.options].some(option => option.value === currentYear)) {
+        yearSelect.add(new Option(currentYear, currentYear));
+    }
+    yearSelect.value = currentYear;
+    yearSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    yearPicker.classList.remove('is-open');
+    yearPicker.setAttribute('aria-hidden', 'true');
+    yearButton.setAttribute('aria-expanded', 'false');
+});
 document.addEventListener('click', event => {
-    if (event.target.closest('.fir-register-controls')) return;
+    if (event.target.closest('.fir-register-hero-year-control')) return;
     yearPicker.classList.remove('is-open');
     yearPicker.setAttribute('aria-hidden', 'true');
     yearButton.setAttribute('aria-expanded', 'false');

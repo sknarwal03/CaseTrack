@@ -22,9 +22,17 @@
 .month-picker-trigger:hover, .register-year:hover { border-color: var(--brand-primary); }
 .month-picker input, .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
 .disposed-month-picker, .disposed-year-picker { position: absolute; z-index: 20; top: calc(100% + 8px); left: 0; display: none; gap: 4px; padding: 8px; border: 1px solid var(--border-strong); border-radius: 15px; background: var(--surface-raised); box-shadow: var(--shadow-overlay); }
-.disposed-month-picker { width: 218px; grid-template-columns: repeat(3, 1fr); }
+.disposed-month-picker { width: 218px; grid-template-columns: minmax(0, 1fr); }
 .disposed-year-picker { width: 188px; max-height: 190px; overflow-y: auto; grid-template-columns: repeat(3, 1fr); }
 .disposed-month-picker.is-open, .disposed-year-picker.is-open { display: grid; }
+.period-picker-anchor { position: relative; }
+.disposed-heading { margin: 4px 0 0; color: var(--text-primary); font: 620 17px/1.25 Inter, "Segoe UI", sans-serif; letter-spacing: -.02em; }
+.disposed-period-trigger { padding: 0; border: 0; color: inherit; background: transparent; font: inherit; letter-spacing: inherit; cursor: pointer; }
+.disposed-period-trigger:hover { color: #54a9ff; text-decoration: none; }
+.disposed-month-options, .disposed-year-options { display: none; gap: 4px; }
+.disposed-month-options { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.disposed-year-options { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.disposed-month-picker.is-month-mode .disposed-month-options, .disposed-month-picker.is-year-mode .disposed-year-options { display: grid; }
 .disposed-month-picker button, .disposed-year-picker button { padding: 9px 5px; border: 0; border-radius: 8px; color: var(--text-secondary); background: transparent; font: 12px Inter, "Segoe UI", sans-serif; cursor: pointer; }
 .disposed-month-picker button:hover, .disposed-year-picker button:hover, .disposed-month-picker button[aria-pressed="true"], .disposed-year-picker button[aria-pressed="true"] { color: #fff; background: #287cf3; }
 .print-register { display: flex; min-height: 39px; align-items: center; justify-content: center; gap: 8px; padding: 0 13px; border: 1px solid var(--border-strong); border-radius: 7px; color: var(--text-primary); background: var(--surface-soft); font: 600 12px Inter, "Segoe UI", sans-serif; cursor: pointer; }
