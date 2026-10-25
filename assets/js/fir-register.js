@@ -48,8 +48,10 @@ function fieldValue(sourceList, keys) {
     return '';
 }
 
-function makeSection(code, title, count = '') {
+function makeSection(code, title, count = '', editTarget = '', editCaseItem = null) {
     const section = make('section', 'fir-record-section');
+    section.dataset.editTarget = editTarget;
+    section._editCaseItem = editCaseItem;
     const heading = make('header', 'fir-record-section-title');
     heading.append(make('i', '', code), make('h3', '', title));
     if (count) heading.append(make('span', '', count));
@@ -105,8 +107,10 @@ function uniquePeople(proceedings, key) {
     return [...unique.values()];
 }
 
-function makeProceedingsSection(proceedings) {
-    const section = makeSection('03', 'Court & report records', `${proceedings.length} ${proceedings.length === 1 ? 'record' : 'records'}`);
+function makeProceedingsSection(proceedings, fir) {
+    const defaultRecord = proceedings.find(record => record.recordType !== 'ucr' && !record.ucrNumber) || proceedings[0] || fir;
+    const sectionTarget = defaultRecord?.recordType === 'ucr' || defaultRecord?.ucrNumber ? '#ucrRecordFields' : '#sectionCourtReg';
+    const section = makeSection('03', 'Court & report records', `${proceedings.length} ${proceedings.length === 1 ? 'record' : 'records'}`, sectionTarget, defaultRecord);
     if (!proceedings.length) {
         const empty = make('div', 'fir-index-empty', 'No court or report record is linked to this FIR yet.');
         section.append(empty);
@@ -118,6 +122,8 @@ function makeProceedingsSection(proceedings) {
         const type = ({ ucr: 'UCR report', lower: 'Lower court proceeding', session: 'Sessions court proceeding', jjb: 'JJB proceeding', chargesheet: 'Chargesheet' })[recordType]
             || recordType.replaceAll('_', ' ');
         const article = make('article', 'fir-subrecord');
+        article._editCaseItem = record;
+        article._editTarget = recordType === 'ucr' ? '#ucrRecordFields' : '#sectionCourtReg';
         const header = make('header', 'fir-subrecord-head');
         header.append(make('strong', '', `${type.toLocaleUpperCase()} · ${String(index + 1).padStart(2, '0')}`));
         header.append(make('span', '', record.status || record.report_type || 'Record'));
@@ -139,9 +145,13 @@ function makeProceedingsSection(proceedings) {
     return section;
 }
 
-function makePeopleSection(type, people, code) {
+function makePeopleSection(type, people, code, proceedings, fir) {
     const title = type === 'Accused' ? 'Accused details' : 'Witness details';
-    const section = makeSection(code, title, `${people.length} ${people.length === 1 ? 'person' : 'people'}`);
+    const key = type === 'Accused' ? 'accused' : 'witnesses';
+    const editCaseItem = proceedings.find(record => record.recordType !== 'ucr' && Array.isArray(record[key]) && record[key].length)
+        || proceedings.find(record => record.recordType !== 'ucr') || proceedings[0] || fir;
+    const editTarget = type === 'Accused' ? '#sectionAccused' : '#sectionWitness';
+    const section = makeSection(code, title, `${people.length} ${people.length === 1 ? 'person' : 'people'}`, editTarget, editCaseItem);
     if (!people.length) {
         section.append(make('div', 'fir-index-empty', `No ${type.toLocaleLowerCase()} details recorded.`));
         return section;
@@ -157,6 +167,9 @@ function makePeopleSection(type, people, code) {
 }
 
 function makeTimeline(proceedings, fir) {
+    const timelineRecord = proceedings.find(record => record.nextDate || record.challanDate || record.chargeDate || record.decisionDate || record.ucr_dod)
+        || proceedings.find(record => record.recordType !== 'ucr') || proceedings[0] || fir;
+    const timelineTarget = timelineRecord?.recordType === 'ucr' || timelineRecord?.ucrNumber ? '#ucrRecordFields' : '#sectionNextDate';
     const items = [];
     const add = (date, label) => {
         if (!text(date)) return;
@@ -185,7 +198,7 @@ function makeTimeline(proceedings, fir) {
     });
     const unique = [...new Map(items.map(item => [`${item.date}|${item.label}`, item])).values()]
         .sort((left, right) => left.time - right.time);
-    const section = makeSection('06', 'Case timeline', `${unique.length} ${unique.length === 1 ? 'event' : 'events'}`);
+    const section = makeSection('06', 'Case timeline', `${unique.length} ${unique.length === 1 ? 'event' : 'events'}`, timelineTarget, timelineRecord);
     if (!unique.length) {
         section.append(make('div', 'fir-index-empty', 'No dated events recorded yet.'));
         return section;
@@ -210,14 +223,15 @@ function renderRecord(fir) {
     const sources = [fir, ...proceedings];
     const status = fieldValue(sources, ['firStatus', 'caseStatus', 'status']) || 'Status not recorded';
     const cover = make('header', 'fir-record-cover');
-    const heading = make('div');
+    const heading = make('div', 'fir-record-cover-heading');
     heading.append(make('span', 'fir-record-overline', `FIR REGISTER · ${firYearOf(fir) || 'YEAR NOT RECORDED'}`));
     heading.append(make('h2', '', displayFir(fir)));
     heading.append(make('p', '', [fieldValue(sources, ['policeStation']), fieldValue(sources, ['fileNo']) && `File ${fieldValue(sources, ['fileNo'])}`].filter(Boolean).join('  ·  ') || 'Official police case record'));
-    cover.append(heading, make('span', 'fir-record-status', status));
+    const statusBadge = make('span', 'fir-record-status', status);
+    cover.append(heading, statusBadge);
 
     const body = make('div', 'fir-record-body');
-    const identity = makeSection('01', 'First Information Report');
+    const identity = makeSection('01', 'First Information Report', '', '.case-section-fir', fir);
     identity.append(makeDetails([
         ['File number', fieldValue(sources, ['fileNo'])], ['FIR number', firNumber(fir)], ['FIR year', firYearOf(fir)],
         ['Date of FIR', fieldValue(sources, ['firDate'])], ['Police station', fieldValue(sources, ['policeStation'])],
@@ -226,7 +240,7 @@ function renderRecord(fir) {
     ], true));
     body.append(identity);
 
-    const incident = makeSection('02', 'Incident & complainant');
+    const incident = makeSection('02', 'Incident & complainant', '', '.case-section-complainant', fir);
     incident.append(makeDetails([
         ['Incident date', fieldValue(sources, ['incidentDate'])], ['Incident place', fieldValue(sources, ['incidentPlace'])],
         ['Beat details', fieldValue(sources, ['beatDetails'])], ['Complainant name', fieldValue(sources, ['complainantName'])],
@@ -234,13 +248,22 @@ function renderRecord(fir) {
         ['Address', fieldValue(sources, ['complainantAddress']), true]
     ], true));
     body.append(incident);
-    body.append(makeProceedingsSection(proceedings));
-    body.append(makePeopleSection('Accused', uniquePeople(proceedings, 'accused'), '04'));
-    body.append(makePeopleSection('Witness', uniquePeople(proceedings, 'witnesses'), '05'));
+    body.append(makeProceedingsSection(proceedings, fir));
+    body.append(makePeopleSection('Accused', uniquePeople(proceedings, 'accused'), '04', proceedings, fir));
+    body.append(makePeopleSection('Witness', uniquePeople(proceedings, 'witnesses'), '05', proceedings, fir));
     body.append(makeTimeline(proceedings, fir));
 
     recordPage.replaceChildren(cover, body);
 }
+
+recordPage.addEventListener('dblclick', event => {
+    const section = event.target.closest('.fir-record-section[data-edit-target]');
+    if (!section) return;
+    const subrecord = event.target.closest('.fir-subrecord');
+    const caseItem = subrecord?._editCaseItem || section._editCaseItem || visibleFirs[activeIndex];
+    const focusSelector = subrecord?._editTarget || section.dataset.editTarget;
+    if (caseItem) window.openAddCaseModal?.(caseItem, { focusSelector });
+});
 
 function updateNavigation() {
     const fir = visibleFirs[activeIndex];

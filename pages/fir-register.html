@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/css/shared.css">
     <link rel="stylesheet" href="../assets/css/fir-register.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="../components/add-case/add-case.css">
 </head>
 <body data-page="fir-register">
     <div class="layout">
@@ -16,35 +18,36 @@
                 <header class="fir-register-hero">
                     <div class="fir-register-hero-copy">
                         <span class="fir-register-kicker"><i></i> OFFICIAL CASE LEDGER</span>
-                        <h1>FIR <em>Register <span class="fir-register-hero-year-control"><button class="fir-register-hero-year" id="firRegisterYearButton" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="firRegisterYearPicker">2026</button><span class="fir-register-year-picker" id="firRegisterYearPicker" role="listbox" aria-label="Select FIR register year" aria-hidden="true"></span><select class="fir-register-year-source" id="firRegisterYear" aria-label="Select FIR register year" tabindex="-1" aria-hidden="true"><option value="">Loading years…</option></select></span></em></h1>
+                        <h1>FIR <em>Register <span class="fir-register-hero-year-control"><button class="fir-register-hero-year" id="firRegisterYearButton" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="firRegisterYearPicker">2026</button><span class="fir-register-year-picker" id="firRegisterYearPicker" role="listbox" aria-label="Select FIR register year" aria-hidden="true"></span><select class="fir-register-year-source" id="firRegisterYear" aria-label="Select FIR register year" tabindex="-1" aria-hidden="true"><option value="">Loading years&#8230;</option></select></span></em></h1>
                         <p>Every FIR, one complete record. Browse the register year by year.</p>
                     </div>
-                    <div class="fir-register-seal" aria-hidden="true"><span>FIR</span><b class="fir-register-seal-star">✦</b><i></i><i></i><i></i></div>
+                    <div class="fir-register-seal" aria-hidden="true"><span>FIR</span><b class="fir-register-seal-star">&#10022;</b><i></i><i></i><i></i></div>
                 </header>
 
                 <div class="fir-register-toolbar">
-                    <div class="fir-register-location"><span>CASE FILES</span><b>/</b><strong id="yearBreadcrumb">—</strong></div>
+                    <div class="fir-register-location"><span>CASE FILES</span><b>/</b><strong id="yearBreadcrumb">&#8212;</strong></div>
                     <div class="fir-register-actions">
-                        <label class="fir-register-search"><span aria-hidden="true">⌕</span><input id="firRegisterSearch" type="search" placeholder="Find FIR number or name" autocomplete="off"></label>
-                        <a class="fir-index-open fir-cases-open" href="cases.html"><span aria-hidden="true">▦</span> All Cases</a>
-                        <a class="fir-index-open" id="openFirIndex" href="fir-index.html"><span aria-hidden="true">▤</span> FIR Index</a>
+                        <label class="fir-register-search"><span aria-hidden="true">&#8981;</span><input id="firRegisterSearch" type="search" placeholder="Find FIR number or name" autocomplete="off"></label>
+                        <a class="fir-index-open" id="openFirIndex" href="fir-index.html"><span aria-hidden="true">&#9638;</span> FIR Index</a>
+                        <button class="fir-add-fir-button" type="button" data-open-add-case><span aria-hidden="true">&#43;</span> Add FIR</button>
                         <button class="fir-print-button" id="printFirPage" type="button" aria-label="Print this FIR record" title="Print this FIR record"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/></svg><span>Print record</span></button>
                     </div>
                 </div>
 
                 <div class="fir-register-layout">
                     <article class="fir-record-page" id="firRecordPage" aria-live="polite">
-                        <div class="fir-record-empty">Loading FIR register…</div>
+                        <div class="fir-record-empty">Loading FIR register&#8230;</div>
                     </article>
                 </div>
                 <nav class="fir-page-navigation" aria-label="FIR record pages">
-                    <button id="previousFir" type="button" disabled><span aria-hidden="true">←</span> Previous FIR</button>
+                    <button id="previousFir" type="button" disabled><span aria-hidden="true">&larr;</span> Previous FIR</button>
                     <span id="firPagePosition">0 of 0</span>
-                    <button id="nextFir" type="button" disabled>Next FIR <span aria-hidden="true">→</span></button>
+                    <button id="nextFir" type="button" disabled>Next FIR <span aria-hidden="true">&rarr;</span></button>
                 </nav>
             </section>
         </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script type="module" src="../assets/js/shared-layout.js"></script>
     <script type="module" src="../assets/js/fir-register.js"></script>
 </body>

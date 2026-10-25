@@ -1112,3 +1112,58 @@ body.mobile-nav-open {
         background: var(--surface);
     }
 }
+
+/* Use the FIR Index search treatment across page and shared header searches. */
+body[data-page] :is(.search, .fir-index-search, .fir-register-search) {
+    height: 37px;
+    min-height: 37px;
+    box-sizing: border-box;
+    align-items: center;
+    gap: 7px;
+    padding: 0 11px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    background: var(--surface);
+    transition: box-shadow .16s ease, background-color .16s ease;
+}
+
+body[data-page] :is(.search, .fir-index-search, .fir-register-search) > span {
+    flex: 0 0 auto;
+    font-size: 19px;
+    line-height: 1;
+}
+
+body[data-page] :is(.search, .fir-index-search, .fir-register-search) input {
+    min-width: 0;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    color: var(--text-primary);
+    background: transparent;
+    box-shadow: none;
+    font-size: 13px;
+}
+
+body[data-page] :is(.search, .fir-index-search, .fir-register-search) input::placeholder {
+    color: var(--text-muted);
+}
+
+body[data-page] :is(.search, .fir-index-search, .fir-register-search):hover {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-primary) 10%, transparent);
+}
+
+body[data-page] :is(.search, .fir-index-search, .fir-register-search):focus-within {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 18%, transparent);
+}
+
+body[data-page="fir-register"] .fir-register-search:focus-within,
+body[data-page="fir-index"] .fir-index-search:focus-within {
+    box-shadow: 0 0 0 3px rgba(85,209,170,.15);
+}
+
+body[data-page] :is(.search, .fir-index-search, .fir-register-search):focus-within > span {
+    display: none;
+}

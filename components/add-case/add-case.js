@@ -1789,11 +1789,35 @@ const caseRecordCourtTypes = {
     jjb: 'JJB'
 };
 
+function comparableCaseValue(value) {
+    if (value === undefined || value === null || value === '') return null;
+    if (Array.isArray(value)) {
+        const items = value.map(comparableCaseValue);
+        return items.length ? items : null;
+    }
+    if (typeof value === 'object') {
+        const entries = Object.entries(value)
+            .map(([key, item]) => [key, comparableCaseValue(item)])
+            .filter(([, item]) => item !== null)
+            .sort(([left], [right]) => left.localeCompare(right));
+        return entries.length ? Object.fromEntries(entries) : null;
+    }
+    return value;
+}
+
+function caseRecordPayloadChanged(record, payload) {
+    if (!record.originalData) return true;
+    return Object.entries(payload).some(([key, value]) =>
+        JSON.stringify(comparableCaseValue(value)) !== JSON.stringify(comparableCaseValue(record.originalData[key]))
+    );
+}
+
 function createCaseRecordDraft(type, caseItem = null) {
     const draft = {
         type,
         id: caseItem?.id || null,
         isPersisted: Boolean(caseItem?.id),
+        originalData: caseItem ? { ...caseItem } : null,
         createdAt: caseItem?.createdAt || null,
         collectionName: caseItem?._collectionName || LINKED_CASES_COLLECTION,
         policeStationId: caseItem?.policeStationId || '',
@@ -2421,7 +2445,7 @@ document.getElementById('commitToSessions')?.addEventListener('click', () => {
     if (caseRecordStatus) caseRecordStatus.textContent = 'Sessions Court successor added. Complete its registration details and save both records.';
 });
 
-window.openAddCaseModal = (caseItem = null) => {
+window.openAddCaseModal = (caseItem = null, options = {}) => {
     resetForm();
 
     const title = document.getElementById('modalTitle');
@@ -2624,6 +2648,19 @@ window.openAddCaseModal = (caseItem = null) => {
     updateCaseStatusFields();
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
+    if (options.focusSelector) {
+        requestAnimationFrame(() => {
+            let section = modal.querySelector(options.focusSelector);
+            if (!section || section.closest('[hidden]')) section = modal.querySelector('.case-section-fir');
+            if (!section) return;
+            const focusTarget = section.matches('input, select, textarea, button')
+                ? section
+                : section.querySelector('input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), button:not(:disabled)') || section;
+            if (focusTarget === section && !section.hasAttribute('tabindex')) section.setAttribute('tabindex', '-1');
+            section.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            focusTarget.focus({ preventScroll: true });
+        });
+    }
 };
 
 const closeModal = () => {
@@ -3044,6 +3081,17 @@ form?.addEventListener('reset', () => {
 
 form?.addEventListener('submit', async e => {
     e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn?.textContent || 'Save';
+    const restoreSubmitButton = () => {
+        if (!submitBtn) return;
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    };
+    if (submitBtn) {
+        submitBtn.textContent = 'Preparing...';
+        submitBtn.disabled = true;
+    }
     if (activeCaseRecordIndex >= 0) captureActiveCaseRecord();
     if (editingFirMaster && selectedFirMasterId) {
         try {
@@ -3058,12 +3106,14 @@ form?.addEventListener('submit', async e => {
             refreshUcrActionState();
         } catch (error) {
             if (caseRecordStatus) caseRecordStatus.textContent = 'Linked proceedings and UCR could not be loaded, so the FIR Master was not saved. Reopen the modal and retry.';
+            restoreSubmitButton();
             return;
         }
     }
     if (selectedFirMasterId && !editingFirMaster && !caseRecordDrafts.length) {
         if (caseRecordStatus) caseRecordStatus.textContent = 'Add a proceeding before saving changes to the selected FIR.';
         document.querySelector('.case-record-options')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        restoreSubmitButton();
         return;
     }
     for (const [index, record] of caseRecordDrafts.entries()) {
@@ -3075,26 +3125,28 @@ form?.addEventListener('submit', async e => {
                 activateCaseRecord(index, false);
                 if (caseRecordStatus) caseRecordStatus.textContent = `Complete UCR details for record ${index + 1}.`;
                 document.getElementById(missingUcrField)?.focus();
+                restoreSubmitButton();
                 return;
             }
             if (!/^\d{4}$/.test(String(fields.ucrYear || '').trim())) {
                 activateCaseRecord(index, false);
                 if (caseRecordStatus) caseRecordStatus.textContent = `Enter a four-digit UCR year for record ${index + 1}.`;
                 document.getElementById('ucrYear')?.focus();
+                restoreSubmitButton();
                 return;
             }
         } else if (!String(fields.casestatus || '').trim() || !String(fields.courttype || '').trim()) {
             activateCaseRecord(index, false);
             if (caseRecordStatus) caseRecordStatus.textContent = `Complete case status and court type for record ${index + 1}.`;
+            restoreSubmitButton();
             return;
         }
     }
-    if (!validateRequiredFields()) return;
-
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Saving...';
-    submitBtn.disabled = true;
+    if (!validateRequiredFields()) {
+        restoreSubmitButton();
+        return;
+    }
+    if (submitBtn) submitBtn.textContent = 'Saving...';
 
     try {
         const formData = new FormData(form);
@@ -3244,6 +3296,7 @@ form?.addEventListener('submit', async e => {
         };
         const linkedCasesCollection = collection(db, LINKED_CASES_COLLECTION);
         const saveFailures = [];
+        let didWriteProceeding = false;
         for (const [recordIndex, record] of caseRecordDrafts.entries()) {
           try {
             const fields = record.fields;
@@ -3303,6 +3356,16 @@ form?.addEventListener('submit', async e => {
                 record.collectionName = LINKED_CASES_COLLECTION;
                 record.createdAt = Timestamp.now();
             }
+            const predecessorRecord = record.predecessorCaseId
+                ? caseRecordDrafts.find(item => item.id === record.predecessorCaseId)
+                : null;
+            const predecessorNeedsUpdate = Boolean(record.predecessorCaseId && predecessorRecord?.successorCaseId !== recordId);
+            if (record.isPersisted && !caseRecordPayloadChanged(record, caseData) && !predecessorNeedsUpdate) {
+                record.hearingDateRecord = recordHearings;
+                hearingDateRecords = recordHearings;
+                persistHearingRecords(recordId);
+                continue;
+            }
             const recordReference = doc(db, record.collectionName || LINKED_CASES_COLLECTION, recordId);
             const batch = writeBatch(db);
             if (record.isPersisted) {
@@ -3328,7 +3391,9 @@ form?.addEventListener('submit', async e => {
                 });
             }
             await batch.commit();
+            didWriteProceeding = true;
             record.isPersisted = true;
+            record.originalData = { ...(record.originalData || {}), ...caseData };
             if (record.predecessorCaseId) {
                 const source = caseRecordDrafts.find(item => item.id === record.predecessorCaseId);
                 source.successorCaseId = recordId;
@@ -3342,32 +3407,37 @@ form?.addEventListener('submit', async e => {
         }
 
         let statusRefreshFailure = null;
-        try {
-            const linkedRecords = firMasterId
-                ? await loadRecordsForFir(db, firMasterId)
-                : (isEditingLegacyRecord ? await loadRecordsForFir(db, String(rawData.fileNo || '').trim()) : []);
-            const firStatus = deriveFirStatus(masterData, linkedRecords);
-            const firStatusField = document.getElementById('fir_Status');
-            if (firStatusField) {
-                const statusLabels = { UI: 'Under Investigation', UT: 'Under Trial', Disposed: 'Disposed', UCR: 'Untraced', Cancelled: 'Cancelled' };
-                firStatusField.value = statusLabels[firStatus] || statusLabels.UI;
+        if (didWriteProceeding || editingFirMaster) {
+            try {
+                const linkedRecords = didWriteProceeding
+                    ? (firMasterId
+                        ? await loadRecordsForFir(db, firMasterId)
+                        : (isEditingLegacyRecord ? await loadRecordsForFir(db, String(rawData.fileNo || '').trim()) : []))
+                    : linkedFirStatusRecords;
+                const firStatus = deriveFirStatus(masterData, linkedRecords);
+                const firStatusField = document.getElementById('fir_Status');
+                if (firStatusField) {
+                    const statusLabels = { UI: 'Under Investigation', UT: 'Under Trial', Disposed: 'Disposed', UCR: 'Untraced', Cancelled: 'Cancelled' };
+                    firStatusField.value = statusLabels[firStatus] || statusLabels.UI;
+                }
+                const savedFirStatus = String(masterData.firStatus || masterData.status || '').trim();
+                if (firMasterId && !isEditingLegacyRecord && savedFirStatus !== firStatus) {
+                    await saveFirMaster(db, {
+                        ...masterData,
+                        fileNo: String(rawData.fileNo || '').trim(),
+                        policeStationId: assignedStation.policeStationId,
+                        firStatus
+                    }, firMasterId);
+                } else if (isEditingLegacyRecord) {
+                    const legacyRecords = linkedRecords.filter(item => item._collectionName === 'cases');
+                    await Promise.all(legacyRecords.map(item => updateDoc(doc(db, 'cases', item.id), {
+                        firStatus,
+                        updatedAt: serverTimestamp()
+                    })));
+                }
+            } catch (error) {
+                statusRefreshFailure = error;
             }
-            if (firMasterId && !isEditingLegacyRecord) {
-                await saveFirMaster(db, {
-                    ...masterData,
-                    fileNo: String(rawData.fileNo || '').trim(),
-                    policeStationId: assignedStation.policeStationId,
-                    firStatus
-                }, firMasterId);
-            } else if (isEditingLegacyRecord) {
-                const legacyRecords = linkedRecords.filter(item => item._collectionName === 'cases');
-                await Promise.all(legacyRecords.map(item => updateDoc(doc(db, 'cases', item.id), {
-                    firStatus,
-                    updatedAt: serverTimestamp()
-                })));
-            }
-        } catch (error) {
-            statusRefreshFailure = error;
         }
         if (saveFailures.length || statusRefreshFailure) {
             const details = saveFailures.map(({ recordIndex, record, error }) =>
