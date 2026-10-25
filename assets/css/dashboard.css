@@ -163,18 +163,8 @@ nav {
     color: #ee929d;
 }
 
-.nav-item[data-page="disposed-cases"] .disposed-nav-label {
-    color: #ee929d;
-    font-weight: inherit;
-}
-
 .nav-item[data-page="po-cases"] span {
     color: #a69bff;
-}
-
-.nav-item[data-page="po-cases"] .po-nav-label {
-    color: #aaa0ff;
-    font-weight: inherit;
 }
 
 .nav-item[data-page="po-cases"] .po-sidebar-icon {
@@ -1584,8 +1574,6 @@ body.light-theme .nav-item.active {
 #sidebarNav .nav-item[data-page="settings"],
 #sidebarNav .nav-item[data-page="admin-panel"] { --nav-accent: #7ea9db; }
 #sidebarNav .nav-item span { color: var(--nav-accent, #b9c9e4); }
-#sidebarNav .nav-item .po-nav-label,
-#sidebarNav .nav-item .disposed-nav-label { color: var(--nav-accent); font-weight: inherit; }
 #sidebarNav .nav-item:hover { background: radial-gradient(ellipse at 88% 0,color-mix(in srgb,var(--nav-accent) 15%,transparent),transparent 68%),linear-gradient(110deg,color-mix(in srgb,var(--nav-accent) 9%,#0d1d31),#10243a 72%,color-mix(in srgb,var(--nav-accent) 7%,#112c43)); box-shadow: inset 3px 0 var(--nav-accent); }
 #sidebarNav .nav-item.active { color: #fff; background: radial-gradient(ellipse at 88% 0,color-mix(in srgb,var(--nav-accent) 15%,transparent),transparent 68%),linear-gradient(110deg,color-mix(in srgb,var(--nav-accent) 9%,#0d1d31),#10243a 72%,color-mix(in srgb,var(--nav-accent) 7%,#112c43)); box-shadow: inset 3px 0 var(--nav-accent); }
 #sidebarNav .nav-item:active,#sidebarNav .nav-item:focus-visible { background: radial-gradient(ellipse at 88% 0,color-mix(in srgb,var(--nav-accent) 26%,transparent),transparent 68%),linear-gradient(110deg,color-mix(in srgb,var(--nav-accent) 17%,#0b1a2c),#10243a 60%,color-mix(in srgb,var(--nav-accent) 13%,#112c43)); }
