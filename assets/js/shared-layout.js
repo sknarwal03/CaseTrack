@@ -29,6 +29,7 @@ const SIDEBAR_HTML = /* html */ `
         <a class="nav-item" data-page="disposed-cases" href="disposed-cases.html"><span>✓</span>Disposed Cases</a>
         <a class="nav-item" data-page="cases"      href="cases.html"><span>▧</span>All Cases</a>
         <a class="nav-item" data-page="po-cases"   href="po-cases.html"><span>⚑</span>PO Cases</a>
+        <a class="nav-item" data-page="fir-register" href="fir-register.html"><span>▤</span>FIR Register</a>
         <a class="nav-item" data-page="calendar"   href="calendar.html"><span>▣</span>Calendar</a>
         <a class="nav-item" data-page="register-diary" href="register-diary.html"><span>✎</span>Register Diary</a>
         <a class="nav-item" data-page="report"     href="report.html"><span>▥</span>Report</a>

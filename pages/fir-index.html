@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Search and browse the annual CaseTrack FIR index">
+    <title>CaseTrack | FIR Index</title>
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/shared.css">
+    <link rel="stylesheet" href="../assets/css/fir-index.css">
+</head>
+<body data-page="fir-index">
+    <div class="layout">
+        <main class="main">
+            <section class="content fir-index-shell">
+                <header class="fir-index-hero">
+                    <div>
+                        <span class="fir-index-kicker"><i></i> ANNUAL DIRECTORY</span>
+                        <h1>FIR <em>Index</em></h1>
+                        <p>Find a file quickly, then open its complete FIR record.</p>
+                    </div>
+                    <a class="fir-index-back" href="fir-register.html">← Back to FIR Register</a>
+                </header>
+
+                <section class="fir-index-board" aria-label="Searchable FIR index">
+                    <div class="fir-index-tools">
+                        <label class="fir-index-year"><span>REGISTER YEAR</span><select id="firIndexYear" aria-label="Select FIR index year"><option value="">Loading years…</option></select></label>
+                        <label class="fir-index-search"><span aria-hidden="true">⌕</span><input id="firIndexSearch" type="search" placeholder="Search FIR no., complainant, section, or police station" autocomplete="off"></label>
+                        <div class="fir-index-result-count" id="firIndexResultCount" aria-live="polite">Loading records…</div>
+                    </div>
+                    <div class="fir-index-table-wrap">
+                        <table class="fir-index-table">
+                            <thead><tr><th>Index</th><th>FIR number</th><th>FIR date</th><th>Police station</th><th>Complainant</th><th>Under section</th><th>Status</th><th><span class="fir-index-visually-hidden">Open record</span></th></tr></thead>
+                            <tbody id="firIndexRows"><tr><td colspan="8" class="fir-index-table-message">Loading the annual FIR index…</td></tr></tbody>
+                        </table>
+                    </div>
+                    <footer class="fir-index-pagination">
+                        <span id="firIndexPageSummary">0–0 of 0</span>
+                        <div><button id="firIndexPrevious" type="button" disabled>← Previous</button><span id="firIndexPageNumber">0 / 0</span><button id="firIndexNext" type="button" disabled>Next →</button></div>
+                    </footer>
+                </section>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="../assets/js/shared-layout.js"></script>
+    <script type="module" src="../assets/js/fir-index.js"></script>
+</body>
+</html>

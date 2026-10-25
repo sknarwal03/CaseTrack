@@ -7,11 +7,10 @@ const monthInput = document.getElementById('disposedMonth');
 const monthPickerButton = document.getElementById('openDisposedMonthPicker');
 const monthPicker = document.getElementById('disposedMonthPicker');
 const tableBody = document.getElementById('disposedCasesBody');
-const countLabel = document.getElementById('disposedCount');
+const countLabel = document.getElementById('selectedMonthCount');
 const printButton = document.getElementById('printDisposedRegister');
 const yearLabel = document.getElementById('disposedYear');
 const yearPicker = document.getElementById('disposedYearPicker');
-const selectedMonthCount = document.getElementById('selectedMonthCount');
 let disposedCases = [];
 const localDateKey = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 const dateToParts = value => {
@@ -68,7 +67,6 @@ function render(records) {
         .sort((a, b) => a.parsed.timestamp - b.parsed.timestamp);
     tableBody.replaceChildren();
     countLabel.textContent = `${matches.length} ${matches.length === 1 ? 'case' : 'cases'}`;
-    if (selectedMonthCount) selectedMonthCount.textContent = countLabel.textContent;
     if (!matches.length) {
         const row = document.createElement('tr');
         const cell = document.createElement('td');
@@ -217,7 +215,6 @@ async function init() {
         console.error('Could not load disposed cases:', error);
         tableBody.innerHTML = '<tr><td colspan="9" class="empty-state">Disposed cases load nahi ho sake. Access check karke page reload karein.</td></tr>';
         countLabel.textContent = 'Could not load';
-        if (selectedMonthCount) selectedMonthCount.textContent = 'Could not load';
     }
 }
 
