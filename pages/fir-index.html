@@ -14,24 +14,31 @@
         <main class="main">
             <section class="content fir-index-shell">
                 <header class="fir-index-hero">
-                    <div>
+                    <div class="fir-index-hero-copy">
                         <span class="fir-index-kicker"><i></i> ANNUAL DIRECTORY</span>
                         <h1>FIR <em>Index</em></h1>
                         <p>Find a file quickly, then open its complete FIR record.</p>
                     </div>
-                    <a class="fir-index-back" href="fir-register.html">← Back to FIR Register</a>
+                    <div class="fir-index-motif" aria-hidden="true"><svg class="fir-index-motif-mark" viewBox="0 0 24 24" focusable="false"><path d="M9 6h10M9 12h10M9 18h10"/><circle cx="5" cy="6" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="18" r="1"/></svg><i></i><i></i><i></i></div>
                 </header>
 
-                <section class="fir-index-board" aria-label="Searchable FIR index">
+                <div class="fir-index-toolbar">
                     <div class="fir-index-tools">
-                        <label class="fir-index-year"><span>REGISTER YEAR</span><select id="firIndexYear" aria-label="Select FIR index year"><option value="">Loading years…</option></select></label>
+                        <a class="fir-index-back" href="fir-register.html">&larr; Back</a>
+                    <div class="fir-index-year">
+                        <button class="fir-index-year-button" id="firIndexYearButton" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="firIndexYearPicker">Loading years&#8230;</button>
+                        <div class="fir-index-year-picker" id="firIndexYearPicker" role="listbox" aria-label="Select FIR index year" aria-hidden="true"></div>
+                        <select class="fir-index-year-source" id="firIndexYear" aria-label="Select FIR index year" tabindex="-1" aria-hidden="true"><option value="">Loading years&#8230;</option></select>
+                    </div>
                         <label class="fir-index-search"><span aria-hidden="true">⌕</span><input id="firIndexSearch" type="search" placeholder="Search FIR no., complainant, section, or police station" autocomplete="off"></label>
                         <div class="fir-index-result-count" id="firIndexResultCount" aria-live="polite">Loading records…</div>
                     </div>
+                </div>
+                <section class="fir-index-board" aria-label="Searchable FIR index">
                     <div class="fir-index-table-wrap">
                         <table class="fir-index-table">
-                            <thead><tr><th>Index</th><th>FIR number</th><th>FIR date</th><th>Police station</th><th>Complainant</th><th>Under section</th><th>Status</th><th><span class="fir-index-visually-hidden">Open record</span></th></tr></thead>
-                            <tbody id="firIndexRows"><tr><td colspan="8" class="fir-index-table-message">Loading the annual FIR index…</td></tr></tbody>
+                            <thead><tr><th>Sr. No.</th><th>FIR number</th><th>FIR date</th><th>Under section</th><th>Police station</th><th>Status</th></tr></thead>
+                            <tbody id="firIndexRows"><tr><td colspan="6" class="fir-index-table-message">Loading the annual FIR index&#8230;</td></tr></tbody>
                         </table>
                     </div>
                     <footer class="fir-index-pagination">
@@ -42,6 +49,7 @@
             </section>
         </main>
     </div>
+    <button class="fir-index-print-button" id="printFirIndex" type="button" aria-label="Print FIR index" title="Print FIR index"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/></svg></button>
     <script type="module" src="../assets/js/shared-layout.js"></script>
     <script type="module" src="../assets/js/fir-index.js"></script>
 </body>

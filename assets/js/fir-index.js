@@ -2,6 +2,8 @@ import { db } from '@config/firebase-config.js';
 import { getFirSummaries, loadCaseRecords } from './fir-case-model.js';
 
 const yearSelect = document.getElementById('firIndexYear');
+const yearButton = document.getElementById('firIndexYearButton');
+const yearPicker = document.getElementById('firIndexYearPicker');
 const searchInput = document.getElementById('firIndexSearch');
 const rowsHost = document.getElementById('firIndexRows');
 const resultCount = document.getElementById('firIndexResultCount');
@@ -9,6 +11,7 @@ const pageSummary = document.getElementById('firIndexPageSummary');
 const pageNumber = document.getElementById('firIndexPageNumber');
 const previousButton = document.getElementById('firIndexPrevious');
 const nextButton = document.getElementById('firIndexNext');
+const printButton = document.getElementById('printFirIndex');
 const pageSize = 50;
 
 let records = [];
@@ -68,21 +71,30 @@ function renderRows() {
     if (!visibleFirs.length) {
         const row = document.createElement('tr');
         const cell = node('td', 'fir-index-table-message', 'No FIRs match this year and search.');
-        cell.colSpan = 8;
+        cell.colSpan = 6;
         row.append(cell);
         rowsHost.append(row);
     } else {
         pageRecords.forEach((fir, offset) => {
             const row = document.createElement('tr');
+            row.tabIndex = 0;
+            row.setAttribute('aria-label', `Open FIR record ${displayFir(fir)}`);
+            const openRecord = () => window.location.assign(recordUrl(fir));
+            row.addEventListener('click', openRecord);
+            row.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openRecord();
+                }
+            });
             row.append(node('td', '', String(start + offset + 1).padStart(3, '0')));
 
             const numberCell = document.createElement('td');
             numberCell.append(node('strong', 'fir-index-number', displayFir(fir)));
             row.append(numberCell);
             row.append(node('td', '', fir.firDate || '—'));
-            row.append(node('td', '', fir.policeStation || '—'));
-            row.append(node('td', '', fir.complainantName || '—'));
             row.append(node('td', '', fir.underSection || '—'));
+            row.append(node('td', '', fir.policeStation || '—'));
 
             const status = text(fir.firStatus || fir.caseStatus || fir.status || 'Unknown');
             const statusCell = document.createElement('td');
@@ -91,12 +103,6 @@ function renderRows() {
             statusCell.append(statusBadge);
             row.append(statusCell);
 
-            const actionCell = document.createElement('td');
-            const openLink = node('a', 'fir-index-open-record', 'Open FIR →');
-            openLink.href = recordUrl(fir);
-            openLink.setAttribute('aria-label', `Open full record for FIR ${displayFir(fir)}`);
-            actionCell.append(openLink);
-            row.append(actionCell);
             rowsHost.append(row);
         });
     }
@@ -119,31 +125,70 @@ function applyFilters() {
     renderRows();
 }
 
+function syncYearPicker(years = []) {
+    yearPicker.replaceChildren();
+    years.forEach(year => {
+        const option = node('button', '', year);
+        option.type = 'button';
+        option.setAttribute('role', 'option');
+        option.setAttribute('aria-selected', String(year === yearSelect.value));
+        option.addEventListener('click', () => {
+            yearSelect.value = year;
+            yearSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            yearPicker.classList.remove('is-open');
+            yearPicker.setAttribute('aria-hidden', 'true');
+            yearButton.setAttribute('aria-expanded', 'false');
+        });
+        yearPicker.append(option);
+    });
+    yearButton.textContent = yearSelect.value || (years.length ? 'Select year' : 'No years');
+    yearButton.disabled = !years.length;
+}
+
 function populateYears() {
-    const years = [...new Set(indexedFirs.map(firYearOf).filter(year => /^\d{4}$/.test(year)))].sort((a, b) => Number(b) - Number(a));
-    yearSelect.replaceChildren();
-    if (!years.length) {
-        yearSelect.add(new Option('No years available', ''));
-        yearSelect.disabled = true;
-        applyFilters();
-        return;
-    }
-    years.forEach(year => yearSelect.add(new Option(year, year)));
+    const currentYear = new Date().getFullYear();
     const params = new URLSearchParams(window.location.search);
     const requestedYear = params.get('year');
-    const currentYear = String(new Date().getFullYear());
-    yearSelect.value = years.includes(requestedYear) ? requestedYear : years.includes(currentYear) ? currentYear : years[0];
+    const years = Array.from({ length: 11 }, (_, index) => String(currentYear - 5 + index));
+    if (/^\d{4}$/.test(requestedYear || '') && !years.includes(requestedYear)) {
+        years.push(requestedYear);
+        years.sort((a, b) => Number(a) - Number(b));
+    }
+    yearSelect.replaceChildren();
+    years.forEach(year => yearSelect.add(new Option(year, year)));
     searchInput.value = params.get('q') || '';
     yearSelect.disabled = false;
+    yearSelect.value = years.includes(requestedYear) ? requestedYear : String(currentYear);
+    syncYearPicker(years);
     applyFilters();
 }
 
-yearSelect.addEventListener('change', () => { currentPage = 0; applyFilters(); });
+yearSelect.addEventListener('change', () => { currentPage = 0; syncYearPicker([...yearSelect.options].map(option => option.value).filter(Boolean)); applyFilters(); });
+yearButton.addEventListener('click', () => {
+    const open = !yearPicker.classList.contains('is-open');
+    yearPicker.classList.toggle('is-open', open);
+    yearPicker.setAttribute('aria-hidden', String(!open));
+    yearButton.setAttribute('aria-expanded', String(open));
+});
+document.addEventListener('click', event => {
+    if (event.target.closest('.fir-index-year')) return;
+    yearPicker.classList.remove('is-open');
+    yearPicker.setAttribute('aria-hidden', 'true');
+    yearButton.setAttribute('aria-expanded', 'false');
+});
+document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || !yearPicker.classList.contains('is-open')) return;
+    yearPicker.classList.remove('is-open');
+    yearPicker.setAttribute('aria-hidden', 'true');
+    yearButton.setAttribute('aria-expanded', 'false');
+    yearButton.focus();
+});
 searchInput.addEventListener('input', () => { currentPage = 0; applyFilters(); });
 previousButton.addEventListener('click', () => { if (currentPage > 0) { currentPage--; renderRows(); } });
 nextButton.addEventListener('click', () => {
     if (currentPage < Math.ceil(visibleFirs.length / pageSize) - 1) { currentPage++; renderRows(); }
 });
+printButton.addEventListener('click', () => window.print());
 
 async function init() {
     try {
@@ -160,10 +205,12 @@ async function init() {
         console.error('Unable to load the FIR index.', error);
         yearSelect.replaceChildren(new Option('Unavailable', ''));
         yearSelect.disabled = true;
+        syncYearPicker();
+        yearButton.textContent = 'Unavailable';
         resultCount.textContent = 'Register unavailable';
         const row = document.createElement('tr');
         const cell = node('td', 'fir-index-table-message', 'The FIR index could not be loaded. Check your access and connection, then reload this page.');
-        cell.colSpan = 8;
+        cell.colSpan = 6;
         row.append(cell);
         rowsHost.replaceChildren(row);
         pageSummary.textContent = '—';

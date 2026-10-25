@@ -12,7 +12,7 @@
 .fir-register-year-source { display: none; }
 .fir-register-controls { position: relative; }
 .fir-register-year-button { min-width: 84px; min-height: 37px; padding: 0 10px; border: 1px solid var(--border-strong); border-radius: 8px; color: var(--text-primary); background: var(--surface); font: 600 12px/1 Inter,"Segoe UI",sans-serif; cursor: pointer; }
-.fir-register-year-button:hover,.fir-register-year-button[aria-expanded="true"] { border-color: var(--brand-primary); }
+.fir-register-year-button:hover,.fir-register-year-button[aria-expanded="true"] { border-color: rgba(85,209,170,.72); }
 .fir-register-year-button:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
 .fir-register-year-picker { position: absolute; z-index: 30; top: calc(100% + 8px); right: 0; display: none; width: 188px; max-height: 190px; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 4px; overflow-y: auto; padding: 8px; border: 1px solid var(--border-strong); border-radius: 15px; background: var(--surface-raised); box-shadow: var(--shadow-overlay); }
 .fir-register-year-picker.is-open { display: grid; }
