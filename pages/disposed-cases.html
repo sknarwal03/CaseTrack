@@ -62,7 +62,14 @@
             </header>
             <div class="modal-body detail-modal-body">
                 <div class="detail-header-card"><div><span class="detail-label">FIR Number</span><h3 id="detailFIRLabel">—</h3></div><span class="detail-status" id="detailStatusBadge">—</span><div><span class="detail-label">Next Date &amp; Stage</span><h3></h3></div></div>
-                <div class="detail-grid" id="caseDetailFields"></div>
+                <section class="detail-section" aria-labelledby="caseInformationTitle">
+                    <h3 class="detail-section-title" id="caseInformationTitle">Case Information</h3>
+                    <div class="detail-grid" id="caseDetailFields"></div>
+                </section>
+                <section class="detail-section timeline-section" aria-labelledby="caseTimelineTitle">
+                    <h3 class="detail-section-title" id="caseTimelineTitle">Case Timeline</h3>
+                    <div class="case-timeline" id="caseTimeline"></div>
+                </section>
             </div>
         </section>
     </div>

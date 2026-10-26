@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/css/shared.css">
     <link rel="stylesheet" href="../assets/css/settings.css">
+    <meta name="theme-color" content="#173f35">
+    <link rel="manifest" href="/CaseTrack/manifest.webmanifest">
+    <link rel="icon" href="/CaseTrack/icons/icon.svg" type="image/svg+xml">
 </head>
 
 <body data-page="settings">
@@ -108,10 +111,26 @@
                     </div>
 
                     <div class="security-boxes">
-                        <div class="security-card">
-                            <strong>Profile</strong>
-                            <p>Shivkumar Narwal</p>
-                            <small>Administrator</small>
+                        <div class="security-card profile-card">
+                            <strong>My Profile</strong>
+                            <div class="profile-summary">
+                                <span class="profile-initials" id="settingsProfileInitials" aria-hidden="true">U</span>
+                                <div class="profile-identity">
+                                    <p id="settingsProfileName">Loading profile…</p>
+                                    <small id="settingsProfileEmail">Your sign-in email</small>
+                                </div>
+                            </div>
+                            <small class="profile-note">Update your display name. Sign-in email and access role are managed separately.</small>
+                            <small id="profileEditStatus" class="profile-edit-status" role="status" aria-live="polite"></small>
+                            <button type="button" class="new-case profile-edit-button" id="editProfileButton" disabled>Edit Profile</button>
+                            <form class="profile-edit-form" id="profileEditForm" hidden>
+                                <label for="profileDisplayNameInput">Display name</label>
+                                <input id="profileDisplayNameInput" name="displayName" type="text" maxlength="80" autocomplete="name" required>
+                                <div class="profile-edit-actions">
+                                    <button type="button" class="btn" id="cancelProfileEdit">Cancel</button>
+                                    <button type="submit" class="btn primary" id="saveProfileButton">Save profile</button>
+                                </div>
+                            </form>
                         </div>
                         <div class="security-card">
                             <strong>Last Backup</strong>
@@ -159,6 +178,7 @@
 
     <script type="module" src="../assets/js/settings.js"></script>
     <script type="module" src="../assets/js/shared-layout.js"></script>
+    <script type="module" src="../assets/js/pwa.js"></script>
 </body>
 
 </html>

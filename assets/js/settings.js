@@ -2,7 +2,9 @@ import { auth, db } from "@config/firebase-config.js";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import {
     EmailAuthProvider,
+    onAuthStateChanged,
     reauthenticateWithCredential,
+    updateProfile,
     updatePassword
 } from "firebase/auth";
 
@@ -16,6 +18,94 @@ const passwordChangeForm = document.querySelector('#passwordChangeForm');
 const passwordChangeStatus = document.querySelector('#passwordChangeStatus');
 const submitPasswordChange = document.querySelector('#submitPasswordChange');
 let previousBodyOverflow = '';
+
+const profileEditForm = document.querySelector('#profileEditForm');
+const profileDisplayNameInput = document.querySelector('#profileDisplayNameInput');
+const profileEditStatus = document.querySelector('#profileEditStatus');
+const saveProfileButton = document.querySelector('#saveProfileButton');
+const editProfileButton = document.querySelector('#editProfileButton');
+let profileUser = null;
+
+function setProfileName(name) {
+    const normalizedName = name.trim() || 'User';
+    const initials = normalizedName.split(/\s+/).map(part => part[0]).join('').slice(0, 2).toUpperCase();
+    const profileName = document.querySelector('#settingsProfileName');
+    const profileInitials = document.querySelector('#settingsProfileInitials');
+    if (profileName) profileName.textContent = normalizedName;
+    if (profileInitials) profileInitials.textContent = initials || 'U';
+
+    // Keep the shared header and its profile menu current on this page.
+    const headerName = document.querySelector('#userDisplayName');
+    const headerAvatar = document.querySelector('#userAvatar');
+    const menuName = document.querySelector('.pd-name');
+    const menuAvatar = document.querySelector('.pd-avatar');
+    if (headerName) headerName.textContent = normalizedName;
+    if (headerAvatar) headerAvatar.textContent = initials || 'U';
+    if (menuName) menuName.textContent = normalizedName;
+    if (menuAvatar) menuAvatar.textContent = initials || 'U';
+}
+
+onAuthStateChanged(auth, user => {
+    profileUser = user;
+    if (!user) return;
+    if (editProfileButton) editProfileButton.disabled = false;
+    setProfileName(user.displayName || 'User');
+    const email = document.querySelector('#settingsProfileEmail');
+    if (email) email.textContent = user.email || 'Email unavailable';
+    if (profileDisplayNameInput) profileDisplayNameInput.value = user.displayName || '';
+});
+
+editProfileButton?.addEventListener('click', () => {
+    if (!profileUser || !profileEditForm) return;
+    if (profileDisplayNameInput) profileDisplayNameInput.value = profileUser.displayName || '';
+    if (profileEditStatus) profileEditStatus.textContent = '';
+    profileEditForm.hidden = false;
+    editProfileButton.hidden = true;
+    profileDisplayNameInput?.focus();
+});
+
+document.querySelector('#cancelProfileEdit')?.addEventListener('click', () => {
+    profileEditForm.hidden = true;
+    editProfileButton.hidden = false;
+    if (profileEditStatus) profileEditStatus.textContent = '';
+    editProfileButton.focus();
+});
+
+profileEditForm?.addEventListener('submit', async event => {
+    event.preventDefault();
+    const user = auth.currentUser;
+    const displayName = profileDisplayNameInput?.value.trim() || '';
+    if (!user || user.uid !== profileUser?.uid) {
+        if (profileEditStatus) profileEditStatus.textContent = 'Your session is unavailable. Sign in again and retry.';
+        return;
+    }
+    if (!displayName) {
+        profileDisplayNameInput?.setCustomValidity('Enter a display name.');
+        profileDisplayNameInput?.reportValidity();
+        profileDisplayNameInput?.setCustomValidity('');
+        return;
+    }
+
+    saveProfileButton.disabled = true;
+    if (profileEditStatus) profileEditStatus.textContent = 'Saving profile…';
+    try {
+        await updateProfile(user, { displayName });
+        setProfileName(displayName);
+        profileEditForm.hidden = true;
+        editProfileButton.hidden = false;
+        if (profileEditStatus) profileEditStatus.textContent = 'Profile updated.';
+        editProfileButton.focus();
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        if (profileEditStatus) {
+            profileEditStatus.textContent = error.code === 'auth/requires-recent-login'
+                ? 'Please sign in again, then retry the profile change.'
+                : 'Could not update your profile. Check your sign-in and try again.';
+        }
+    } finally {
+        saveProfileButton.disabled = false;
+    }
+});
 
 function openPasswordChange() {
     if (!passwordChangeModal) return;

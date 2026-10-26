@@ -2460,7 +2460,6 @@ window.openAddCaseModal = (caseItem = null, options = {}) => {
         : (caseItem?._collectionName === LINKED_CASES_COLLECTION ? (caseItem.firMasterId || caseItem.firId || '') : (caseItem?.firMasterId || ''));
     if (selectedFirMasterId && caseItem) {
         selectedFirMasterData = { ...caseItem };
-        if (!editingFirMaster) setFirMasterFieldsLocked(true);
     }
     if (caseItem && caseItem.id) {
         form.dataset.editId = caseItem.id;
@@ -3184,7 +3183,7 @@ form?.addEventListener('submit', async e => {
             complainantAddress: String(rawData.complainant_address || '').trim()
         };
         let masterData = selectedFirMasterId && !editingFirMaster
-            ? { ...selectedFirMasterData, fileNo: String(rawData.fileNo || '').trim() }
+            ? { ...selectedFirMasterData, ...enteredMasterData }
             : enteredMasterData;
         const ucrDrafts = caseRecordDrafts.filter(record => record.type === 'ucr');
         if (ucrDrafts.length > 1) throw new Error('Only one UCR report can be linked to an FIR. Remove the duplicate draft before saving.');
@@ -3268,6 +3267,10 @@ form?.addEventListener('submit', async e => {
             }
         } else if (editingFirMaster && firMasterId) {
             firMasterId = await saveFirMaster(db, enteredMasterData, firMasterId);
+        } else if (selectedFirMasterId && firMasterId) {
+            // Linked proceeding edits can also update the FIR Master fields shown in the shared FIR section.
+            firMasterId = await saveFirMaster(db, masterData, firMasterId);
+            selectedFirMasterData = { ...masterData, id: firMasterId };
         }
         if (firMasterId && !isEditingLegacyRecord && !selectedFirMasterId) {
             selectedFirMasterId = firMasterId;

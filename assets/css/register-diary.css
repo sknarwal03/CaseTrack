@@ -882,6 +882,16 @@ body.light-theme .diary-date-dialog::backdrop { background: rgba(15,20,35,.48); 
 .detail-header-card > div:last-child h3 { font-size: 19px; font-weight: 600; }
 .detail-status { display: inline-flex; align-items: center; justify-content: center; min-width: 94px; padding: 8px 10px; border: 1px solid rgba(25, 212, 155, .35); border-radius: 999px; background: rgba(25, 212, 155, .12); color: #69f2c3; font-size: 11px; font-weight: 800; text-transform: uppercase; }
 .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.detail-section { margin-top: 22px; }
+.detail-section-title { margin: 0 0 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line, #244163); color: var(--text, #edf5ff); font-size: 15px; font-weight: 700; }
+.case-timeline-list { display: grid; gap: 0; margin: 0; padding: 0 0 0 8px; list-style: none; }
+.case-timeline-item { position: relative; display: grid; grid-template-columns: minmax(100px, 140px) 1fr; gap: 14px; padding: 0 0 18px 20px; border-left: 2px solid var(--primary, #19d49b); color: var(--text, #edf5ff); font-size: 13px; }
+.case-timeline-item::before { position: absolute; top: 2px; left: -6px; width: 10px; height: 10px; border: 2px solid var(--primary, #19d49b); border-radius: 50%; background: var(--panel, #0c1828); content: ""; }
+.case-timeline-item:last-child { padding-bottom: 0; border-left-color: transparent; }
+.case-timeline-item time { color: var(--muted, #94a3b8); font-weight: 700; }
+.case-timeline-empty { margin: 0; color: var(--muted); font-size: 13px; }
+body.light-theme .detail-section-title, body.light-theme .case-timeline-item { color: var(--text); }
+body.light-theme .case-timeline-item::before { background: var(--panel, #fff); }
 .detail-item { padding: 14px 16px; border: 1px solid #244163; border-radius: 12px; background: rgba(12, 24, 40, .6); }
 .detail-item span { display: block; margin-bottom: 8px; color: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
 .detail-item strong { color: #edf5ff; font-size: 14px; line-height: 1.5; }

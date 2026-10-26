@@ -47,7 +47,6 @@ export default defineConfig(({ mode, command }) => {
         firRegister: resolve(projectRoot, "pages/fir-register.html"),
         firIndex: resolve(projectRoot, "pages/fir-index.html"),
         disposedCases: resolve(projectRoot, "pages/disposed-cases.html"),
-        calendar: resolve(projectRoot, "pages/calendar.html"),
         poCases: resolve(projectRoot, "pages/po-cases.html"),
         report: resolve(projectRoot, "pages/report.html"),
         settings: resolve(projectRoot, "pages/settings.html"),

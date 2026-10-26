@@ -184,6 +184,114 @@
     color: #9bb2d3;
 }
 
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.profile-summary {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 13px;
+    margin: 2px 0 10px;
+}
+
+.profile-initials {
+    display: grid;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    border: 1px solid rgba(85, 209, 170, .28);
+    border-radius: 50%;
+    color: #86e4c8;
+    background: rgba(85, 209, 170, .12);
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.profile-identity {
+    min-width: 0;
+}
+
+.security-card .profile-identity p {
+    overflow-wrap: anywhere;
+    margin: 0 0 4px;
+}
+
+.profile-identity small,
+.security-card .profile-note,
+.security-card .profile-edit-status {
+    color: var(--text-muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.security-card .profile-note {
+    margin-bottom: 12px;
+    font-weight: 400;
+}
+
+.security-card .profile-edit-status {
+    min-height: 18px;
+    margin-bottom: 7px;
+    color: #72d7ba;
+    font-weight: 600;
+}
+
+.profile-edit-button {
+    min-height: 38px;
+}
+
+.profile-edit-form {
+    display: grid;
+    width: 100%;
+    gap: 9px;
+    margin-top: 4px;
+}
+
+.profile-edit-form[hidden] {
+    display: none !important;
+}
+
+.profile-edit-form label {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.profile-edit-form input {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    color: var(--text-primary);
+    background: var(--surface);
+    font: inherit;
+}
+
+.profile-edit-form input:focus-visible {
+    border-color: #55d1aa;
+    outline: 2px solid rgba(85, 209, 170, .3);
+    outline-offset: 1px;
+}
+
+.profile-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 3px;
+}
+
+.profile-edit-actions .btn {
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
 .password-modal {
     width: min(520px, 100%);
 }
@@ -245,6 +353,15 @@ body.light-theme .settings-panel .panel-title h2 {
 
 body.light-theme .password-modal .config-form input {
     color: var(--text);
+}
+
+body.light-theme .profile-initials {
+    color: #176b53;
+    background: #e2f7ef;
+}
+
+body.light-theme .profile-edit-form label {
+    color: var(--text-secondary);
 }
 
 @media (max-width: 980px) {

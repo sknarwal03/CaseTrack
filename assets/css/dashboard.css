@@ -1569,7 +1569,6 @@ body.light-theme .nav-item.active {
 #sidebarNav .nav-item[data-page="register-diary"] { --nav-accent: #aab4ed; }
 #sidebarNav .nav-item[data-page="po-cases"] { --nav-accent: #a69bff; }
 #sidebarNav .nav-item[data-page="disposed-cases"] { --nav-accent: #ee929d; }
-#sidebarNav .nav-item[data-page="calendar"],
 #sidebarNav .nav-item[data-page="report"],
 #sidebarNav .nav-item[data-page="settings"],
 #sidebarNav .nav-item[data-page="admin-panel"] { --nav-accent: #7ea9db; }

@@ -446,6 +446,10 @@ including:
 -   Major operating constraints.
 -   Long-term expansion direction.
 
+The canonical implementation status and open issue register are
+maintained separately in [`PROJECT-STATUS.md`](./PROJECT-STATUS.md) and
+[`PROJECT-ISSUE-TRACKER.md`](./PROJECT-ISSUE-TRACKER.md).
+
 Detailed functional rules, technical architecture, security design, and
 implementation status should be maintained in separate documents. When
 updating this overview, distinguish confirmed decisions from proposals

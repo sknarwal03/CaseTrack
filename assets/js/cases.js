@@ -442,6 +442,8 @@ const openDetailModal = caseItem => {
     }
 
     const headerCard = document.querySelector('.detail-header-card');
+    const modalTitle = detailsModal?.querySelector('#caseDetailsTitle');
+    const modalDescription = detailsModal?.querySelector('.modal-header p');
     if (headerCard) {
         let displayFir = caseItem.firNo || '';
         if (caseItem.firNo && caseItem.firYear) {
@@ -450,6 +452,9 @@ const openDetailModal = caseItem => {
                 displayFir = caseItem.firNo + '/' + yrStr.slice(-2);
             }
         }
+
+        if (modalTitle) modalTitle.textContent = `FIR No. ${displayFir || '—'}`;
+        if (modalDescription) modalDescription.textContent = `Police Station - ${caseItem.policeStation || 'Not specified'}`;
 
         let nextStageTxt = '';
         if (caseItem.nextDate) nextStageTxt += caseItem.nextDate;
@@ -635,18 +640,20 @@ const openDetailModal = caseItem => {
             });
         }
 
-        if (timeline.length > 0) {
+        const timelineContainer = document.querySelector('#caseTimeline');
+        if (timelineContainer && timeline.length > 0) {
             timeline.sort((a, b) => a.ms - b.ms);
-            let tlHtml = '<div style="grid-column: 1 / -1; margin-top: 1.5rem; border-bottom: 1px solid #eaeaea; padding-bottom: 5px;"><h4>Case Timeline</h4></div>';
-            tlHtml += '<div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; padding-left: 10px; border-left: 2px solid var(--primary); margin-top: 10px;">';
+            let tlHtml = '<ol class="case-timeline-list">';
             timeline.forEach(item => {
-                tlHtml += `<div style="display: flex; gap: 15px;">
-                    <span style="font-weight: bold; min-width: 90px;">${item.dateStr}</span>
-                    <span style="color: #555;">- ${item.label}</span>
-                </div>`;
+                tlHtml += `<li class="case-timeline-item">
+                    <time>${item.dateStr}</time>
+                    <span>${item.label}</span>
+                </li>`;
             });
-            tlHtml += '</div>';
-            detailFields.innerHTML += tlHtml;
+            tlHtml += '</ol>';
+            timelineContainer.innerHTML = tlHtml;
+        } else if (timelineContainer) {
+            timelineContainer.innerHTML = '<p class="case-timeline-empty">No timeline dates are available for this case.</p>';
         }
     }
 

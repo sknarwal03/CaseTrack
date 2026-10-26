@@ -401,9 +401,8 @@ async function init() {
         yearSelect.disabled = true;
         syncYearPicker();
         yearButton.textContent = 'Unavailable';
-        indexCount.textContent = '—';
-        indexList.replaceChildren(make('li', 'fir-index-empty', 'The register could not be loaded. Check your access and connection, then reload this page.'));
         recordPage.replaceChildren(make('div', 'fir-record-empty', 'FIR records are unavailable. Please check your access and try again.'));
+        breadcrumb.textContent = '—';
         positionLabel.textContent = '—';
     }
 }
