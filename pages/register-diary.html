@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="../assets/css/register-diary.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="../components/add-case/add-case.css">
+    <meta name="theme-color" content="#173f35">
+    <link rel="manifest" href="/CaseTrack/manifest.webmanifest">
+    <link rel="icon" href="/CaseTrack/icons/icon.svg" type="image/svg+xml">
 </head>
 
 <body data-page="register-diary">
@@ -246,6 +249,7 @@
         positionDiaryActions();
         document.getElementById('diaryPrintBtn')?.addEventListener('click', () => window.print());
     </script>
+    <script type="module" src="../assets/js/pwa.js"></script>
 </body>
 
 </html>

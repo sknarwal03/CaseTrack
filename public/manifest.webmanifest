@@ -1,0 +1,14 @@
+{
+  "id": "/CaseTrack/",
+  "name": "CaseTrack Case Management",
+  "short_name": "CaseTrack",
+  "description": "Secure case management and hearing tracking.",
+  "start_url": "/CaseTrack/pages/login.html",
+  "scope": "/CaseTrack/",
+  "display": "standalone",
+  "background_color": "#f5f7f4",
+  "theme_color": "#173f35",
+  "icons": [
+    { "src": "/CaseTrack/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
