@@ -32,9 +32,6 @@
 .fir-register-seal i:nth-of-type(3) { top: 45px; left: 5px; }
 .fir-register-seal-star { position: absolute; top: 63%; color: #55d1aa; font-size: 11px; line-height: 1; }
 .fir-register-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 19px 2px 14px; }
-.fir-register-location { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 9px; font-weight: 750; letter-spacing: .13em; }
-.fir-register-location b { color: var(--border-strong); }
-.fir-register-location strong { color: #5ed3b0; }
 .fir-register-actions { display: flex; align-items: center; gap: 9px; }
 .fir-register-actions .fir-register-controls { display: flex; min-width: 0; align-items: center; gap: 7px; margin: 0; }
 .fir-register-actions .fir-register-controls { display: flex; min-width: 0; align-items: center; margin: 0; }
@@ -160,35 +157,33 @@
 
 /* Keep the register filters aligned as one toolbar across screen sizes. */
 @media screen {
-    .fir-register-toolbar { display: grid; grid-template-columns: auto minmax(0,1fr); align-items: center; column-gap: 18px; }
-    .fir-register-location { min-height: 37px; white-space: nowrap; }
-    .fir-register-actions { display: grid; grid-template-columns: auto minmax(220px,1fr) auto; align-items: stretch; gap: 9px; min-width: 0; }
-    .fir-index-open { grid-column: 1; grid-row: 1; }
-    .fir-register-search { grid-column: 2; grid-row: 1; }
+    .fir-register-toolbar { display: grid; width: 100%; grid-template-columns: minmax(0,1fr); align-items: stretch; }
+    .fir-register-actions { display: grid; width: 100%; grid-template-columns: max-content minmax(0,1fr) max-content; align-items: stretch; gap: 9px; min-width: 0; }
+    .fir-register-page-links { position: relative; z-index: 1; display: flex; grid-column: 1; align-items: center; gap: 9px; min-width: 0; }
+    .fir-register-search { grid-column: 2; grid-row: 1; width: 100%; min-width: 0; }
     .fir-add-fir-button { grid-column: 3; grid-row: 1; }
     .fir-register-actions .fir-register-controls { height: 37px; min-height: 37px; }
-    .fir-register-year-button,.fir-register-search,.fir-index-open { height: 37px; min-height: 37px; box-sizing: border-box; align-self: center; }
+    .fir-register-year-button,.fir-register-search,.fir-index-open,.fir-statusmap-open { height: 37px; min-height: 37px; box-sizing: border-box; }
     .fir-register-search { line-height: 1; }
 }
 @media screen and (max-width: 1050px) {
     .fir-register-toolbar { grid-template-columns: minmax(0,1fr); align-items: stretch; row-gap: 8px; }
-    .fir-register-actions { width: 100%; min-width: 0; grid-template-columns: auto minmax(0,1fr) auto; }
+    .fir-register-actions { width: 100%; grid-template-columns: max-content minmax(0,1fr) max-content; }
     .layout .content .fir-register-toolbar .fir-register-search input { width: 100%; height: auto; min-width: 0; min-height: 0; margin: 0; padding: 0; border: 0; font-size: 13px; }
 }
 @media screen and (max-width: 560px) {
     .fir-register-toolbar { row-gap: 7px; }
-    .fir-register-actions { grid-template-columns: minmax(0,1fr) auto; align-items: center; }
-    .fir-index-open { grid-column: 1; grid-row: 1; }
-    .fir-register-search { grid-column: 1; grid-row: 2; width: 100%; min-width: 0; }
+    .fir-register-actions { grid-template-columns: minmax(0,1fr) max-content; }
+    .fir-register-page-links { grid-column: 1 / -1; grid-row: 1; }
+    .fir-register-search { grid-column: 1; grid-row: 2; }
     .fir-add-fir-button { grid-column: 2; grid-row: 2; }
 }
 
 @media screen {
     .fir-register-kicker { font-size: 11px; }
     .fir-register-hero p { font-size: 14px; }
-    .fir-register-location { font-size: 10px; }
     .fir-register-search input,.layout .content .fir-register-toolbar .fir-register-search input { font-size: 13px; }
-    .fir-index-open,.fir-add-fir-button,.fir-print-button,.fir-page-navigation button { font-size: 13px; }
+    .fir-index-open,.fir-statusmap-open,.fir-add-fir-button,.fir-print-button,.fir-page-navigation button { font-size: 13px; }
     .fir-index-heading span { font-size: 9px; }
     .fir-index-heading h2 { font-size: 17px; }
     .fir-index-number { font-size: 11px; }

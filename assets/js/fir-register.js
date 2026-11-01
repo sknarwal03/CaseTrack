@@ -9,8 +9,8 @@ const recordPage = document.getElementById('firRecordPage');
 const positionLabel = document.getElementById('firPagePosition');
 const previousButton = document.getElementById('previousFir');
 const nextButton = document.getElementById('nextFir');
-const breadcrumb = document.getElementById('yearBreadcrumb');
 const indexLink = document.getElementById('openFirIndex');
+const statusmapLink = document.getElementById('openFirStatusMap');
 
 let records = [];
 let firs = [];
@@ -234,6 +234,7 @@ function renderRecord(fir) {
     const identity = makeSection('01', 'First Information Report', '', '.case-section-fir', fir);
     identity.append(makeDetails([
         ['File number', fieldValue(sources, ['fileNo'])], ['FIR number', firNumber(fir)], ['FIR year', firYearOf(fir)],
+        ['Page No', fieldValue(sources, ['pageNo'])],
         ['Date of FIR', fieldValue(sources, ['firDate'])], ['Police station', fieldValue(sources, ['policeStation'])],
         ['Under section', fieldValue(sources, ['underSection'])], ['Crime head', fieldValue(sources, ['crimeHead'])],
         ['FIR status', status], ['Highlighted case', fieldValue(sources, ['highlighted']) === true ? 'Yes' : (fieldValue(sources, ['highlighted']) === false ? 'No' : '')]
@@ -282,6 +283,13 @@ function refreshVisibleFirs() {
         if (query) indexUrl.searchParams.set('q', query);
         indexLink.href = `${indexUrl.pathname}${indexUrl.search}`;
     }
+    if (statusmapLink) {
+        const statusmapUrl = new URL('fir-statusmap.html', window.location.href);
+        if (year) statusmapUrl.searchParams.set('year', year);
+        const stationId = new URLSearchParams(window.location.search).get('station');
+        if (stationId) statusmapUrl.searchParams.set('station', stationId);
+        statusmapLink.href = `${statusmapUrl.pathname}${statusmapUrl.search}`;
+    }
     const yearFirs = firs.filter(fir => firYearOf(fir) === year);
     visibleFirs = yearFirs.filter(fir => {
         if (!query) return true;
@@ -294,7 +302,6 @@ function refreshVisibleFirs() {
         return haystack.includes(query);
     });
     activeIndex = Math.min(activeIndex, Math.max(visibleFirs.length - 1, 0));
-    breadcrumb.textContent = year || '—';
     updateNavigation();
 }
 

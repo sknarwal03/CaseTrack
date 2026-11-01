@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,10 +28,12 @@
                 </header>
 
                 <div class="fir-register-toolbar">
-                    <div class="fir-register-location"><span>CASE FILES</span><b>/</b><strong id="yearBreadcrumb">&#8212;</strong></div>
                     <div class="fir-register-actions">
                         <label class="fir-register-search"><span aria-hidden="true">&#8981;</span><input id="firRegisterSearch" type="search" placeholder="Find FIR number or name" autocomplete="off"></label>
-                        <a class="fir-index-open" id="openFirIndex" href="fir-index.html"><span aria-hidden="true">&#9638;</span> FIR Index</a>
+                        <div class="fir-register-page-links">
+                            <a class="fir-index-open" id="openFirIndex" href="fir-index.html"><span aria-hidden="true">&#9638;</span> FIR Index</a>
+                            <a class="fir-index-open fir-statusmap-open" id="openFirStatusMap" href="fir-statusmap.html"><span aria-hidden="true">▦</span> StatusMap</a>
+                        </div>
                         <button class="fir-add-fir-button" type="button" data-open-add-case><span aria-hidden="true">&#43;</span> Add FIR</button>
                         <button class="fir-print-button" id="printFirPage" type="button" aria-label="Print this FIR record" title="Print this FIR record"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/></svg><span>Print record</span></button>
                     </div>

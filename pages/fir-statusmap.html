@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Yearly FIR StatusMap by authorized police station">
+    <title>CaseTrack | FIR StatusMap</title>
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/shared.css">
+    <link rel="stylesheet" href="../assets/css/fir-register.css">
+    <link rel="stylesheet" href="../assets/css/fir-statusmap.css?v=20261101-premium-palette1">
+    <meta name="theme-color" content="#173f35">
+    <link rel="manifest" href="/CaseTrack/manifest.webmanifest">
+    <link rel="icon" href="/CaseTrack/icons/icon.svg" type="image/svg+xml">
+</head>
+<body class="fir-statusmap-theme" data-page="fir-register">
+    <div class="layout">
+        <main class="main">
+            <section class="content statusmap-shell" aria-labelledby="statusmapTitle">
+                <header class="fir-register-hero statusmap-hero">
+                    <div class="fir-register-hero-copy">
+                        <span class="fir-register-kicker"><i></i> ANNUAL FIR OVERVIEW</span>
+                        <h1 id="statusmapTitle">FIR <em>StatusMap</em> <span class="fir-register-hero-year-control"><button class="fir-register-hero-year" id="statusmapYearButton" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="statusmapYearPicker">2026</button><span class="fir-register-year-picker statusmap-year-picker" id="statusmapYearPicker" role="listbox" aria-label="Select FIR year" aria-hidden="true"></span><select class="fir-register-year-source" id="statusmapYear" aria-label="Select FIR year" tabindex="-1" aria-hidden="true"></select></span></h1>
+                        <p>One cell per FIR number. Status colors follow the CaseTrack FIR status rules.</p>
+                    </div>
+                    <div class="statusmap-seal" aria-hidden="true">
+                        <svg class="statusmap-seal-art" width="108" height="108" viewBox="0 0 120 120" focusable="false">
+                            <path d="M38 43h14l8 12h16M38 77h14l8-12h16" fill="none" stroke="#9dd5cd" stroke-opacity=".8" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" />
+                            <rect x="29" y="35" width="18" height="16" rx="4" fill="#5B8DEF" stroke="#fff" stroke-opacity=".65" />
+                            <rect x="73" y="35" width="18" height="16" rx="4" fill="#E6B84A" stroke="#fff" stroke-opacity=".65" />
+                            <rect x="29" y="69" width="18" height="16" rx="4" fill="#E66A73" stroke="#fff" stroke-opacity=".65" />
+                            <rect x="73" y="69" width="18" height="16" rx="4" fill="#42B883" stroke="#fff" stroke-opacity=".65" />
+                            <circle cx="60" cy="60" r="7" fill="#14384b" stroke="#8ce6c9" stroke-width="2" />
+                            <circle cx="102" cy="17" r="2.8" fill="#55d1aa" />
+                            <circle cx="45" cy="108" r="2.8" fill="#55d1aa" />
+                            <circle cx="8" cy="53" r="2.8" fill="#55d1aa" />
+                        </svg>
+                    </div>
+                </header>
+
+                <div class="statusmap-toolbar">
+                    <a class="statusmap-back" id="statusmapBack" href="fir-register.html">← Back to FIR Register</a>
+                </div>
+
+                <section class="statusmap-summary" aria-label="FIR status summary" aria-live="polite">
+                    <article class="summary-card summary-total"><span>Total registered FIRs</span><strong id="countRegistered">—</strong></article>
+                    <article class="summary-card" data-status="ui"><span>Under Investigation</span><strong id="countUi">—</strong></article>
+                    <article class="summary-card" data-status="ucr"><span>UCR / Cancellation</span><strong id="countUcr">—</strong></article>
+                    <article class="summary-card" data-status="ut"><span>Under Trial</span><strong id="countUt">—</strong></article>
+                    <article class="summary-card" data-status="disposed"><span>Disposed</span><strong id="countDisposed">—</strong></article>
+                    <article class="summary-card summary-other"><span>Other / unmapped</span><strong id="countOther">—</strong></article>
+                    <article class="summary-card summary-missing"><span>Missing FIR numbers</span><strong id="countMissing">—</strong></article>
+                </section>
+
+                <p class="statusmap-message" id="statusmapMessage" role="status" aria-live="polite">Loading FIR records…</p>
+                <section class="statusmap-board" aria-label="Sequential FIR number status grid">
+                    <div class="statusmap-grid" id="statusmapGrid" role="group" aria-label="FIR number cells"></div>
+                </section>
+                <section class="unnumbered-panel" id="unnumberedPanel" hidden aria-labelledby="unnumberedTitle">
+                    <h2 id="unnumberedTitle">Registered records without a valid FIR number</h2>
+                    <p>These FIR Masters are included in the registered and status totals but cannot be placed in the numbered sequence.</p>
+                    <div id="unnumberedList"></div>
+                </section>
+                <div class="statusmap-legend" aria-label="FIR status legend">
+                    <span><i class="legend-swatch status-ui"></i>Under Investigation</span>
+                    <span><i class="legend-swatch status-ucr"></i>UCR / Cancellation</span>
+                    <span><i class="legend-swatch status-ut"></i>Under Trial</span>
+                    <span><i class="legend-swatch status-disposed"></i>Disposed</span>
+                    <span><i class="legend-swatch status-missing"></i>Not registered</span>
+                    <span><i class="legend-swatch status-unknown"></i>Unknown / duplicate</span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <dialog class="statusmap-dialog" id="firDetailsDialog" aria-labelledby="dialogTitle">
+        <form method="dialog" class="dialog-form">
+            <button class="dialog-close" value="close" aria-label="Close FIR details">×</button>
+            <span class="statusmap-kicker">FIR RECORD</span>
+            <h2 id="dialogTitle">FIR details</h2>
+            <p class="dialog-status" id="dialogStatus"></p>
+            <dl class="dialog-details">
+                <div><dt>FIR Number</dt><dd id="dialogFirNumber">—</dd></div>
+                <div><dt>FIR Date</dt><dd id="dialogFirDate">—</dd></div>
+                <div><dt>Sections</dt><dd id="dialogSections">—</dd></div>
+                <div><dt>Police Station</dt><dd id="dialogStation">—</dd></div>
+                <div><dt>Next Hearing</dt><dd id="dialogHearing">—</dd></div>
+            </dl>
+            <p class="dialog-missing" id="dialogMissing" hidden>No FIR registered for this number.</p>
+            <a class="dialog-view" id="dialogViewFir" href="fir-register.html">View FIR</a>
+        </form>
+    </dialog>
+
+    <script type="module" src="../assets/js/shared-layout.js"></script>
+    <script type="module" src="../assets/js/fir-statusmap.js"></script>
+    <script type="module" src="../assets/js/pwa.js"></script>
+</body>
+</html>
