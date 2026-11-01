@@ -258,7 +258,7 @@ body.light-theme .forgot-link {
 
 @media (max-width: 520px) {
     body {
-        align-items: flex-start;
+        align-items: center;
         min-height: 100vh;
         min-height: 100dvh;
         overflow-y: auto;
@@ -269,6 +269,7 @@ body.light-theme .forgot-link {
     .login-wrapper {
         max-width: 440px;
         padding: 12px;
+        margin-block: auto;
     }
 
     .login-container {
