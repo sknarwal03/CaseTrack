@@ -139,7 +139,7 @@ function mergeCaseRecords(masterDocs, linkedDocs, legacyDocs) {
     records.forEach(record => {
         const master = mastersById.get(record.firMasterId || record.firId);
         if (!master) return;
-        ['firNo', 'firYear', 'fileNo', 'firDate', 'policeStation', 'policeStationId', 'underSection', 'crimeHead', 'incidentDate', 'beatDetails',
+        ['firNo', 'firYear', 'fileNo', 'firDate', 'policeStation', 'policeStationId', 'underSection', 'crimeHead', 'pageNo', 'incidentDate', 'beatDetails',
             'incidentPlace', 'complainantName', 'complainantFatherName', 'complainantMobile', 'complainantAddress']
             .forEach(key => { record[key] = master[key] ?? (key === 'fileNo' ? fileNumberFor(master) : record[key]) ?? ''; });
         record.firStatus = master.firStatus || master.status || record.firStatus || '';
@@ -306,7 +306,7 @@ export async function loadRecordsForFir(db, firId) {
     if (masterSnapshot.exists()) {
         const master = masterSnapshot.data();
         records.forEach(record => {
-            ['firNo', 'firYear', 'fileNo', 'firDate', 'policeStation', 'policeStationId', 'underSection', 'crimeHead', 'incidentDate', 'beatDetails',
+            ['firNo', 'firYear', 'fileNo', 'firDate', 'policeStation', 'policeStationId', 'underSection', 'crimeHead', 'pageNo', 'incidentDate', 'beatDetails',
                 'incidentPlace', 'complainantName', 'complainantFatherName', 'complainantMobile', 'complainantAddress']
                 .forEach(key => { record[key] = master[key] ?? (key === 'fileNo' ? fileNumberFor(master) : record[key]) ?? ''; });
             record.firStatus = master.firStatus || master.status || record.firStatus || '';

@@ -1,5 +1,6 @@
 import { db } from '@config/firebase-config.js';
-import { getFirSummaries, loadCaseRecords } from './fir-case-model.js';
+import { getFirSummaries, loadCaseRecords, saveFirMaster, caseRecordRef } from './fir-case-model.js';
+import { updateDoc } from 'firebase/firestore';
 
 const yearSelect = document.getElementById('firIndexYear');
 const yearButton = document.getElementById('firIndexYearButton');
@@ -52,7 +53,7 @@ function searchMatch(fir, query) {
     if (!query) return true;
     const related = records.filter(record => identityKey(record) === fir._registerKey);
     const values = [
-        firNumber(fir), firYearOf(fir), fir.fileNo, fir.firDate, fir.policeStation,
+        firNumber(fir), firYearOf(fir), fir.fileNo, fir.pageNo, fir.firDate, fir.policeStation,
         fir.complainantName, fir.complainantFatherName, fir.complainantMobile,
         fir.incidentPlace, fir.underSection, fir.crimeHead,
         ...related.flatMap(record => [
@@ -71,7 +72,7 @@ function renderRows() {
     if (!visibleFirs.length) {
         const row = document.createElement('tr');
         const cell = node('td', 'fir-index-table-message', 'No FIRs match this year and search.');
-        cell.colSpan = 6;
+        cell.colSpan = 7;
         row.append(cell);
         rowsHost.append(row);
     } else {
@@ -102,6 +103,92 @@ function renderRows() {
             statusBadge.dataset.status = status.toLocaleLowerCase();
             statusCell.append(statusBadge);
             row.append(statusCell);
+
+            const pageCell = document.createElement('td');
+            pageCell.className = 'fir-index-page-cell';
+            pageCell.append(makePageValue());
+            pageCell.addEventListener('click', event => event.stopPropagation());
+            pageCell.addEventListener('dblclick', event => {
+                event.stopPropagation();
+                if (!pageCell.querySelector('input')) enterPageEdit();
+            });
+            row.append(pageCell);
+
+            function makePageValue() {
+                const pageValue = node('span', 'fir-index-page-value', text(fir.pageNo) || '—');
+                pageValue.title = 'Double-click to edit Page No';
+                pageValue.setAttribute('aria-label', `Page No ${text(fir.pageNo) || 'not set'}; double-click to edit`);
+                return pageValue;
+            }
+
+            function enterPageEdit() {
+                const pageEditor = document.createElement('div');
+                pageEditor.className = 'fir-index-page-editor';
+                const pageInput = document.createElement('input');
+                pageInput.type = 'text';
+                pageInput.maxLength = 40;
+                pageInput.value = text(fir.pageNo);
+                pageInput.placeholder = 'Page No';
+                pageInput.setAttribute('aria-label', `Page number for FIR ${displayFir(fir)}`);
+                pageInput.addEventListener('click', event => event.stopPropagation());
+                pageInput.addEventListener('keydown', event => {
+                    event.stopPropagation();
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        savePageNo(pageInput, savePageButton);
+                    } else if (event.key === 'Escape') {
+                        pageCell.replaceChildren(makePageValue());
+                    }
+                });
+                const savePageButton = node('button', 'fir-index-page-save', 'Save');
+                savePageButton.type = 'button';
+                savePageButton.setAttribute('aria-label', `Save page number for FIR ${displayFir(fir)}`);
+                savePageButton.addEventListener('keydown', event => event.stopPropagation());
+                savePageButton.addEventListener('click', event => {
+                    event.stopPropagation();
+                    savePageNo(pageInput, savePageButton);
+                });
+                pageEditor.append(pageInput, savePageButton);
+                pageCell.replaceChildren(pageEditor);
+                pageInput.focus();
+                pageInput.select();
+            }
+
+            async function savePageNo(pageInput, savePageButton) {
+                const pageNo = text(pageInput.value);
+                if (pageNo === text(fir.pageNo)) {
+                    pageCell.replaceChildren(makePageValue());
+                    return;
+                }
+                pageInput.disabled = true;
+                savePageButton.disabled = true;
+                savePageButton.textContent = 'Saving…';
+                try {
+                    const masterId = fir._collectionName === 'firMasters'
+                        ? fir.id
+                        : (fir.firMasterId || (fir._collectionName === 'linkedCases' ? fir.firId : ''));
+                    if (masterId) {
+                        await saveFirMaster(db, {
+                            firNo: text(fir.firNo),
+                            firYear: firYearOf(fir),
+                            policeStation: text(fir.policeStation),
+                            policeStationId: text(fir.policeStationId),
+                            pageNo
+                        }, masterId);
+                    } else {
+                        await updateDoc(caseRecordRef(db, fir), { pageNo });
+                    }
+                    fir.pageNo = pageNo;
+                    pageCell.replaceChildren(makePageValue());
+                } catch (error) {
+                    console.error('Unable to save the FIR page number.', error);
+                    savePageButton.textContent = 'Retry';
+                    resultCount.textContent = 'Page number could not be saved. Check access and try again.';
+                } finally {
+                    pageInput.disabled = false;
+                    savePageButton.disabled = false;
+                }
+            }
 
             rowsHost.append(row);
         });
@@ -222,7 +309,7 @@ async function init() {
         resultCount.textContent = 'Register unavailable';
         const row = document.createElement('tr');
         const cell = node('td', 'fir-index-table-message', 'The FIR index could not be loaded. Check your access and connection, then reload this page.');
-        cell.colSpan = 6;
+        cell.colSpan = 7;
         row.append(cell);
         rowsHost.replaceChildren(row);
         pageSummary.textContent = '—';

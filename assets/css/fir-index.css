@@ -59,6 +59,13 @@
 .fir-index-open-record { display:inline-flex; min-height:28px; align-items:center; padding:0 9px; border:1px solid rgba(85,209,170,.2); border-radius:6px; color:#72d7ba; background:rgba(85,209,170,.06); font-size:9px; font-weight:700; text-decoration:none; white-space:nowrap; }
 .fir-index-open-record:hover { border-color:rgba(85,209,170,.5); color:#a2f0d8; background:rgba(85,209,170,.12); }
 .fir-index-status { display:inline-flex; max-width:130px; overflow:hidden; padding:4px 7px; border:1px solid var(--border-color); border-radius:999px; color:var(--text-secondary); background:var(--surface-raised); font-size:8px; text-overflow:ellipsis; text-transform:uppercase; white-space:nowrap; }
+.fir-index-page-value { display:inline-flex; min-width:72px; min-height:28px; align-items:center; color:var(--text-primary); cursor:text; }
+.fir-index-page-value:hover { text-decoration:underline dotted rgba(85,209,170,.7); text-underline-offset:3px; }
+.fir-index-page-editor { display:flex; min-width:132px; align-items:center; gap:5px; }
+.fir-index-page-editor input { width:100%; min-width:0; height:30px; padding:0 8px; border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); background:var(--surface-raised); font-size:11px; }
+.fir-index-page-editor input:focus { border-color:rgba(85,209,170,.72); outline:2px solid rgba(85,209,170,.16); }
+.fir-index-page-save { min-height:30px; padding:0 8px; border:1px solid rgba(85,209,170,.25); border-radius:6px; color:#72d7ba; background:rgba(85,209,170,.07); font-size:9px; font-weight:700; cursor:pointer; }
+.fir-index-page-save:disabled { opacity:.55; cursor:wait; }
 .fir-index-status[data-status="disposed"],.fir-index-status[data-status="cancelled"] { border-color:rgba(224,82,100,.22); color:#ee929d; background:rgba(224,82,100,.07); }
 .fir-index-status[data-status="under trial"],.fir-index-status[data-status="ut"] { border-color:rgba(52,141,255,.22); color:#82baff; background:rgba(52,141,255,.07); }
 .fir-index-status[data-status="under investigation"],.fir-index-status[data-status="ui"] { border-color:rgba(85,209,170,.2); color:#79d8b9; background:rgba(85,209,170,.06); }

@@ -4,6 +4,10 @@
 > **Last updated:** 2026-10-25  
 > **Issue tracker:** [PROJECT-ISSUE-TRACKER.md](./PROJECT-ISSUE-TRACKER.md)
 
+## Add/Edit Case source of truth
+
+The authoritative Add/Edit Case governance set is documented in [ADD-CASE-MASTER-RULES.md](./ADD-CASE-MASTER-RULES.md), with its linked field registry, data mapping, UI/UX standards, business logic, and change-impact matrix. These documents record the repository audit as of 2026-10-26; source behavior and verified behavior are distinguished explicitly. Older Add/Edit Case references remain historical unless linked as authoritative from the master rules.
+
 ## Current status
 
 Four source-confirmed record-management findings have been registered for future resolution. They are all **Open** and **Not Started**. They are not completed implementation work, and no fix is authorized by this status entry.
