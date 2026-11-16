@@ -1,4 +1,4 @@
-const CACHE_VERSION = "casetrack-shell-v4";
+const CACHE_VERSION = "casetrack-shell-v5";
 const APP_BASE = "/CaseTrack/";
 const SHELL = [
   APP_BASE,

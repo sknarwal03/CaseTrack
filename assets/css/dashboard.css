@@ -221,10 +221,6 @@ nav {
     border-bottom: 1px solid #142b46;
 }
 
-.menu {
-    display: none;
-}
-
 .search {
     width: min(510px, 45vw);
     display: flex;
