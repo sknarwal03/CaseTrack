@@ -1,0 +1,633 @@
+{
+  "time": "2026-11-12T16:57:45.983Z",
+  "endpoints": [
+    {
+      "endpoint": "getMyAccess",
+      "method": "GET",
+      "status": 401,
+      "body": "{\"error\":\"Unauthorized.\"}"
+    },
+    {
+      "endpoint": "listUserRoles",
+      "method": "GET",
+      "status": 401,
+      "body": "{\"error\":\"Unauthorized.\"}"
+    },
+    {
+      "endpoint": "policeStations",
+      "method": "GET",
+      "status": 401,
+      "body": "{\"error\":\"Unauthorized.\"}"
+    },
+    {
+      "endpoint": "validateOperatorSetupCode",
+      "method": "POST",
+      "status": 404,
+      "body": "Function us-central1-validateOperatorSetupCode does not exist, valid functions are: us-central1-saveFirMaster, us-central1-listUserRoles, us-central1-policeStations, us-central1-createOperator, us-central1-resetOperatorPassword, us-central1-completeOperatorFirstPasswordChange, us-central1-manageUserRole, us-central1-getMyAccess"
+    },
+    {
+      "endpoint": "completeOperatorPasswordSetup",
+      "method": "POST",
+      "status": 404,
+      "body": "Function us-central1-completeOperatorPasswordSetup does not exist, valid functions are: us-central1-saveFirMaster, us-central1-listUserRoles, us-central1-policeStations, us-central1-createOperator, us-central1-resetOperatorPassword, us-central1-completeOperatorFirstPasswordChange, us-central1-manageUserRole, us-central1-getMyAccess"
+    }
+  ],
+  "screenshots": [
+    "admin-panel-dialog-viewport-1366-light.png",
+    "admin-panel-dialog-viewport-320-light.png",
+    "admin-panel-dialog-viewport-1366-dark.png",
+    "admin-panel-dialog-viewport-320-dark.png"
+  ],
+  "styles": [
+    {
+      "theme": "light",
+      "stationHeader": {
+        "selector": "",
+        "color": "rgb(24, 38, 56)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "panelToken": "",
+        "chain": [
+          {
+            "tag": "TH",
+            "id": "",
+            "class": "",
+            "color": "rgba(16, 31, 52, 0.9)",
+            "image": "none"
+          },
+          {
+            "tag": "TR",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "THEAD",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "TABLE",
+            "id": "",
+            "class": "station-master-table",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "",
+            "class": "station-master-table-wrap",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "panel station-master",
+            "color": "rgb(255, 255, 255)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "adminPanelContent",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "content",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "MAIN",
+            "id": "",
+            "class": "main",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "",
+            "class": "layout",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "class": "light-theme",
+            "color": "rgb(243, 246, 250)",
+            "image": "radial-gradient(circle at 70% -10%, rgb(223, 239, 255) 0px, rgba(0, 0, 0, 0) 32%)"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          }
+        ]
+      },
+      "userUid": {
+        "selector": "",
+        "color": "rgb(169, 158, 255)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "panelToken": "",
+        "chain": [
+          {
+            "tag": "TD",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "TR",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "TBODY",
+            "id": "adminUsersTableBody",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "TABLE",
+            "id": "",
+            "class": "po-table admin-users-table",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "",
+            "class": "po-table-wrap",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "panel",
+            "color": "rgb(255, 255, 255)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "adminPanelContent",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "content",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "MAIN",
+            "id": "",
+            "class": "main",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "",
+            "class": "layout",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "class": "light-theme",
+            "color": "rgb(243, 246, 250)",
+            "image": "radial-gradient(circle at 70% -10%, rgb(223, 239, 255) 0px, rgba(0, 0, 0, 0) 32%)"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          }
+        ]
+      },
+      "dialog": {
+        "selector": "roleManagementDialog",
+        "color": "rgb(24, 38, 56)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "panelToken": "",
+        "chain": [
+          {
+            "tag": "DIALOG",
+            "id": "roleManagementDialog",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "panel",
+            "color": "rgb(255, 255, 255)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "adminPanelContent",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "content",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "MAIN",
+            "id": "",
+            "class": "main",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "",
+            "class": "layout",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "class": "light-theme",
+            "color": "rgb(243, 246, 250)",
+            "image": "radial-gradient(circle at 70% -10%, rgb(223, 239, 255) 0px, rgba(0, 0, 0, 0) 32%)"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          }
+        ]
+      }
+    },
+    {
+      "theme": "dark",
+      "stationHeader": {
+        "selector": "",
+        "color": "rgb(191, 208, 235)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "panelToken": "",
+        "chain": [
+          {
+            "tag": "TH",
+            "id": "",
+            "class": "",
+            "color": "rgba(16, 31, 52, 0.9)",
+            "image": "none"
+          },
+          {
+            "tag": "TR",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "THEAD",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "TABLE",
+            "id": "",
+            "class": "station-master-table",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "",
+            "class": "station-master-table-wrap",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "panel station-master",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "linear-gradient(145deg, rgb(16, 31, 52), rgb(12, 27, 45))"
+          },
+          {
+            "tag": "DIV",
+            "id": "adminPanelContent",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "content",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "MAIN",
+            "id": "",
+            "class": "main",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "",
+            "class": "layout",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "class": "",
+            "color": "rgb(7, 19, 33)",
+            "image": "radial-gradient(circle at 70% -10%, rgb(20, 54, 91) 0px, rgba(0, 0, 0, 0) 32%), none"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          }
+        ]
+      },
+      "userUid": {
+        "selector": "",
+        "color": "rgb(169, 158, 255)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "panelToken": "",
+        "chain": [
+          {
+            "tag": "TD",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "TR",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "TBODY",
+            "id": "adminUsersTableBody",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "TABLE",
+            "id": "",
+            "class": "po-table admin-users-table",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "",
+            "class": "po-table-wrap",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "panel",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "linear-gradient(145deg, rgb(16, 31, 52), rgb(12, 27, 45))"
+          },
+          {
+            "tag": "DIV",
+            "id": "adminPanelContent",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "content",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "MAIN",
+            "id": "",
+            "class": "main",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "",
+            "class": "layout",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "class": "",
+            "color": "rgb(7, 19, 33)",
+            "image": "radial-gradient(circle at 70% -10%, rgb(20, 54, 91) 0px, rgba(0, 0, 0, 0) 32%), none"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          }
+        ]
+      },
+      "dialog": {
+        "selector": "roleManagementDialog",
+        "color": "rgb(244, 247, 255)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "panelToken": "",
+        "chain": [
+          {
+            "tag": "DIALOG",
+            "id": "roleManagementDialog",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "panel",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "linear-gradient(145deg, rgb(16, 31, 52), rgb(12, 27, 45))"
+          },
+          {
+            "tag": "DIV",
+            "id": "adminPanelContent",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "SECTION",
+            "id": "",
+            "class": "content",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "MAIN",
+            "id": "",
+            "class": "main",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "DIV",
+            "id": "",
+            "class": "layout",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "class": "",
+            "color": "rgb(7, 19, 33)",
+            "image": "radial-gradient(circle at 70% -10%, rgb(20, 54, 91) 0px, rgba(0, 0, 0, 0) 32%), none"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "class": "",
+            "color": "rgba(0, 0, 0, 0)",
+            "image": "none"
+          }
+        ]
+      }
+    }
+  ],
+  "setupConsole": [
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "verbose",
+      "text": "[DOM] Password forms should have (optionally hidden) username fields for accessibility: (More info: https://goo.gl/9p2vKq) %o"
+    },
+    {
+      "type": "error",
+      "text": "Access to fetch at 'http://127.0.0.1:5003/demo-casetrack-role-prototype/us-central1/validateOperatorSetupCode' from origin 'http://127.0.0.1:5174' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_FAILED"
+    },
+    {
+      "type": "warning",
+      "text": "Password setup link verification failed. unknown"
+    }
+  ],
+  "setupFailedRequests": [
+    {
+      "url": "http://127.0.0.1:5003/demo-casetrack-role-prototype/us-central1/validateOperatorSetupCode",
+      "error": "net::ERR_FAILED"
+    }
+  ],
+  "remoteFirebase": [],
+  "setupRegistryActive": true,
+  "setupPreflight": {
+    "status": 404,
+    "allowOrigin": null,
+    "body": "Function us-central1-validateOperatorSetupCode does not exist, valid functions are: us-central1-saveFirMaster, us-central1-listUserRoles, us-central1-policeStations, us-central1-createOperator, us-central1-resetOperatorPassword, us-central1-completeOperatorFirstPasswordChange, us-central1-manageUserRole, us-central1-getMyAccess"
+  },
+  "browserVersion": "156.0.8078.80",
+  "setupFormVisible": false,
+  "contrast": {
+    "method": "WCAG relative luminance from browser computed sRGB colors; station header rgba composited over its opaque white panel",
+    "stationHeader": {
+      "foreground": [
+        24,
+        38,
+        56
+      ],
+      "background": [
+        39.9,
+        53.4,
+        72.3
+      ],
+      "ratio": 1.238540866216607
+    },
+    "userUid": {
+      "foreground": [
+        169,
+        158,
+        255
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "ratio": 2.3277087678022124
+    }
+  }
+}

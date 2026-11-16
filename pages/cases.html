@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/css/shared.css">
     <link rel="stylesheet" href="../assets/css/cases.css">
+    <link rel="stylesheet" href="../assets/css/export-dialog.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="../components/add-case/add-case.css">
     <meta name="theme-color" content="#173f35">
@@ -34,7 +35,7 @@
                 <div class="cases-page-toolbar">
                     <div class="cases-location"><span>CASE FILES</span><b>/</b><strong>ALL CASES</strong></div>
                     <div class="case-actions">
-                        <button class="btn" type="button">Export</button>
+                        <button class="btn" id="casesExportTrigger" type="button">Export</button>
                         <button class="btn primary" data-open-add-case type="button">Add Case</button>
                     </div>
                 </div>
@@ -56,7 +57,7 @@
                         <div class="case-total-count" id="caseTotalCount" aria-live="polite">Total Records: 0</div>
                     </div>
 
-                    <div class="cases-table-wrap">
+                    <div class="cases-table-wrap" tabindex="0" role="region" aria-label="All Cases table; scroll horizontally to view all columns">
                         <table class="cases-table">
                             <thead>
                                 <tr>
@@ -70,10 +71,39 @@
                             </thead>
                             <tbody id="casesTableBody"></tbody>
                         </table>
+                        <p class="cases-table-scroll-hint" aria-hidden="true">Scroll horizontally to view all columns</p>
                     </div>
                 </section>
             </section>
         </main>
+    </div>
+
+    <div class="modal-backdrop" id="exportDialog" aria-hidden="true">
+        <section class="modal export-dialog" role="dialog" aria-modal="true" aria-labelledby="exportDialogTitle">
+            <header class="modal-header">
+                <div><h2 id="exportDialogTitle">Export Data</h2><p>Choose a file format and record scope.</p></div>
+                <button class="close" type="button" data-export-close aria-label="Close export dialog">×</button>
+            </header>
+            <form class="modal-body export-form" id="exportForm">
+                <fieldset class="export-choice-group">
+                    <legend>Format</legend>
+                    <label class="export-choice"><input type="radio" name="export-format" value="csv" checked> CSV (.csv)</label>
+                    <label class="export-choice"><input type="radio" name="export-format" value="xlsx"> Excel (.xlsx)</label>
+                    <label class="export-choice"><input type="radio" name="export-format" value="pdf"> PDF (.pdf)</label>
+                </fieldset>
+                <fieldset class="export-choice-group">
+                    <legend>Records</legend>
+                    <label class="export-choice"><input type="radio" name="export-scope" value="filtered" checked> Filtered Records</label>
+                    <label class="export-choice"><input type="radio" name="export-scope" value="all"> All Records</label>
+                </fieldset>
+                <p class="export-record-count" data-export-count aria-live="polite">Loading record count…</p>
+                <p class="export-status" data-export-status role="status" aria-live="polite"></p>
+                <footer class="modal-footer">
+                    <button class="btn" type="button" data-export-close>Cancel</button>
+                    <button class="btn primary" type="submit" data-export-submit>Export</button>
+                </footer>
+            </form>
+        </section>
     </div>
 
     <div class="modal-backdrop" id="caseDetailsModal" aria-hidden="true">

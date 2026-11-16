@@ -46,6 +46,7 @@ test('premium status palette maps exactly and preserves unknown as neutral', () 
 
 test('statusmap cells, legend, counters, and popup share the approved CSS color tokens', async () => {
     const css = await readFile(new URL('../assets/css/fir-statusmap.css', import.meta.url), 'utf8');
+    const sharedCss = await readFile(new URL('../assets/css/shared.css', import.meta.url), 'utf8');
     const html = await readFile(new URL('../pages/fir-statusmap.html', import.meta.url), 'utf8');
     const expected = {
         ui: '#5B8DEF',
@@ -55,14 +56,36 @@ test('statusmap cells, legend, counters, and popup share the approved CSS color 
     };
     Object.entries(expected).forEach(([status, color]) => {
         const token = `--fir-statusmap-${status}`;
-        const tokenMatch = css.match(new RegExp(`${token}:\\s*(#[0-9A-F]{6})`));
+        const tokenMatch = sharedCss.match(new RegExp(`--fir-status-${status}:\\s*(#[0-9A-F]{6})`));
         assert.equal(tokenMatch?.[1], color);
+        assert.match(css, new RegExp(`${token}:var\\(--fir-status-${status}\\)`));
         assert.ok(html.includes(`fill="${color}"`), `seal motif should use the ${status} palette color`);
         assert.match(css, new RegExp(`\\.legend-swatch\\.status-${status}[^{}]*\\{[^}]*var\\(${token}\\)`));
         assert.match(css, new RegExp(`\\.summary-card\\[data-status="${status}"\\][^{}]*\\{[^}]*var\\(${token}\\)`));
         assert.match(css, new RegExp(`\\.statusmap-cell\\.status-${status}[^{}]*\\{[^}]*var\\(${token}\\)`));
         assert.match(css, new RegExp(`\\.dialog-status\\.status-${status}[^{}]*\\{[^}]*var\\(${token}\\)`));
     });
+});
+
+test('canonical FIR status presentation keeps FIR and linked-case meanings distinct', async () => {
+    const { firStatusPresentation } = await import('../assets/js/fir-status-presentation.mjs');
+    const expected = [
+        ['UI', 'ui', 'Under Investigation'],
+        ['UCR', 'ucr', 'UCR — Untraced / Cancellation'],
+        ['Untraced', 'ucr', 'UCR — Untraced / Cancellation'],
+        ['Cancellation', 'ucr', 'Cancelled'],
+        ['UT', 'ut', 'Under Trial'],
+        ['Disposed', 'disposed', 'Disposed']
+    ];
+    expected.forEach(([value, category, label]) => {
+        const presentation = firStatusPresentation(value);
+        assert.equal(presentation.category, category);
+        assert.equal(presentation.label, label);
+    });
+    assert.equal(firStatusPresentation('').category, 'other');
+    assert.equal(firStatusPresentation('').label, 'Status not recorded');
+    assert.equal(firStatusPresentation('committed').category, 'other');
+    assert.equal(firStatusPresentation('committed').label, 'committed');
 });
 
 test('a registered FIR without proceedings follows the canonical UI rule', () => {

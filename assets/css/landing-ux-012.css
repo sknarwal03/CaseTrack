@@ -1,0 +1,99 @@
+/* UX-012: readable, wrapping dashboard-preview details on narrow screens. */
+@media (max-width: 480px) {
+    .hero > *,
+    .preview,
+    .preview-content,
+    .preview-heading,
+    .preview-heading > span,
+    .mini-stats,
+    .mini-stats > div,
+    .chart,
+    .hearing,
+    .hearing > span {
+        min-width: 0;
+    }
+
+    body .preview-top {
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .preview-heading {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    body .preview-heading b {
+        font-size: 15px;
+        line-height: 1.35;
+    }
+
+    body .preview-heading small,
+    body .chart small {
+        font-size: 12px;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+    }
+
+    body .preview-heading button {
+        flex: 0 0 auto;
+        padding: 7px 9px;
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    body .mini-stats {
+        gap: 7px;
+    }
+
+    body .mini-stats > div {
+        padding: 7px 6px;
+    }
+
+    body .mini-stats i {
+        font-size: 11px;
+        line-height: 1.35;
+    }
+
+    body .mini-stats small {
+        font-size: 11px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    body .mini-stats b {
+        font-size: 18px;
+        line-height: 1.25;
+    }
+
+    body .chart {
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    body .hearing {
+        align-items: flex-start;
+        gap: 9px;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    body .hearing small {
+        font-size: 12px;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+    }
+
+    body .hearing strong {
+        flex: 0 0 54px;
+        font-size: 13px;
+    }
+
+    body .hearing strong small {
+        font-size: 9px;
+        line-height: 1.2;
+    }
+}

@@ -1,0 +1,1024 @@
+[
+  {
+    "width": 320,
+    "theme": "light",
+    "screenshot": "ux-017-admin-tables-320-light.png",
+    "geometry": {
+      "viewportWidth": 320,
+      "documentWidth": 320,
+      "userTableWidth": 960,
+      "userWrapperWidth": 260,
+      "stationTableWidth": 620,
+      "stationWrapperWidth": 260,
+      "uid": {
+        "color": "rgb(24, 38, 56)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 30,
+          "y": 852.828125,
+          "width": 214.171875,
+          "height": 61,
+          "right": 244.171875,
+          "bottom": 913.828125
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(244, 247, 255)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 31,
+          "y": 1814.015625,
+          "width": 210.796875,
+          "height": 41.890625,
+          "right": 241.796875,
+          "bottom": 1855.90625
+        }
+      },
+      "panelBackground": "none"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(24, 38, 56)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(40, 124, 243)",
+      "color": "rgb(85, 103, 124)",
+      "backgroundColor": "rgb(247, 249, 252)"
+    },
+    "disabled": {
+      "color": "rgb(93, 111, 133)",
+      "backgroundColor": "rgb(247, 249, 252)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 960,
+        "clientWidth": 260,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 620,
+        "clientWidth": 258,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "screenshot": "ux-017-admin-tables-320-dark.png",
+    "geometry": {
+      "viewportWidth": 320,
+      "documentWidth": 320,
+      "userTableWidth": 960,
+      "userWrapperWidth": 260,
+      "stationTableWidth": 620,
+      "stationWrapperWidth": 260,
+      "uid": {
+        "color": "rgb(169, 158, 255)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 30,
+          "y": 852.828125,
+          "width": 214.171875,
+          "height": 61,
+          "right": 244.171875,
+          "bottom": 913.828125
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(191, 208, 235)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 31,
+          "y": 1814.015625,
+          "width": 210.796875,
+          "height": 41.890625,
+          "right": 241.796875,
+          "bottom": 1855.90625
+        }
+      },
+      "panelBackground": "linear-gradient(145deg, rgb(16, 31, 52), rgb(12, 27, 45))"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(169, 158, 255)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(52, 141, 255)",
+      "color": "rgb(186, 201, 224)",
+      "backgroundColor": "rgb(16, 31, 52)"
+    },
+    "disabled": {
+      "color": "rgb(156, 177, 208)",
+      "backgroundColor": "rgb(16, 31, 52)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 960,
+        "clientWidth": 260,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 620,
+        "clientWidth": 258,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 375,
+    "theme": "light",
+    "screenshot": "ux-017-admin-tables-375-light.png",
+    "geometry": {
+      "viewportWidth": 375,
+      "documentWidth": 375,
+      "userTableWidth": 960,
+      "userWrapperWidth": 315,
+      "stationTableWidth": 620,
+      "stationWrapperWidth": 315,
+      "uid": {
+        "color": "rgb(24, 38, 56)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 30,
+          "y": 791.9375,
+          "width": 214.171875,
+          "height": 61,
+          "right": 244.171875,
+          "bottom": 852.9375
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(244, 247, 255)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 31,
+          "y": 1712.53125,
+          "width": 210.796875,
+          "height": 41.890625,
+          "right": 241.796875,
+          "bottom": 1754.421875
+        }
+      },
+      "panelBackground": "none"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(24, 38, 56)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(40, 124, 243)",
+      "color": "rgb(69, 86, 106)",
+      "backgroundColor": "rgb(247, 249, 252)"
+    },
+    "disabled": {
+      "color": "rgb(93, 111, 133)",
+      "backgroundColor": "rgb(247, 249, 252)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 960,
+        "clientWidth": 315,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 620,
+        "clientWidth": 313,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 375,
+    "theme": "dark",
+    "screenshot": "ux-017-admin-tables-375-dark.png",
+    "geometry": {
+      "viewportWidth": 375,
+      "documentWidth": 375,
+      "userTableWidth": 960,
+      "userWrapperWidth": 315,
+      "stationTableWidth": 620,
+      "stationWrapperWidth": 315,
+      "uid": {
+        "color": "rgb(169, 158, 255)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 30,
+          "y": 791.9375,
+          "width": 214.171875,
+          "height": 61,
+          "right": 244.171875,
+          "bottom": 852.9375
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(191, 208, 235)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 31,
+          "y": 1712.53125,
+          "width": 210.796875,
+          "height": 41.890625,
+          "right": 241.796875,
+          "bottom": 1754.421875
+        }
+      },
+      "panelBackground": "linear-gradient(145deg, rgb(16, 31, 52), rgb(12, 27, 45))"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(169, 158, 255)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(52, 141, 255)",
+      "color": "rgb(186, 201, 224)",
+      "backgroundColor": "rgb(16, 31, 52)"
+    },
+    "disabled": {
+      "color": "rgb(156, 177, 208)",
+      "backgroundColor": "rgb(16, 31, 52)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 960,
+        "clientWidth": 315,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 620,
+        "clientWidth": 313,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 430,
+    "theme": "light",
+    "screenshot": "ux-017-admin-tables-430-light.png",
+    "geometry": {
+      "viewportWidth": 430,
+      "documentWidth": 430,
+      "userTableWidth": 960,
+      "userWrapperWidth": 370,
+      "stationTableWidth": 620,
+      "stationWrapperWidth": 370,
+      "uid": {
+        "color": "rgb(24, 38, 56)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 30,
+          "y": 773.703125,
+          "width": 214.171875,
+          "height": 61,
+          "right": 244.171875,
+          "bottom": 834.703125
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(244, 247, 255)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 31,
+          "y": 1694.296875,
+          "width": 210.796875,
+          "height": 41.890625,
+          "right": 241.796875,
+          "bottom": 1736.1875
+        }
+      },
+      "panelBackground": "none"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(24, 38, 56)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(40, 124, 243)",
+      "color": "rgb(53, 69, 89)",
+      "backgroundColor": "rgb(247, 249, 252)"
+    },
+    "disabled": {
+      "color": "rgb(93, 111, 133)",
+      "backgroundColor": "rgb(247, 249, 252)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 960,
+        "clientWidth": 370,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 620,
+        "clientWidth": 368,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 430,
+    "theme": "dark",
+    "screenshot": "ux-017-admin-tables-430-dark.png",
+    "geometry": {
+      "viewportWidth": 430,
+      "documentWidth": 430,
+      "userTableWidth": 960,
+      "userWrapperWidth": 370,
+      "stationTableWidth": 620,
+      "stationWrapperWidth": 370,
+      "uid": {
+        "color": "rgb(169, 158, 255)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 30,
+          "y": 773.703125,
+          "width": 214.171875,
+          "height": 61,
+          "right": 244.171875,
+          "bottom": 834.703125
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(191, 208, 235)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 31,
+          "y": 1694.296875,
+          "width": 210.796875,
+          "height": 41.890625,
+          "right": 241.796875,
+          "bottom": 1736.1875
+        }
+      },
+      "panelBackground": "linear-gradient(145deg, rgb(16, 31, 52), rgb(12, 27, 45))"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(169, 158, 255)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(52, 141, 255)",
+      "color": "rgb(166, 185, 213)",
+      "backgroundColor": "rgb(16, 31, 52)"
+    },
+    "disabled": {
+      "color": "rgb(156, 177, 208)",
+      "backgroundColor": "rgb(16, 31, 52)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 960,
+        "clientWidth": 370,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 620,
+        "clientWidth": 368,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "screenshot": "ux-017-admin-tables-768-light.png",
+    "geometry": {
+      "viewportWidth": 768,
+      "documentWidth": 768,
+      "userTableWidth": 960,
+      "userWrapperWidth": 704,
+      "stationTableWidth": 702,
+      "stationWrapperWidth": 704,
+      "uid": {
+        "color": "rgb(24, 38, 56)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 32,
+          "y": 636.46875,
+          "width": 214.171875,
+          "height": 61,
+          "right": 246.171875,
+          "bottom": 697.46875
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(244, 247, 255)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 33,
+          "y": 1492.765625,
+          "width": 238.671875,
+          "height": 41.890625,
+          "right": 271.671875,
+          "bottom": 1534.65625
+        }
+      },
+      "panelBackground": "none"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(24, 38, 56)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(40, 124, 243)",
+      "color": "rgb(93, 111, 133)",
+      "backgroundColor": "rgb(247, 249, 252)"
+    },
+    "disabled": {
+      "color": "rgb(93, 111, 133)",
+      "backgroundColor": "rgb(247, 249, 252)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 960,
+        "clientWidth": 704,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 702,
+        "clientWidth": 702,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "screenshot": "ux-017-admin-tables-768-dark.png",
+    "geometry": {
+      "viewportWidth": 768,
+      "documentWidth": 768,
+      "userTableWidth": 960,
+      "userWrapperWidth": 704,
+      "stationTableWidth": 702,
+      "stationWrapperWidth": 704,
+      "uid": {
+        "color": "rgb(169, 158, 255)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 32,
+          "y": 636.46875,
+          "width": 214.171875,
+          "height": 61,
+          "right": 246.171875,
+          "bottom": 697.46875
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(191, 208, 235)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 33,
+          "y": 1492.765625,
+          "width": 238.671875,
+          "height": 41.890625,
+          "right": 271.671875,
+          "bottom": 1534.65625
+        }
+      },
+      "panelBackground": "linear-gradient(145deg, rgb(16, 31, 52), rgb(12, 27, 45))"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(169, 158, 255)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(52, 141, 255)",
+      "color": "rgb(156, 177, 208)",
+      "backgroundColor": "rgb(16, 31, 52)"
+    },
+    "disabled": {
+      "color": "rgb(156, 177, 208)",
+      "backgroundColor": "rgb(16, 31, 52)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 960,
+        "clientWidth": 704,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 702,
+        "clientWidth": 702,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 1024,
+    "theme": "light",
+    "screenshot": "ux-017-admin-tables-1024-light.png",
+    "geometry": {
+      "viewportWidth": 1024,
+      "documentWidth": 1024,
+      "userTableWidth": 960,
+      "userWrapperWidth": 688,
+      "stationTableWidth": 686,
+      "stationWrapperWidth": 688,
+      "uid": {
+        "color": "rgb(24, 38, 56)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 290,
+          "y": 693.140625,
+          "width": 214.171875,
+          "height": 61,
+          "right": 504.171875,
+          "bottom": 754.140625
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(244, 247, 255)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 291,
+          "y": 1543.359375,
+          "width": 233.234375,
+          "height": 41.890625,
+          "right": 524.234375,
+          "bottom": 1585.25
+        }
+      },
+      "panelBackground": "none"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(24, 38, 56)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(40, 124, 243)",
+      "color": "rgb(93, 111, 133)",
+      "backgroundColor": "rgb(247, 249, 252)"
+    },
+    "disabled": {
+      "color": "rgb(93, 111, 133)",
+      "backgroundColor": "rgb(247, 249, 252)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 960,
+        "clientWidth": 688,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 686,
+        "clientWidth": 686,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 1024,
+    "theme": "dark",
+    "screenshot": "ux-017-admin-tables-1024-dark.png",
+    "geometry": {
+      "viewportWidth": 1024,
+      "documentWidth": 1024,
+      "userTableWidth": 960,
+      "userWrapperWidth": 688,
+      "stationTableWidth": 686,
+      "stationWrapperWidth": 688,
+      "uid": {
+        "color": "rgb(169, 158, 255)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 290,
+          "y": 693.140625,
+          "width": 214.171875,
+          "height": 61,
+          "right": 504.171875,
+          "bottom": 754.140625
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(191, 208, 235)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 291,
+          "y": 1543.359375,
+          "width": 233.234375,
+          "height": 41.890625,
+          "right": 524.234375,
+          "bottom": 1585.25
+        }
+      },
+      "panelBackground": "linear-gradient(145deg, rgb(16, 31, 52), rgb(12, 27, 45))"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(169, 158, 255)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(52, 141, 255)",
+      "color": "rgb(156, 177, 208)",
+      "backgroundColor": "rgb(16, 31, 52)"
+    },
+    "disabled": {
+      "color": "rgb(156, 177, 208)",
+      "backgroundColor": "rgb(16, 31, 52)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 960,
+        "clientWidth": 688,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 686,
+        "clientWidth": 686,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 1366,
+    "theme": "light",
+    "screenshot": "ux-017-admin-tables-1366-light.png",
+    "geometry": {
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "userTableWidth": 1030,
+      "userWrapperWidth": 1030,
+      "stationTableWidth": 1028,
+      "stationWrapperWidth": 1030,
+      "uid": {
+        "color": "rgb(24, 38, 56)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 290,
+          "y": 672.84375,
+          "width": 229.78125,
+          "height": 61,
+          "right": 519.78125,
+          "bottom": 733.84375
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(244, 247, 255)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 291,
+          "y": 1502.765625,
+          "width": 349.515625,
+          "height": 41.890625,
+          "right": 640.515625,
+          "bottom": 1544.65625
+        }
+      },
+      "panelBackground": "none"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(24, 38, 56)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(40, 124, 243)",
+      "color": "rgb(93, 111, 133)",
+      "backgroundColor": "rgb(247, 249, 252)"
+    },
+    "disabled": {
+      "color": "rgb(93, 111, 133)",
+      "backgroundColor": "rgb(247, 249, 252)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 1030,
+        "clientWidth": 1030,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 1028,
+        "clientWidth": 1028,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 1366,
+    "theme": "dark",
+    "screenshot": "ux-017-admin-tables-1366-dark.png",
+    "geometry": {
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "userTableWidth": 1030,
+      "userWrapperWidth": 1030,
+      "stationTableWidth": 1028,
+      "stationWrapperWidth": 1030,
+      "uid": {
+        "color": "rgb(169, 158, 255)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 290,
+          "y": 672.84375,
+          "width": 229.78125,
+          "height": 61,
+          "right": 519.78125,
+          "bottom": 733.84375
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(191, 208, 235)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 291,
+          "y": 1502.765625,
+          "width": 349.515625,
+          "height": 41.890625,
+          "right": 640.515625,
+          "bottom": 1544.65625
+        }
+      },
+      "panelBackground": "linear-gradient(145deg, rgb(16, 31, 52), rgb(12, 27, 45))"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(169, 158, 255)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(52, 141, 255)",
+      "color": "rgb(156, 177, 208)",
+      "backgroundColor": "rgb(16, 31, 52)"
+    },
+    "disabled": {
+      "color": "rgb(156, 177, 208)",
+      "backgroundColor": "rgb(16, 31, 52)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 1030,
+        "clientWidth": 1030,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 1028,
+        "clientWidth": 1028,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 1920,
+    "theme": "light",
+    "screenshot": "ux-017-admin-tables-1920-light.png",
+    "geometry": {
+      "viewportWidth": 1920,
+      "documentWidth": 1920,
+      "userTableWidth": 1408,
+      "userWrapperWidth": 1408,
+      "stationTableWidth": 1406,
+      "stationWrapperWidth": 1408,
+      "uid": {
+        "color": "rgb(24, 38, 56)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 378,
+          "y": 652.546875,
+          "width": 314.125,
+          "height": 61,
+          "right": 692.125,
+          "bottom": 713.546875
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(244, 247, 255)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 379,
+          "y": 1482.46875,
+          "width": 478.03125,
+          "height": 41.890625,
+          "right": 857.03125,
+          "bottom": 1524.359375
+        }
+      },
+      "panelBackground": "none"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(24, 38, 56)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(40, 124, 243)",
+      "color": "rgb(93, 111, 133)",
+      "backgroundColor": "rgb(247, 249, 252)"
+    },
+    "disabled": {
+      "color": "rgb(93, 111, 133)",
+      "backgroundColor": "rgb(247, 249, 252)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 1408,
+        "clientWidth": 1408,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 1406,
+        "clientWidth": 1406,
+        "overflowX": "auto"
+      }
+    ]
+  },
+  {
+    "width": 1920,
+    "theme": "dark",
+    "screenshot": "ux-017-admin-tables-1920-dark.png",
+    "geometry": {
+      "viewportWidth": 1920,
+      "documentWidth": 1920,
+      "userTableWidth": 1408,
+      "userWrapperWidth": 1408,
+      "stationTableWidth": 1406,
+      "stationWrapperWidth": 1408,
+      "uid": {
+        "color": "rgb(169, 158, 255)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "fontSize": "13px",
+        "fontWeight": "650",
+        "rect": {
+          "x": 378,
+          "y": 652.546875,
+          "width": 314.125,
+          "height": 61,
+          "right": 692.125,
+          "bottom": 713.546875
+        }
+      },
+      "stationHeader": {
+        "color": "rgb(191, 208, 235)",
+        "backgroundColor": "rgba(16, 31, 52, 0.9)",
+        "backgroundImage": "none",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "rect": {
+          "x": 379,
+          "y": 1482.46875,
+          "width": 478.03125,
+          "height": 41.890625,
+          "right": 857.03125,
+          "bottom": 1524.359375
+        }
+      },
+      "panelBackground": "linear-gradient(145deg, rgb(16, 31, 52), rgb(12, 27, 45))"
+    },
+    "hover": {
+      "rowBackground": "rgba(143, 131, 255, 0.067)",
+      "uidColor": "rgb(169, 158, 255)"
+    },
+    "focus": {
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(52, 141, 255)",
+      "color": "rgb(156, 177, 208)",
+      "backgroundColor": "rgb(16, 31, 52)"
+    },
+    "disabled": {
+      "color": "rgb(156, 177, 208)",
+      "backgroundColor": "rgb(16, 31, 52)",
+      "opacity": "1",
+      "cursor": "pointer"
+    },
+    "horizontalOverflow": [
+      {
+        "scrollWidth": 1408,
+        "clientWidth": 1408,
+        "overflowX": "auto"
+      },
+      {
+        "scrollWidth": 1406,
+        "clientWidth": 1406,
+        "overflowX": "auto"
+      }
+    ]
+  }
+]

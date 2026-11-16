@@ -68,6 +68,12 @@ body.light-theme .station-master-table td {
     color: var(--text);
 }
 
+/* The light-theme header retains its dark CaseTrack surface; use a light
+   foreground so the heading remains readable on that composited background. */
+body.light-theme .station-master-table th {
+    color: #f4f7ff;
+}
+
 @media (max-width: 520px) {
     .station-master-form-row {
         align-items: stretch;

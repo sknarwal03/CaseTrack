@@ -1,0 +1,1485 @@
+{
+  "audit": "Phase 2B final verification",
+  "date": "2026-11-12T16:54:55.943Z",
+  "nodeRuntime": "v22.23.5",
+  "projectId": "demo-casetrack-role-prototype",
+  "viewports": [
+    [
+      320,
+      700
+    ],
+    [
+      375,
+      812
+    ],
+    [
+      430,
+      932
+    ],
+    [
+      768,
+      1024
+    ],
+    [
+      1024,
+      768
+    ],
+    [
+      1366,
+      768
+    ],
+    [
+      1920,
+      1080
+    ]
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "screenshots": [
+    "admin-panel-data-320-light.png",
+    "admin-panel-data-375-light.png",
+    "admin-panel-data-430-light.png",
+    "admin-panel-data-768-light.png",
+    "admin-panel-data-1024-light.png",
+    "admin-panel-data-1366-light.png",
+    "admin-panel-data-1920-light.png",
+    "admin-panel-data-320-dark.png",
+    "admin-panel-data-375-dark.png",
+    "admin-panel-data-430-dark.png",
+    "admin-panel-data-768-dark.png",
+    "admin-panel-data-1024-dark.png",
+    "admin-panel-data-1366-dark.png",
+    "admin-panel-data-1920-dark.png",
+    "admin-panel-manage-dialog-1366-light.png",
+    "admin-panel-manage-dialog-320-light.png",
+    "admin-panel-empty-operator-validation-1366-light.png",
+    "password-setup-node22-320-light.png",
+    "password-setup-node22-375-light.png",
+    "password-setup-node22-430-light.png",
+    "password-setup-node22-768-light.png",
+    "password-setup-node22-1024-light.png",
+    "password-setup-node22-1366-light.png",
+    "password-setup-node22-1920-light.png",
+    "password-setup-node22-320-dark.png",
+    "password-setup-node22-375-dark.png",
+    "password-setup-node22-430-dark.png",
+    "password-setup-node22-768-dark.png",
+    "password-setup-node22-1024-dark.png",
+    "password-setup-node22-1366-dark.png",
+    "password-setup-node22-1920-dark.png"
+  ],
+  "responses": [
+    {
+      "endpoint": "getMyAccess",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "listUserRoles",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "policeStations",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "policeStations",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "policeStations",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "policeStations",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "listUserRoles",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "policeStations",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "policeStations",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "policeStations",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "listUserRoles",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "policeStations",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "policeStations",
+      "method": "GET",
+      "status": 200
+    }
+  ],
+  "pageErrors": [],
+  "blockedRemoteFirebase": [],
+  "admin": {
+    "actualLogin": true,
+    "status": "Showing 2 user-role records.",
+    "rows": 2,
+    "stationRendered": true,
+    "matrix": [
+      {
+        "theme": "light",
+        "width": 320,
+        "height": 700,
+        "viewport": 320,
+        "documentWidth": 320,
+        "bodyTheme": "light-theme",
+        "tables": [
+          {
+            "width": 960,
+            "containerWidth": 260,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 620,
+            "containerWidth": 258,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 16
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 47
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 375,
+        "height": 812,
+        "viewport": 375,
+        "documentWidth": 375,
+        "bodyTheme": "light-theme",
+        "tables": [
+          {
+            "width": 960,
+            "containerWidth": 315,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 620,
+            "containerWidth": 313,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 16
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 47
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 430,
+        "height": 932,
+        "viewport": 430,
+        "documentWidth": 430,
+        "bodyTheme": "light-theme",
+        "tables": [
+          {
+            "width": 960,
+            "containerWidth": 370,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 620,
+            "containerWidth": 368,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 16
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 47
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 768,
+        "height": 1024,
+        "viewport": 768,
+        "documentWidth": 768,
+        "bodyTheme": "light-theme",
+        "tables": [
+          {
+            "width": 960,
+            "containerWidth": 704,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 702,
+            "containerWidth": 702,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 16
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 47
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 1024,
+        "height": 768,
+        "viewport": 1024,
+        "documentWidth": 1024,
+        "bodyTheme": "light-theme",
+        "tables": [
+          {
+            "width": 960,
+            "containerWidth": 688,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 686,
+            "containerWidth": 686,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 19
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 44
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 45
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 44
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 1366,
+        "height": 768,
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "bodyTheme": "light-theme",
+        "tables": [
+          {
+            "width": 1030,
+            "containerWidth": 1030,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 1028,
+            "containerWidth": 1028,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 19
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 44
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 45
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 44
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 1920,
+        "height": 1080,
+        "viewport": 1920,
+        "documentWidth": 1920,
+        "bodyTheme": "light-theme",
+        "tables": [
+          {
+            "width": 1408,
+            "containerWidth": 1408,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 1406,
+            "containerWidth": 1406,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 19
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 44
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 45
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 44
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 320,
+        "height": 700,
+        "viewport": 320,
+        "documentWidth": 320,
+        "bodyTheme": "",
+        "tables": [
+          {
+            "width": 960,
+            "containerWidth": 260,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 620,
+            "containerWidth": 258,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 16
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 47
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 375,
+        "height": 812,
+        "viewport": 375,
+        "documentWidth": 375,
+        "bodyTheme": "",
+        "tables": [
+          {
+            "width": 960,
+            "containerWidth": 315,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 620,
+            "containerWidth": 313,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 16
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 47
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 430,
+        "height": 932,
+        "viewport": 430,
+        "documentWidth": 430,
+        "bodyTheme": "",
+        "tables": [
+          {
+            "width": 960,
+            "containerWidth": 370,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 620,
+            "containerWidth": 368,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 16
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 47
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 768,
+        "height": 1024,
+        "viewport": 768,
+        "documentWidth": 768,
+        "bodyTheme": "",
+        "tables": [
+          {
+            "width": 960,
+            "containerWidth": 704,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 702,
+            "containerWidth": 702,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 16
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 47
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 47
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 1024,
+        "height": 768,
+        "viewport": 1024,
+        "documentWidth": 1024,
+        "bodyTheme": "",
+        "tables": [
+          {
+            "width": 960,
+            "containerWidth": 688,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 686,
+            "containerWidth": 686,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 19
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 44
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 45
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 44
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 1366,
+        "height": 768,
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "bodyTheme": "",
+        "tables": [
+          {
+            "width": 1030,
+            "containerWidth": 1030,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 1028,
+            "containerWidth": 1028,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 19
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 44
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 45
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 44
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 1920,
+        "height": 1080,
+        "viewport": 1920,
+        "documentWidth": 1920,
+        "bodyTheme": "",
+        "tables": [
+          {
+            "width": 1408,
+            "containerWidth": 1408,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 1406,
+            "containerWidth": 1406,
+            "containerOverflow": "auto",
+            "containerTabIndex": null
+          },
+          {
+            "width": 0,
+            "containerWidth": 0,
+            "containerOverflow": "visible",
+            "containerTabIndex": null
+          }
+        ],
+        "fields": [
+          {
+            "id": "globalSearch",
+            "label": "⌕",
+            "ariaLabel": null,
+            "height": 19
+          },
+          {
+            "id": "operatorEmail",
+            "label": "Operator login ID (email)",
+            "ariaLabel": null,
+            "height": 44
+          },
+          {
+            "id": "operatorPoliceStation",
+            "label": "Police station",
+            "ariaLabel": null,
+            "height": 45
+          },
+          {
+            "id": "policeStationName",
+            "label": "Canonical station name",
+            "ariaLabel": null,
+            "height": 44
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Admin Panel"
+          },
+          {
+            "tag": "H2",
+            "text": "Administration overview"
+          },
+          {
+            "tag": "H2",
+            "text": "Users"
+          },
+          {
+            "tag": "H2",
+            "text": "Create Operator"
+          },
+          {
+            "tag": "H2",
+            "text": "Police Station Master"
+          }
+        ]
+      }
+    ],
+    "verified": true
+  },
+  "setup": {
+    "matrix": [
+      {
+        "theme": "light",
+        "width": 320,
+        "height": 700,
+        "viewport": 320,
+        "documentWidth": 320,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 375,
+        "height": 812,
+        "viewport": 375,
+        "documentWidth": 375,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 430,
+        "height": 932,
+        "viewport": 430,
+        "documentWidth": 430,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 768,
+        "height": 1024,
+        "viewport": 768,
+        "documentWidth": 768,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 1024,
+        "height": 768,
+        "viewport": 1024,
+        "documentWidth": 1024,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 1366,
+        "height": 768,
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 1920,
+        "height": 1080,
+        "viewport": 1920,
+        "documentWidth": 1920,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 320,
+        "height": 700,
+        "viewport": 320,
+        "documentWidth": 320,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 375,
+        "height": 812,
+        "viewport": 375,
+        "documentWidth": 375,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 430,
+        "height": 932,
+        "viewport": 430,
+        "documentWidth": 430,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 768,
+        "height": 1024,
+        "viewport": 768,
+        "documentWidth": 768,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 1024,
+        "height": 768,
+        "viewport": 1024,
+        "documentWidth": 1024,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 1366,
+        "height": 768,
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 1920,
+        "height": 1080,
+        "viewport": 1920,
+        "documentWidth": 1920,
+        "bodyTheme": "",
+        "tables": [],
+        "fields": [],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Set your CaseTrack password"
+          }
+        ]
+      }
+    ],
+    "formVisible": false,
+    "message": "This link is expired, invalid, already used, or the account is unavailable. Request a new setup email.",
+    "fragmentRemoved": true,
+    "verified": false
+  },
+  "interactions": {
+    "dialogInitialFocus": "roleManagementAction",
+    "dialogTabOrder": [
+      {
+        "id": "roleManagementReason",
+        "tag": "TEXTAREA",
+        "inside": true
+      },
+      {
+        "id": "roleManagementCancel",
+        "tag": "BUTTON",
+        "inside": true
+      },
+      {
+        "id": "roleManagementSubmit",
+        "tag": "BUTTON",
+        "inside": true
+      },
+      {
+        "id": "",
+        "tag": "BODY",
+        "inside": false
+      },
+      {
+        "id": "roleManagementAction",
+        "tag": "SELECT",
+        "inside": true
+      },
+      {
+        "id": "roleManagementReason",
+        "tag": "TEXTAREA",
+        "inside": true
+      }
+    ],
+    "escapeClosesDialog": true,
+    "focusRestored": true,
+    "emptyOperatorFormStatus": "Enter a valid email and select one police station."
+  }
+}

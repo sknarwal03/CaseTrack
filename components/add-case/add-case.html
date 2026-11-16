@@ -123,33 +123,33 @@
 
                         <div class="form-grid">
                             <div class="input-group">
-                                <label>Incident Date</label>
-                                <input type="text" name="incident_date" class="flatpickr-date" placeholder="Pick Incident Date" autocomplete="off" readonly>
+                                <label for="incidentDate">Incident Date</label>
+                                <input type="text" id="incidentDate" name="incident_date" class="flatpickr-date" placeholder="Pick Incident Date" autocomplete="off" readonly>
                             </div>
                             <div class="input-group">
-                                <label>Incident Place</label>
-                                <input type="text" name="incident_place" placeholder="Enter incident location">
+                                <label for="incidentPlace">Incident Place</label>
+                                <input type="text" id="incidentPlace" name="incident_place" placeholder="Enter incident location">
                             </div>
                             <div class="input-group full-width">
                                 <label for="beatDetails">Beat Details</label>
                                 <input type="text" id="beatDetails" name="beatDetails" placeholder="Enter beat details">
                             </div>
                             <div class="input-group">
-                                <label>Complainant Name</label>
-                                <input type="text" name="complainant_name" placeholder="Enter full name">
+                                <label for="complainantName">Complainant Name</label>
+                                <input type="text" id="complainantName" name="complainant_name" placeholder="Enter full name">
                             </div>
                             <div class="input-group">
-                                <label>Complainant Father's Name</label>
-                                <input type="text" name="complainant_father_name" placeholder="Enter full name">
+                                <label for="complainantFatherName">Complainant Father's Name</label>
+                                <input type="text" id="complainantFatherName" name="complainant_father_name" placeholder="Enter full name">
                             </div>
                             <div class="input-group">
-                                <label>Mobile Number</label>
-                                <input type="tel" name="complainant_mobile" placeholder="10 digit mobile number"
+                                <label for="complainantMobile">Mobile Number</label>
+                                <input type="tel" id="complainantMobile" name="complainant_mobile" placeholder="10 digit mobile number"
                                     maxlength="10">
                             </div>
                             <div class="input-group full-width">
-                                <label>Complainant Address</label>
-                                <textarea name="complainant_address" rows="3"
+                                <label for="complainantAddress">Complainant Address</label>
+                                <textarea id="complainantAddress" name="complainant_address" rows="3"
                                     placeholder="Enter complete address"></textarea>
                             </div>
                         </div>
@@ -208,7 +208,7 @@
                         </div>
                         <div class="toggle-card">
                             <div>
-                                <strong>Highlighted Case</strong>
+                                <strong><label for="highlightcase">Highlighted Case</label></strong>
                             </div>
                             <label class="switch">
                                 <input type="checkbox" id="highlightcase" name="highlightcase" value="yes" form="caseForm">
@@ -241,7 +241,7 @@
 
                         <div class="input-group">
 
-                            <label>Registration Number</label>
+                            <label for="regprefix">Registration Number</label>
 
                             <div class="registration-input">
 
@@ -251,11 +251,13 @@
 
                                 <span>/</span>
 
-                                <input type="number" id="regnumber" name="regnumber" placeholder="Number">
+                                <input type="number" id="regnumber" name="regnumber" placeholder="Number" aria-label="Registration number">
+                                <label class="case-form-visually-hidden" for="regnumber">Registration number part</label>
 
                                 <span>/</span>
 
-                                <input type="number" id="regyear" name="regyear" placeholder="Year">
+                                <input type="number" id="regyear" name="regyear" placeholder="Year" aria-label="Registration year">
+                                <label class="case-form-visually-hidden" for="regyear">Registration year</label>
 
                                 <ul id="regprefixSuggestions" class="registration-suggestions" role="listbox" hidden></ul>
 
@@ -447,48 +449,48 @@
                             <div class="form-grid">
 
                                 <div class="input-group">
-                                    <label>Accused Name</label>
+                                    <label for="accusedName1">Accused Name</label>
 
-                                    <input type="text" name="accused_name[]" placeholder="Full name">
+                                    <input type="text" id="accusedName1" name="accused_name[]" placeholder="Full name">
                                 </div>
 
 
                                 <div class="input-group">
-                                    <label>Father's Name</label>
+                                    <label for="accusedFatherName1">Father's Name</label>
 
-                                    <input type="text" name="accused_father_name[]" placeholder="Father's name">
+                                    <input type="text" id="accusedFatherName1" name="accused_father_name[]" placeholder="Father's name">
                                 </div>
 
 
                                 <div class="input-group">
-                                    <label>Mobile Number</label>
+                                    <label for="accusedMobile1">Mobile Number</label>
 
-                                    <input type="tel" name="accused_mobile[]" placeholder="10 digit mobile number"
+                                    <input type="tel" id="accusedMobile1" name="accused_mobile[]" placeholder="10 digit mobile number"
                                         maxlength="10">
                                 </div>
 
 
                                 <div class="input-group toggle-label-group">
-                                    <label>Arrest Status</label>
+                                    <label for="accusedArrested1">Arrest Status</label>
                                     <div class="toggle-container">
                                         <span style="font-size: 13px; color: var(--muted); flex-grow: 1;">Mark as
                                             Arrested</span>
                                         <label class="switch">
-                                            <input type="checkbox" name="arrested[]" class="arrested" value="yes">
+                                            <input type="checkbox" id="accusedArrested1" name="arrested[]" class="arrested" value="yes">
                                             <span class="slider"></span>
                                         </label>
                                     </div>
                                 </div>
 
                                 <div class="input-group">
-                                    <label>Arrest Date</label>
-                                    <input type="text" name="arrestingdate[]" class="arrestingdate flatpickr-date"
+                                    <label for="accusedArrestDate1">Arrest Date</label>
+                                    <input type="text" id="accusedArrestDate1" name="arrestingdate[]" class="arrestingdate flatpickr-date"
                                         placeholder="Pick Arresting Date" autocomplete="off" readonly disabled>
                                 </div>
 
                                 <div class="input-group permanent-label-group">
-                                    <label>Custody Status</label>
-                                    <select name="custody_status[]" class="custody-status" disabled>
+                                    <label for="accusedCustodyStatus1">Custody Status</label>
+                                    <select id="accusedCustodyStatus1" name="custody_status[]" class="custody-status" disabled>
                                         <option value="" disabled selected hidden></option>
                                         <option value="bailed_police">Bailed by Police</option>
                                         <option value="bailed_court">Bailed by Court</option>
@@ -498,32 +500,32 @@
                                 </div>
 
                                 <div class="input-group">
-                                    <label>Bail Date</label>
-                                    <input type="text" name="baildate[]" class="baildate flatpickr-date" placeholder="Pick Bail Date"
+                                    <label for="accusedBailDate1">Bail Date</label>
+                                    <input type="text" id="accusedBailDate1" name="baildate[]" class="baildate flatpickr-date" placeholder="Pick Bail Date"
                                         autocomplete="off" readonly disabled>
                                 </div>
 
                                 <div class="input-group toggle-label-group">
-                                    <label>Proclaimed Offender</label>
+                                    <label for="accusedPoStatus1">Proclaimed Offender</label>
                                     <div class="toggle-container">
                                         <span style="font-size: 13px; color: var(--muted); flex-grow: 1;">Mark as
                                             PO</span>
                                         <label class="switch">
-                                            <input type="checkbox" name="po_status[]" class="po-status" value="yes">
+                                            <input type="checkbox" id="accusedPoStatus1" name="po_status[]" class="po-status" value="yes">
                                             <span class="slider"></span>
                                         </label>
                                     </div>
                                 </div>
 
                                 <div class="input-group">
-                                    <label>PO V.O.D</label>
-                                    <input type="text" name="po_date[]" class="po-date flatpickr-date" placeholder="Pick PO V.O.D"
+                                    <label for="accusedPoDate1">PO V.O.D</label>
+                                    <input type="text" id="accusedPoDate1" name="po_date[]" class="po-date flatpickr-date" placeholder="Pick PO V.O.D"
                                         autocomplete="off" readonly disabled>
                                 </div>
 
                                 <div class="input-group full-width">
-                                    <label>Accused Address</label>
-                                    <textarea name="accused_address[]" rows="3"
+                                    <label for="accusedAddress1">Accused Address</label>
+                                    <textarea id="accusedAddress1" name="accused_address[]" rows="3"
                                         placeholder="Enter complete address"></textarea>
                                 </div>
 
@@ -574,9 +576,10 @@
                             <tbody id="witnessTableBody">
                                 <tr>
                                     <td class="sr-no">1</td>
-                                    <td><input type="text" name="witness_name[]" placeholder="Full name"></td>
+                                    <td><label class="case-form-visually-hidden" for="witnessName1">Witness 1 name</label><input type="text" id="witnessName1" name="witness_name[]" aria-label="Witness 1 name" placeholder="Full name"></td>
                                     <td>
-                                        <select name="witness_status[]">
+                                        <label class="case-form-visually-hidden" for="witnessStatus1">Witness 1 status</label>
+                                        <select id="witnessStatus1" name="witness_status[]" aria-label="Witness 1 status">
                                             <option value="">Pending</option>
                                             <option value="chief">Chief</option>
                                             <option value="cross">Cross</option>
@@ -584,10 +587,11 @@
                                         </select>
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" name="witness_examined[]" class="examined-checkbox"
+                                        <label class="case-form-visually-hidden" for="witnessExamined1">Witness 1 examined</label>
+                                        <input type="checkbox" id="witnessExamined1" name="witness_examined[]" class="examined-checkbox" aria-label="Witness 1 examined"
                                             value="yes">
                                     </td>
-                                    <td><input type="text" name="witness_examined_date[]" class="examined-date flatpickr-date"
+                                    <td><label class="case-form-visually-hidden" for="witnessExaminedDate1">Witness 1 examined date</label><input type="text" id="witnessExaminedDate1" name="witness_examined_date[]" class="examined-date flatpickr-date" aria-label="Witness 1 examined date"
                                             placeholder="Pick Examined Date" autocomplete="off" readonly disabled></td>
                                     <td class="text-center witness-action">
                                         —
@@ -603,17 +607,17 @@
 
                     <div class="form-grid summary-grid">
                         <div class="input-group">
-                            <label>Total Witness</label>
+                            <label for="totalWitness">Total Witness</label>
                             <input type="number" id="totalWitness" name="total_witness" value="0" readonly>
                         </div>
 
                         <div class="input-group">
-                            <label>Witness Examined</label>
+                            <label for="examinedWitness">Witness Examined</label>
                             <input type="number" id="examinedWitness" name="examined_witness" value="0" readonly>
                         </div>
 
                         <div class="input-group">
-                            <label>Witness Left</label>
+                            <label for="leftWitness">Witness Left</label>
                             <input type="number" id="leftWitness" name="left_witness" value="0" readonly>
                         </div>
 

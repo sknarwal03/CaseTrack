@@ -1,0 +1,32 @@
+{
+  "runtime": "v22.23.5",
+  "discoveryTimeoutSeconds": 60,
+  "project": "demo-casetrack-role-prototype",
+  "results": [
+    {
+      "endpoint": "getMyAccess",
+      "status": 401,
+      "body": "{\"error\":\"Unauthorized.\"}"
+    },
+    {
+      "endpoint": "listUserRoles",
+      "status": 401,
+      "body": "{\"error\":\"Unauthorized.\"}"
+    },
+    {
+      "endpoint": "policeStations",
+      "status": 401,
+      "body": "{\"error\":\"Unauthorized.\"}"
+    },
+    {
+      "endpoint": "validateOperatorSetupCode",
+      "status": 404,
+      "body": "Function us-central1-validateOperatorSetupCode does not exist, valid functions are: us-central1-saveFirMaster, us-central1-listUserRoles, us-central1-policeStations, us-central1-createOperator, us-central1-resetOperatorPassword, us-central1-completeOperatorFirstPasswordChange, us-central1-manageUserRole, us-central1-getMyAccess"
+    },
+    {
+      "endpoint": "completeOperatorPasswordSetup",
+      "status": 404,
+      "body": "Function us-central1-completeOperatorPasswordSetup does not exist, valid functions are: us-central1-saveFirMaster, us-central1-listUserRoles, us-central1-policeStations, us-central1-createOperator, us-central1-resetOperatorPassword, us-central1-completeOperatorFirstPasswordChange, us-central1-manageUserRole, us-central1-getMyAccess"
+    }
+  ]
+}

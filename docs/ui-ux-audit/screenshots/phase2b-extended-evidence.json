@@ -1,0 +1,346 @@
+{
+  "generatedAt": "2026-11-12T16:14:34.729Z",
+  "mode": "role-admin-local",
+  "firebaseNetworkBlocked": 0,
+  "pageErrors": [],
+  "records": [
+    {
+      "file": "password-change-320-light.png",
+      "theme": "light",
+      "viewport": "320x700",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 320,
+      "error": null
+    },
+    {
+      "file": "password-change-375-light.png",
+      "theme": "light",
+      "viewport": "375x812",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 375,
+      "error": null
+    },
+    {
+      "file": "password-change-430-light.png",
+      "theme": "light",
+      "viewport": "430x932",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 430,
+      "error": null
+    },
+    {
+      "file": "password-change-768-light.png",
+      "theme": "light",
+      "viewport": "768x1024",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 768,
+      "error": null
+    },
+    {
+      "file": "password-change-1024-light.png",
+      "theme": "light",
+      "viewport": "1024x768",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 1024,
+      "error": null
+    },
+    {
+      "file": "password-change-1366-light.png",
+      "theme": "light",
+      "viewport": "1366x768",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 1366,
+      "error": null
+    },
+    {
+      "file": "password-change-1920-light.png",
+      "theme": "light",
+      "viewport": "1920x1080",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 1920,
+      "error": null
+    },
+    {
+      "file": "password-change-320-dark.png",
+      "theme": "dark",
+      "viewport": "320x700",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 320,
+      "error": null
+    },
+    {
+      "file": "password-change-375-dark.png",
+      "theme": "dark",
+      "viewport": "375x812",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 375,
+      "error": null
+    },
+    {
+      "file": "password-change-430-dark.png",
+      "theme": "dark",
+      "viewport": "430x932",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 430,
+      "error": null
+    },
+    {
+      "file": "password-change-768-dark.png",
+      "theme": "dark",
+      "viewport": "768x1024",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 768,
+      "error": null
+    },
+    {
+      "file": "password-change-1024-dark.png",
+      "theme": "dark",
+      "viewport": "1024x768",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 1024,
+      "error": null
+    },
+    {
+      "file": "password-change-1366-dark.png",
+      "theme": "dark",
+      "viewport": "1366x768",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 1366,
+      "error": null
+    },
+    {
+      "file": "password-change-1920-dark.png",
+      "theme": "dark",
+      "viewport": "1920x1080",
+      "route": "password-change.html",
+      "finalPath": "/CaseTrack/pages/password-change.html",
+      "title": "CaseTrack | Change Temporary Password",
+      "heading": [
+        "Change your temporary password"
+      ],
+      "body": "Change your temporary password Set a new password with at least 12 characters. This is required before opening case data. New password Confirm new password Change password",
+      "scrollWidth": 1920,
+      "error": null
+    },
+    {
+      "file": "password-setup-320-light.png",
+      "theme": "light",
+      "viewport": "320x700",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-375-light.png",
+      "theme": "light",
+      "viewport": "375x812",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-430-light.png",
+      "theme": "light",
+      "viewport": "430x932",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-768-light.png",
+      "theme": "light",
+      "viewport": "768x1024",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-1024-light.png",
+      "theme": "light",
+      "viewport": "1024x768",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-1366-light.png",
+      "theme": "light",
+      "viewport": "1366x768",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-1920-light.png",
+      "theme": "light",
+      "viewport": "1920x1080",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-320-dark.png",
+      "theme": "dark",
+      "viewport": "320x700",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-375-dark.png",
+      "theme": "dark",
+      "viewport": "375x812",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-430-dark.png",
+      "theme": "dark",
+      "viewport": "430x932",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-768-dark.png",
+      "theme": "dark",
+      "viewport": "768x1024",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-1024-dark.png",
+      "theme": "dark",
+      "viewport": "1024x768",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-1366-dark.png",
+      "theme": "dark",
+      "viewport": "1366x768",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "password-setup-1920-dark.png",
+      "theme": "dark",
+      "viewport": "1920x1080",
+      "route": "password-setup.html valid synthetic setup link",
+      "finalPath": "/CaseTrack/pages/password-setup.html",
+      "formVisible": false,
+      "body": "Set your CaseTrack password This link is expired, invalid, already used, or the account is unavailable. Request a new setup email."
+    },
+    {
+      "file": "dashboard-task-dialog-1366-light.png",
+      "theme": "light",
+      "viewport": "1366x768",
+      "route": "dashboard.html + Tasks & Reminders dialog",
+      "finalPath": "/CaseTrack/pages/dashboard.html",
+      "dialog": "Tasks & Reminders\n\nKeep track of your follow-ups.\n\n×\nTask\nDate\nTime\nAdd task\n\nNo tasks yet. Use the form above to add a task or reminder."
+    },
+    {
+      "file": "dashboard-task-dialog-1366-dark.png",
+      "theme": "dark",
+      "viewport": "1366x768",
+      "route": "dashboard.html + Tasks & Reminders dialog",
+      "finalPath": "/CaseTrack/pages/dashboard.html",
+      "dialog": "Tasks & Reminders\n\nKeep track of your follow-ups.\n\n×\nTask\nDate\nTime\nAdd task\n\nNo tasks yet. Use the form above to add a task or reminder."
+    }
+  ]
+}

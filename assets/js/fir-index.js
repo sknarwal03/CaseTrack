@@ -1,6 +1,7 @@
 import { db } from '@config/firebase-config.js';
 import { getFirSummaries, loadCaseRecords, saveFirMaster, caseRecordRef } from './fir-case-model.js';
 import { updateDoc } from 'firebase/firestore';
+import { firStatusPresentation } from './fir-status-presentation.mjs';
 
 const yearSelect = document.getElementById('firIndexYear');
 const yearButton = document.getElementById('firIndexYearButton');
@@ -97,10 +98,10 @@ function renderRows() {
             row.append(node('td', '', fir.underSection || '—'));
             row.append(node('td', '', fir.policeStation || '—'));
 
-            const status = text(fir.firStatus || fir.caseStatus || fir.status || 'Unknown');
+            const status = firStatusPresentation(fir.firStatus || fir.caseStatus || fir.status);
             const statusCell = document.createElement('td');
-            const statusBadge = node('span', 'fir-index-status', status);
-            statusBadge.dataset.status = status.toLocaleLowerCase();
+            const statusBadge = node('span', `fir-index-status status-${status.category}`, status.label);
+            statusBadge.dataset.status = status.category;
             statusCell.append(statusBadge);
             row.append(statusCell);
 

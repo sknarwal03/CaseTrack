@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="CaseTrack case management dashboard">
     <title>CaseTrack | Dashboard</title>
-    <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/css/shared.css">
     <link rel="stylesheet" href="../components/add-case/add-case.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
     <meta name="theme-color" content="#173f35">
@@ -35,7 +35,7 @@
                         <div class="stat-icon blue">▰</div>
                         <div>
                             <p>Unique FIRs</p><strong id="totalCases">0</strong>
-                        </div><em>↑ 12%</em>
+                        </div>
                     </article>
                     <article class="stat">
                         <div class="stat-icon purple">▤</div>
@@ -47,19 +47,19 @@
                         <div class="stat-icon green">◉</div>
                         <div>
                             <p>Active Cases</p><strong id="activeCases">0</strong>
-                        </div><em>↑ 8%</em>
+                        </div>
                     </article>
                     <article class="stat">
                         <div class="stat-icon red">▣</div>
                         <div>
                             <p>Pending Hearings</p><strong id="pendingHearings">0</strong>
-                        </div><em class="down">↓ 25%</em>
+                        </div>
                     </article>
                     <article class="stat">
                         <div class="stat-icon mint">✓</div>
                         <div>
                             <p>Disposed Cases</p><strong id="closedCases">0</strong>
-                        </div><em>↑ 16%</em>
+                        </div>
                     </article>
                 </section>
                 <div class="dashboard-grid">
@@ -68,34 +68,35 @@
                             <div class="panel-title">
                                 <div class="mini-icon">⌁</div>
                                 <h2>Case Trends</h2>
-                            </div><select class="period">
-                                <option>This Year</option>
+                            </div><select class="period" id="trendPeriod" aria-label="Select case trends period">
+                                <option value="thisYear">This Year</option>
+                                <option value="lastYear">Last Year</option>
+                                <option value="last6Months">Last 6 Months</option>
+                                <option value="last12Months">Last 12 Months</option>
                             </select>
                         </div>
                         <div class="chart-key"><span><i></i>New Cases</span><span><i class="green"></i>Closed
-                                Cases</span><span><i class="purple"></i>Pending Cases</span></div><svg
-                            class="line-chart" viewBox="0 0 720 180" role="img" aria-label="Monthly case trends">
+                                Cases</span><span><i class="purple"></i>Pending Cases</span></div>
+                        <div class="trend-chart-scroll" role="region" tabindex="0" aria-label="Case trends chart; scroll horizontally to view all month labels">
+                            <svg class="line-chart" id="caseTrendChart" viewBox="0 0 720 180" role="img" aria-label="Monthly case trends">
                             <defs>
                                 <linearGradient id="fade" x1="0" x2="0" y1="0" y2="1">
                                     <stop stop-color="#398fff" stop-opacity=".35" />
                                     <stop offset="1" stop-color="#398fff" stop-opacity="0" />
                                 </linearGradient>
                             </defs>
-                            <path class="grid-line"
-                                d="M35 18H705M35 48H705M35 78H705M35 108H705M35 138H705M35 18V138M90 18V138M146 18V138M202 18V138M258 18V138M314 18V138M370 18V138M426 18V138M482 18V138M538 18V138M594 18V138M650 18V138M705 18V138" />
-                            <path class="area"
-                                d="M35 100 L90 80 L146 92 L202 82 L258 65 L314 77 L370 52 L426 59 L482 40 L538 55 L594 70 L650 53 L705 63 L705 138 L35 138Z" />
-                            <polyline class="series-blue"
-                                points="35,100 90,80 146,92 202,82 258,65 314,77 370,52 426,59 482,40 538,55 594,70 650,53 705,63" />
-                            <polyline class="series-green"
-                                points="35,126 90,119 146,124 202,112 258,102 314,93 370,108 426,83 482,80 538,85 594,82 650,98 705,84" />
-                            <g text-anchor="middle"><text x="35" y="165">Jan</text><text x="90" y="165">Feb</text><text
-                                    x="146" y="165">Mar</text><text x="202" y="165">Apr</text><text x="258"
-                                    y="165">May</text><text x="314" y="165">Jun</text><text x="370"
-                                    y="165">Jul</text><text x="426" y="165">Aug</text><text x="482"
-                                    y="165">Sep</text><text x="538" y="165">Oct</text><text x="594"
-                                    y="165">Nov</text><text x="650" y="165">Dec</text></g>
-                        </svg>
+                            <g id="trendGrid"></g>
+                            <path class="area" id="trendArea" d="" />
+                            <polyline class="series-blue" id="newCasesSeries" points="" />
+                            <polyline class="series-green" id="closedCasesSeries" points="" />
+                            <polyline class="series-purple" id="pendingCasesSeries" points="" />
+                            <g id="trendPoints"></g>
+                            <g id="trendLabels" text-anchor="middle"></g>
+                            </svg>
+                        </div>
+                        <p class="trend-scroll-hint">Scroll horizontally to view all months.</p>
+                        <p class="trend-empty" id="trendEmpty" hidden>No dated case activity for this period.</p>
+                        <p class="trend-note">Pending trend is estimated from recorded registration/disposal dates and current case status.</p>
                     </section>
                     <section class="panel panel-status">
                         <div class="panel-heading">
@@ -165,24 +166,34 @@
                         <div class="panel-heading">
                             <div class="panel-title">
                                 <div class="mini-icon">☑</div>
-                                <h2>Tasks & Reminders</h2>
+                                <h2>Tasks</h2>
                             </div>
+                            <button type="button" class="task-add-button" id="addTaskButton">＋ Add</button>
                         </div>
-                        <div class="task"><i class="checkbox"></i>
-                            <div><b>Prepare documents for FIR-150</b><small class="urgent">Today, 09:00 AM</small></div>
-                        </div>
-                        <div class="task"><i class="checkbox"></i>
-                            <div><b>Call investigating officer</b><small>Today, 04:00 PM</small></div>
-                        </div>
-                        <div class="task"><i class="checkbox"></i>
-                            <div><b>Review evidence files</b><small>Tomorrow, 10:00 AM</small></div>
-                        </div>
+                        <p class="task-scope-note">Saved in this browser. No automatic alerts.</p>
+                        <div id="taskPreview"><p class="empty">No tasks yet. Add a task to track a follow-up.</p></div>
                         <button type="button" class="panel-view-all" data-panel="tasks">View All</button>
                     </section>
                 </div>
             </section>
         </main>
     </div>
+    <dialog class="task-dialog" id="taskDialog" aria-labelledby="taskDialogTitle">
+        <div class="task-dialog-heading">
+            <div><h2 id="taskDialogTitle">Tasks</h2><p>Saved in this browser on this device. Due dates organize your list; automatic notifications are not sent.</p></div>
+            <button type="button" class="task-dialog-close" id="closeTaskDialog" aria-label="Close">×</button>
+        </div>
+        <form id="taskForm" class="task-form">
+            <label>Task<input name="title" maxlength="120" required placeholder="e.g. Call investigating officer"></label>
+            <div class="task-date-fields">
+                <label>Due date<input name="date" type="date" required></label>
+                <label>Due time<input name="time" type="time"></label>
+            </div>
+            <button type="submit" class="task-save-button">Add task</button>
+        </form>
+        <p class="task-form-status" id="taskFormStatus" aria-live="polite"></p>
+        <div id="taskFullList" class="task-full-list"></div>
+    </dialog>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script type="module" src="../assets/js/shared-layout.js"></script>
     <script type="module" src="../assets/js/dashboard.js"></script>

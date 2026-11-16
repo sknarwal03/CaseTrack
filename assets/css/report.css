@@ -24,6 +24,18 @@
     margin-bottom: 20px;
 }
 
+.report-quality-warning {
+    margin: -8px 0 20px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--surface-raised) 88%, var(--brand-primary) 12%);
+    color: var(--text);
+    font-size: 12px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
 .report-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

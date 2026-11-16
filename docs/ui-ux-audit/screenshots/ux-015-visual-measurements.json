@@ -1,0 +1,3754 @@
+[
+  {
+    "theme": "light",
+    "width": 320,
+    "pageWidth": 320,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 284,
+        "scrollWidth": 284,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 148,
+            "right": 296,
+            "bottom": 208,
+            "width": 272,
+            "height": 60,
+            "scrollWidth": 272,
+            "clientWidth": 272
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 214,
+            "right": 168,
+            "bottom": 258,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 264,
+            "right": 103.203125,
+            "bottom": 308,
+            "width": 79.203125,
+            "height": 44,
+            "scrollWidth": 79,
+            "clientWidth": 79
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 314,
+            "right": 66.078125,
+            "bottom": 329,
+            "width": 42.078125,
+            "height": 15,
+            "scrollWidth": 42,
+            "clientWidth": 42
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 335,
+            "right": 191.015625,
+            "bottom": 350,
+            "width": 167.015625,
+            "height": 15,
+            "scrollWidth": 167,
+            "clientWidth": 167
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 272,
+            "clientWidth": 272,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 29,
+            "clientWidth": 29,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            79.203125,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 284,
+        "scrollWidth": 284,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 367,
+            "right": 296,
+            "bottom": 420,
+            "width": 272,
+            "height": 53,
+            "scrollWidth": 272,
+            "clientWidth": 272
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 426,
+            "right": 168,
+            "bottom": 470,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 476,
+            "right": 94.4375,
+            "bottom": 520,
+            "width": 70.4375,
+            "height": 44,
+            "scrollWidth": 70,
+            "clientWidth": 70
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 526,
+            "right": 76.6875,
+            "bottom": 541,
+            "width": 52.6875,
+            "height": 15,
+            "scrollWidth": 53,
+            "clientWidth": 53
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 547,
+            "right": 24,
+            "bottom": 547,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 75,
+            "clientWidth": 75,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 270,
+            "clientWidth": 270,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            70.4375,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 284,
+        "scrollWidth": 284,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 564,
+            "right": 168,
+            "bottom": 608,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 614,
+            "right": 185.96875,
+            "bottom": 658,
+            "width": 161.96875,
+            "height": 44,
+            "scrollWidth": 162,
+            "clientWidth": 162
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 664,
+            "right": 24,
+            "bottom": 664,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 670,
+            "right": 24,
+            "bottom": 670,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            161.96875,
+            44
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "light",
+    "width": 375,
+    "pageWidth": 375,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 339,
+        "scrollWidth": 339,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 148,
+            "right": 351,
+            "bottom": 208,
+            "width": 327,
+            "height": 60,
+            "scrollWidth": 327,
+            "clientWidth": 327
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 214,
+            "right": 168,
+            "bottom": 258,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 264,
+            "right": 103.203125,
+            "bottom": 308,
+            "width": 79.203125,
+            "height": 44,
+            "scrollWidth": 79,
+            "clientWidth": 79
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 314,
+            "right": 66.078125,
+            "bottom": 329,
+            "width": 42.078125,
+            "height": 15,
+            "scrollWidth": 42,
+            "clientWidth": 42
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 335,
+            "right": 191.015625,
+            "bottom": 350,
+            "width": 167.015625,
+            "height": 15,
+            "scrollWidth": 167,
+            "clientWidth": 167
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 327,
+            "clientWidth": 327,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 29,
+            "clientWidth": 29,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            79.203125,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 339,
+        "scrollWidth": 339,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 367,
+            "right": 351,
+            "bottom": 420,
+            "width": 327,
+            "height": 53,
+            "scrollWidth": 327,
+            "clientWidth": 327
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 426,
+            "right": 168,
+            "bottom": 470,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 476,
+            "right": 94.4375,
+            "bottom": 520,
+            "width": 70.4375,
+            "height": 44,
+            "scrollWidth": 70,
+            "clientWidth": 70
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 526,
+            "right": 76.6875,
+            "bottom": 541,
+            "width": 52.6875,
+            "height": 15,
+            "scrollWidth": 53,
+            "clientWidth": 53
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 547,
+            "right": 24,
+            "bottom": 547,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 75,
+            "clientWidth": 75,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 325,
+            "clientWidth": 325,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            70.4375,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 339,
+        "scrollWidth": 339,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 564,
+            "right": 168,
+            "bottom": 608,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 614,
+            "right": 185.96875,
+            "bottom": 658,
+            "width": 161.96875,
+            "height": 44,
+            "scrollWidth": 162,
+            "clientWidth": 162
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 664,
+            "right": 24,
+            "bottom": 664,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 670,
+            "right": 24,
+            "bottom": 670,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            161.96875,
+            44
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "light",
+    "width": 430,
+    "pageWidth": 430,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 394,
+        "scrollWidth": 394,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 148,
+            "right": 388.5625,
+            "bottom": 176,
+            "width": 364.5625,
+            "height": 28,
+            "scrollWidth": 365,
+            "clientWidth": 365
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 182,
+            "right": 168,
+            "bottom": 226,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 232,
+            "right": 103.203125,
+            "bottom": 276,
+            "width": 79.203125,
+            "height": 44,
+            "scrollWidth": 79,
+            "clientWidth": 79
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 282,
+            "right": 66.078125,
+            "bottom": 297,
+            "width": 42.078125,
+            "height": 15,
+            "scrollWidth": 42,
+            "clientWidth": 42
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 303,
+            "right": 191.015625,
+            "bottom": 318,
+            "width": 167.015625,
+            "height": 15,
+            "scrollWidth": 167,
+            "clientWidth": 167
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 331,
+            "clientWidth": 331,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 29,
+            "clientWidth": 29,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            79.203125,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 394,
+        "scrollWidth": 394,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 335,
+            "right": 406,
+            "bottom": 380,
+            "width": 382,
+            "height": 45,
+            "scrollWidth": 382,
+            "clientWidth": 382
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 386,
+            "right": 168,
+            "bottom": 430,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 436,
+            "right": 94.4375,
+            "bottom": 480,
+            "width": 70.4375,
+            "height": 44,
+            "scrollWidth": 70,
+            "clientWidth": 70
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 486,
+            "right": 76.6875,
+            "bottom": 501,
+            "width": 52.6875,
+            "height": 15,
+            "scrollWidth": 53,
+            "clientWidth": 53
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 507,
+            "right": 24,
+            "bottom": 507,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 75,
+            "clientWidth": 75,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 326,
+            "clientWidth": 326,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            70.4375,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 394,
+        "scrollWidth": 394,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 524,
+            "right": 168,
+            "bottom": 568,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 574,
+            "right": 185.96875,
+            "bottom": 618,
+            "width": 161.96875,
+            "height": 44,
+            "scrollWidth": 162,
+            "clientWidth": 162
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 624,
+            "right": 24,
+            "bottom": 624,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 630,
+            "right": 24,
+            "bottom": 630,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            161.96875,
+            44
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "light",
+    "width": 768,
+    "pageWidth": 768,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 732,
+        "scrollWidth": 732,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 22,
+            "y": 151,
+            "right": 386.5625,
+            "bottom": 179,
+            "width": 364.5625,
+            "height": 28,
+            "scrollWidth": 365,
+            "clientWidth": 365
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 389.5625,
+            "y": 143,
+            "right": 533.5625,
+            "bottom": 187,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 536.5625,
+            "y": 143,
+            "right": 611.765625,
+            "bottom": 187,
+            "width": 75.203125,
+            "height": 44,
+            "scrollWidth": 75,
+            "clientWidth": 75
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 614.765625,
+            "y": 157.5,
+            "right": 656.84375,
+            "bottom": 172.5,
+            "width": 42.078125,
+            "height": 15,
+            "scrollWidth": 42,
+            "clientWidth": 42
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 22,
+            "y": 190,
+            "right": 189.015625,
+            "bottom": 205,
+            "width": 167.015625,
+            "height": 15,
+            "scrollWidth": 167,
+            "clientWidth": 167
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 331,
+            "clientWidth": 331,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 29,
+            "clientWidth": 29,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            75.203125,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 732,
+        "scrollWidth": 732,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 22,
+            "y": 220,
+            "right": 426.734375,
+            "bottom": 248,
+            "width": 404.734375,
+            "height": 28,
+            "scrollWidth": 405,
+            "clientWidth": 405
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 429.734375,
+            "y": 212,
+            "right": 573.734375,
+            "bottom": 256,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 576.734375,
+            "y": 212,
+            "right": 643.171875,
+            "bottom": 256,
+            "width": 66.4375,
+            "height": 44,
+            "scrollWidth": 66,
+            "clientWidth": 66
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 646.171875,
+            "y": 226.5,
+            "right": 698.859375,
+            "bottom": 241.5,
+            "width": 52.6875,
+            "height": 15,
+            "scrollWidth": 53,
+            "clientWidth": 53
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 701.859375,
+            "y": 234,
+            "right": 701.859375,
+            "bottom": 234,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 75,
+            "clientWidth": 75,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 326,
+            "clientWidth": 326,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            66.4375,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 732,
+        "scrollWidth": 732,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 22,
+            "y": 263,
+            "right": 166,
+            "bottom": 307,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 169,
+            "y": 263,
+            "right": 326.96875,
+            "bottom": 307,
+            "width": 157.96875,
+            "height": 44,
+            "scrollWidth": 158,
+            "clientWidth": 158
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 329.96875,
+            "y": 285,
+            "right": 329.96875,
+            "bottom": 285,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 332.96875,
+            "y": 285,
+            "right": 332.96875,
+            "bottom": 285,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            157.96875,
+            44
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "light",
+    "width": 1024,
+    "pageWidth": 1024,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 900,
+        "scrollWidth": 900,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 66,
+            "y": 154.5,
+            "right": 488.671875,
+            "bottom": 182.5,
+            "width": 422.671875,
+            "height": 28,
+            "scrollWidth": 423,
+            "clientWidth": 423
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 492.671875,
+            "y": 153.5,
+            "right": 552.671875,
+            "bottom": 183.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 556.671875,
+            "y": 153.5,
+            "right": 644.40625,
+            "bottom": 183.5,
+            "width": 87.734375,
+            "height": 30,
+            "scrollWidth": 88,
+            "clientWidth": 88
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 648.40625,
+            "y": 159.75,
+            "right": 697.5,
+            "bottom": 177.25,
+            "width": 49.09375,
+            "height": 17.5,
+            "scrollWidth": 49,
+            "clientWidth": 49
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 701.5,
+            "y": 159.75,
+            "right": 896.359375,
+            "bottom": 177.25,
+            "width": 194.859375,
+            "height": 17.5,
+            "scrollWidth": 195,
+            "clientWidth": 195
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 386,
+            "clientWidth": 386,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 32,
+            "clientWidth": 32,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            87.734375,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 900,
+        "scrollWidth": 900,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 66,
+            "y": 192.5,
+            "right": 535.515625,
+            "bottom": 220.5,
+            "width": 469.515625,
+            "height": 28,
+            "scrollWidth": 470,
+            "clientWidth": 470
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 539.515625,
+            "y": 191.5,
+            "right": 599.515625,
+            "bottom": 221.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 603.515625,
+            "y": 191.5,
+            "right": 681.015625,
+            "bottom": 221.5,
+            "width": 77.5,
+            "height": 30,
+            "scrollWidth": 78,
+            "clientWidth": 78
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 685.015625,
+            "y": 197.75,
+            "right": 746.484375,
+            "bottom": 215.25,
+            "width": 61.46875,
+            "height": 17.5,
+            "scrollWidth": 61,
+            "clientWidth": 61
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 750.484375,
+            "y": 206.5,
+            "right": 750.484375,
+            "bottom": 206.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 88,
+            "clientWidth": 88,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 378,
+            "clientWidth": 378,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            77.5,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 900,
+        "scrollWidth": 900,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 66,
+            "y": 229.5,
+            "right": 126,
+            "bottom": 259.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 130,
+            "y": 229.5,
+            "right": 314.296875,
+            "bottom": 259.5,
+            "width": 184.296875,
+            "height": 30,
+            "scrollWidth": 184,
+            "clientWidth": 184
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 318.296875,
+            "y": 244.5,
+            "right": 318.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 322.296875,
+            "y": 244.5,
+            "right": 322.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            184.296875,
+            30
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "light",
+    "width": 1366,
+    "pageWidth": 1366,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 224,
+            "y": 154.5,
+            "right": 646.671875,
+            "bottom": 182.5,
+            "width": 422.671875,
+            "height": 28,
+            "scrollWidth": 423,
+            "clientWidth": 423
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 650.671875,
+            "y": 153.5,
+            "right": 710.671875,
+            "bottom": 183.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 714.671875,
+            "y": 153.5,
+            "right": 802.40625,
+            "bottom": 183.5,
+            "width": 87.734375,
+            "height": 30,
+            "scrollWidth": 88,
+            "clientWidth": 88
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 806.40625,
+            "y": 159.75,
+            "right": 855.5,
+            "bottom": 177.25,
+            "width": 49.09375,
+            "height": 17.5,
+            "scrollWidth": 49,
+            "clientWidth": 49
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 859.5,
+            "y": 159.75,
+            "right": 1054.359375,
+            "bottom": 177.25,
+            "width": 194.859375,
+            "height": 17.5,
+            "scrollWidth": 195,
+            "clientWidth": 195
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 386,
+            "clientWidth": 386,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 32,
+            "clientWidth": 32,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            87.734375,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 224,
+            "y": 192.5,
+            "right": 693.515625,
+            "bottom": 220.5,
+            "width": 469.515625,
+            "height": 28,
+            "scrollWidth": 470,
+            "clientWidth": 470
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 697.515625,
+            "y": 191.5,
+            "right": 757.515625,
+            "bottom": 221.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 761.515625,
+            "y": 191.5,
+            "right": 839.015625,
+            "bottom": 221.5,
+            "width": 77.5,
+            "height": 30,
+            "scrollWidth": 78,
+            "clientWidth": 78
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 843.015625,
+            "y": 197.75,
+            "right": 904.484375,
+            "bottom": 215.25,
+            "width": 61.46875,
+            "height": 17.5,
+            "scrollWidth": 61,
+            "clientWidth": 61
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 908.484375,
+            "y": 206.5,
+            "right": 908.484375,
+            "bottom": 206.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 88,
+            "clientWidth": 88,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 378,
+            "clientWidth": 378,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            77.5,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 224,
+            "y": 229.5,
+            "right": 284,
+            "bottom": 259.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 288,
+            "y": 229.5,
+            "right": 472.296875,
+            "bottom": 259.5,
+            "width": 184.296875,
+            "height": 30,
+            "scrollWidth": 184,
+            "clientWidth": 184
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 476.296875,
+            "y": 244.5,
+            "right": 476.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 480.296875,
+            "y": 244.5,
+            "right": 480.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            184.296875,
+            30
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "light",
+    "width": 1920,
+    "pageWidth": 1920,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 501,
+            "y": 154.5,
+            "right": 923.671875,
+            "bottom": 182.5,
+            "width": 422.671875,
+            "height": 28,
+            "scrollWidth": 423,
+            "clientWidth": 423
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 927.671875,
+            "y": 153.5,
+            "right": 987.671875,
+            "bottom": 183.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 991.671875,
+            "y": 153.5,
+            "right": 1079.40625,
+            "bottom": 183.5,
+            "width": 87.734375,
+            "height": 30,
+            "scrollWidth": 88,
+            "clientWidth": 88
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 1083.40625,
+            "y": 159.75,
+            "right": 1132.5,
+            "bottom": 177.25,
+            "width": 49.09375,
+            "height": 17.5,
+            "scrollWidth": 49,
+            "clientWidth": 49
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 1136.5,
+            "y": 159.75,
+            "right": 1331.359375,
+            "bottom": 177.25,
+            "width": 194.859375,
+            "height": 17.5,
+            "scrollWidth": 195,
+            "clientWidth": 195
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 386,
+            "clientWidth": 386,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 32,
+            "clientWidth": 32,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            87.734375,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 501,
+            "y": 192.5,
+            "right": 970.515625,
+            "bottom": 220.5,
+            "width": 469.515625,
+            "height": 28,
+            "scrollWidth": 470,
+            "clientWidth": 470
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 974.515625,
+            "y": 191.5,
+            "right": 1034.515625,
+            "bottom": 221.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 1038.515625,
+            "y": 191.5,
+            "right": 1116.015625,
+            "bottom": 221.5,
+            "width": 77.5,
+            "height": 30,
+            "scrollWidth": 78,
+            "clientWidth": 78
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 1120.015625,
+            "y": 197.75,
+            "right": 1181.484375,
+            "bottom": 215.25,
+            "width": 61.46875,
+            "height": 17.5,
+            "scrollWidth": 61,
+            "clientWidth": 61
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 1185.484375,
+            "y": 206.5,
+            "right": 1185.484375,
+            "bottom": 206.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 88,
+            "clientWidth": 88,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 378,
+            "clientWidth": 378,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            77.5,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 501,
+            "y": 229.5,
+            "right": 561,
+            "bottom": 259.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 565,
+            "y": 229.5,
+            "right": 749.296875,
+            "bottom": 259.5,
+            "width": 184.296875,
+            "height": 30,
+            "scrollWidth": 184,
+            "clientWidth": 184
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 753.296875,
+            "y": 244.5,
+            "right": 753.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 757.296875,
+            "y": 244.5,
+            "right": 757.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            184.296875,
+            30
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "dark",
+    "width": 320,
+    "pageWidth": 320,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 284,
+        "scrollWidth": 284,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 148,
+            "right": 296,
+            "bottom": 208,
+            "width": 272,
+            "height": 60,
+            "scrollWidth": 272,
+            "clientWidth": 272
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 214,
+            "right": 168,
+            "bottom": 258,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 264,
+            "right": 103.203125,
+            "bottom": 308,
+            "width": 79.203125,
+            "height": 44,
+            "scrollWidth": 79,
+            "clientWidth": 79
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 314,
+            "right": 66.078125,
+            "bottom": 329,
+            "width": 42.078125,
+            "height": 15,
+            "scrollWidth": 42,
+            "clientWidth": 42
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 335,
+            "right": 191.015625,
+            "bottom": 350,
+            "width": 167.015625,
+            "height": 15,
+            "scrollWidth": 167,
+            "clientWidth": 167
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 272,
+            "clientWidth": 272,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 29,
+            "clientWidth": 29,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            79.203125,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 284,
+        "scrollWidth": 284,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 367,
+            "right": 296,
+            "bottom": 420,
+            "width": 272,
+            "height": 53,
+            "scrollWidth": 272,
+            "clientWidth": 272
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 426,
+            "right": 168,
+            "bottom": 470,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 476,
+            "right": 94.4375,
+            "bottom": 520,
+            "width": 70.4375,
+            "height": 44,
+            "scrollWidth": 70,
+            "clientWidth": 70
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 526,
+            "right": 76.6875,
+            "bottom": 541,
+            "width": 52.6875,
+            "height": 15,
+            "scrollWidth": 53,
+            "clientWidth": 53
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 547,
+            "right": 24,
+            "bottom": 547,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 75,
+            "clientWidth": 75,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 270,
+            "clientWidth": 270,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            70.4375,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 284,
+        "scrollWidth": 284,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 564,
+            "right": 168,
+            "bottom": 608,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 614,
+            "right": 185.96875,
+            "bottom": 658,
+            "width": 161.96875,
+            "height": 44,
+            "scrollWidth": 162,
+            "clientWidth": 162
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 664,
+            "right": 24,
+            "bottom": 664,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 670,
+            "right": 24,
+            "bottom": 670,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            161.96875,
+            44
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "dark",
+    "width": 375,
+    "pageWidth": 375,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 339,
+        "scrollWidth": 339,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 148,
+            "right": 351,
+            "bottom": 208,
+            "width": 327,
+            "height": 60,
+            "scrollWidth": 327,
+            "clientWidth": 327
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 214,
+            "right": 168,
+            "bottom": 258,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 264,
+            "right": 103.203125,
+            "bottom": 308,
+            "width": 79.203125,
+            "height": 44,
+            "scrollWidth": 79,
+            "clientWidth": 79
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 314,
+            "right": 66.078125,
+            "bottom": 329,
+            "width": 42.078125,
+            "height": 15,
+            "scrollWidth": 42,
+            "clientWidth": 42
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 335,
+            "right": 191.015625,
+            "bottom": 350,
+            "width": 167.015625,
+            "height": 15,
+            "scrollWidth": 167,
+            "clientWidth": 167
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 327,
+            "clientWidth": 327,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 29,
+            "clientWidth": 29,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            79.203125,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 339,
+        "scrollWidth": 339,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 367,
+            "right": 351,
+            "bottom": 420,
+            "width": 327,
+            "height": 53,
+            "scrollWidth": 327,
+            "clientWidth": 327
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 426,
+            "right": 168,
+            "bottom": 470,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 476,
+            "right": 94.4375,
+            "bottom": 520,
+            "width": 70.4375,
+            "height": 44,
+            "scrollWidth": 70,
+            "clientWidth": 70
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 526,
+            "right": 76.6875,
+            "bottom": 541,
+            "width": 52.6875,
+            "height": 15,
+            "scrollWidth": 53,
+            "clientWidth": 53
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 547,
+            "right": 24,
+            "bottom": 547,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 75,
+            "clientWidth": 75,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 325,
+            "clientWidth": 325,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            70.4375,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 339,
+        "scrollWidth": 339,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 564,
+            "right": 168,
+            "bottom": 608,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 614,
+            "right": 185.96875,
+            "bottom": 658,
+            "width": 161.96875,
+            "height": 44,
+            "scrollWidth": 162,
+            "clientWidth": 162
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 664,
+            "right": 24,
+            "bottom": 664,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 670,
+            "right": 24,
+            "bottom": 670,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            161.96875,
+            44
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "dark",
+    "width": 430,
+    "pageWidth": 430,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 394,
+        "scrollWidth": 394,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 148,
+            "right": 388.5625,
+            "bottom": 176,
+            "width": 364.5625,
+            "height": 28,
+            "scrollWidth": 365,
+            "clientWidth": 365
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 182,
+            "right": 168,
+            "bottom": 226,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 232,
+            "right": 103.203125,
+            "bottom": 276,
+            "width": 79.203125,
+            "height": 44,
+            "scrollWidth": 79,
+            "clientWidth": 79
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 282,
+            "right": 66.078125,
+            "bottom": 297,
+            "width": 42.078125,
+            "height": 15,
+            "scrollWidth": 42,
+            "clientWidth": 42
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 303,
+            "right": 191.015625,
+            "bottom": 318,
+            "width": 167.015625,
+            "height": 15,
+            "scrollWidth": 167,
+            "clientWidth": 167
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 331,
+            "clientWidth": 331,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 29,
+            "clientWidth": 29,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            79.203125,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 394,
+        "scrollWidth": 394,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 24,
+            "y": 335,
+            "right": 406,
+            "bottom": 380,
+            "width": 382,
+            "height": 45,
+            "scrollWidth": 382,
+            "clientWidth": 382
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 386,
+            "right": 168,
+            "bottom": 430,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 436,
+            "right": 94.4375,
+            "bottom": 480,
+            "width": 70.4375,
+            "height": 44,
+            "scrollWidth": 70,
+            "clientWidth": 70
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 486,
+            "right": 76.6875,
+            "bottom": 501,
+            "width": 52.6875,
+            "height": 15,
+            "scrollWidth": 53,
+            "clientWidth": 53
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 507,
+            "right": 24,
+            "bottom": 507,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 75,
+            "clientWidth": 75,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 326,
+            "clientWidth": 326,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            70.4375,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 394,
+        "scrollWidth": 394,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 24,
+            "y": 524,
+            "right": 168,
+            "bottom": 568,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 24,
+            "y": 574,
+            "right": 185.96875,
+            "bottom": 618,
+            "width": 161.96875,
+            "height": 44,
+            "scrollWidth": 162,
+            "clientWidth": 162
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 24,
+            "y": 624,
+            "right": 24,
+            "bottom": 624,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 24,
+            "y": 630,
+            "right": 24,
+            "bottom": 630,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            161.96875,
+            44
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "dark",
+    "width": 768,
+    "pageWidth": 768,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 732,
+        "scrollWidth": 732,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 22,
+            "y": 151,
+            "right": 386.5625,
+            "bottom": 179,
+            "width": 364.5625,
+            "height": 28,
+            "scrollWidth": 365,
+            "clientWidth": 365
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 389.5625,
+            "y": 143,
+            "right": 533.5625,
+            "bottom": 187,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 536.5625,
+            "y": 143,
+            "right": 611.765625,
+            "bottom": 187,
+            "width": 75.203125,
+            "height": 44,
+            "scrollWidth": 75,
+            "clientWidth": 75
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 614.765625,
+            "y": 157.5,
+            "right": 656.84375,
+            "bottom": 172.5,
+            "width": 42.078125,
+            "height": 15,
+            "scrollWidth": 42,
+            "clientWidth": 42
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 22,
+            "y": 190,
+            "right": 189.015625,
+            "bottom": 205,
+            "width": 167.015625,
+            "height": 15,
+            "scrollWidth": 167,
+            "clientWidth": 167
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 331,
+            "clientWidth": 331,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 29,
+            "clientWidth": 29,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            75.203125,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 732,
+        "scrollWidth": 732,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 22,
+            "y": 220,
+            "right": 426.734375,
+            "bottom": 248,
+            "width": 404.734375,
+            "height": 28,
+            "scrollWidth": 405,
+            "clientWidth": 405
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 429.734375,
+            "y": 212,
+            "right": 573.734375,
+            "bottom": 256,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 576.734375,
+            "y": 212,
+            "right": 643.171875,
+            "bottom": 256,
+            "width": 66.4375,
+            "height": 44,
+            "scrollWidth": 66,
+            "clientWidth": 66
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 646.171875,
+            "y": 226.5,
+            "right": 698.859375,
+            "bottom": 241.5,
+            "width": 52.6875,
+            "height": 15,
+            "scrollWidth": 53,
+            "clientWidth": 53
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 701.859375,
+            "y": 234,
+            "right": 701.859375,
+            "bottom": 234,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 75,
+            "clientWidth": 75,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 326,
+            "clientWidth": 326,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            66.4375,
+            44
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 732,
+        "scrollWidth": 732,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 22,
+            "y": 263,
+            "right": 166,
+            "bottom": 307,
+            "width": 144,
+            "height": 44,
+            "scrollWidth": 144,
+            "clientWidth": 144
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 169,
+            "y": 263,
+            "right": 326.96875,
+            "bottom": 307,
+            "width": 157.96875,
+            "height": 44,
+            "scrollWidth": 158,
+            "clientWidth": 158
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 329.96875,
+            "y": 285,
+            "right": 329.96875,
+            "bottom": 285,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 332.96875,
+            "y": 285,
+            "right": 332.96875,
+            "bottom": 285,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            157.96875,
+            44
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "dark",
+    "width": 1024,
+    "pageWidth": 1024,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 900,
+        "scrollWidth": 900,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 66,
+            "y": 154.5,
+            "right": 488.671875,
+            "bottom": 182.5,
+            "width": 422.671875,
+            "height": 28,
+            "scrollWidth": 423,
+            "clientWidth": 423
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 492.671875,
+            "y": 153.5,
+            "right": 552.671875,
+            "bottom": 183.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 556.671875,
+            "y": 153.5,
+            "right": 644.40625,
+            "bottom": 183.5,
+            "width": 87.734375,
+            "height": 30,
+            "scrollWidth": 88,
+            "clientWidth": 88
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 648.40625,
+            "y": 159.75,
+            "right": 697.5,
+            "bottom": 177.25,
+            "width": 49.09375,
+            "height": 17.5,
+            "scrollWidth": 49,
+            "clientWidth": 49
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 701.5,
+            "y": 159.75,
+            "right": 896.359375,
+            "bottom": 177.25,
+            "width": 194.859375,
+            "height": 17.5,
+            "scrollWidth": 195,
+            "clientWidth": 195
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 386,
+            "clientWidth": 386,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 32,
+            "clientWidth": 32,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            87.734375,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 900,
+        "scrollWidth": 900,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 66,
+            "y": 192.5,
+            "right": 535.515625,
+            "bottom": 220.5,
+            "width": 469.515625,
+            "height": 28,
+            "scrollWidth": 470,
+            "clientWidth": 470
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 539.515625,
+            "y": 191.5,
+            "right": 599.515625,
+            "bottom": 221.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 603.515625,
+            "y": 191.5,
+            "right": 681.015625,
+            "bottom": 221.5,
+            "width": 77.5,
+            "height": 30,
+            "scrollWidth": 78,
+            "clientWidth": 78
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 685.015625,
+            "y": 197.75,
+            "right": 746.484375,
+            "bottom": 215.25,
+            "width": 61.46875,
+            "height": 17.5,
+            "scrollWidth": 61,
+            "clientWidth": 61
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 750.484375,
+            "y": 206.5,
+            "right": 750.484375,
+            "bottom": 206.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 88,
+            "clientWidth": 88,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 378,
+            "clientWidth": 378,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            77.5,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 900,
+        "scrollWidth": 900,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 66,
+            "y": 229.5,
+            "right": 126,
+            "bottom": 259.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 130,
+            "y": 229.5,
+            "right": 314.296875,
+            "bottom": 259.5,
+            "width": 184.296875,
+            "height": 30,
+            "scrollWidth": 184,
+            "clientWidth": 184
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 318.296875,
+            "y": 244.5,
+            "right": 318.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 322.296875,
+            "y": 244.5,
+            "right": 322.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            184.296875,
+            30
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "dark",
+    "width": 1366,
+    "pageWidth": 1366,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 224,
+            "y": 154.5,
+            "right": 646.671875,
+            "bottom": 182.5,
+            "width": 422.671875,
+            "height": 28,
+            "scrollWidth": 423,
+            "clientWidth": 423
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 650.671875,
+            "y": 153.5,
+            "right": 710.671875,
+            "bottom": 183.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 714.671875,
+            "y": 153.5,
+            "right": 802.40625,
+            "bottom": 183.5,
+            "width": 87.734375,
+            "height": 30,
+            "scrollWidth": 88,
+            "clientWidth": 88
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 806.40625,
+            "y": 159.75,
+            "right": 855.5,
+            "bottom": 177.25,
+            "width": 49.09375,
+            "height": 17.5,
+            "scrollWidth": 49,
+            "clientWidth": 49
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 859.5,
+            "y": 159.75,
+            "right": 1054.359375,
+            "bottom": 177.25,
+            "width": 194.859375,
+            "height": 17.5,
+            "scrollWidth": 195,
+            "clientWidth": 195
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 386,
+            "clientWidth": 386,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 32,
+            "clientWidth": 32,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            87.734375,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 224,
+            "y": 192.5,
+            "right": 693.515625,
+            "bottom": 220.5,
+            "width": 469.515625,
+            "height": 28,
+            "scrollWidth": 470,
+            "clientWidth": 470
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 697.515625,
+            "y": 191.5,
+            "right": 757.515625,
+            "bottom": 221.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 761.515625,
+            "y": 191.5,
+            "right": 839.015625,
+            "bottom": 221.5,
+            "width": 77.5,
+            "height": 30,
+            "scrollWidth": 78,
+            "clientWidth": 78
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 843.015625,
+            "y": 197.75,
+            "right": 904.484375,
+            "bottom": 215.25,
+            "width": 61.46875,
+            "height": 17.5,
+            "scrollWidth": 61,
+            "clientWidth": 61
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 908.484375,
+            "y": 206.5,
+            "right": 908.484375,
+            "bottom": 206.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 88,
+            "clientWidth": 88,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 378,
+            "clientWidth": 378,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            77.5,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 224,
+            "y": 229.5,
+            "right": 284,
+            "bottom": 259.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 288,
+            "y": 229.5,
+            "right": 472.296875,
+            "bottom": 259.5,
+            "width": 184.296875,
+            "height": 30,
+            "scrollWidth": 184,
+            "clientWidth": 184
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 476.296875,
+            "y": 244.5,
+            "right": 476.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 480.296875,
+            "y": 244.5,
+            "right": 480.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            184.296875,
+            30
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  },
+  {
+    "theme": "dark",
+    "width": 1920,
+    "pageWidth": 1920,
+    "rows": [
+      {
+        "name": "long-judge",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 501,
+            "y": 154.5,
+            "right": 923.671875,
+            "bottom": 182.5,
+            "width": 422.671875,
+            "height": 28,
+            "scrollWidth": 423,
+            "clientWidth": 423
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 927.671875,
+            "y": 153.5,
+            "right": 987.671875,
+            "bottom": 183.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 991.671875,
+            "y": 153.5,
+            "right": 1079.40625,
+            "bottom": 183.5,
+            "width": 87.734375,
+            "height": 30,
+            "scrollWidth": 88,
+            "clientWidth": 88
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 1083.40625,
+            "y": 159.75,
+            "right": 1132.5,
+            "bottom": 177.25,
+            "width": 49.09375,
+            "height": 17.5,
+            "scrollWidth": 49,
+            "clientWidth": 49
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 1136.5,
+            "y": 159.75,
+            "right": 1331.359375,
+            "bottom": 177.25,
+            "width": 194.859375,
+            "height": 17.5,
+            "scrollWidth": 195,
+            "clientWidth": 195
+          }
+        ],
+        "text": [
+          {
+            "text": "Honourable Judge Alexandra Very Long Judicial Name",
+            "scrollWidth": 386,
+            "clientWidth": 386,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "12",
+            "scrollWidth": 32,
+            "clientWidth": 32,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            87.734375,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "long-court",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-session-assignment",
+            "x": 501,
+            "y": 192.5,
+            "right": 970.515625,
+            "bottom": 220.5,
+            "width": 469.515625,
+            "height": 28,
+            "scrollWidth": 470,
+            "clientWidth": 470
+          },
+          {
+            "class": "diary-file-status-group",
+            "x": 974.515625,
+            "y": 191.5,
+            "right": 1034.515625,
+            "bottom": 221.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 1038.515625,
+            "y": 191.5,
+            "right": 1116.015625,
+            "bottom": 221.5,
+            "width": 77.5,
+            "height": 30,
+            "scrollWidth": 78,
+            "clientWidth": 78
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 1120.015625,
+            "y": 197.75,
+            "right": 1181.484375,
+            "bottom": 215.25,
+            "width": 61.46875,
+            "height": 17.5,
+            "scrollWidth": 61,
+            "clientWidth": 61
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 1185.484375,
+            "y": 206.5,
+            "right": 1185.484375,
+            "bottom": 206.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [
+          {
+            "text": "Judge Alpha",
+            "scrollWidth": 88,
+            "clientWidth": 88,
+            "whiteSpace": "normal"
+          },
+          {
+            "text": "District and Sessions Court Twelve, Central Division",
+            "scrollWidth": 378,
+            "clientWidth": 378,
+            "whiteSpace": "normal"
+          }
+        ],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            77.5,
+            30
+          ]
+        ],
+        "overlaps": []
+      },
+      {
+        "name": "missing",
+        "width": 926,
+        "scrollWidth": 926,
+        "children": [
+          {
+            "class": "diary-file-status-group",
+            "x": 501,
+            "y": 229.5,
+            "right": 561,
+            "bottom": 259.5,
+            "width": 60,
+            "height": 30,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "class": "diary-fir-number",
+            "x": 565,
+            "y": 229.5,
+            "right": 749.296875,
+            "bottom": 259.5,
+            "width": 184.296875,
+            "height": 30,
+            "scrollWidth": 184,
+            "clientWidth": 184
+          },
+          {
+            "class": "diary-file-stage",
+            "x": 753.296875,
+            "y": 244.5,
+            "right": 753.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          },
+          {
+            "class": "diary-file-linked-date",
+            "x": 757.296875,
+            "y": 244.5,
+            "right": 757.296875,
+            "bottom": 244.5,
+            "width": 0,
+            "height": 0,
+            "scrollWidth": 0,
+            "clientWidth": 0
+          }
+        ],
+        "text": [],
+        "targets": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            184.296875,
+            30
+          ]
+        ],
+        "overlaps": []
+      }
+    ]
+  }
+]

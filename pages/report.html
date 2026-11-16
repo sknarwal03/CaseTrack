@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/css/shared.css">
     <link rel="stylesheet" href="../assets/css/report.css">
+    <link rel="stylesheet" href="../assets/css/export-dialog.css">
     <meta name="theme-color" content="#173f35">
     <link rel="manifest" href="/CaseTrack/manifest.webmanifest">
     <link rel="icon" href="/CaseTrack/icons/icon.svg" type="image/svg+xml">
@@ -27,7 +28,7 @@
                         <p class="eyebrow">Reports</p>
                         <h1>Case Insights</h1>
                     </div>
-                    <button class="new-case" type="button">Export Report</button>
+                    <button class="new-case" id="reportExportTrigger" type="button">Export Report</button>
                 </div>
 
                 <section class="stats report-stats">
@@ -50,10 +51,10 @@
                     <article class="stat">
                         <div class="stat-icon red">▣</div>
                         <div>
-                            <p>Pending</p>
-                            <strong id="reportPending">0</strong>
+                            <p>Pending Court Proceedings</p>
+                            <strong id="reportPending">—</strong>
                         </div>
-                        <em>At risk</em>
+                        <em>Active court proceedings</em>
                     </article>
                     <article class="stat">
                         <div class="stat-icon mint">✓</div>
@@ -65,6 +66,7 @@
                     </article>
                 </section>
 
+                <p class="report-quality-warning" id="pendingProceedingsWarning" role="status" aria-live="polite" hidden></p>
                 <div class="report-grid">
                     <section class="panel report-panel">
                         <div class="panel-heading">
@@ -110,6 +112,34 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <div class="modal-backdrop" id="exportDialog" aria-hidden="true">
+        <section class="modal export-dialog" role="dialog" aria-modal="true" aria-labelledby="exportDialogTitle">
+            <header class="modal-header">
+                <div><h2 id="exportDialogTitle">Export Data</h2><p>Choose a file format and report scope.</p></div>
+                <button class="close" type="button" data-export-close aria-label="Close export dialog">×</button>
+            </header>
+            <form class="modal-body export-form" id="exportForm">
+                <fieldset class="export-choice-group">
+                    <legend>Format</legend>
+                    <label class="export-choice"><input type="radio" name="export-format" value="csv" checked> CSV (.csv)</label>
+                    <label class="export-choice"><input type="radio" name="export-format" value="xlsx"> Excel (.xlsx)</label>
+                    <label class="export-choice"><input type="radio" name="export-format" value="pdf"> PDF (.pdf)</label>
+                </fieldset>
+                <fieldset class="export-choice-group">
+                    <legend>Records</legend>
+                    <label class="export-choice"><input type="radio" name="export-scope" value="filtered" checked> Filtered Records</label>
+                    <label class="export-choice"><input type="radio" name="export-scope" value="all"> All Records</label>
+                </fieldset>
+                <p class="export-record-count" data-export-count aria-live="polite">Loading report count…</p>
+                <p class="export-status" data-export-status role="status" aria-live="polite"></p>
+                <footer class="modal-footer">
+                    <button class="btn" type="button" data-export-close>Cancel</button>
+                    <button class="btn primary" type="submit" data-export-submit>Export</button>
+                </footer>
+            </form>
+        </section>
     </div>
 
     <script type="module" src="../assets/js/report.js"></script>

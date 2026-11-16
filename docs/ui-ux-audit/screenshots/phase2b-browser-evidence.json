@@ -1,0 +1,750 @@
+{
+  "audit": "CaseTrack Phase 2B authenticated visual audit evidence",
+  "generatedAt": "2026-11-12T16:24:13.977Z",
+  "application": {
+    "url": "http://127.0.0.1:5174/CaseTrack/",
+    "viteMode": "role-admin-local",
+    "firebaseProjectId": "demo-casetrack-role-prototype",
+    "authEmulator": "127.0.0.1:9198",
+    "firestoreEmulator": "127.0.0.1:8187",
+    "functionsEmulator": "127.0.0.1:5003",
+    "functionsConfiguredRuntime": "nodejs22",
+    "hostNodeRuntime": "v24.22.0"
+  },
+  "safety": {
+    "authentication": "Operator, Admin and must-change-password account signed in through the actual CaseTrack login form; no auth bypass.",
+    "syntheticOnly": true,
+    "productionFirebase": "not used; browser traffic guarded against remote Firebase/Auth/Firestore/Functions domains; 0 non-local Firebase requests observed.",
+    "firestoreRules": "Existing firestore.admin-panel.rules used by emulator; rules and production configuration not modified.",
+    "writes": "Synthetic Firestore fixtures were seeded with Firebase Admin SDK against the local emulator only (fixture setup bypassed rules); browser app reads used the existing unmodified emulator rules. No UI CRUD, password change, setup completion, email, or case submission was performed.",
+    "cleanup": "Emulator in-memory state cleared by stopping emulators; temporary credential manifest removed after audit."
+  },
+  "coverage": {
+    "viewportSizes": [
+      {
+        "width": 320,
+        "height": 700
+      },
+      {
+        "width": 375,
+        "height": 812
+      },
+      {
+        "width": 430,
+        "height": 932
+      },
+      {
+        "width": 768,
+        "height": 1024
+      },
+      {
+        "width": 1024,
+        "height": 768
+      },
+      {
+        "width": 1366,
+        "height": 768
+      },
+      {
+        "width": 1920,
+        "height": 1080
+      }
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "operatorAuthenticatedRouteMatrix": {
+      "routes": 12,
+      "routeViewportThemeCaptures": 168,
+      "status": "Captured all routes; a later authenticated route diagnostic at 1366x768 with 2.4s hydration wait confirmed data and zero page errors."
+    },
+    "adminPanel": {
+      "captures": 14,
+      "status": "Page screenshot matrix captured, but role-management backend endpoints did not load."
+    },
+    "passwordChange": {
+      "captures": 14,
+      "status": "Reached by signing in as synthetic must-change-password operator; form not submitted."
+    },
+    "passwordSetup": {
+      "captures": 14,
+      "status": "Valid synthetic token route rendered, but validator rejected/unavailable and form remained hidden; these captures are invalid-link/error state."
+    },
+    "interactiveStates": [
+      "Add Case dialog (1366x768 light)",
+      "Tasks & Reminders dialog (1366x768 light and dark)",
+      "Synthetic case details modal (1366x768 light)",
+      "Register Diary scheduled hearing (14 Dec 2026; 320x700 and 1366x768 light)"
+    ],
+    "notExercised": [
+      "Edit Case submission",
+      "Case/FIR change writes",
+      "filters/search actions",
+      "keyboard focus/containment/restoration",
+      "screen reader/contrast/zoom",
+      "setup token completion or password change submission"
+    ]
+  },
+  "syntheticData": {
+    "firMasters": 4,
+    "linkedProceedings": 5,
+    "users": 3,
+    "stations": 1,
+    "judges": 2,
+    "investigatingOfficers": 2,
+    "representativeFirStates": [
+      "Under Investigation",
+      "UCR",
+      "Under Trial",
+      "Disposed"
+    ],
+    "otherCases": [
+      "multiple linked Lower/Session/JJB records",
+      "PO accused",
+      "hearing records on 14 and 21 Dec 2026",
+      "disposed court proceeding",
+      "two judges",
+      "two investigating officers"
+    ]
+  },
+  "routeSmoke": [
+    {
+      "route": "Dashboard",
+      "loaded": true,
+      "evidence": "4 FIRs, 4 proceedings, 2 active, 2 pending hearings, 1 disposed"
+    },
+    {
+      "route": "All Cases",
+      "loaded": true,
+      "evidence": "6 records after hydration"
+    },
+    {
+      "route": "FIR Register",
+      "loaded": true,
+      "evidence": "4 synthetic FIR masters"
+    },
+    {
+      "route": "FIR Index",
+      "loaded": true,
+      "evidence": "4 FIRs found"
+    },
+    {
+      "route": "FIR Status Map",
+      "loaded": true,
+      "evidence": "4 registered; UI/UCR/UT/Disposed each 1"
+    },
+    {
+      "route": "PO Cases",
+      "loaded": true,
+      "evidence": "1 PO record"
+    },
+    {
+      "route": "Disposed Cases",
+      "loaded": true,
+      "evidence": "1 disposed proceeding"
+    },
+    {
+      "route": "Report",
+      "loaded": true,
+      "evidence": "4 unique FIRs; 1 disposed; 3 pending; 2 next hearings"
+    },
+    {
+      "route": "Register Diary",
+      "loaded": true,
+      "evidence": "calendar rendered; selected current day has no hearing; synthetic hearing displayed on 14 Dec 2026"
+    },
+    {
+      "route": "All Judges",
+      "loaded": true,
+      "evidence": "2 synthetic judges"
+    },
+    {
+      "route": "Manage IO",
+      "loaded": true,
+      "evidence": "2 synthetic investigating officers"
+    },
+    {
+      "route": "Settings",
+      "loaded": true,
+      "evidence": "settings and preference controls rendered"
+    },
+    {
+      "route": "Admin Panel",
+      "loaded": false,
+      "evidence": "shell rendered at screenshots; listUserRoles/policeStations functions failed to load in emulator; error endpoint-unavailable"
+    },
+    {
+      "route": "Password Change",
+      "loaded": true,
+      "evidence": "actual authenticated form state; no submission"
+    },
+    {
+      "route": "Password Setup valid token",
+      "loaded": false,
+      "evidence": "setup form not visible; validator returned unavailable/invalid state"
+    }
+  ],
+  "findings": {
+    "newIssueIds": [
+      "UX-013",
+      "UX-014",
+      "UX-015"
+    ],
+    "existingEvidence": [
+      "UX-009 responsive-table clipping confirmed in loaded Cases and FIR Index captures",
+      "UX-011 invalid Password Setup visual mismatch remains",
+      "UX-012 Landing preview remains"
+    ]
+  },
+  "screenshotCounts": {
+    "allPng": 231,
+    "phase2b": 216,
+    "previousPhaseBaseline": 15
+  },
+  "routeMatrix": [
+    {
+      "route": "dashboard",
+      "light": [
+        "dashboard-320-light.png",
+        "dashboard-375-light.png",
+        "dashboard-430-light.png",
+        "dashboard-768-light.png",
+        "dashboard-1024-light.png",
+        "dashboard-1366-light.png",
+        "dashboard-1920-light.png"
+      ],
+      "dark": [
+        "dashboard-320-dark.png",
+        "dashboard-375-dark.png",
+        "dashboard-430-dark.png",
+        "dashboard-768-dark.png",
+        "dashboard-1024-dark.png",
+        "dashboard-1366-dark.png",
+        "dashboard-1920-dark.png"
+      ]
+    },
+    {
+      "route": "cases",
+      "light": [
+        "cases-320-light.png",
+        "cases-375-light.png",
+        "cases-430-light.png",
+        "cases-768-light.png",
+        "cases-1024-light.png",
+        "cases-1366-light.png",
+        "cases-1920-light.png"
+      ],
+      "dark": [
+        "cases-320-dark.png",
+        "cases-375-dark.png",
+        "cases-430-dark.png",
+        "cases-768-dark.png",
+        "cases-1024-dark.png",
+        "cases-1366-dark.png",
+        "cases-1920-dark.png"
+      ]
+    },
+    {
+      "route": "fir-register",
+      "light": [
+        "fir-register-320-light.png",
+        "fir-register-375-light.png",
+        "fir-register-430-light.png",
+        "fir-register-768-light.png",
+        "fir-register-1024-light.png",
+        "fir-register-1366-light.png",
+        "fir-register-1920-light.png"
+      ],
+      "dark": [
+        "fir-register-320-dark.png",
+        "fir-register-375-dark.png",
+        "fir-register-430-dark.png",
+        "fir-register-768-dark.png",
+        "fir-register-1024-dark.png",
+        "fir-register-1366-dark.png",
+        "fir-register-1920-dark.png"
+      ]
+    },
+    {
+      "route": "fir-index",
+      "light": [
+        "fir-index-320-light.png",
+        "fir-index-375-light.png",
+        "fir-index-430-light.png",
+        "fir-index-768-light.png",
+        "fir-index-1024-light.png",
+        "fir-index-1366-light.png",
+        "fir-index-1920-light.png"
+      ],
+      "dark": [
+        "fir-index-320-dark.png",
+        "fir-index-375-dark.png",
+        "fir-index-430-dark.png",
+        "fir-index-768-dark.png",
+        "fir-index-1024-dark.png",
+        "fir-index-1366-dark.png",
+        "fir-index-1920-dark.png"
+      ]
+    },
+    {
+      "route": "fir-statusmap",
+      "light": [
+        "fir-statusmap-320-light.png",
+        "fir-statusmap-375-light.png",
+        "fir-statusmap-430-light.png",
+        "fir-statusmap-768-light.png",
+        "fir-statusmap-1024-light.png",
+        "fir-statusmap-1366-light.png",
+        "fir-statusmap-1920-light.png"
+      ],
+      "dark": [
+        "fir-statusmap-320-dark.png",
+        "fir-statusmap-375-dark.png",
+        "fir-statusmap-430-dark.png",
+        "fir-statusmap-768-dark.png",
+        "fir-statusmap-1024-dark.png",
+        "fir-statusmap-1366-dark.png",
+        "fir-statusmap-1920-dark.png"
+      ]
+    },
+    {
+      "route": "po-cases",
+      "light": [
+        "po-cases-320-light.png",
+        "po-cases-375-light.png",
+        "po-cases-430-light.png",
+        "po-cases-768-light.png",
+        "po-cases-1024-light.png",
+        "po-cases-1366-light.png",
+        "po-cases-1920-light.png"
+      ],
+      "dark": [
+        "po-cases-320-dark.png",
+        "po-cases-375-dark.png",
+        "po-cases-430-dark.png",
+        "po-cases-768-dark.png",
+        "po-cases-1024-dark.png",
+        "po-cases-1366-dark.png",
+        "po-cases-1920-dark.png"
+      ]
+    },
+    {
+      "route": "disposed-cases",
+      "light": [
+        "disposed-cases-320-light.png",
+        "disposed-cases-375-light.png",
+        "disposed-cases-430-light.png",
+        "disposed-cases-768-light.png",
+        "disposed-cases-1024-light.png",
+        "disposed-cases-1366-light.png",
+        "disposed-cases-1920-light.png"
+      ],
+      "dark": [
+        "disposed-cases-320-dark.png",
+        "disposed-cases-375-dark.png",
+        "disposed-cases-430-dark.png",
+        "disposed-cases-768-dark.png",
+        "disposed-cases-1024-dark.png",
+        "disposed-cases-1366-dark.png",
+        "disposed-cases-1920-dark.png"
+      ]
+    },
+    {
+      "route": "report",
+      "light": [
+        "report-320-light.png",
+        "report-375-light.png",
+        "report-430-light.png",
+        "report-768-light.png",
+        "report-1024-light.png",
+        "report-1366-light.png",
+        "report-1920-light.png"
+      ],
+      "dark": [
+        "report-320-dark.png",
+        "report-375-dark.png",
+        "report-430-dark.png",
+        "report-768-dark.png",
+        "report-1024-dark.png",
+        "report-1366-dark.png",
+        "report-1920-dark.png"
+      ]
+    },
+    {
+      "route": "register-diary",
+      "light": [
+        "register-diary-320-light.png",
+        "register-diary-375-light.png",
+        "register-diary-430-light.png",
+        "register-diary-768-light.png",
+        "register-diary-1024-light.png",
+        "register-diary-1366-light.png",
+        "register-diary-1920-light.png"
+      ],
+      "dark": [
+        "register-diary-320-dark.png",
+        "register-diary-375-dark.png",
+        "register-diary-430-dark.png",
+        "register-diary-768-dark.png",
+        "register-diary-1024-dark.png",
+        "register-diary-1366-dark.png",
+        "register-diary-1920-dark.png"
+      ]
+    },
+    {
+      "route": "all-judges",
+      "light": [
+        "all-judges-320-light.png",
+        "all-judges-375-light.png",
+        "all-judges-430-light.png",
+        "all-judges-768-light.png",
+        "all-judges-1024-light.png",
+        "all-judges-1366-light.png",
+        "all-judges-1920-light.png"
+      ],
+      "dark": [
+        "all-judges-320-dark.png",
+        "all-judges-375-dark.png",
+        "all-judges-430-dark.png",
+        "all-judges-768-dark.png",
+        "all-judges-1024-dark.png",
+        "all-judges-1366-dark.png",
+        "all-judges-1920-dark.png"
+      ]
+    },
+    {
+      "route": "manage-io",
+      "light": [
+        "manage-io-320-light.png",
+        "manage-io-375-light.png",
+        "manage-io-430-light.png",
+        "manage-io-768-light.png",
+        "manage-io-1024-light.png",
+        "manage-io-1366-light.png",
+        "manage-io-1920-light.png"
+      ],
+      "dark": [
+        "manage-io-320-dark.png",
+        "manage-io-375-dark.png",
+        "manage-io-430-dark.png",
+        "manage-io-768-dark.png",
+        "manage-io-1024-dark.png",
+        "manage-io-1366-dark.png",
+        "manage-io-1920-dark.png"
+      ]
+    },
+    {
+      "route": "settings",
+      "light": [
+        "settings-320-light.png",
+        "settings-375-light.png",
+        "settings-430-light.png",
+        "settings-768-light.png",
+        "settings-1024-light.png",
+        "settings-1366-light.png",
+        "settings-1920-light.png"
+      ],
+      "dark": [
+        "settings-320-dark.png",
+        "settings-375-dark.png",
+        "settings-430-dark.png",
+        "settings-768-dark.png",
+        "settings-1024-dark.png",
+        "settings-1366-dark.png",
+        "settings-1920-dark.png"
+      ]
+    }
+  ],
+  "screenshotFiles": [
+    "admin-panel-1024-dark.png",
+    "admin-panel-1024-light.png",
+    "admin-panel-1366-dark.png",
+    "admin-panel-1366-light.png",
+    "admin-panel-1920-dark.png",
+    "admin-panel-1920-light.png",
+    "admin-panel-320-dark.png",
+    "admin-panel-320-light.png",
+    "admin-panel-375-dark.png",
+    "admin-panel-375-light.png",
+    "admin-panel-430-dark.png",
+    "admin-panel-430-light.png",
+    "admin-panel-768-dark.png",
+    "admin-panel-768-light.png",
+    "all-judges-1024-dark.png",
+    "all-judges-1024-light.png",
+    "all-judges-1366-dark.png",
+    "all-judges-1366-light.png",
+    "all-judges-1920-dark.png",
+    "all-judges-1920-light.png",
+    "all-judges-320-dark.png",
+    "all-judges-320-light.png",
+    "all-judges-375-dark.png",
+    "all-judges-375-light.png",
+    "all-judges-430-dark.png",
+    "all-judges-430-light.png",
+    "all-judges-768-dark.png",
+    "all-judges-768-light.png",
+    "case-details-1366-light.png",
+    "cases-1024-dark.png",
+    "cases-1024-light.png",
+    "cases-1366-dark.png",
+    "cases-1366-light.png",
+    "cases-1920-dark.png",
+    "cases-1920-light.png",
+    "cases-320-dark.png",
+    "cases-320-light.png",
+    "cases-375-dark.png",
+    "cases-375-light.png",
+    "cases-430-dark.png",
+    "cases-430-light.png",
+    "cases-768-dark.png",
+    "cases-768-light.png",
+    "dashboard-1024-dark.png",
+    "dashboard-1024-light.png",
+    "dashboard-1366-dark.png",
+    "dashboard-1366-light.png",
+    "dashboard-1920-dark.png",
+    "dashboard-1920-light.png",
+    "dashboard-320-dark.png",
+    "dashboard-320-light.png",
+    "dashboard-375-dark.png",
+    "dashboard-375-light.png",
+    "dashboard-430-dark.png",
+    "dashboard-430-light.png",
+    "dashboard-768-dark.png",
+    "dashboard-768-light.png",
+    "dashboard-add-case-1366-light.png",
+    "dashboard-task-dialog-1366-dark.png",
+    "dashboard-task-dialog-1366-light.png",
+    "disposed-cases-1024-dark.png",
+    "disposed-cases-1024-light.png",
+    "disposed-cases-1366-dark.png",
+    "disposed-cases-1366-light.png",
+    "disposed-cases-1920-dark.png",
+    "disposed-cases-1920-light.png",
+    "disposed-cases-320-dark.png",
+    "disposed-cases-320-light.png",
+    "disposed-cases-375-dark.png",
+    "disposed-cases-375-light.png",
+    "disposed-cases-430-dark.png",
+    "disposed-cases-430-light.png",
+    "disposed-cases-768-dark.png",
+    "disposed-cases-768-light.png",
+    "fir-index-1024-dark.png",
+    "fir-index-1024-light.png",
+    "fir-index-1366-dark.png",
+    "fir-index-1366-light.png",
+    "fir-index-1920-dark.png",
+    "fir-index-1920-light.png",
+    "fir-index-320-dark.png",
+    "fir-index-320-light.png",
+    "fir-index-375-dark.png",
+    "fir-index-375-light.png",
+    "fir-index-430-dark.png",
+    "fir-index-430-light.png",
+    "fir-index-768-dark.png",
+    "fir-index-768-light.png",
+    "fir-register-1024-dark.png",
+    "fir-register-1024-light.png",
+    "fir-register-1366-dark.png",
+    "fir-register-1366-light.png",
+    "fir-register-1920-dark.png",
+    "fir-register-1920-light.png",
+    "fir-register-320-dark.png",
+    "fir-register-320-light.png",
+    "fir-register-375-dark.png",
+    "fir-register-375-light.png",
+    "fir-register-430-dark.png",
+    "fir-register-430-light.png",
+    "fir-register-768-dark.png",
+    "fir-register-768-light.png",
+    "fir-statusmap-1024-dark.png",
+    "fir-statusmap-1024-light.png",
+    "fir-statusmap-1366-dark.png",
+    "fir-statusmap-1366-light.png",
+    "fir-statusmap-1920-dark.png",
+    "fir-statusmap-1920-light.png",
+    "fir-statusmap-320-dark.png",
+    "fir-statusmap-320-light.png",
+    "fir-statusmap-375-dark.png",
+    "fir-statusmap-375-light.png",
+    "fir-statusmap-430-dark.png",
+    "fir-statusmap-430-light.png",
+    "fir-statusmap-768-dark.png",
+    "fir-statusmap-768-light.png",
+    "landing-1024-default.png",
+    "landing-1366-default.png",
+    "landing-1920-default.png",
+    "landing-320-default.png",
+    "landing-375-default.png",
+    "landing-430-default.png",
+    "landing-768-default.png",
+    "login-1024-default.png",
+    "login-1366-default.png",
+    "login-1920-default.png",
+    "login-320-default.png",
+    "login-375-default.png",
+    "login-430-default.png",
+    "login-768-default.png",
+    "manage-io-1024-dark.png",
+    "manage-io-1024-light.png",
+    "manage-io-1366-dark.png",
+    "manage-io-1366-light.png",
+    "manage-io-1920-dark.png",
+    "manage-io-1920-light.png",
+    "manage-io-320-dark.png",
+    "manage-io-320-light.png",
+    "manage-io-375-dark.png",
+    "manage-io-375-light.png",
+    "manage-io-430-dark.png",
+    "manage-io-430-light.png",
+    "manage-io-768-dark.png",
+    "manage-io-768-light.png",
+    "password-change-1024-dark.png",
+    "password-change-1024-light.png",
+    "password-change-1366-dark.png",
+    "password-change-1366-light.png",
+    "password-change-1920-dark.png",
+    "password-change-1920-light.png",
+    "password-change-320-dark.png",
+    "password-change-320-light.png",
+    "password-change-375-dark.png",
+    "password-change-375-light.png",
+    "password-change-430-dark.png",
+    "password-change-430-light.png",
+    "password-change-768-dark.png",
+    "password-change-768-light.png",
+    "password-setup-1024-dark.png",
+    "password-setup-1024-light.png",
+    "password-setup-1366-dark.png",
+    "password-setup-1366-default.png",
+    "password-setup-1366-light.png",
+    "password-setup-1920-dark.png",
+    "password-setup-1920-light.png",
+    "password-setup-320-dark.png",
+    "password-setup-320-light.png",
+    "password-setup-375-dark.png",
+    "password-setup-375-light.png",
+    "password-setup-430-dark.png",
+    "password-setup-430-light.png",
+    "password-setup-768-dark.png",
+    "password-setup-768-light.png",
+    "po-cases-1024-dark.png",
+    "po-cases-1024-light.png",
+    "po-cases-1366-dark.png",
+    "po-cases-1366-light.png",
+    "po-cases-1920-dark.png",
+    "po-cases-1920-light.png",
+    "po-cases-320-dark.png",
+    "po-cases-320-light.png",
+    "po-cases-375-dark.png",
+    "po-cases-375-light.png",
+    "po-cases-430-dark.png",
+    "po-cases-430-light.png",
+    "po-cases-768-dark.png",
+    "po-cases-768-light.png",
+    "register-diary-1024-dark.png",
+    "register-diary-1024-light.png",
+    "register-diary-1366-dark.png",
+    "register-diary-1366-light.png",
+    "register-diary-1920-dark.png",
+    "register-diary-1920-light.png",
+    "register-diary-2026-12-14-1366-light.png",
+    "register-diary-2026-12-14-320-light.png",
+    "register-diary-320-dark.png",
+    "register-diary-320-light.png",
+    "register-diary-375-dark.png",
+    "register-diary-375-light.png",
+    "register-diary-430-dark.png",
+    "register-diary-430-light.png",
+    "register-diary-768-dark.png",
+    "register-diary-768-light.png",
+    "report-1024-dark.png",
+    "report-1024-light.png",
+    "report-1366-dark.png",
+    "report-1366-light.png",
+    "report-1920-dark.png",
+    "report-1920-light.png",
+    "report-320-dark.png",
+    "report-320-light.png",
+    "report-375-dark.png",
+    "report-375-light.png",
+    "report-430-dark.png",
+    "report-430-light.png",
+    "report-768-dark.png",
+    "report-768-light.png",
+    "settings-1024-dark.png",
+    "settings-1024-light.png",
+    "settings-1366-dark.png",
+    "settings-1366-light.png",
+    "settings-1920-dark.png",
+    "settings-1920-light.png",
+    "settings-320-dark.png",
+    "settings-320-light.png",
+    "settings-375-dark.png",
+    "settings-375-light.png",
+    "settings-430-dark.png",
+    "settings-430-light.png",
+    "settings-768-dark.png",
+    "settings-768-light.png"
+  ],
+  "finalVerification": {
+    "status": "incomplete",
+    "adminDataVerified": true,
+    "validSetupFormVerified": false,
+    "runtime": "v22.23.5",
+    "newIssueIds": [
+      "UX-016",
+      "UX-017"
+    ],
+    "newScreenshots": [
+      "admin-panel-data-320-light.png",
+      "admin-panel-data-375-light.png",
+      "admin-panel-data-430-light.png",
+      "admin-panel-data-768-light.png",
+      "admin-panel-data-1024-light.png",
+      "admin-panel-data-1366-light.png",
+      "admin-panel-data-1920-light.png",
+      "admin-panel-data-320-dark.png",
+      "admin-panel-data-375-dark.png",
+      "admin-panel-data-430-dark.png",
+      "admin-panel-data-768-dark.png",
+      "admin-panel-data-1024-dark.png",
+      "admin-panel-data-1366-dark.png",
+      "admin-panel-data-1920-dark.png",
+      "admin-panel-manage-dialog-1366-light.png",
+      "admin-panel-manage-dialog-320-light.png",
+      "admin-panel-empty-operator-validation-1366-light.png",
+      "password-setup-node22-320-light.png",
+      "password-setup-node22-375-light.png",
+      "password-setup-node22-430-light.png",
+      "password-setup-node22-768-light.png",
+      "password-setup-node22-1024-light.png",
+      "password-setup-node22-1366-light.png",
+      "password-setup-node22-1920-light.png",
+      "password-setup-node22-320-dark.png",
+      "password-setup-node22-375-dark.png",
+      "password-setup-node22-430-dark.png",
+      "password-setup-node22-768-dark.png",
+      "password-setup-node22-1024-dark.png",
+      "password-setup-node22-1366-dark.png",
+      "password-setup-node22-1920-dark.png",
+      "admin-panel-dialog-viewport-1366-light.png",
+      "admin-panel-dialog-viewport-320-light.png",
+      "admin-panel-dialog-viewport-1366-dark.png",
+      "admin-panel-dialog-viewport-320-dark.png"
+    ],
+    "newScreenshotCount": 35,
+    "totalPngCount": 266,
+    "blocker": "validateOperatorSetupCode and completeOperatorPasswordSetup missing from current backend exports; HTTP 404 despite active synthetic token registry.",
+    "evidenceFiles": [
+      "phase2b-final-verification.json",
+      "phase2b-final-supplement.json",
+      "phase2b-final-restart.json",
+      "phase2b-final-runtime.txt",
+      "phase2b-final-cleanup.json"
+    ],
+    "note": "All fields outside finalVerification preserve the original Phase 2B run; their earlier Admin/runtime limitations are superseded by this finalVerification object."
+  }
+}

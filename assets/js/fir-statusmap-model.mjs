@@ -1,11 +1,7 @@
 import { deriveFirStatus, normalizeFirStatus } from './fir-status.mjs';
+import { FIR_STATUS_PRESENTATION, firStatusPresentation } from './fir-status-presentation.mjs';
 
-export const FIR_STATUSMAP_STATUS_COLORS = Object.freeze({
-    UI: Object.freeze({ label: 'Under Investigation', color: '#5B8DEF', category: 'ui' }),
-    UCR: Object.freeze({ label: 'UCR — Untraced / Cancellation', color: '#E6B84A', category: 'ucr' }),
-    UT: Object.freeze({ label: 'Under Trial', color: '#E66A73', category: 'ut' }),
-    Disposed: Object.freeze({ label: 'Disposed', color: '#42B883', category: 'disposed' })
-});
+export const FIR_STATUSMAP_STATUS_COLORS = Object.freeze({ UI: FIR_STATUS_PRESENTATION.UI, UCR: FIR_STATUS_PRESENTATION.UCR, UT: FIR_STATUS_PRESENTATION.UT, Disposed: FIR_STATUS_PRESENTATION.Disposed });
 
 const statusStyleFor = status => {
     const normalized = normalizeFirStatus(status);
@@ -49,13 +45,9 @@ function statusFor(master, proceedings) {
 
 function classify(status) {
     const style = statusStyleFor(status);
-    if (!style) return { category: 'other', status: String(status || 'Unknown'), style: null };
-    const normalized = normalizeFirStatus(status);
-    return {
-        category: style.category,
-        status: normalized === 'Cancelled' ? 'Cancelled' : normalized,
-        style
-    };
+    const presentation = firStatusPresentation(status);
+    return { category: presentation.category, status: presentation.status || String(status || 'Unknown'), style,
+        label: presentation.label };
 }
 
 function compareMasterId(left, right) {
@@ -78,7 +70,7 @@ function makeRegisteredRecord(master, proceedings, duplicateMasters = []) {
         status: classification.status,
         statusCategory: classification.category,
         color: classification.style?.color || null,
-        statusLabel: classification.style?.label || (duplicateMasters.length ? 'Duplicate FIR number' : 'Registered · status unknown')
+        statusLabel: duplicateMasters.length ? 'Duplicate FIR number' : classification.label
     };
 }
 

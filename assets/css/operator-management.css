@@ -27,13 +27,33 @@
     white-space: nowrap;
 }
 
+/* Keep the shared table's violet UID accent in dark mode, but use the
+   existing light-theme primary text color for the Admin Users table. */
+body.light-theme .admin-users-table td:first-child {
+    color: var(--text-primary);
+}
+
+.admin-users-table-wrap:focus-visible {
+    outline: 2px solid var(--brand-primary, #8f83ff);
+    outline-offset: 2px;
+}
+
+.admin-users-scroll-hint {
+    margin: 0;
+    padding: 7px 14px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    background: var(--surface);
+    font-size: 11px;
+}
+
 #roleManagementDialog {
     box-sizing: border-box;
     width: min(560px, calc(100vw - 32px));
     max-height: calc(100dvh - 32px);
     overflow-y: auto;
     color: var(--text);
-    background: var(--panel);
+    background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 16px;
 }
@@ -127,7 +147,7 @@
 
 body.light-theme #roleManagementDialog {
     color: var(--text);
-    background: var(--panel);
+    background: var(--surface);
     border-color: var(--line);
 }
 

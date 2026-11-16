@@ -7,17 +7,20 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test test/fir-status.test.mjs test/hearing-date.test.mjs test/proceeding-fields.test.mjs test/firebase-project-policy.test.mjs test/fir-statusmap.test.mjs"
+    "test": "node --test test/fir-status.test.mjs test/hearing-date.test.mjs test/proceeding-fields.test.mjs test/firebase-project-policy.test.mjs test/fir-statusmap.test.mjs test/data-export.test.mjs test/report-pending-proceedings.test.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "firebase": "^12.19.0"
+    "exceljs": "^4.4.0",
+    "firebase": "^12.19.0",
+    "pdfmake": "^0.3.14"
   },
   "overrides": {
-    "@grpc/grpc-js": "^1.13.6"
+    "@grpc/grpc-js": "^1.13.6",
+    "uuid": "^11.1.1"
   },
   "devDependencies": {
     "vite": "^8.3.0"

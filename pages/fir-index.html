@@ -33,11 +33,12 @@
                     </div>
                 </div>
                 <section class="fir-index-board" aria-label="Searchable FIR index">
-                    <div class="fir-index-table-wrap">
+                    <div class="fir-index-table-wrap" tabindex="0" role="region" aria-label="FIR Index table; scroll horizontally to view all columns">
                         <table class="fir-index-table">
                             <thead><tr><th>Sr. No.</th><th>FIR number</th><th>FIR date</th><th>Under section</th><th>Police station</th><th>Status</th><th>Page No</th></tr></thead>
                             <tbody id="firIndexRows"><tr><td colspan="7" class="fir-index-table-message">Loading the annual FIR index&#8230;</td></tr></tbody>
                         </table>
+                        <p class="fir-index-scroll-hint" aria-hidden="true">Scroll horizontally to view all columns</p>
                     </div>
                     <footer class="fir-index-pagination">
                         <span id="firIndexPageSummary">0–0 of 0</span>

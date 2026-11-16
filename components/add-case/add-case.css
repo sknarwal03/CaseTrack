@@ -553,6 +553,18 @@ select {
     padding: 0 12px;
 }
 
+#caseModal .case-form-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .decision-fields-grid {
     padding-top: 12px;
     padding-bottom: 12px;
@@ -2381,4 +2393,9 @@ body.light-theme #caseModal .remove-witness-btn:hover,
 body.light-theme #caseModal .remove-accused-btn:hover {
     background: #287cf3;
     color: #ffffff;
+}
+
+#caseModal :is(button, a, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--primary, #287cf3);
+    outline-offset: 2px;
 }

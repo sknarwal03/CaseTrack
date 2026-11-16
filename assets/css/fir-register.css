@@ -79,6 +79,12 @@
 .fir-record-cover p { margin: 0; color: var(--text-muted); font-size: 11px; }
 .fir-record-status { padding: 7px 10px; border: 1px solid rgba(85,209,170,.25); border-radius: 999px; color: #74dcbf; background: rgba(85,209,170,.08); font-size: 9px; font-weight: 750; letter-spacing: .07em; text-transform: uppercase; white-space: nowrap; }
 .fir-record-status { justify-self:center; }
+.fir-record-status[class*="status-"] { max-width:100%; border-color:currentColor; font-size:10px; text-transform:none; white-space:normal; }
+.fir-record-status.status-ui { color:var(--fir-status-ink); border-color:var(--fir-status-ui); background:var(--fir-status-ui); }
+.fir-record-status.status-ucr { color:var(--fir-status-ink); border-color:var(--fir-status-ucr); background:var(--fir-status-ucr); }
+.fir-record-status.status-ut { color:var(--fir-status-ink); border-color:var(--fir-status-ut); background:var(--fir-status-ut); }
+.fir-record-status.status-disposed { color:var(--fir-status-ink); border-color:var(--fir-status-disposed); background:var(--fir-status-disposed); }
+.fir-record-status.status-missing,.fir-record-status.status-other { color:var(--text-secondary); border-color:var(--border-strong); background:var(--surface-raised); }
 .fir-record-body { display: grid; gap: 13px; padding: 18px; }
 .fir-record-section { padding: 16px 17px; border: 1px solid var(--border-color); border-radius: 10px; background: color-mix(in srgb,var(--surface) 80%,var(--surface-raised)); break-inside: avoid; }
 .fir-record-section-title { display: flex; align-items: center; gap: 9px; margin-bottom: 13px; }
@@ -202,4 +208,125 @@
     .fir-person-content p { font-size: 12px; }
     .fir-timeline-item { font-size: 12px; }
     .fir-page-navigation>span { font-size: 12px; }
+}
+
+@media screen {
+    /* Keep the accused table and existing court section full-width in the dossier grid. */
+    .fir-record-body > .fir-accused-section,
+    .fir-record-body > .fir-proceedings-section {
+        grid-column: 1 / -1 !important;
+        width: 100%;
+        min-width: 0;
+        justify-self: stretch;
+        box-sizing: border-box;
+    }
+    .fir-record-body > .fir-accused-section {
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #b9cce7;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: none;
+    }
+    .fir-accused-section > .fir-record-section-title {
+        min-height: 36px;
+        margin: 0;
+        padding: 6px 14px;
+        border-bottom: 1px solid #c5d8f3;
+        border-radius: 9px 9px 0 0;
+        background: linear-gradient(100deg,#dceaff,#c8dcff);
+    }
+    .fir-accused-section > .fir-record-section-title i {
+        width: 24px;
+        height: 24px;
+        border: 0;
+        color: #123e7f;
+        background: transparent;
+        font-size: 19px;
+    }
+    .fir-accused-section > .fir-record-section-title h3 {
+        color: #102f66;
+        font-size: 20px;
+        font-weight: 750;
+    }
+    .fir-accused-table-wrap {
+        width: calc(100% - 16px);
+        min-width: 0;
+        margin: 6px 8px 8px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+    }
+    .fir-accused-table-wrap:focus-visible {
+        outline: 2px solid var(--brand-primary, #2864b4);
+        outline-offset: 2px;
+    }
+    .fir-accused-scroll-hint {
+        margin: 0;
+        padding: 7px 8px;
+        color: var(--text-secondary);
+        font: 11px/1.4 Inter, "Segoe UI", Arial, sans-serif;
+    }
+    .fir-accused-table {
+        width: 100%;
+        min-width: 1180px;
+        table-layout: fixed;
+        border: 1px solid #cbd8e8;
+        border-spacing: 0;
+        border-collapse: separate;
+        border-radius: 9px;
+        color: #172b49;
+        background: #fff;
+        font: 12px/1.4 Inter,"Segoe UI",Arial,sans-serif;
+    }
+    .fir-accused-table col:nth-child(1) { width: 5%; }
+    .fir-accused-table col:nth-child(2) { width: 11%; }
+    .fir-accused-table col:nth-child(3) { width: 10%; }
+    .fir-accused-table col:nth-child(4) { width: 8%; }
+    .fir-accused-table col:nth-child(5) { width: 16%; }
+    .fir-accused-table col:nth-child(6) { width: 9%; }
+    .fir-accused-table col:nth-child(7) { width: 8%; }
+    .fir-accused-table col:nth-child(8) { width: 10%; }
+    .fir-accused-table col:nth-child(9) { width: 8%; }
+    .fir-accused-table col:nth-child(10) { width: 9%; }
+    .fir-accused-table col:nth-child(11) { width: 6%; }
+    .fir-accused-table th,
+    .fir-accused-table td {
+        box-sizing: border-box;
+        padding: 6px 8px;
+        border-right: 1px solid #d4dfed;
+        border-bottom: 1px solid #d4dfed;
+        vertical-align: middle;
+        text-align: left;
+        overflow-wrap: anywhere;
+    }
+    .fir-accused-table th {
+        color: #172b49;
+        background: #eff4fb;
+        font-weight: 700;
+    }
+    .fir-accused-table thead th:first-child { border-top-left-radius: 8px; }
+    .fir-accused-table thead th:last-child { border-top-right-radius: 8px; }
+    .fir-accused-table tr > :last-child { border-right: 0; }
+    .fir-accused-table tbody tr:last-child > td { border-bottom: 0; }
+    .fir-accused-table tbody tr:nth-child(even) { background: #f8fafd; }
+    .fir-accused-table th:first-child,
+    .fir-accused-table .fir-accused-number { text-align: center; }
+    .fir-accused-table .fir-accused-name { color: #172b49; font-weight: 700; }
+    .fir-accused-table .fir-accused-empty { padding: 12px; color: var(--text-secondary); text-align: center; }
+    .fir-accused-badge {
+        display: inline-flex;
+        max-width: 100%;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 6px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: normal;
+    }
+    .fir-accused-badge i { flex: 0 0 auto; font-style: normal; }
+    .fir-accused-badge.is-positive { color: #166534; background: #dcfce7; }
+    .fir-accused-badge.is-negative { color: #854d0e; background: #fef3c7; }
+    .fir-accused-badge.is-po { color: #991b1b; background: #fee2e2; }
+    .fir-accused-badge.is-neutral { color: #475569; background: #eef2f7; }
 }

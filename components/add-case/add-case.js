@@ -6,6 +6,7 @@ import { openIoDialog } from '../../assets/js/io-dialog.js';
 import { findFirMasterMatches, findLegacyFirGroups, getCaseAccessContext, usesStationScopedAccess, LINKED_CASES_COLLECTION, loadCaseRecords, loadRecordsForFir, saveFirMaster } from '../../assets/js/fir-case-model.js';
 import { normalizeProceedingFields, proceedingFieldsFromForm, proceedingPayload } from '../../assets/js/proceeding-fields.mjs';
 import { deriveFirStatus } from '../../assets/js/fir-status.mjs';
+import { setupCustomModalFocus } from '../../assets/js/shared-utils.js';
 import addCaseHtml from './add-case.html?raw';
 
 const masterDefinitions = {
@@ -299,6 +300,14 @@ document.querySelector('#caseModal .modal-body')?.addEventListener('scroll', () 
 });
 
 const modal = document.getElementById('caseModal');
+const modalFocusManager = setupCustomModalFocus(modal, {
+    initialFocusSelector: '#firno',
+    fallbackFocusSelector: '[data-open-add-case]',
+    onEscape: () => {
+        closePoliceReportMenu();
+        closeModal();
+    }
+});
 const form = document.getElementById('caseForm');
 if (form) form.noValidate = true;
 const caseRecordDrafts = [];
@@ -2446,6 +2455,7 @@ document.getElementById('commitToSessions')?.addEventListener('click', () => {
 });
 
 window.openAddCaseModal = (caseItem = null, options = {}) => {
+    const modalOpener = document.activeElement;
     resetForm();
 
     const title = document.getElementById('modalTitle');
@@ -2647,19 +2657,15 @@ window.openAddCaseModal = (caseItem = null, options = {}) => {
     updateCaseStatusFields();
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
-    if (options.focusSelector) {
-        requestAnimationFrame(() => {
-            let section = modal.querySelector(options.focusSelector);
-            if (!section || section.closest('[hidden]')) section = modal.querySelector('.case-section-fir');
-            if (!section) return;
-            const focusTarget = section.matches('input, select, textarea, button')
-                ? section
-                : section.querySelector('input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), button:not(:disabled)') || section;
-            if (focusTarget === section && !section.hasAttribute('tabindex')) section.setAttribute('tabindex', '-1');
-            section.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            focusTarget.focus({ preventScroll: true });
-        });
-    }
+    let section = options.focusSelector ? modal.querySelector(options.focusSelector) : modal.querySelector('.case-section-fir');
+    if (!section || section.closest('[hidden]')) section = modal.querySelector('.case-section-fir');
+    let focusTarget = section?.matches('input, select, textarea, button')
+        ? section
+        : section?.querySelector('input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), button:not(:disabled)') || section;
+    if (!options.focusSelector) focusTarget = modal.querySelector('#firno') || focusTarget;
+    if (focusTarget === section && !section.hasAttribute('tabindex')) section.setAttribute('tabindex', '-1');
+    if (options.focusSelector) focusTarget?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    modalFocusManager.open({ openerElement: modalOpener, initialFocus: focusTarget });
 };
 
 const closeModal = () => {
@@ -2671,6 +2677,7 @@ const closeModal = () => {
     }
     modal.classList.remove('show');
     document.body.style.overflow = '';
+    modalFocusManager.close();
 };
 
 document.addEventListener('click', e => {
@@ -2682,7 +2689,6 @@ document.addEventListener('click', e => {
 document.getElementById('closeModal')?.addEventListener('click', closeModal);
 document.getElementById('cancelModal')?.addEventListener('click', closeModal);
 modal?.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal?.classList.contains('show')) closeModal(); });
 
 // FIR Year Auto calculation
 const firDate = document.getElementById('firdate');
@@ -2838,6 +2844,26 @@ function setupAccusedCard(card) {
 }
 document.querySelectorAll('.accused-card').forEach(setupAccusedCard);
 
+let nextAccusedControlSequence = 2;
+
+function assignAccusedControlIds(card, sequence) {
+    const repeatedIds = [
+        'accusedName', 'accusedFatherName', 'accusedMobile', 'accusedArrested',
+        'accusedArrestDate', 'accusedCustodyStatus', 'accusedBailDate',
+        'accusedPoStatus', 'accusedPoDate', 'accusedAddress'
+    ];
+    repeatedIds.forEach(prefix => {
+        const oldId = `${prefix}1`;
+        const newId = `${prefix}${sequence}`;
+        const control = card.querySelector(`#${oldId}`);
+        if (!control) return;
+        control.id = newId;
+        card.querySelectorAll(`label[for="${oldId}"]`).forEach(label => {
+            label.htmlFor = newId;
+        });
+    });
+}
+
 function addAccusedCard() {
     const container = document.getElementById('accusedContainer');
     if (!container) return;
@@ -2848,6 +2874,7 @@ function addAccusedCard() {
     const tpl = cards[0].cloneNode(true);
 
     resetAccusedCard(tpl);
+    assignAccusedControlIds(tpl, nextAccusedControlSequence++);
 
     const num = cards.length + 1;
 
@@ -2885,6 +2912,28 @@ function addAccusedCard() {
 }
 
 // Witness Logic
+let nextWitnessControlSequence = 2;
+
+function assignWitnessControlIds(row, sequence) {
+    const fields = [
+        ['witnessName', 'witness_name[]', `Witness ${sequence} name`],
+        ['witnessStatus', 'witness_status[]', `Witness ${sequence} status`],
+        ['witnessExamined', 'witness_examined[]', `Witness ${sequence} examined`],
+        ['witnessExaminedDate', 'witness_examined_date[]', `Witness ${sequence} examined date`]
+    ];
+    fields.forEach(([id, name, label]) => {
+        const control = row.querySelector(`[name="${name}"]`);
+        if (!control) return;
+        control.id = `${id}${sequence}`;
+        const rowLabel = row.querySelector(`label[for="${id}1"]`);
+        if (rowLabel) {
+            rowLabel.htmlFor = control.id;
+            rowLabel.textContent = label;
+        }
+        control.setAttribute('aria-label', label);
+    });
+}
+
 function updateWitnessCounts() {
     const wContainer = document.getElementById('witnessTableBody');
     if (!wContainer) return;
@@ -2957,6 +3006,7 @@ function addWitnessRow() {
 
     // Fields reset karo
     resetWitnessRow(tpl);
+    assignWitnessControlIds(tpl, nextWitnessControlSequence++);
 
     // Serial number
     const srNo = tpl.querySelector('.sr-no');
@@ -3002,6 +3052,19 @@ function updateWitnessSerialNumbers() {
         if (srNo) {
             srNo.textContent = index + 1;
         }
+        const rowNumber = index + 1;
+        [
+            ['witness_name[]', 'name'],
+            ['witness_status[]', 'status'],
+            ['witness_examined[]', 'examined'],
+            ['witness_examined_date[]', 'examined date']
+        ].forEach(([name, description]) => {
+            const control = row.querySelector(`[name="${name}"]`);
+            if (!control) return;
+            const label = `Witness ${rowNumber} ${description}`;
+            control.setAttribute('aria-label', label);
+            row.querySelector(`label[for="${control.id}"]`)?.replaceChildren(document.createTextNode(label));
+        });
     });
 }
 document.addEventListener('click', e => {

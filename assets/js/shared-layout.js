@@ -26,6 +26,7 @@ const SIDEBAR_HTML = /* html */ `
         <div><strong>CaseTrack</strong><small>Case Management System</small></div>
     </a>
     <nav id="sidebarNav">
+        <a class="nav-item" data-page="dashboard" href="dashboard.html"><span aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></span>Dashboard</a>
         <a class="nav-item" data-page="fir-register" href="fir-register.html"><span>&#9638;</span>FIR Register</a>
         <a class="nav-item" data-page="cases" href="cases.html"><span>&#9633;</span>All Cases</a>
         <a class="nav-item" data-page="register-diary" href="register-diary.html"><span>&#9998;</span>Register Diary</a>
@@ -111,7 +112,10 @@ function injectLayout() {
 function markActiveNav() {
     const page = document.body.dataset.page || "";
     document.querySelectorAll("#sidebarNav .nav-item").forEach(link => {
-        link.classList.toggle("active", link.dataset.page === page);
+        const isActive = link.dataset.page === page;
+        link.classList.toggle("active", isActive);
+        if (isActive) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
     });
 }
 

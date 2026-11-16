@@ -19,6 +19,15 @@
     --state-warning: #e4a33a;
     --state-error: #e05264;
     --state-info: #348dff;
+    --fir-status-ui: #5B8DEF;
+    --fir-status-ucr: #E6B84A;
+    --fir-status-ut: #E66A73;
+    --fir-status-disposed: #42B883;
+    --fir-status-ink: #071827;
+    --fir-status-ui-text: #82baff;
+    --fir-status-ucr-text: #f0c766;
+    --fir-status-ut-text: #ff9198;
+    --fir-status-disposed-text: #70d6a8;
     --focus-ring: rgba(52, 141, 255, 0.24);
     --radius-sm: 8px;
     --radius-md: 12px;
@@ -65,6 +74,10 @@ body.light-theme {
     --brand-primary-hover: #1e68d5;
     --brand-secondary: #6550d8;
     --state-success: #13845f;
+    --fir-status-ui-text: #2457a6;
+    --fir-status-ucr-text: #765500;
+    --fir-status-ut-text: #a62e39;
+    --fir-status-disposed-text: #087347;
     --state-warning: #98600c;
     --state-error: #b83245;
     --state-info: #245fb5;

@@ -676,6 +676,7 @@ function sessionAssignment(caseItem) {
 function createDiaryFileItem({ caseItem, trialStage }, diaryDate, isSessionCase = false) {
     const item = document.createElement('div');
     item.className = 'diary-file-item';
+    if (isSessionCase) item.classList.add('diary-session-file-item');
     const firNumber = [caseItem.firNo, caseItem.firYear ? String(caseItem.firYear).slice(-2) : '']
         .filter(Boolean).join('/');
     const status = getFileStatus(caseItem.id, diaryDate);

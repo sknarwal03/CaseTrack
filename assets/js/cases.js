@@ -2,13 +2,19 @@ import { db } from '@config/firebase-config.js';
 import { parseCaseDate, setupModal } from './shared-utils.js';
 import { normalizeTrialStage } from './trial-stages.js';
 import { loadCaseRecords } from './fir-case-model.js';
+import { configureExportDialog } from './export-dialog.js';
 
 const detailsModal = document.querySelector('#caseDetailsModal');
-const modalHelper = setupModal(detailsModal);
+const modalHelper = setupModal(detailsModal, null, undefined, {
+    initialFocusSelector: '.modal-header .close',
+    fallbackFocusSelector: '.case-filter.active'
+});
 
 let casesCache = [];
 let activeCaseSort = { key: '', direction: '' };
 let casesLoadError = null;
+let casesLoaded = false;
+const rowCaseItems = new WeakMap();
 const REGISTER_DIARY_FILE_STATUS_KEY = 'register-diary-file-statuses';
 
 function applyCaseFilters() {
@@ -139,6 +145,72 @@ function getCaseHearingSummary(caseItem) {
     };
 }
 
+const exportColumns = [
+    { header: 'FIR No.', key: 'firNo', width: 16 },
+    { header: 'Date of FIR', key: 'firDate', width: 16 },
+    { header: 'Under Section', key: 'underSection', width: 28 },
+    { header: 'In the court of', key: 'court', width: 28 },
+    { header: 'Next Hearing / PO details', key: 'hearing', width: 28 }
+];
+
+function exportCaseData(scope) {
+    if (!casesLoaded) return null;
+    if (casesLoadError) throw new Error('Case records could not be loaded.');
+    const allTableRows = [...document.querySelectorAll('#casesTableBody tr.case-row-data')];
+    const rows = [];
+    if (scope === 'filtered') {
+        allTableRows.filter(row => row.style.display !== 'none').forEach(row => {
+            const cells = [...row.cells];
+            rows.push({
+                firNo: cells[0]?.textContent.trim() || '',
+                firDate: cells[1]?.textContent.trim() || '',
+                underSection: cells[2]?.textContent.trim() || '',
+                court: cells[3]?.textContent.trim() || '',
+                hearing: cells[4]?.textContent.trim() || ''
+            });
+        });
+    } else {
+        const seen = new Set();
+        allTableRows.forEach(row => {
+            const item = rowCaseItems.get(row);
+            if (!item) return;
+            const identity = `${item._collectionName || 'cases'}:${item.id}`;
+            if (seen.has(identity)) return;
+            seen.add(identity);
+            const year = String(item.firYear || '').trim();
+            const firNo = item.firNo && year.length >= 2 ? `${item.firNo}/${year.slice(-2)}` : item.firNo || '';
+            const hearing = getCaseHearingSummary(item);
+            rows.push({
+                firNo,
+                firDate: item.firDate || '',
+                underSection: item.underSection || '',
+                court: item.courtName || item.courtNumber || '',
+                hearing: [hearing.date, hearing.trialStage].filter(Boolean).join(' - ')
+            });
+        });
+    }
+    const activeFilter = document.querySelector('.case-filter.active')?.textContent.trim() || 'All Cases';
+    const searchApplied = Boolean(document.getElementById('globalSearch')?.value.trim());
+    const context = scope === 'all'
+        ? 'All records within this page’s authorized loaded dataset. The search and status filter are ignored.'
+        : `Current status filter: ${activeFilter}${searchApplied ? '; search applied' : ''}. Includes every matching table row, independent of pagination.`;
+    return {
+        columns: exportColumns,
+        rows,
+        scopeLabel: scope === 'all' ? 'All Records' : 'Filtered Records',
+        context,
+        countLabel: `${rows.length} ${scope === 'filtered' ? 'matching' : 'authorized'} table records will be exported.`
+    };
+}
+
+configureExportDialog({
+    trigger: '#casesExportTrigger',
+    dialog: '#exportDialog',
+    title: 'All Cases',
+    filenamePrefix: 'casetrack-all-cases',
+    getData: exportCaseData
+});
+
 // parseCaseDate is imported from shared-utils.js
 
 const loadCases = async () => {
@@ -150,6 +222,7 @@ const loadCases = async () => {
         casesLoadError = error;
         casesCache = [];
     }
+    casesLoaded = true;
     renderCaseTable();
     const requestedCaseId = new URLSearchParams(window.location.search).get('case');
     if (requestedCaseId) {
@@ -190,6 +263,7 @@ const renderCaseTable = () => {
         displayedAccused.forEach((poAccusedPerson, poRowIndex) => {
         const row = document.createElement('tr');
         row.className = 'case-row-data';
+        rowCaseItems.set(row, caseItem);
 
         row.dataset.status = (caseItem.status || '').toLowerCase();
         row.dataset.highlighted = caseItem.highlighted ? 'true' : 'false';

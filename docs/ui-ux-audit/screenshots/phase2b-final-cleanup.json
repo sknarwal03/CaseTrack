@@ -1,0 +1,27 @@
+﻿{
+    "checkedAt":  "2026-11-12T17:08:59.2538307Z",
+    "authSyntheticDataClearedHttpStatus":  200,
+    "firestoreSyntheticDataClearedHttpStatus":  200,
+    "servicesStopped":  true,
+    "checkedPorts":  [
+                         5174,
+                         9198,
+                         8187,
+                         5003,
+                         4400,
+                         4500,
+                         9150
+                     ],
+    "listenersFound":  0,
+    "systemNodeRuntime":  "v24.22.0",
+    "existingModifiedSourceFiles":  7,
+    "existingSourceHashesPreserved":  true,
+    "priorScreenshotsRetained":  231,
+    "newScreenshots":  35,
+    "totalPng":  266,
+    "missingScreenshots":  [
+
+                           ],
+    "temporarySecretsFoundInEvidence":  0,
+    "temporaryFilesRemoved":  true
+}

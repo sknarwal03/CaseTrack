@@ -1127,6 +1127,78 @@ body.light-theme .diary-dialog-status { color: #93404a; }
         z-index: 4;
         pointer-events: none;
     }
+
+    .diary-session-file-item .diary-file-status-group { gap: 6px; }
+    .diary-session-file-item .diary-file-status {
+        width: 44px;
+        min-width: 44px;
+        height: 44px;
+        min-height: 44px;
+    }
+    .diary-session-file-item .diary-fir-number { min-height: 44px; }
+}
+
+/* Let session-hearing metadata wrap without changing its content or actions. */
+.diary-session-file-item {
+    height: auto;
+    min-height: 38px;
+    align-items: center;
+}
+
+.diary-session-file-item .diary-session-assignment {
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    white-space: normal;
+}
+
+.diary-session-file-item .diary-session-judge-name {
+    white-space: normal;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+}
+
+.diary-session-file-item .diary-session-court-number {
+    flex: 0 1 auto;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    min-height: 28px;
+    padding: 2px 6px;
+    border-radius: 14px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+/* Give session-hearing metadata and its controls distinct rows on phones. */
+@media (max-width: 480px) {
+    .diary-session-file-item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
+        gap: 6px;
+        height: auto;
+        min-height: 0;
+        padding: 8px 6px;
+    }
+
+    .diary-session-file-item .diary-fir-number {
+        max-width: 100%;
+        padding: 4px 2px;
+        text-align: left;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .diary-session-file-item .diary-file-stage,
+    .diary-session-file-item .diary-file-linked-date,
+    .diary-session-file-item .diary-file-detail {
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
 }
 
 @media (max-width: 560px) {

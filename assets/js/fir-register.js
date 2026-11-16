@@ -1,5 +1,7 @@
 import { db } from '@config/firebase-config.js';
 import { getFirSummaries, loadCaseRecords } from './fir-case-model.js';
+import { parseCaseDate } from './shared-utils.js';
+import { firStatusPresentation } from './fir-status-presentation.mjs';
 
 const yearSelect = document.getElementById('firRegisterYear');
 const yearButton = document.getElementById('firRegisterYearButton');
@@ -107,10 +109,104 @@ function uniquePeople(proceedings, key) {
     return [...unique.values()];
 }
 
+function displayAccusedDate(value) {
+    const raw = text(value);
+    if (!raw) return '—';
+    const parsed = parseCaseDate(raw);
+    return parsed && !Number.isNaN(parsed.getTime())
+        ? parsed.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+        : raw;
+}
+
+function accusedField(value) {
+    return text(value) || '—';
+}
+
+function custodyLabel(value) {
+    const labels = {
+        bailed_police: 'Bailed by Police',
+        bailed_court: 'Bailed by Court',
+        jc: 'In Judicial Custody',
+        pc: 'In Police Custody'
+    };
+    return labels[value] || (text(value) ? text(value).replaceAll('_', ' ') : '—');
+}
+
+function accusedStatus(value, { trueLabel, falseLabel, trueClass, falseClass }) {
+    if (value !== true && value !== false) return '—';
+    const arrested = value === true;
+    const badge = make('span', `fir-accused-badge ${arrested ? trueClass : falseClass}`);
+    badge.append(make('i', '', arrested ? '✓' : '◷'), make('span', '', arrested ? trueLabel : falseLabel));
+    badge.firstChild.setAttribute('aria-hidden', 'true');
+    return badge;
+}
+
+function makeAccusedTable(people) {
+    const wrap = make('div', 'fir-accused-table-wrap');
+    wrap.tabIndex = 0;
+    wrap.setAttribute('role', 'region');
+    wrap.setAttribute('aria-label', 'Accused details table; scroll horizontally to view all columns');
+    const table = document.createElement('table');
+    table.className = 'fir-accused-table';
+    const colgroup = document.createElement('colgroup');
+    for (let i = 0; i < 11; i++) colgroup.append(document.createElement('col'));
+    table.append(colgroup);
+    const headings = ['S. No.', 'Name of Accused', "Father's Name", 'Mobile Number', 'Address', 'Arrest Status', 'Arrest Date', 'Custody Status', 'Bail Date', 'PO Status', 'PO Date (V.O.D)'];
+    const thead = document.createElement('thead');
+    const headingRow = document.createElement('tr');
+    headings.forEach(label => {
+        const cell = make('th', '', label);
+        cell.scope = 'col';
+        headingRow.append(cell);
+    });
+    thead.append(headingRow);
+    const tbody = document.createElement('tbody');
+    if (!people.length) {
+        const row = document.createElement('tr');
+        const empty = make('td', 'fir-accused-empty', 'No accused details available.');
+        empty.colSpan = headings.length;
+        row.append(empty);
+        tbody.append(row);
+    }
+    people.forEach((person, index) => {
+        const row = document.createElement('tr');
+        row.append(make('td', 'fir-accused-number', String(index + 1)));
+        row.append(make('td', 'fir-accused-name', accusedField(person.name)));
+        row.append(make('td', '', accusedField(person.fatherName)));
+        row.append(make('td', '', accusedField(person.mobile)));
+        row.append(make('td', 'fir-accused-address', accusedField(person.address)));
+        row.append(make('td', '', ''));
+        const arrestStatusCell = row.lastElementChild;
+        const arrestStatus = accusedStatus(person.arrested, {
+            trueLabel: 'Arrested', falseLabel: 'Not Arrested', trueClass: 'is-positive', falseClass: 'is-negative'
+        });
+        if (typeof arrestStatus === 'string') arrestStatusCell.textContent = arrestStatus;
+        else arrestStatusCell.append(arrestStatus);
+        row.append(make('td', '', displayAccusedDate(person.arrestDate)));
+        row.append(make('td', '', custodyLabel(person.custodyStatus)));
+        row.append(make('td', '', displayAccusedDate(person.bailDate)));
+        row.append(make('td', '', ''));
+        const poStatusCell = row.lastElementChild;
+        const poStatus = accusedStatus(person.poStatus, {
+            trueLabel: 'Proclaimed Offender', falseLabel: 'Not Proclaimed Offender', trueClass: 'is-po', falseClass: 'is-neutral'
+        });
+        if (typeof poStatus === 'string') poStatusCell.textContent = poStatus;
+        else poStatusCell.append(poStatus);
+        row.append(make('td', '', displayAccusedDate(person.poDate)));
+        tbody.append(row);
+    });
+    table.append(thead, tbody);
+    const scrollHint = make('p', 'fir-accused-scroll-hint', 'Scroll horizontally to view all columns');
+    scrollHint.setAttribute('aria-hidden', 'true');
+    wrap.append(table, scrollHint);
+    return wrap;
+}
+
 function makeProceedingsSection(proceedings, fir) {
     const defaultRecord = proceedings.find(record => record.recordType !== 'ucr' && !record.ucrNumber) || proceedings[0] || fir;
     const sectionTarget = defaultRecord?.recordType === 'ucr' || defaultRecord?.ucrNumber ? '#ucrRecordFields' : '#sectionCourtReg';
     const section = makeSection('03', 'Court & report records', `${proceedings.length} ${proceedings.length === 1 ? 'record' : 'records'}`, sectionTarget, defaultRecord);
+    section.classList.add('fir-proceedings-section');
     if (!proceedings.length) {
         const empty = make('div', 'fir-index-empty', 'No court or report record is linked to this FIR yet.');
         section.append(empty);
@@ -146,12 +242,18 @@ function makeProceedingsSection(proceedings, fir) {
 }
 
 function makePeopleSection(type, people, code, proceedings, fir) {
-    const title = type === 'Accused' ? 'Accused details' : 'Witness details';
+    const isAccused = type === 'Accused';
+    const title = isAccused ? 'Accused & Arrest Details' : 'Witness details';
     const key = type === 'Accused' ? 'accused' : 'witnesses';
     const editCaseItem = proceedings.find(record => record.recordType !== 'ucr' && Array.isArray(record[key]) && record[key].length)
         || proceedings.find(record => record.recordType !== 'ucr') || proceedings[0] || fir;
     const editTarget = type === 'Accused' ? '#sectionAccused' : '#sectionWitness';
-    const section = makeSection(code, title, `${people.length} ${people.length === 1 ? 'person' : 'people'}`, editTarget, editCaseItem);
+    const section = makeSection(code, title, isAccused ? '' : `${people.length} ${people.length === 1 ? 'person' : 'people'}`, editTarget, editCaseItem);
+    if (isAccused) {
+        section.classList.add('fir-accused-section');
+        section.append(makeAccusedTable(people));
+        return section;
+    }
     if (!people.length) {
         section.append(make('div', 'fir-index-empty', `No ${type.toLocaleLowerCase()} details recorded.`));
         return section;
@@ -221,13 +323,13 @@ function renderRecord(fir) {
     const proceedings = records.filter(record => identityKey(record) === fir._registerKey
         && record._collectionName !== 'firMasters' && record.recordType !== 'fir_master');
     const sources = [fir, ...proceedings];
-    const status = fieldValue(sources, ['firStatus', 'caseStatus', 'status']) || 'Status not recorded';
+    const status = firStatusPresentation(fir.firStatus || fir.fir_Status || fir.status);
     const cover = make('header', 'fir-record-cover');
     const heading = make('div', 'fir-record-cover-heading');
     heading.append(make('span', 'fir-record-overline', `FIR REGISTER · ${firYearOf(fir) || 'YEAR NOT RECORDED'}`));
     heading.append(make('h2', '', displayFir(fir)));
     heading.append(make('p', '', [fieldValue(sources, ['policeStation']), fieldValue(sources, ['fileNo']) && `File ${fieldValue(sources, ['fileNo'])}`].filter(Boolean).join('  ·  ') || 'Official police case record'));
-    const statusBadge = make('span', 'fir-record-status', status);
+    const statusBadge = make('span', `fir-record-status status-${status.category}`, status.label);
     cover.append(heading, statusBadge);
 
     const body = make('div', 'fir-record-body');
@@ -237,7 +339,7 @@ function renderRecord(fir) {
         ['Page No', fieldValue(sources, ['pageNo'])],
         ['Date of FIR', fieldValue(sources, ['firDate'])], ['Police station', fieldValue(sources, ['policeStation'])],
         ['Under section', fieldValue(sources, ['underSection'])], ['Crime head', fieldValue(sources, ['crimeHead'])],
-        ['FIR status', status], ['Highlighted case', fieldValue(sources, ['highlighted']) === true ? 'Yes' : (fieldValue(sources, ['highlighted']) === false ? 'No' : '')]
+        ['FIR status', status.label], ['Highlighted case', fieldValue(sources, ['highlighted']) === true ? 'Yes' : (fieldValue(sources, ['highlighted']) === false ? 'No' : '')]
     ], true));
     body.append(identity);
 
@@ -249,8 +351,8 @@ function renderRecord(fir) {
         ['Address', fieldValue(sources, ['complainantAddress']), true]
     ], true));
     body.append(incident);
-    body.append(makeProceedingsSection(proceedings, fir));
     body.append(makePeopleSection('Accused', uniquePeople(proceedings, 'accused'), '04', proceedings, fir));
+    body.append(makeProceedingsSection(proceedings, fir));
     body.append(makePeopleSection('Witness', uniquePeople(proceedings, 'witnesses'), '05', proceedings, fir));
     body.append(makeTimeline(proceedings, fir));
 

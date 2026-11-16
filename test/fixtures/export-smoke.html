@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="../../assets/css/export-dialog.css">
+    <title>CaseTrack export dialog fixture</title>
+    <style>
+        body { font: 16px Arial, sans-serif; margin: 0; padding: 16px; color: #eaf3ff; background: #10243d; }
+        body.light-theme { color: #172b45; background: #fff; }
+        button { min-height: 44px; padding: 8px 14px; }
+        .modal-backdrop { position: fixed; inset: 0; display: none; place-items: center; padding: 12px; background: #020916bf; }
+        .modal-backdrop.show { display: grid; }
+        .modal { box-sizing: border-box; width: min(520px, 100%); max-height: 95vh; overflow: auto; padding: 18px; border-radius: 12px; background: #10243d; }
+        .modal-header, .modal-footer { display: flex; justify-content: space-between; gap: 12px; }
+        fieldset { display: grid; gap: 8px; margin: 12px 0; }
+        label { min-height: 36px; }
+    </style>
+</head>
+<body class="light-theme">
+    <button id="openExport" type="button">Export</button>
+    <p id="afterDialog" tabindex="0">After dialog</p>
+    <div class="modal-backdrop" id="exportDialog" aria-hidden="true">
+        <section class="modal export-dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+            <header class="modal-header"><div><h1 id="dialogTitle">Export Data</h1></div><button type="button" data-export-close aria-label="Close export dialog">Close</button></header>
+            <form id="exportForm" class="modal-body export-form">
+                <fieldset class="export-choice-group"><legend>Format</legend>
+                    <label class="export-choice"><input type="radio" name="export-format" value="csv" checked> CSV</label>
+                    <label class="export-choice"><input type="radio" name="export-format" value="xlsx"> XLSX</label>
+                    <label class="export-choice"><input type="radio" name="export-format" value="pdf"> PDF</label>
+                </fieldset>
+                <fieldset class="export-choice-group"><legend>Records</legend>
+                    <label class="export-choice"><input type="radio" name="export-scope" value="filtered" checked> Filtered Records</label>
+                    <label class="export-choice"><input type="radio" name="export-scope" value="all"> All Records</label>
+                </fieldset>
+                <p class="export-record-count" data-export-count aria-live="polite"></p>
+                <p class="export-status" data-export-status role="status" aria-live="polite"></p>
+                <footer class="modal-footer"><button type="button" data-export-close>Cancel</button><button type="submit" data-export-submit>Export</button></footer>
+            </form>
+        </section>
+    </div>
+    <script type="module">
+        import { configureExportDialog } from '../../assets/js/export-dialog.js';
+        const columns = [
+            { header: 'FIR No.', key: 'firNo' },
+            { header: 'Description', key: 'description' }
+        ];
+        const allRows = [
+            { firNo: '0007/26', description: 'दिल्ली, "नमस्ते"\nशहर' },
+            { firNo: '0008/26', description: '=1+1' },
+            { firNo: '0009/26', description: '' }
+        ];
+        let failNextExport = false;
+        window.setExportFixtureFailure = value => { failNextExport = value; };
+        configureExportDialog({
+            trigger: '#openExport', dialog: '#exportDialog', title: 'Synthetic Export',
+            filenamePrefix: 'casetrack-export-smoke',
+            getData: scope => {
+                if (failNextExport) throw new Error('synthetic storage failure');
+                return ({ columns, rows: scope === 'filtered' ? allRows.slice(0, 1) : allRows,
+                scopeLabel: scope === 'filtered' ? 'Filtered Records' : 'All Records', context: 'Synthetic authorized test data.' })
+            }
+        });
+        window.exportFixtureReady = true;
+    </script>
+</body>
+</html>

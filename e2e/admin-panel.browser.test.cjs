@@ -32,20 +32,22 @@ async function verifyConcurrentSetupClaims(db, auth) {
     const registry = createSetupCodeRegistry({ db, auth });
     const token = "a".repeat(43);
     try {
-        await db.collection("userRoles").doc(uid).set({ role: "operator", status: "active" });
-        await registry.register(uid, token);
+        await db.collection("userRoles").doc(uid).set({
+            role: "operator", status: "active", mustChangePassword: true
+        });
+        await registry.register(uid, token, "initial_setup");
         const claims = await Promise.all([
-            registry.claim(uid, token, "attempt-a"),
-            registry.claim(uid, token, "attempt-b")
+            registry.claim(uid, token, "attempt-a", "initial_setup"),
+            registry.claim(uid, token, "attempt-b", "initial_setup")
         ]);
         assert.equal(claims.filter(Boolean).length, 1);
-        await assert.rejects(registry.register(uid, "b".repeat(43)), { code: "setup/in-progress" });
+        await assert.rejects(registry.register(uid, "b".repeat(43), "initial_setup"), { code: "setup/in-progress" });
         const winner = claims[0] ? "attempt-a" : "attempt-b";
-        assert.equal(await registry.markUsed(uid, winner), true);
-        await registry.register(uid, token);
+        assert.equal(await registry.markUsed(uid, winner, "initial_setup"), true);
+        await registry.register(uid, token, "initial_setup");
         const race = await Promise.allSettled([
-            registry.claim(uid, token, "attempt-c"),
-            registry.register(uid, "b".repeat(43))
+            registry.claim(uid, token, "attempt-c", "initial_setup"),
+            registry.register(uid, "b".repeat(43), "initial_setup")
         ]);
         if (race[0].status === "fulfilled" && race[0].value) {
             assert.equal(race[1].status, "rejected");
