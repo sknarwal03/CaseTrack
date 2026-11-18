@@ -151,6 +151,7 @@ function setupMasterCombobox(type) {
     };
 
     const chooseValue = async (value, isNew) => {
+        if (input.value !== value) markCaseFormDirty();
         input.value = value;
         status.textContent = '';
         if (isNew) {
@@ -295,22 +296,236 @@ document.addEventListener('click', event => {
 window.addEventListener('resize', () => {
     masterComboboxes.forEach(({ render }) => render());
 });
-document.querySelector('#caseModal .modal-body')?.addEventListener('scroll', () => {
-    masterComboboxes.forEach(({ render }) => render());
+const caseModalBody = document.querySelector('#caseModal .modal-body');
+const caseModalForm = document.querySelector('#caseModal #caseForm');
+const caseSectionNav = document.querySelector('#caseModal .case-section-nav');
+const caseSectionLinks = [...(caseSectionNav?.querySelectorAll('a[href^="#"]') || [])];
+const caseSectionHeadings = caseSectionLinks
+    .map(link => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+    .filter(Boolean);
+
+function updateCaseSectionNavigation() {
+    caseSectionLinks.forEach(link => {
+        const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+        const section = heading?.closest('section');
+        link.hidden = !heading || !section || Boolean(section.closest('[hidden]')) || section.hidden;
+    });
+
+    const visibleHeadings = caseSectionHeadings.filter(heading => {
+        const section = heading.closest('section');
+        return section && !section.hidden && !section.closest('[hidden]');
+    });
+    if (!visibleHeadings.length) return;
+    const navBounds = caseSectionNav?.getBoundingClientRect();
+    const sectionOffset = Math.ceil((navBounds?.height || 0) + 8);
+    caseModalForm?.style.setProperty('--case-section-scroll-offset', `${sectionOffset}px`);
+    // Treat the sticky navigation's full occupied area as the activation zone.
+    // scrollIntoView accounts for scroll-margin, while this threshold must also
+    // account for the sticky strip itself so the destination stays active once
+    // it is aligned immediately below that strip.
+    const navOffset = (navBounds?.bottom || 0) + sectionOffset + 32;
+    const current = [...visibleHeadings].reverse().find(heading => heading.getBoundingClientRect().top <= navOffset)
+        || visibleHeadings[0];
+    caseSectionLinks.forEach(link => {
+        if (link.hash === `#${current.id}`) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+    });
+}
+
+caseSectionNav?.addEventListener('click', event => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link || link.hidden) return;
+    event.preventDefault();
+    caseSectionLinks.forEach(candidate => {
+        if (candidate === link) candidate.setAttribute('aria-current', 'location');
+        else candidate.removeAttribute('aria-current');
+    });
+    const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+    if (heading) {
+        heading.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        requestAnimationFrame(() => heading.focus({ preventScroll: true }));
+    }
 });
+
+if (caseModalBody && caseSectionNav && typeof MutationObserver !== 'undefined') {
+    const visibilityObserver = new MutationObserver(updateCaseSectionNavigation);
+    ['sectionCourtStatus', 'sectionCourtReg', 'sectionNextDate', 'ucrRecordFields', 'sectionAccused', 'sectionWitness', 'caseRecordDetails']
+        .map(id => document.getElementById(id))
+        .filter(Boolean)
+        .forEach(section => visibilityObserver.observe(section, { attributes: true, attributeFilter: ['hidden'] }));
+}
+
+const caseSectionMobileLayout = window.matchMedia('(max-width: 780px)');
+let caseSectionScrollContainer = null;
+const onCaseSectionScroll = () => {
+    masterComboboxes.forEach(({ render }) => render());
+    updateCaseSectionNavigation();
+};
+function syncCaseSectionScrollContainer() {
+    const nextContainer = caseSectionMobileLayout.matches ? caseModalForm : caseModalBody;
+    if (nextContainer === caseSectionScrollContainer) return;
+    caseSectionScrollContainer?.removeEventListener('scroll', onCaseSectionScroll);
+    caseSectionScrollContainer = nextContainer;
+    caseSectionScrollContainer?.addEventListener('scroll', onCaseSectionScroll, { passive: true });
+}
+if (caseModalBody && caseSectionNav) {
+    syncCaseSectionScrollContainer();
+    caseSectionMobileLayout.addEventListener('change', syncCaseSectionScrollContainer);
+}
+window.addEventListener('resize', () => {
+    syncCaseSectionScrollContainer();
+    updateCaseSectionNavigation();
+}, { passive: true });
+updateCaseSectionNavigation();
 
 const modal = document.getElementById('caseModal');
 const modalFocusManager = setupCustomModalFocus(modal, {
     initialFocusSelector: '#firno',
     fallbackFocusSelector: '[data-open-add-case]',
     onEscape: () => {
+        if (caseResetConfirmDialog?.open) {
+            closeCaseResetConfirmation(resetButton);
+            return;
+        }
         closePoliceReportMenu();
         closeModal();
     }
 });
 const form = document.getElementById('caseForm');
+
+function syncRequiredFieldIndicators() {
+    if (!form) return;
+    const requiredIds = new Set([...form.querySelectorAll('[required]:not(:disabled)')]
+        .map(field => field.id)
+        .filter(Boolean));
+    form.querySelectorAll('label[for]').forEach(label => {
+        const required = requiredIds.has(label.htmlFor);
+        let indicator = label.querySelector('.required-indicator');
+        if (required && !indicator) {
+            indicator = document.createElement('span');
+            indicator.className = 'required-indicator';
+            indicator.setAttribute('aria-hidden', 'true');
+            indicator.textContent = 'Required';
+            label.appendChild(indicator);
+        } else if (!required && indicator) {
+            indicator.remove();
+        }
+    });
+}
+
+syncRequiredFieldIndicators();
+if (form && typeof MutationObserver !== 'undefined') {
+    const requiredIndicatorObserver = new MutationObserver(syncRequiredFieldIndicators);
+    requiredIndicatorObserver.observe(form, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ['required', 'disabled', 'for']
+    });
+}
+const caseResetConfirmDialog = document.getElementById('caseResetConfirmDialog');
+const keepEditingButton = document.getElementById('keepEditingButton');
+const confirmCaseResetButton = document.getElementById('confirmCaseResetButton');
+const resetButton = form?.querySelector('button[type="reset"]');
+let caseFormHasUnsavedChanges = false;
+let confirmingCaseFormReset = false;
+
+function markCaseFormDirty() {
+    if (modal?.classList.contains('show')) caseFormHasUnsavedChanges = true;
+}
+
+function closeCaseResetConfirmation(focusTarget = resetButton) {
+    if (caseResetConfirmDialog?.open) caseResetConfirmDialog.close();
+    requestAnimationFrame(() => {
+        if (modal?.classList.contains('show') && focusTarget?.isConnected) focusTarget.focus();
+    });
+}
+
+function showCaseResetConfirmation() {
+    if (!caseResetConfirmDialog || caseResetConfirmDialog.open) return;
+    caseResetConfirmDialog.showModal();
+    keepEditingButton?.focus({ preventScroll: true });
+}
+
+function restoreCaseFormInitialState() {
+    const baseline = caseEditResetBaseline;
+    if (baseline?.caseItem) {
+        const resetOptions = Array.isArray(baseline.linkedRecords)
+            ? { resetBaselineLinkedRecords: baseline.linkedRecords.map(cloneCaseResetItem) }
+            : {};
+        window.openAddCaseModal(cloneCaseResetItem(baseline.caseItem), resetOptions);
+        return;
+    }
+
+    resetForm();
+    const station = document.getElementById('policestation');
+    if (station) station.value = 'OSM';
+    updateCaseStatusFields();
+    updateCaseSectionNavigation();
+}
+
+caseResetConfirmDialog?.addEventListener('keydown', event => {
+    if (event.key !== 'Tab') return;
+    const focusable = [keepEditingButton, confirmCaseResetButton]
+        .filter(button => button && !button.disabled && button.getClientRects().length);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    const activeIndex = focusable.indexOf(document.activeElement);
+    if (activeIndex < 0 || (event.shiftKey && activeIndex === 0) || (!event.shiftKey && activeIndex === focusable.length - 1)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus({ preventScroll: true });
+    }
+});
+
+form?.addEventListener('reset', event => {
+    if (resettingFormForModalOpen || confirmingCaseFormReset) {
+        caseFormHasUnsavedChanges = false;
+        return;
+    }
+    if (!caseFormHasUnsavedChanges) {
+        caseFormHasUnsavedChanges = false;
+        event.preventDefault();
+        restoreCaseFormInitialState();
+        return;
+    }
+    event.preventDefault();
+    showCaseResetConfirmation();
+}, true);
+
+form?.addEventListener('input', event => {
+    if (event.isTrusted && event.target.matches('input, select, textarea')) markCaseFormDirty();
+}, true);
+form?.addEventListener('change', event => {
+    if (event.isTrusted && event.target.matches('input, select, textarea')) markCaseFormDirty();
+}, true);
+form?.addEventListener('click', event => {
+    if (!event.isTrusted) return;
+    if (event.target.closest('#addAccused, #addWitness, .remove-accused-btn, .remove-witness-btn')) {
+        markCaseFormDirty();
+    }
+}, true);
+
+keepEditingButton?.addEventListener('click', () => closeCaseResetConfirmation(resetButton));
+confirmCaseResetButton?.addEventListener('click', () => {
+    caseFormHasUnsavedChanges = false;
+    confirmingCaseFormReset = true;
+    caseResetConfirmDialog?.close();
+    try {
+        restoreCaseFormInitialState();
+    } finally {
+        confirmingCaseFormReset = false;
+    }
+    closeCaseResetConfirmation(document.getElementById('firno'));
+});
+caseResetConfirmDialog?.addEventListener('cancel', event => {
+    event.preventDefault();
+    closeCaseResetConfirmation(resetButton);
+});
+
 if (form) form.noValidate = true;
 const caseRecordDrafts = [];
+let caseEditResetBaseline = null;
 let selectedFirMasterId = '';
 let editingFirMaster = false;
 let selectedFirMasterData = null;
@@ -323,6 +538,18 @@ const caseRecordStatus = document.getElementById('caseRecordStatus');
 const caseRecordDetailTitle = document.getElementById('caseRecordDetailTitle');
 let caseRecordLoadSequence = 0;
 let policeStationLoadSequence = 0;
+
+function cloneCaseResetItem(item) {
+    if (!item || typeof item !== 'object') return item;
+    const clone = { ...item };
+    ['accused', 'witnesses', 'hearingDateRecord', 'registerDiaryDaterecords', 'registerDiaryDateRecords']
+        .forEach(key => {
+            if (Array.isArray(item[key])) clone[key] = item[key].map(value =>
+                value && typeof value === 'object' ? { ...value } : value
+            );
+        });
+    return clone;
+}
 
 function refreshDerivedFirStatus(proceedings = null) {
     const statusSelect = document.getElementById('fir_Status');
@@ -1207,8 +1434,8 @@ document.getElementById('editUcrIO')?.addEventListener('click', () => {
     if (officer) openCaseIoDialog(officer);
 });
 
-form.addEventListener('reset', () => {
-    if (resettingFormForModalOpen) return;
+form.addEventListener('reset', event => {
+    if (resettingFormForModalOpen || event.defaultPrevented) return;
     setTimeout(() => {
         caseIoSelectionTouched = true;
         caseIoSelect.selectedIndex = 0;
@@ -1235,7 +1462,8 @@ function initDatePickers(container = document) {
                     dateFormat: 'd/m/Y',
                     allowInput: false,
                     clickOpens: true,
-                    disableMobile: true
+                    disableMobile: true,
+                    onChange: () => markCaseFormDirty()
                 });
             }
             input.readOnly = true;
@@ -1252,6 +1480,7 @@ function resetForm() {
     resettingFormForModalOpen = true;
     closePoliceReportMenu();
     caseRecordLoadSequence += 1;
+    caseEditResetBaseline = null;
     form.reset();
     resettingFormForModalOpen = false;
     caseRecordDrafts.length = 0;
@@ -1286,10 +1515,13 @@ function resetForm() {
 
     const witnessContainer = document.getElementById('witnessTableBody');
     if (witnessContainer) {
-        const rows = witnessContainer.querySelectorAll('tr');
+        const rows = witnessContainer.querySelectorAll('.witness-card');
         for (let i = 1; i < rows.length; i++) rows[i].remove();
         if (rows.length > 0) resetWitnessRow(rows[0]);
     }
+    updateAccusedCardNumbers();
+    updateWitnessSerialNumbers();
+    updateWitnessCounts();
 }
 
 function resetAccusedCard(card) {
@@ -1416,7 +1648,8 @@ function updateCaseStatusFields() {
 }
 
 document.getElementById('casestatus')?.addEventListener('change', updateCaseStatusFields);
-document.getElementById('caseForm')?.addEventListener('reset', () => {
+document.getElementById('caseForm')?.addEventListener('reset', event => {
+    if (event.defaultPrevented) return;
     setTimeout(() => {
         updateCaseStatusFields();
         renderNextDateStage();
@@ -1478,6 +1711,11 @@ function hearingDateKind(dateKey) {
 function resetHearingRecords() {
     hearingDateRecords = [];
     editingHearingRecordId = null;
+    if (nextDateStageDate?._flatpickr) nextDateStageDate._flatpickr.clear(false);
+    else if (nextDateStageDate) nextDateStageDate.value = '';
+    if (nextDateStageTrial) nextDateStageTrial.value = '';
+    if (nextDateValue) nextDateValue.value = '';
+    if (trialStageValue) trialStageValue.value = '';
     if (hearingRecordStatus) hearingRecordStatus.textContent = '';
     if (addHearingRecordButton) addHearingRecordButton.textContent = 'Add Hearing';
     updateHearingMarkAs('');
@@ -1759,6 +1997,7 @@ addHearingRecordButton?.addEventListener('click', () => {
         && record.date !== dateKey
     );
     hearingDateRecords.push(updatedRecord);
+    markCaseFormDirty();
     editingHearingRecordId = null;
     if (addHearingRecordButton) addHearingRecordButton.textContent = 'Add Hearing';
     if (cancelHearingEditButton) cancelHearingEditButton.hidden = true;
@@ -1961,14 +2200,14 @@ function applyProceedingFields(fields) {
 
     const witnessContainer = document.getElementById('witnessTableBody');
     if (witnessContainer) {
-        let rows = [...witnessContainer.querySelectorAll('tr')];
+        let rows = [...witnessContainer.querySelectorAll('.witness-card')];
         const requiredCount = Math.max(values.witnesses.length, 1);
         while (rows.length > requiredCount) {
             rows.pop().remove();
         }
         while (rows.length < requiredCount) {
             addWitnessRow();
-            rows = [...witnessContainer.querySelectorAll('tr')];
+            rows = [...witnessContainer.querySelectorAll('.witness-card')];
         }
         rows.forEach((row, index) => {
             resetWitnessRow(row);
@@ -2154,46 +2393,49 @@ function setCaseRecordEditorVisibility(draft) {
     });
 }
 
+function applyLinkedCaseRecords(caseItem, linkedRecords, loadSequence) {
+    if (loadSequence !== caseRecordLoadSequence || form.dataset.editId !== caseItem.id) return;
+    linkedFirStatusRecords = linkedRecords;
+    if (!editingFirMaster && linkedRecords.length < 2) return;
+
+    captureActiveCaseRecord();
+    const currentDraftsById = new Map(
+        caseRecordDrafts.filter(record => record.id).map(record => [`${record.collectionName}:${record.id}`, record])
+    );
+    const localDrafts = caseRecordDrafts.filter(record => !record.id);
+    const activeLocalId = caseRecordDrafts[activeCaseRecordIndex]?.id
+        ? null
+        : caseRecordDrafts[activeCaseRecordIndex]?.localId;
+    const loadedDrafts = linkedRecords.map(record => {
+        const loadedDraft = createCaseRecordDraft(inferCaseRecordType(record), record);
+        const currentDraft = currentDraftsById.get(`${record._collectionName}:${record.id}`);
+        if (!currentDraft) return loadedDraft;
+        loadedDraft.fields = { ...loadedDraft.fields, ...currentDraft.fields };
+        loadedDraft.courtFields = normalizeProceedingFields(currentDraft.courtFields);
+        loadedDraft.hearingDateRecord = currentDraft.hearingDateRecord.map(hearing => ({ ...hearing }));
+        return loadedDraft;
+    });
+    caseRecordDrafts.splice(0, caseRecordDrafts.length, ...loadedDrafts, ...localDrafts);
+    const selectedIndex = activeLocalId
+        ? caseRecordDrafts.findIndex(record => record.localId === activeLocalId)
+        : caseRecordDrafts.findIndex(record => record.id === caseItem.id
+            && record.collectionName === (caseItem._collectionName || 'cases'));
+    activeCaseRecordIndex = selectedIndex >= 0 ? selectedIndex : 0;
+    renderCaseRecordList();
+    if (activeCaseRecordIndex >= 0) activateCaseRecord(activeCaseRecordIndex, false);
+    refreshDerivedFirStatus();
+}
+
 async function loadLinkedCaseRecords(caseItem, loadSequence) {
     const firLinkId = caseItem?.firMasterId || caseItem?.firId;
     if (!firLinkId) return;
     try {
         const linkedRecords = await loadRecordsForFir(db, firLinkId);
         if (loadSequence !== caseRecordLoadSequence || form.dataset.editId !== caseItem.id) return;
-        linkedFirStatusRecords = linkedRecords;
-        if (!editingFirMaster && linkedRecords.length < 2) return;
-
-        captureActiveCaseRecord();
-        const currentDraftsById = new Map(
-            caseRecordDrafts.filter(record => record.id).map(record => [`${record.collectionName}:${record.id}`, record])
-        );
-        const localDrafts = caseRecordDrafts.filter(record => !record.id);
-        const activeLocalId = caseRecordDrafts[activeCaseRecordIndex]?.id
-            ? null
-            : caseRecordDrafts[activeCaseRecordIndex]?.localId;
-        const loadedDrafts = linkedRecords.map(record => {
-            const loadedDraft = createCaseRecordDraft(inferCaseRecordType(record), record);
-            const currentDraft = currentDraftsById.get(`${record._collectionName}:${record.id}`);
-            if (!currentDraft) return loadedDraft;
-            loadedDraft.fields = { ...loadedDraft.fields, ...currentDraft.fields };
-            loadedDraft.courtFields = normalizeProceedingFields(currentDraft.courtFields);
-            loadedDraft.hearingDateRecord = currentDraft.hearingDateRecord.map(hearing => ({ ...hearing }));
-            return loadedDraft;
-        });
-        caseRecordDrafts.splice(
-            0,
-            caseRecordDrafts.length,
-            ...loadedDrafts,
-            ...localDrafts
-        );
-        const selectedIndex = activeLocalId
-            ? caseRecordDrafts.findIndex(record => record.localId === activeLocalId)
-            : caseRecordDrafts.findIndex(record => record.id === caseItem.id
-                && record.collectionName === (caseItem._collectionName || 'cases'));
-        activeCaseRecordIndex = selectedIndex >= 0 ? selectedIndex : 0;
-        renderCaseRecordList();
-        if (activeCaseRecordIndex >= 0) activateCaseRecord(activeCaseRecordIndex, false);
-        refreshDerivedFirStatus();
+        if (caseEditResetBaseline?.caseItem?.id === caseItem.id) {
+            caseEditResetBaseline.linkedRecords = linkedRecords.map(cloneCaseResetItem);
+        }
+        applyLinkedCaseRecords(caseItem, linkedRecords, loadSequence);
     } catch (error) {
         console.error('Could not load linked case records:', error);
         if (loadSequence === caseRecordLoadSequence && caseRecordStatus) {
@@ -2278,6 +2520,7 @@ document.getElementById('chooseChargesheet')?.addEventListener('click', () => {
     if (activeCaseRecordIndex >= 0) captureActiveCaseRecord();
     closePoliceReportMenu();
     caseRecordDrafts.push(createCaseRecordDraft('chargesheet'));
+    markCaseFormDirty();
     activateCaseRecord(caseRecordDrafts.length - 1, false);
 });
 
@@ -2313,6 +2556,7 @@ document.querySelectorAll('[data-add-case-record]').forEach(button => {
         }
         closePoliceReportMenu();
         caseRecordDrafts.push(createCaseRecordDraft(type));
+        markCaseFormDirty();
         activateCaseRecord(caseRecordDrafts.length - 1, false);
     });
 });
@@ -2450,6 +2694,7 @@ document.getElementById('commitToSessions')?.addEventListener('click', () => {
     successor.fields.casestatus = 'UT';
     successor.fields.courttype = 'Session Court';
     caseRecordDrafts.push(successor);
+    markCaseFormDirty();
     activateCaseRecord(caseRecordDrafts.length - 1, false);
     if (caseRecordStatus) caseRecordStatus.textContent = 'Sessions Court successor added. Complete its registration details and save both records.';
 });
@@ -2457,6 +2702,14 @@ document.getElementById('commitToSessions')?.addEventListener('click', () => {
 window.openAddCaseModal = (caseItem = null, options = {}) => {
     const modalOpener = document.activeElement;
     resetForm();
+    caseEditResetBaseline = caseItem
+        ? {
+            caseItem: cloneCaseResetItem(caseItem),
+            linkedRecords: Array.isArray(options.resetBaselineLinkedRecords)
+                ? options.resetBaselineLinkedRecords.map(cloneCaseResetItem)
+                : null
+        }
+        : null;
 
     const title = document.getElementById('modalTitle');
     if (title) title.textContent = caseItem ? 'Edit Case' : 'Add New Case';
@@ -2599,11 +2852,11 @@ window.openAddCaseModal = (caseItem = null, options = {}) => {
         if (Array.isArray(caseItem.witnesses) && caseItem.witnesses.length > 0) {
             const container = document.getElementById('witnessTableBody');
             if (container) {
-                let rows = container.querySelectorAll('tr');
+                let rows = container.querySelectorAll('.witness-card');
                 for (let i = 1; i < caseItem.witnesses.length; i++) {
                     addWitnessRow();
                 }
-                rows = container.querySelectorAll('tr');
+                rows = container.querySelectorAll('.witness-card');
                 caseItem.witnesses.forEach((w, i) => {
                     const row = rows[i];
                     if (!row) return;
@@ -2651,10 +2904,17 @@ window.openAddCaseModal = (caseItem = null, options = {}) => {
     const ioLoadId = ++ioLoadSequence;
     subscribeCaseIOs(caseItem, ioLoadId);
     const caseRecordLoadId = ++caseRecordLoadSequence;
-    if (caseItem && selectedFirMasterId) void loadLinkedCaseRecords(caseItem, caseRecordLoadId);
+    if (caseItem && selectedFirMasterId) {
+        if (Array.isArray(options.resetBaselineLinkedRecords)) {
+            applyLinkedCaseRecords(caseItem, caseEditResetBaseline.linkedRecords, caseRecordLoadId);
+        } else {
+            void loadLinkedCaseRecords(caseItem, caseRecordLoadId);
+        }
+    }
     if (selectedFirMasterId) void loadDerivedFirStatusForMaster(selectedFirMasterId);
     else refreshDerivedFirStatus();
     updateCaseStatusFields();
+    caseFormHasUnsavedChanges = false;
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
     let section = options.focusSelector ? modal.querySelector(options.focusSelector) : modal.querySelector('.case-section-fir');
@@ -2838,13 +3098,29 @@ function setupAccusedCard(card) {
     // =========================
     if (removeBtn) {
         removeBtn.addEventListener('click', () => {
+            const cards = Array.from(card.parentElement?.querySelectorAll('.accused-card') || []);
+            const index = cards.indexOf(card);
+            const focusTarget = cards[index + 1]?.querySelector('input:not(:disabled), select:not(:disabled), textarea:not(:disabled)')
+                || cards[index - 1]?.querySelector('.remove-accused-btn')
+                || document.getElementById('addAccused');
             card.remove();
+            updateAccusedCardNumbers();
+            focusTarget?.focus();
         });
     }
 }
 document.querySelectorAll('.accused-card').forEach(setupAccusedCard);
 
 let nextAccusedControlSequence = 2;
+
+function updateAccusedCardNumbers() {
+    document.querySelectorAll('#accusedContainer .accused-card').forEach((card, index) => {
+        const numberEl = card.querySelector('.accused-number span');
+        if (numberEl) numberEl.textContent = String(index + 1).padStart(2, '0');
+        const removeBtn = card.querySelector('.remove-accused-btn');
+        if (removeBtn) removeBtn.setAttribute('aria-label', `Remove Accused ${index + 1}`);
+    });
+}
 
 function assignAccusedControlIds(card, sequence) {
     const repeatedIds = [
@@ -2876,14 +3152,6 @@ function addAccusedCard() {
     resetAccusedCard(tpl);
     assignAccusedControlIds(tpl, nextAccusedControlSequence++);
 
-    const num = cards.length + 1;
-
-    // Accused number
-    const numberEl = tpl.querySelector('.accused-number span');
-    if (numberEl) {
-        numberEl.textContent = String(num).padStart(2, '0');
-    }
-
     // Add remove button only to additional accused
     if (!tpl.querySelector('.remove-accused-btn')) {
 
@@ -2896,7 +3164,7 @@ function addAccusedCard() {
         rm.textContent = 'Remove';
 
         // Wrapper ko poore section header ke andar rakho
-        const header = tpl.querySelector('.accused-number');
+        const header = tpl.querySelector('.accused-card-actions');
 
         if (header) {
             header.appendChild(rm);
@@ -2904,6 +3172,8 @@ function addAccusedCard() {
     }
 
     container.appendChild(tpl);
+    updateAccusedCardNumbers();
+    tpl.querySelector('input:not(:disabled), select:not(:disabled), textarea:not(:disabled)')?.focus();
 
     setTimeout(() => {
         initDatePickers(tpl);
@@ -2938,7 +3208,7 @@ function updateWitnessCounts() {
     const wContainer = document.getElementById('witnessTableBody');
     if (!wContainer) return;
 
-    const rows = wContainer.querySelectorAll('tr');
+    const rows = wContainer.querySelectorAll('.witness-card');
 
     // Sirf un witnesses ko count karo jinke naam mein kuch likha hai
     const namedRows = Array.from(rows).filter(row => {
@@ -2990,15 +3260,25 @@ function setupWitnessRow(row) {
             updateWitnessCounts();
         });
     }
-    if (removeBtn) removeBtn.addEventListener('click', () => { row.remove(); updateWitnessSerialNumbers(); updateWitnessCounts(); });
+    if (removeBtn) removeBtn.addEventListener('click', () => {
+        const rows = Array.from(row.parentElement?.querySelectorAll('.witness-card') || []);
+        const index = rows.indexOf(row);
+        const focusTarget = rows[index + 1]?.querySelector('input:not(:disabled), select:not(:disabled), textarea:not(:disabled)')
+            || rows[index - 1]?.querySelector('.remove-witness-btn')
+            || document.getElementById('addWitness');
+        row.remove();
+        updateWitnessSerialNumbers();
+        updateWitnessCounts();
+        focusTarget?.focus();
+    });
 }
-document.querySelectorAll('#witnessTableBody tr').forEach(setupWitnessRow);
+document.querySelectorAll('#witnessTableBody .witness-card').forEach(setupWitnessRow);
 
 function addWitnessRow() {
     const container = document.getElementById('witnessTableBody');
     if (!container) return;
 
-    const rows = container.querySelectorAll('tr');
+    const rows = container.querySelectorAll('.witness-card');
     if (rows.length === 0) return;
 
     // First row ko template ke liye clone karo
@@ -3023,7 +3303,7 @@ function addWitnessRow() {
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'remove-witness-btn icon-btn';
-        removeBtn.textContent = '🗑';
+        removeBtn.textContent = 'Remove';
 
         actionTd.appendChild(removeBtn);
     }
@@ -3031,6 +3311,7 @@ function addWitnessRow() {
     // New row add karo
     container.appendChild(tpl);
     updateWitnessSerialNumbers();
+    tpl.querySelector('input:not(:disabled), select:not(:disabled), textarea:not(:disabled)')?.focus();
 
     // Date picker + row events
     setTimeout(() => {
@@ -3044,7 +3325,7 @@ function updateWitnessSerialNumbers() {
     const container = document.getElementById('witnessTableBody');
     if (!container) return;
 
-    const rows = container.querySelectorAll('tr');
+    const rows = container.querySelectorAll('.witness-card');
 
     rows.forEach((row, index) => {
         const srNo = row.querySelector('.sr-no');
@@ -3065,6 +3346,8 @@ function updateWitnessSerialNumbers() {
             control.setAttribute('aria-label', label);
             row.querySelector(`label[for="${control.id}"]`)?.replaceChildren(document.createTextNode(label));
         });
+        const removeBtn = row.querySelector('.remove-witness-btn');
+        if (removeBtn) removeBtn.setAttribute('aria-label', `Remove Witness ${rowNumber}`);
     });
 }
 document.addEventListener('click', e => {
@@ -3080,9 +3363,40 @@ function getValidationContainer(field) {
     return field.closest('.input-group, .top-field') || field.parentElement;
 }
 
+let requiredFieldErrorSequence = 0;
+
 function setRequiredFieldError(field, isInvalid) {
     const container = getValidationContainer(field);
     const label = container?.querySelector(':scope > label');
+    if (!field.id && isInvalid) {
+        do { field.id = `required-field-${++requiredFieldErrorSequence}`; }
+        while (document.getElementById(field.id) !== field);
+    }
+    if (isInvalid && field.id && !field.dataset.validationErrorId) {
+        const baseErrorId = `${field.id}-error`;
+        let candidate = baseErrorId;
+        let suffix = 1;
+        while (document.getElementById(candidate)) candidate = `${baseErrorId}-${suffix++}`;
+        field.dataset.validationErrorId = candidate;
+    }
+    const errorId = field.dataset.validationErrorId || null;
+    let error = errorId ? document.getElementById(errorId) : null;
+    if (isInvalid && container && errorId && !error) {
+        error = document.createElement('span');
+        error.id = errorId;
+        error.className = 'field-validation-message';
+        error.textContent = 'This field is required.';
+        container.appendChild(error);
+    } else if (!isInvalid) {
+        error?.remove();
+    }
+
+    const describedBy = new Set((field.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean));
+    if (isInvalid && error) describedBy.add(error.id);
+    else if (errorId) describedBy.delete(errorId);
+    if (!isInvalid) delete field.dataset.validationErrorId;
+    if (describedBy.size) field.setAttribute('aria-describedby', Array.from(describedBy).join(' '));
+    else field.removeAttribute('aria-describedby');
 
     field.classList.toggle('validation-error', isInvalid);
     field.setAttribute('aria-invalid', String(isInvalid));
@@ -3134,11 +3448,10 @@ form?.addEventListener('input', event => {
     }
 });
 
-form?.addEventListener('reset', () => {
-    form.querySelectorAll('.validation-error').forEach(element => {
-        element.classList.remove('validation-error');
-        if (element.matches('[required]')) element.setAttribute('aria-invalid', 'false');
-    });
+form?.addEventListener('reset', event => {
+    if (event.defaultPrevented) return;
+    form.querySelectorAll('[required]').forEach(field => setRequiredFieldError(field, false));
+    form.querySelectorAll('.validation-error').forEach(element => element.classList.remove('validation-error'));
 });
 
 form?.addEventListener('submit', async e => {

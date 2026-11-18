@@ -7,7 +7,8 @@ import { configureExportDialog } from './export-dialog.js';
 const detailsModal = document.querySelector('#caseDetailsModal');
 const modalHelper = setupModal(detailsModal, null, undefined, {
     initialFocusSelector: '.modal-header .close',
-    fallbackFocusSelector: '.case-filter.active'
+    fallbackFocusSelector: '.case-filter.active',
+    onEscape: () => modalHelper?.closeModal()
 });
 
 let casesCache = [];

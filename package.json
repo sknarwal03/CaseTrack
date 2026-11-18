@@ -5,9 +5,19 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
+    "dev:e2e": "vite --config vite.e2e.config.js --mode test",
+    "firebase:e2e:emulators": "firebase emulators:start --only auth,firestore --config firebase.e2e.config.json --project demo-casetrack-date-regression --non-interactive",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test test/fir-status.test.mjs test/hearing-date.test.mjs test/proceeding-fields.test.mjs test/firebase-project-policy.test.mjs test/fir-statusmap.test.mjs test/data-export.test.mjs test/report-pending-proceedings.test.mjs"
+    "test": "node --test test/fir-status.test.mjs test/hearing-date.test.mjs test/proceeding-fields.test.mjs test/firebase-project-policy.test.mjs test/fir-statusmap.test.mjs test/data-export.test.mjs test/report-pending-proceedings.test.mjs",
+    "test:e2e:ready": "node scripts/check-playwright-browser.mjs",
+    "test:e2e:isolation": "playwright test --config=playwright.config.js e2e/playwright/isolation.spec.js",
+    "test:e2e:smoke": "playwright test --config=playwright.config.js e2e/playwright/smoke.spec.js",
+    "test:e2e:interaction": "playwright test --config=playwright.config.js e2e/playwright/add-case.spec.js",
+    "test:e2e": "playwright test --config=playwright.config.js",
+    "test:visual": "playwright test --config=playwright.config.js e2e/playwright/visual-matrix.spec.js",
+    "test:e2e:headed": "playwright test --config=playwright.config.js --headed",
+    "test:e2e:report": "playwright show-report playwright-report"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +33,10 @@
     "uuid": "^11.1.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "1.64.1",
+    "axe-core": "^4.14.1",
+    "firebase-tools": "15.28.1",
     "vite": "^8.3.0"
   }
 }

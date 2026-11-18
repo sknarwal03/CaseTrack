@@ -1,0 +1,2194 @@
+{
+  "colorScheme": "light",
+  "widths": [
+    {
+      "width": 320,
+      "theme": "light",
+      "states": {
+        "page": {
+          "viewportWidth": 320,
+          "documentWidth": 320,
+          "modalId": null,
+          "modalBounds": null,
+          "duplicateIds": []
+        },
+        "details": {
+          "viewportWidth": 320,
+          "documentWidth": 320,
+          "modalId": "caseDetailsModal",
+          "modalBounds": {
+            "left": 8,
+            "right": 312,
+            "top": 66.53125,
+            "bottom": 889.46875,
+            "width": 304,
+            "height": 822.9375
+          },
+          "duplicateIds": []
+        },
+        "edit": {
+          "viewportWidth": 320,
+          "documentWidth": 320,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 310,
+            "top": 66,
+            "bottom": 890,
+            "width": 300,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "validation": {
+          "viewportWidth": 320,
+          "documentWidth": 320,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 310,
+            "top": 66,
+            "bottom": 890,
+            "width": 300,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "ioTriggerAvailability": {
+          "disabled": false,
+          "hidden": false
+        },
+        "io": {
+          "viewportWidth": 320,
+          "documentWidth": 320,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 310,
+            "top": 66,
+            "bottom": 890,
+            "width": 300,
+            "height": 824
+          },
+          "duplicateIds": []
+        }
+      }
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "states": {
+        "page": {
+          "viewportWidth": 375,
+          "documentWidth": 375,
+          "modalId": null,
+          "modalBounds": null,
+          "duplicateIds": []
+        },
+        "details": {
+          "viewportWidth": 375,
+          "documentWidth": 375,
+          "modalId": "caseDetailsModal",
+          "modalBounds": {
+            "left": 9.375,
+            "right": 365.625,
+            "top": 66.53125,
+            "bottom": 889.46875,
+            "width": 356.25,
+            "height": 822.9375
+          },
+          "duplicateIds": []
+        },
+        "edit": {
+          "viewportWidth": 375,
+          "documentWidth": 375,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 365,
+            "top": 66,
+            "bottom": 890,
+            "width": 355,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "validation": {
+          "viewportWidth": 375,
+          "documentWidth": 375,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 365,
+            "top": 66,
+            "bottom": 890,
+            "width": 355,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "ioTriggerAvailability": {
+          "disabled": false,
+          "hidden": false
+        },
+        "io": {
+          "viewportWidth": 375,
+          "documentWidth": 375,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 365,
+            "top": 66,
+            "bottom": 890,
+            "width": 355,
+            "height": 824
+          },
+          "duplicateIds": []
+        }
+      }
+    },
+    {
+      "width": 430,
+      "theme": "light",
+      "states": {
+        "page": {
+          "viewportWidth": 430,
+          "documentWidth": 430,
+          "modalId": null,
+          "modalBounds": null,
+          "duplicateIds": []
+        },
+        "details": {
+          "viewportWidth": 430,
+          "documentWidth": 430,
+          "modalId": "caseDetailsModal",
+          "modalBounds": {
+            "left": 10.75,
+            "right": 419.25,
+            "top": 66.53125,
+            "bottom": 889.46875,
+            "width": 408.5,
+            "height": 822.9375
+          },
+          "duplicateIds": []
+        },
+        "edit": {
+          "viewportWidth": 430,
+          "documentWidth": 430,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 420,
+            "top": 66,
+            "bottom": 890,
+            "width": 410,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "validation": {
+          "viewportWidth": 430,
+          "documentWidth": 430,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 420,
+            "top": 66,
+            "bottom": 890,
+            "width": 410,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "ioTriggerAvailability": {
+          "disabled": false,
+          "hidden": false
+        },
+        "io": {
+          "viewportWidth": 430,
+          "documentWidth": 430,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 420,
+            "top": 66,
+            "bottom": 890,
+            "width": 410,
+            "height": 824
+          },
+          "duplicateIds": []
+        }
+      }
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "states": {
+        "page": {
+          "viewportWidth": 768,
+          "documentWidth": 768,
+          "modalId": null,
+          "modalBounds": null,
+          "duplicateIds": []
+        },
+        "details": {
+          "viewportWidth": 768,
+          "documentWidth": 768,
+          "modalId": "caseDetailsModal",
+          "modalBounds": {
+            "left": 19.203125,
+            "right": 748.796875,
+            "top": 66.53125,
+            "bottom": 889.46875,
+            "width": 729.59375,
+            "height": 822.9375
+          },
+          "duplicateIds": []
+        },
+        "edit": {
+          "viewportWidth": 768,
+          "documentWidth": 768,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 758,
+            "top": 66,
+            "bottom": 890,
+            "width": 748,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "validation": {
+          "viewportWidth": 768,
+          "documentWidth": 768,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 758,
+            "top": 66,
+            "bottom": 890,
+            "width": 748,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "ioTriggerAvailability": {
+          "disabled": false,
+          "hidden": false
+        },
+        "io": {
+          "viewportWidth": 768,
+          "documentWidth": 768,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 758,
+            "top": 66,
+            "bottom": 890,
+            "width": 748,
+            "height": 824
+          },
+          "duplicateIds": []
+        }
+      }
+    },
+    {
+      "width": 780,
+      "theme": "light",
+      "states": {
+        "page": {
+          "viewportWidth": 780,
+          "documentWidth": 780,
+          "modalId": null,
+          "modalBounds": null,
+          "duplicateIds": []
+        },
+        "details": {
+          "viewportWidth": 780,
+          "documentWidth": 780,
+          "modalId": "caseDetailsModal",
+          "modalBounds": {
+            "left": 19.5,
+            "right": 760.5,
+            "top": 66.53125,
+            "bottom": 889.46875,
+            "width": 741,
+            "height": 822.9375
+          },
+          "duplicateIds": []
+        },
+        "edit": {
+          "viewportWidth": 780,
+          "documentWidth": 780,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 770,
+            "top": 66,
+            "bottom": 890,
+            "width": 760,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "validation": {
+          "viewportWidth": 780,
+          "documentWidth": 780,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 770,
+            "top": 66,
+            "bottom": 890,
+            "width": 760,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "ioTriggerAvailability": {
+          "disabled": false,
+          "hidden": false
+        },
+        "io": {
+          "viewportWidth": 780,
+          "documentWidth": 780,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 770,
+            "top": 66,
+            "bottom": 890,
+            "width": 760,
+            "height": 824
+          },
+          "duplicateIds": []
+        }
+      }
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "states": {
+        "page": {
+          "viewportWidth": 1024,
+          "documentWidth": 1024,
+          "modalId": null,
+          "modalBounds": null,
+          "duplicateIds": []
+        },
+        "details": {
+          "viewportWidth": 1024,
+          "documentWidth": 1024,
+          "modalId": "caseDetailsModal",
+          "modalBounds": {
+            "left": 132,
+            "right": 892,
+            "top": 61.53125,
+            "bottom": 838.46875,
+            "width": 760,
+            "height": 776.9375
+          },
+          "duplicateIds": []
+        },
+        "edit": {
+          "viewportWidth": 1024,
+          "documentWidth": 1024,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 62,
+            "right": 962,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        },
+        "validation": {
+          "viewportWidth": 1024,
+          "documentWidth": 1024,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 62,
+            "right": 962,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        },
+        "ioTriggerAvailability": {
+          "disabled": false,
+          "hidden": false
+        },
+        "io": {
+          "viewportWidth": 1024,
+          "documentWidth": 1024,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 62,
+            "right": 962,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        }
+      }
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "states": {
+        "page": {
+          "viewportWidth": 1366,
+          "documentWidth": 1366,
+          "modalId": null,
+          "modalBounds": null,
+          "duplicateIds": []
+        },
+        "details": {
+          "viewportWidth": 1366,
+          "documentWidth": 1366,
+          "modalId": "caseDetailsModal",
+          "modalBounds": {
+            "left": 303,
+            "right": 1063,
+            "top": 61.53125,
+            "bottom": 838.46875,
+            "width": 760,
+            "height": 776.9375
+          },
+          "duplicateIds": []
+        },
+        "edit": {
+          "viewportWidth": 1366,
+          "documentWidth": 1366,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 233,
+            "right": 1133,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        },
+        "validation": {
+          "viewportWidth": 1366,
+          "documentWidth": 1366,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 233,
+            "right": 1133,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        },
+        "ioTriggerAvailability": {
+          "disabled": false,
+          "hidden": false
+        },
+        "io": {
+          "viewportWidth": 1366,
+          "documentWidth": 1366,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 233,
+            "right": 1133,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        }
+      }
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "states": {
+        "page": {
+          "viewportWidth": 1920,
+          "documentWidth": 1920,
+          "modalId": null,
+          "modalBounds": null,
+          "duplicateIds": []
+        },
+        "details": {
+          "viewportWidth": 1920,
+          "documentWidth": 1920,
+          "modalId": "caseDetailsModal",
+          "modalBounds": {
+            "left": 580,
+            "right": 1340,
+            "top": 61.53125,
+            "bottom": 838.46875,
+            "width": 760,
+            "height": 776.9375
+          },
+          "duplicateIds": []
+        },
+        "edit": {
+          "viewportWidth": 1920,
+          "documentWidth": 1920,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 510,
+            "right": 1410,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        },
+        "validation": {
+          "viewportWidth": 1920,
+          "documentWidth": 1920,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 510,
+            "right": 1410,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        },
+        "ioTriggerAvailability": {
+          "disabled": false,
+          "hidden": false
+        },
+        "io": {
+          "viewportWidth": 1920,
+          "documentWidth": 1920,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 510,
+            "right": 1410,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        }
+      }
+    }
+  ],
+  "axeScans": [
+    {
+      "width": 320,
+      "theme": "light",
+      "state": "cases-page",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "state": "case-details",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#detailStatusBadge"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.27 (foreground color: #69f2c3, background color: #e3faf3, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "help": "Scrollable region must have keyboard access",
+          "nodes": [
+            {
+              "target": [
+                ".detail-modal-body"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "state": "edit-case",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "a[href$=\"#caseSectionComplaint\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"fir_Status\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "state": "add-case-validation-errors",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firno-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firdate-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firyear-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#undersection-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "state": "nested-add-io-dialog",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "state": "cases-page",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "state": "case-details",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#detailStatusBadge"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.27 (foreground color: #69f2c3, background color: #e3faf3, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "help": "Scrollable region must have keyboard access",
+          "nodes": [
+            {
+              "target": [
+                ".detail-modal-body"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "state": "edit-case",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionComplaint\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".case-record-options > .section-header > .section-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.34 (foreground color: #287cf3, background color: #e1ecfd, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#addPoliceReport"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.28 (foreground color: #1e68d5, background color: #dce9fd, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "state": "add-case-validation-errors",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firno-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firdate-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firyear-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#undersection-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "state": "nested-add-io-dialog",
+      "violations": []
+    },
+    {
+      "width": 430,
+      "theme": "light",
+      "state": "cases-page",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 430,
+      "theme": "light",
+      "state": "case-details",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#detailStatusBadge"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.27 (foreground color: #69f2c3, background color: #e3faf3, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "help": "Scrollable region must have keyboard access",
+          "nodes": [
+            {
+              "target": [
+                ".detail-modal-body"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 430,
+      "theme": "light",
+      "state": "edit-case",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionComplaint\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".case-record-options > .section-header > .section-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.34 (foreground color: #287cf3, background color: #e1ecfd, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#addPoliceReport"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.28 (foreground color: #1e68d5, background color: #dce9fd, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 430,
+      "theme": "light",
+      "state": "add-case-validation-errors",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firno-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firdate-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firyear-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#undersection-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 430,
+      "theme": "light",
+      "state": "nested-add-io-dialog",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "state": "cases-page",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "state": "case-details",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#detailStatusBadge"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.27 (foreground color: #69f2c3, background color: #e3faf3, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "help": "Scrollable region must have keyboard access",
+          "nodes": [
+            {
+              "target": [
+                ".detail-modal-body"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "state": "edit-case",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionComplaint\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".case-record-options > .section-header > .section-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.34 (foreground color: #287cf3, background color: #e1ecfd, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#addPoliceReport"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.28 (foreground color: #1e68d5, background color: #dce9fd, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "state": "add-case-validation-errors",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firno-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firdate-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firyear-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#undersection-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "state": "nested-add-io-dialog",
+      "violations": []
+    },
+    {
+      "width": 780,
+      "theme": "light",
+      "state": "cases-page",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 780,
+      "theme": "light",
+      "state": "case-details",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#detailStatusBadge"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.27 (foreground color: #69f2c3, background color: #e3faf3, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "help": "Scrollable region must have keyboard access",
+          "nodes": [
+            {
+              "target": [
+                ".detail-modal-body"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 780,
+      "theme": "light",
+      "state": "edit-case",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionComplaint\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".case-record-options > .section-header > .section-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.34 (foreground color: #287cf3, background color: #e1ecfd, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#addPoliceReport"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.28 (foreground color: #1e68d5, background color: #dce9fd, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 780,
+      "theme": "light",
+      "state": "add-case-validation-errors",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firno-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firdate-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firyear-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#undersection-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 780,
+      "theme": "light",
+      "state": "nested-add-io-dialog",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "state": "cases-page",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "state": "case-details",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#detailStatusBadge"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.27 (foreground color: #69f2c3, background color: #e3faf3, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "help": "Scrollable region must have keyboard access",
+          "nodes": [
+            {
+              "target": [
+                ".detail-modal-body"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "state": "edit-case",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"fir_Status\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "state": "add-case-validation-errors",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"fir_Status\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firno-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firdate-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firyear-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#undersection-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "state": "nested-add-io-dialog",
+      "violations": []
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "state": "cases-page",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "state": "case-details",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#detailStatusBadge"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.27 (foreground color: #69f2c3, background color: #e3faf3, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "help": "Scrollable region must have keyboard access",
+          "nodes": [
+            {
+              "target": [
+                ".detail-modal-body"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "state": "edit-case",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionComplaint\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".case-record-options > .section-header > .section-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.34 (foreground color: #287cf3, background color: #e1ecfd, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#addPoliceReport"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.28 (foreground color: #1e68d5, background color: #dce9fd, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "state": "add-case-validation-errors",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"fir_Status\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firno-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firdate-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firyear-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#undersection-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "state": "nested-add-io-dialog",
+      "violations": []
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "state": "cases-page",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "state": "case-details",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#detailStatusBadge"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.27 (foreground color: #69f2c3, background color: #e3faf3, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "help": "Scrollable region must have keyboard access",
+          "nodes": [
+            {
+              "target": [
+                ".detail-modal-body"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "state": "edit-case",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionComplaint\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".case-record-options > .section-header > .section-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.34 (foreground color: #287cf3, background color: #e1ecfd, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#addPoliceReport"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.28 (foreground color: #1e68d5, background color: #dce9fd, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "state": "add-case-validation-errors",
+      "violations": [
+        {
+          "id": "aria-required-children",
+          "impact": "critical",
+          "help": "Certain ARIA roles must contain particular children",
+          "nodes": [
+            {
+              "target": [
+                ".profile-dropdown"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has children which are not allowed: button"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"fir_Status\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firno-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firdate-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firyear-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#undersection-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".brand"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "state": "nested-add-io-dialog",
+      "violations": []
+    }
+  ],
+  "interactionFindings": [
+    {
+      "width": 320,
+      "theme": "light",
+      "finding": "Sortable case table headers are not keyboard focusable"
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "finding": "Sortable case table headers are not keyboard focusable"
+    },
+    {
+      "width": 430,
+      "theme": "light",
+      "finding": "Sortable case table headers are not keyboard focusable"
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "finding": "Sortable case table headers are not keyboard focusable"
+    },
+    {
+      "width": 780,
+      "theme": "light",
+      "finding": "Sortable case table headers are not keyboard focusable"
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "finding": "Sortable case table headers are not keyboard focusable"
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "finding": "Sortable case table headers are not keyboard focusable"
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "finding": "Sortable case table headers are not keyboard focusable"
+    }
+  ],
+  "pageErrors": []
+}

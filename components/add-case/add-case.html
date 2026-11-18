@@ -13,6 +13,17 @@
         </header>
         <form id="caseForm" novalidate>
             <div class="modal-body">
+                <nav class="case-section-nav" aria-label="Add Case form sections">
+                    <a href="#caseSectionFir" aria-current="location">FIR Details</a>
+                    <a href="#caseSectionComplaint">Complaint Details</a>
+                    <a href="#caseSectionRecords">Case Records</a>
+                    <a href="#caseSectionCourtStatus">Court Status</a>
+                    <a href="#caseSectionCourtRegistration">Court Registration</a>
+                    <a href="#caseSectionHearings">Hearings</a>
+                    <a href="#caseSectionUcr">UCR Report</a>
+                    <a href="#caseSectionAccused">Accused</a>
+                    <a href="#caseSectionWitness">Witnesses</a>
+                </nav>
                 <section class="form-card case-section-fir-meta">
                     <div class="form-grid">
                         <div class="input-group">
@@ -31,7 +42,7 @@
                         <div class="section-header">
                             <div class="section-icon">A</div>
                             <div>
-                                <h2>FIR Details</h2>
+                                <h2 id="caseSectionFir" tabindex="-1">FIR Details</h2>
                                 <p>Basic First Information Report details</p>
                             </div>
                         </div>
@@ -116,7 +127,7 @@
                         <div class="section-header">
                             <div class="section-icon">B</div>
                             <div>
-                                <h2>Complaint Details</h2>
+                                <h2 id="caseSectionComplaint" tabindex="-1">Complaint Details</h2>
                                 <p>Information regarding the complainant and incident</p>
                             </div>
                         </div>
@@ -160,7 +171,7 @@
                     <div class="section-header">
                         <div class="section-icon">PR</div>
                         <div>
-                            <h2>Case Records</h2>
+                            <h2 id="caseSectionRecords" tabindex="-1">Case Records</h2>
                             <p>Add one or more records linked to this FIR</p>
                         </div>
                         <div class="case-record-menu-host">
@@ -188,6 +199,10 @@
                     </div>
 
                 <section class="form-card case-section-court-status" id="sectionCourtStatus">
+                    <div class="section-header">
+                        <div class="section-icon">CS</div>
+                        <div><h2 id="caseSectionCourtStatus" tabindex="-1">Court Status</h2></div>
+                    </div>
                     <div class="form-grid">
                         <div class="input-group permanent-label-group">
                             <label for="courttype">Court Type</label>
@@ -228,7 +243,7 @@
                         <div class="section-icon">01</div>
 
                         <div>
-                            <h2>Court Registration</h2>
+                            <h2 id="caseSectionCourtRegistration" tabindex="-1">Court Registration</h2>
                             <p>Court registration and proceedings information</p>
                         </div>
 
@@ -340,7 +355,7 @@
                     <div class="section-header">
                         <div class="section-icon">02</div>
                         <div>
-                            <h2>Hearings Records</h2>
+                            <h2 id="caseSectionHearings" tabindex="-1">Hearings Records</h2>
                             <p>Add, edit, and manage court dates and trial stages</p>
                         </div>
                     </div>
@@ -376,7 +391,7 @@
                     <div class="section-header">
                         <div class="section-icon">UCR</div>
                         <div>
-                            <h2>UCR Report Details</h2>
+                            <h2 id="caseSectionUcr" tabindex="-1">UCR Report Details</h2>
                             <p>Untraced case report information</p>
                         </div>
                     </div>
@@ -429,7 +444,7 @@
                         <div class="section-icon">03</div>
 
                         <div>
-                            <h2>Accused Details</h2>
+                            <h2 id="caseSectionAccused" tabindex="-1">Accused Details</h2>
                             <p>Add accused information and arrest status</p>
                         </div>
 
@@ -439,11 +454,12 @@
                     <div id="accusedContainer">
 
 
-                        <div class="accused-card">
+                        <fieldset class="accused-card">
 
-                            <div class="accused-number">
-                                ACCUSED <span>01</span>
-                            </div>
+                            <legend class="accused-number">
+                                Accused <span>01</span>
+                            </legend>
+                            <div class="accused-card-actions"></div>
 
 
                             <div class="form-grid">
@@ -531,7 +547,7 @@
 
                             </div>
 
-                        </div>
+                        </fieldset>
 
                     </div>
 
@@ -554,51 +570,41 @@
                         <div class="section-icon">04</div>
 
                         <div>
-                            <h2>Witness Details</h2>
+                            <h2 id="caseSectionWitness" tabindex="-1">Witness Details</h2>
                             <p>Track witness examination progress</p>
                         </div>
 
                     </div>
 
 
-                    <div class="table-container">
-                        <table class="witness-table">
-                            <thead>
-                                <tr>
-                                    <th width="50">Sr.</th>
-                                    <th>Witness Name</th>
-                                    <th>Status</th>
-                                    <th class="text-center">Examined?</th>
-                                    <th>Date</th>
-                                    <th class="text-centre">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="witnessTableBody">
-                                <tr>
-                                    <td class="sr-no">1</td>
-                                    <td><label class="case-form-visually-hidden" for="witnessName1">Witness 1 name</label><input type="text" id="witnessName1" name="witness_name[]" aria-label="Witness 1 name" placeholder="Full name"></td>
-                                    <td>
-                                        <label class="case-form-visually-hidden" for="witnessStatus1">Witness 1 status</label>
-                                        <select id="witnessStatus1" name="witness_status[]" aria-label="Witness 1 status">
-                                            <option value="">Pending</option>
-                                            <option value="chief">Chief</option>
-                                            <option value="cross">Cross</option>
-                                            <option value="givenup">Given Up</option>
-                                        </select>
-                                    </td>
-                                    <td class="text-center">
-                                        <label class="case-form-visually-hidden" for="witnessExamined1">Witness 1 examined</label>
-                                        <input type="checkbox" id="witnessExamined1" name="witness_examined[]" class="examined-checkbox" aria-label="Witness 1 examined"
-                                            value="yes">
-                                    </td>
-                                    <td><label class="case-form-visually-hidden" for="witnessExaminedDate1">Witness 1 examined date</label><input type="text" id="witnessExaminedDate1" name="witness_examined_date[]" class="examined-date flatpickr-date" aria-label="Witness 1 examined date"
-                                            placeholder="Pick Examined Date" autocomplete="off" readonly disabled></td>
-                                    <td class="text-center witness-action">
-                                        —
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div id="witnessTableBody" class="witness-cards">
+                        <fieldset class="witness-card">
+                            <legend>Witness <span class="sr-no">1</span></legend>
+                            <div class="witness-card-fields">
+                                <div class="input-group permanent-label-group witness-field">
+                                    <label for="witnessName1">Witness 1 name</label>
+                                    <input type="text" id="witnessName1" name="witness_name[]" aria-label="Witness 1 name" placeholder="Full name">
+                                </div>
+                                <div class="input-group permanent-label-group witness-field">
+                                    <label for="witnessStatus1">Witness 1 status</label>
+                                    <select id="witnessStatus1" name="witness_status[]" aria-label="Witness 1 status">
+                                        <option value="">Pending</option>
+                                        <option value="chief">Chief</option>
+                                        <option value="cross">Cross</option>
+                                        <option value="givenup">Given Up</option>
+                                    </select>
+                                </div>
+                                <div class="witness-examined-field">
+                                    <input type="checkbox" id="witnessExamined1" name="witness_examined[]" class="examined-checkbox" aria-label="Witness 1 examined" value="yes">
+                                    <label for="witnessExamined1">Witness 1 examined</label>
+                                </div>
+                                <div class="input-group permanent-label-group witness-field">
+                                    <label for="witnessExaminedDate1">Witness 1 examined date</label>
+                                    <input type="text" id="witnessExaminedDate1" name="witness_examined_date[]" class="examined-date flatpickr-date" aria-label="Witness 1 examined date" placeholder="Pick Examined Date" autocomplete="off" readonly disabled>
+                                </div>
+                                <div class="witness-action">—</div>
+                            </div>
+                        </fieldset>
                     </div>
 
                     <button type="button" id="addWitness" class="add-more">
@@ -640,5 +646,14 @@
                 <button class="btn primary" type="submit">Save Case</button>
             </footer>
         </form>
+        <dialog id="caseResetConfirmDialog" class="case-reset-confirm-dialog" aria-modal="true"
+            aria-labelledby="caseResetConfirmTitle" aria-describedby="caseResetConfirmDescription">
+            <h2 id="caseResetConfirmTitle">Reset this form?</h2>
+            <p id="caseResetConfirmDescription">Unsaved changes will be lost if you reset the form.</p>
+            <div class="case-reset-confirm-actions">
+                <button class="btn" type="button" id="keepEditingButton" autofocus>Keep Editing</button>
+                <button class="btn case-reset-confirm-destructive" type="button" id="confirmCaseResetButton">Reset Form</button>
+            </div>
+        </dialog>
     </section>
 </div>

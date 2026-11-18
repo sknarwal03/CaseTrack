@@ -1,0 +1,165 @@
+{
+  "colorScheme": "light",
+  "widths": [
+    {
+      "width": 320,
+      "theme": "light",
+      "states": {
+        "page": {
+          "viewportWidth": 320,
+          "documentWidth": 320,
+          "modalId": null,
+          "modalBounds": null,
+          "duplicateIds": []
+        },
+        "details": {
+          "viewportWidth": 320,
+          "documentWidth": 320,
+          "modalId": "caseDetailsModal",
+          "modalBounds": {
+            "left": 8,
+            "right": 312,
+            "top": 66.53125,
+            "bottom": 889.46875,
+            "width": 304,
+            "height": 822.9375
+          },
+          "duplicateIds": []
+        },
+        "edit": {
+          "viewportWidth": 320,
+          "documentWidth": 320,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 310,
+            "top": 66,
+            "bottom": 890,
+            "width": 300,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "validation": {
+          "viewportWidth": 320,
+          "documentWidth": 320,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 310,
+            "top": 66,
+            "bottom": 890,
+            "width": 300,
+            "height": 824
+          },
+          "duplicateIds": []
+        },
+        "ioTriggerAvailability": {
+          "disabled": false,
+          "hidden": false
+        },
+        "io": {
+          "viewportWidth": 320,
+          "documentWidth": 320,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 10,
+            "right": 310,
+            "top": 66,
+            "bottom": 890,
+            "width": 300,
+            "height": 824
+          },
+          "duplicateIds": []
+        }
+      }
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "states": {
+        "page": {
+          "viewportWidth": 1366,
+          "documentWidth": 1366,
+          "modalId": null,
+          "modalBounds": null,
+          "duplicateIds": []
+        },
+        "details": {
+          "viewportWidth": 1366,
+          "documentWidth": 1366,
+          "modalId": "caseDetailsModal",
+          "modalBounds": {
+            "left": 303,
+            "right": 1063,
+            "top": 61.53125,
+            "bottom": 838.46875,
+            "width": 760,
+            "height": 776.9375
+          },
+          "duplicateIds": []
+        },
+        "edit": {
+          "viewportWidth": 1366,
+          "documentWidth": 1366,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 233,
+            "right": 1133,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        },
+        "validation": {
+          "viewportWidth": 1366,
+          "documentWidth": 1366,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 233,
+            "right": 1133,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        },
+        "ioTriggerAvailability": {
+          "disabled": false,
+          "hidden": false
+        },
+        "io": {
+          "viewportWidth": 1366,
+          "documentWidth": 1366,
+          "modalId": "caseModal",
+          "modalBounds": {
+            "left": 233,
+            "right": 1133,
+            "top": 36,
+            "bottom": 864,
+            "width": 900,
+            "height": 828
+          },
+          "duplicateIds": []
+        }
+      }
+    }
+  ],
+  "axeScans": [],
+  "interactionFindings": [
+    {
+      "width": 320,
+      "theme": "light",
+      "finding": "Sortable case table headers are not keyboard focusable"
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "finding": "Sortable case table headers are not keyboard focusable"
+    }
+  ],
+  "pageErrors": []
+}

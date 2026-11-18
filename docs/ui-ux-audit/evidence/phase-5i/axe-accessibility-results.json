@@ -1,0 +1,632 @@
+{
+  "date": "2026-11-18",
+  "tool": "axe-core via @axe-core/playwright",
+  "scope": "#caseModal",
+  "rules": "axe-core default enabled rules",
+  "viewports": [
+    320,
+    1366
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "states": [
+    "initial",
+    "validation-errors",
+    "dynamic-accused",
+    "dynamic-witness",
+    "reset-confirmation-dialog"
+  ],
+  "scans": [
+    {
+      "theme": "light",
+      "state": "initial",
+      "width": 320,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"fir_Status\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "state": "initial",
+      "width": 1366,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"fir_Status\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "state": "validation-errors",
+      "width": 320,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"fir_Status\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "state": "validation-errors",
+      "width": 1366,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"fir_Status\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firno-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firdate-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firyear-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#undersection-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.96 (foreground color: #d9534f, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "state": "dynamic-accused",
+      "width": 320,
+      "violations": [
+        {
+          "id": "aria-allowed-attr",
+          "impact": "critical",
+          "description": "Ensure an element's role supports its ARIA attributes",
+          "help": "Elements must only use supported ARIA attributes",
+          "nodes": [
+            {
+              "target": [
+                "#regprefix"
+              ],
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"fir_Status\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "state": "dynamic-accused",
+      "width": 1366,
+      "violations": [
+        {
+          "id": "aria-allowed-attr",
+          "impact": "critical",
+          "description": "Ensure an element's role supports its ARIA attributes",
+          "help": "Elements must only use supported ARIA attributes",
+          "nodes": [
+            {
+              "target": [
+                "#regprefix"
+              ],
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionHearings\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"caseIoSelect\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#sectionAccused > .section-header > .section-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.34 (foreground color: #287cf3, background color: #e1ecfd, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"accusedArrested1\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.74 (foreground color: #287cf3, background color: #f5f8fe, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"accusedPoStatus1\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.74 (foreground color: #287cf3, background color: #f5f8fe, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "state": "dynamic-witness",
+      "width": 320,
+      "violations": [
+        {
+          "id": "aria-allowed-attr",
+          "impact": "critical",
+          "description": "Ensure an element's role supports its ARIA attributes",
+          "help": "Elements must only use supported ARIA attributes",
+          "nodes": [
+            {
+              "target": [
+                "#regprefix"
+              ],
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionFir\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"fir_Status\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.98 (foreground color: #287cf3, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "state": "dynamic-witness",
+      "width": 1366,
+      "violations": [
+        {
+          "id": "aria-allowed-attr",
+          "impact": "critical",
+          "description": "Ensure an element's role supports its ARIA attributes",
+          "help": "Elements must only use supported ARIA attributes",
+          "nodes": [
+            {
+              "target": [
+                "#regprefix"
+              ],
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"#caseSectionAccused\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #287cf3, background color: #e9f2fe, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"accusedPoStatus1\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.74 (foreground color: #287cf3, background color: #f5f8fe, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".remove-accused-btn"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.74 (foreground color: #287cf3, background color: #f5f8fe, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"accusedArrested2\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.74 (foreground color: #287cf3, background color: #f5f8fe, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"accusedPoStatus2\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.74 (foreground color: #287cf3, background color: #f5f8fe, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#sectionWitness > .section-header > .section-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.34 (foreground color: #287cf3, background color: #e1ecfd, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "state": "reset-confirmation-dialog",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "theme": "light",
+      "state": "reset-confirmation-dialog",
+      "width": 1366,
+      "violations": []
+    },
+    {
+      "theme": "dark",
+      "state": "initial",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "theme": "dark",
+      "state": "initial",
+      "width": 1366,
+      "violations": []
+    },
+    {
+      "theme": "dark",
+      "state": "validation-errors",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "theme": "dark",
+      "state": "validation-errors",
+      "width": 1366,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#firno-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.37 (foreground color: #d9534f, background color: #0c1b2d, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firdate-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.37 (foreground color: #d9534f, background color: #0c1b2d, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#firyear-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.37 (foreground color: #d9534f, background color: #0c1b2d, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#undersection-error"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.37 (foreground color: #d9534f, background color: #0c1b2d, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "state": "dynamic-accused",
+      "width": 320,
+      "violations": [
+        {
+          "id": "aria-allowed-attr",
+          "impact": "critical",
+          "description": "Ensure an element's role supports its ARIA attributes",
+          "help": "Elements must only use supported ARIA attributes",
+          "nodes": [
+            {
+              "target": [
+                "#regprefix"
+              ],
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "state": "dynamic-accused",
+      "width": 1366,
+      "violations": [
+        {
+          "id": "aria-allowed-attr",
+          "impact": "critical",
+          "description": "Ensure an element's role supports its ARIA attributes",
+          "help": "Elements must only use supported ARIA attributes",
+          "nodes": [
+            {
+              "target": [
+                "#regprefix"
+              ],
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#sectionAccused > .section-header > .section-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.62 (foreground color: #287cf3, background color: #102a4b, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".accused-card:nth-child(1) > .accused-number > span"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.15 (foreground color: #287cf3, background color: #101f34, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"accusedArrested1\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.15 (foreground color: #287cf3, background color: #101f34, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"accusedPoStatus1\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.15 (foreground color: #287cf3, background color: #101f34, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "state": "dynamic-witness",
+      "width": 320,
+      "violations": [
+        {
+          "id": "aria-allowed-attr",
+          "impact": "critical",
+          "description": "Ensure an element's role supports its ARIA attributes",
+          "help": "Elements must only use supported ARIA attributes",
+          "nodes": [
+            {
+              "target": [
+                "#regprefix"
+              ],
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "state": "dynamic-witness",
+      "width": 1366,
+      "violations": [
+        {
+          "id": "aria-allowed-attr",
+          "impact": "critical",
+          "description": "Ensure an element's role supports its ARIA attributes",
+          "help": "Elements must only use supported ARIA attributes",
+          "nodes": [
+            {
+              "target": [
+                "#regprefix"
+              ],
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "label[for=\"accusedPoStatus1\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.15 (foreground color: #287cf3, background color: #101f34, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".accused-card:nth-child(2) > .accused-number > span"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.15 (foreground color: #287cf3, background color: #101f34, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".remove-accused-btn"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.15 (foreground color: #287cf3, background color: #101f34, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"accusedArrested2\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.15 (foreground color: #287cf3, background color: #101f34, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "label[for=\"accusedPoStatus2\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.15 (foreground color: #287cf3, background color: #101f34, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#sectionWitness > .section-header > .section-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.62 (foreground color: #287cf3, background color: #102a4b, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "state": "reset-confirmation-dialog",
+      "width": 320,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#confirmCaseResetButton"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.09 (foreground color: #e05264, background color: #252234, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "state": "reset-confirmation-dialog",
+      "width": 1366,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "#confirmCaseResetButton"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.09 (foreground color: #e05264, background color: #252234, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -234,6 +234,138 @@ select {
 #caseModal .modal-body {
     display: flex;
     flex-direction: column;
+    scroll-padding-top: 76px;
+}
+
+#caseModal .case-section-nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    flex: 0 0 auto;
+    min-width: 0;
+    max-width: 100%;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+    overflow: visible;
+    margin: -22px -16px 18px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+}
+
+#caseModal .case-section-nav a {
+    display: inline-flex;
+    min-height: 38px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+#caseModal .case-section-nav a:hover,
+#caseModal .case-section-nav a[aria-current="location"] {
+    border-color: var(--brand-primary);
+    color: var(--brand-primary);
+    background: color-mix(in srgb, var(--brand-primary) 10%, var(--surface));
+}
+
+#caseModal .case-section-nav a:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+}
+
+#caseModal .modal-body h2[id^="caseSection"] {
+    scroll-margin-top: var(--case-section-scroll-offset, 76px);
+}
+
+#caseModal .modal-body h2[id^="caseSection"]:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 4px;
+    border-radius: 2px;
+}
+
+#caseModal .case-section-nav a[hidden] {
+    display: none;
+}
+
+#caseModal #sectionCourtStatus > .section-header {
+    margin-bottom: 18px;
+}
+
+#caseModal .case-reset-confirm-dialog {
+    box-sizing: border-box;
+    width: min(420px, calc(100vw - 32px));
+    max-width: none;
+    max-height: calc(100vh - 32px);
+    margin: auto;
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+    background: var(--surface);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+#caseModal .case-reset-confirm-dialog::backdrop {
+    background: rgba(3, 10, 20, 0.62);
+    backdrop-filter: blur(2px);
+}
+
+#caseModal .case-reset-confirm-dialog h2 {
+    margin: 0 0 8px;
+    color: var(--text-primary);
+    font-size: 18px;
+}
+
+#caseModal .case-reset-confirm-dialog p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+#caseModal .case-reset-confirm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 22px;
+}
+
+#caseModal .case-reset-confirm-actions .btn {
+    min-width: 120px;
+    min-height: 44px;
+}
+
+#caseModal .case-reset-confirm-destructive {
+    border-color: var(--state-error);
+    color: var(--state-error);
+    background: color-mix(in srgb, var(--state-error) 12%, var(--surface));
+}
+
+#caseModal .case-reset-confirm-destructive:hover {
+    border-color: var(--state-error);
+    color: var(--text-primary);
+    background: color-mix(in srgb, var(--state-error) 22%, var(--surface));
+}
+
+@media (max-width: 420px) {
+    #caseModal .case-reset-confirm-dialog {
+        padding: 18px;
+    }
+
+    #caseModal .case-reset-confirm-actions .btn {
+        flex: 1 1 100%;
+    }
 }
 
 #caseModal .modal-body > .case-topbar,
@@ -270,6 +402,15 @@ select {
 }
 
 @media (max-width: 600px) {
+    #caseModal .case-section-nav {
+        margin-top: -22px;
+    }
+
+    #caseModal .case-section-nav a {
+        min-height: 42px;
+        padding-inline: 11px;
+    }
+
     #caseModal .modal-header {
         grid-template-columns: minmax(0, 1fr) auto;
     }
@@ -1483,7 +1624,10 @@ option {
 ========================================================= */
 
 .accused-card {
+    position: relative;
     margin: 22px;
+    padding: 0;
+    min-inline-size: 0;
 
     background: var(--surface-2);
 
@@ -1497,6 +1641,22 @@ option {
 
 .accused-card .form-grid {
     padding: 18px;
+}
+
+#caseModal .accused-card > legend.accused-number {
+    display: flex;
+    max-width: 100%;
+}
+
+#caseModal .accused-card > legend.accused-number:has(+ .accused-card-actions .remove-accused-btn) {
+    padding-right: 110px;
+}
+
+#caseModal .accused-card-actions {
+    position: absolute;
+    z-index: 1;
+    top: 1px;
+    right: 0;
 }
 
 
@@ -1667,81 +1827,94 @@ option {
 }
 
 
-/* =========================================================
-   WITNESS TABLE
-========================================================= */
-
-.table-container {
-    padding: 22px;
-    padding-bottom: 0;
-    overflow-x: auto;
+#caseModal .witness-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+    gap: 14px;
+    min-width: 0;
+    padding: 20px 22px 0;
 }
 
-.witness-table {
+#caseModal .witness-card {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-raised);
+    color: var(--text-primary);
+}
+
+#caseModal .witness-card legend {
+    max-width: 100%;
+    padding: 0 6px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#caseModal .witness-card-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 12px;
+    min-width: 0;
+}
+
+#caseModal .witness-card .witness-field,
+#caseModal .witness-card .witness-examined-field,
+#caseModal .witness-card .witness-action {
+    min-width: 0;
+}
+
+#caseModal .witness-card .witness-field > label {
+    max-width: calc(100% - 20px);
+    overflow-wrap: anywhere;
+    background: var(--surface-raised);
+}
+
+#caseModal .witness-card .witness-field > :is(input, select) {
+    box-sizing: border-box;
     width: 100%;
-    border-collapse: collapse;
-    min-width: 650px;
+    min-width: 0;
+    min-height: 42px;
+    font-size: 14px;
 }
 
-.witness-table th {
-    text-align: left;
-    font-size: 12px;
-    color: var(--muted);
-    font-weight: 600;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
+#caseModal .witness-examined-field {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 42px;
+    padding: 0 4px;
 }
 
-.witness-table td {
-    padding: 12px 10px 12px 0;
-    border-bottom: 1px solid rgba(36, 50, 71, 0.4);
-    color: var(--text);
-    font-size: 13px;
-}
-
-.witness-table th:last-child,
-.witness-table td:last-child {
-    padding-right: 0;
-}
-
-.witness-table .text-center {
-    text-align: center;
-}
-
-.witness-table input[type="text"],
-.witness-table input[type="date"],
-.witness-table select {
-    height: 38px;
-    font-size: 12px;
-}
-
-.witness-table input[type="checkbox"] {
+#caseModal .witness-examined-field input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
+    flex: 0 0 20px;
     width: 20px;
     height: 20px;
-    background: var(--bg);
+    margin: 0;
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 4px;
     cursor: pointer;
     position: relative;
     outline: none;
     transition: all 0.2s;
-    margin: 0;
-    display: inline-block;
-    vertical-align: middle;
 }
 
-.witness-table input[type="checkbox"]:hover {
+#caseModal .witness-examined-field input[type="checkbox"]:hover {
     border-color: var(--primary);
 }
 
-.witness-table input[type="checkbox"]:checked {
+#caseModal .witness-examined-field input[type="checkbox"]:checked {
     background: var(--primary);
     border-color: var(--primary);
 }
 
-.witness-table input[type="checkbox"]:checked::after {
+#caseModal .witness-examined-field input[type="checkbox"]:checked::after {
     content: "";
     position: absolute;
     left: 6px;
@@ -1751,6 +1924,46 @@ option {
     border: solid white;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
+}
+
+#caseModal .witness-examined-field label {
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+
+#caseModal .witness-action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 42px;
+}
+
+#caseModal .witness-card .remove-witness-btn {
+    width: auto;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#caseModal .witness-card .field-validation-message {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+    #caseModal .witness-cards {
+        grid-template-columns: minmax(0, 1fr);
+        padding-inline: 14px;
+    }
+
+    #caseModal .witness-card-fields {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }
 
 .summary-grid {
@@ -1959,18 +2172,48 @@ option {
         min-height: auto;
         max-height: none;
         overflow: visible;
+        padding-bottom: calc(22px + 32px + env(safe-area-inset-bottom));
     }
 
     #caseModal #caseForm > .modal-footer {
         flex: 0 0 auto;
         flex-wrap: wrap;
         gap: 8px;
-        padding: 10px 12px;
-        position: static;
+        position: sticky;
+        bottom: 0;
+        z-index: 25;
+        padding: 10px 12px max(10px, env(safe-area-inset-bottom));
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        box-shadow: 0 -8px 18px rgba(5, 14, 27, 0.18);
+    }
+
+    #caseModal #caseForm {
+        scroll-padding-top: var(--case-section-scroll-offset, 76px);
+        scroll-padding-bottom: calc(132px + env(safe-area-inset-bottom));
     }
 
     #caseModal .modal-footer .btn {
         min-height: 44px;
+        min-width: 0;
+        flex: 1 1 calc(50% - 8px);
+    }
+
+    #caseModal .modal-footer #deleteFirMaster {
+        flex-basis: 100%;
+    }
+
+    #caseModal .modal-footer #cancelModal {
+        order: 1;
+    }
+
+    #caseModal .modal-footer button[type="reset"] {
+        order: 0;
+    }
+
+    #caseModal .modal-footer button[type="submit"] {
+        order: 2;
+        flex-basis: 100%;
     }
 }
 
@@ -1978,6 +2221,34 @@ option {
     content: " *";
     color: #dc2626;
     font-weight: 700;
+}
+
+#caseModal .field-validation-message {
+    display: block;
+    margin-top: 6px;
+    color: var(--danger, #d9534f);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+#caseModal .required-indicator {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 1px 5px;
+    border-radius: 999px;
+    color: #fee2e2;
+    background: #7f1d1d;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.35;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+body.light-theme #caseModal .required-indicator {
+    color: #991b1b;
+    background: #fee2e2;
 }
 
 #caseModal .validation-error > input:not([type="checkbox"]):not([type="hidden"]),
@@ -2053,7 +2324,7 @@ body.light-theme #caseModal .modal-footer .btn:not(.primary):hover {
     margin-left: 5px;
 }
 
-.accused-number .remove-accused-btn {
+.accused-card-actions .remove-accused-btn {
     margin-left: auto;
     padding: 7px 14px;
     border: 1px solid var(--primary);
@@ -2066,7 +2337,7 @@ body.light-theme #caseModal .modal-footer .btn:not(.primary):hover {
     white-space: nowrap;
 }
 
-.accused-number .remove-accused-btn:hover {
+.accused-card-actions .remove-accused-btn:hover {
     background: var(--primary);
     color: #fff;
 }
@@ -2308,32 +2579,6 @@ body.light-theme #caseModal .toggle-card strong {
 
 body.light-theme #caseModal .toggle-card span:not(.slider) {
     color: #5f7187;
-}
-
-/* Witness table */
-body.light-theme #caseModal .witness-table th {
-    color: #5f7187;
-    border-color: #dce8f8;
-}
-
-body.light-theme #caseModal .witness-table td {
-    color: #13253d;
-    border-color: #edf2fb;
-}
-
-/* Witness checkboxes */
-body.light-theme #caseModal .witness-table input[type="checkbox"] {
-    background: #ffffff;
-    border-color: #c9d8ef;
-}
-
-body.light-theme #caseModal .witness-table input[type="checkbox"]:hover {
-    border-color: #287cf3;
-}
-
-body.light-theme #caseModal .witness-table input[type="checkbox"]:checked {
-    background: #287cf3;
-    border-color: #287cf3;
 }
 
 /* Witness summary grid border */
