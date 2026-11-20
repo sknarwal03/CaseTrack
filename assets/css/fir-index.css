@@ -18,6 +18,17 @@
 .fir-index-hero h1 .fir-index-hero-year { min-width:0; height:auto; padding:0; border:0; color:#55d1aa; background:transparent; font:inherit; letter-spacing:inherit; vertical-align:baseline; cursor:pointer; }
 .fir-index-hero h1 .fir-index-hero-year:hover { color:#8ce6c9; }
 .fir-index-hero h1 .fir-index-hero-year:focus-visible { outline:2px solid var(--brand-primary); outline-offset:3px; border-radius:3px; }
+body.light-theme .fir-index-hero { border-color:var(--border-color); background:radial-gradient(ellipse at 82% 2%,color-mix(in srgb,var(--brand-primary) 8%,transparent),transparent 38%),linear-gradient(125deg,var(--surface),var(--surface-raised) 72%,color-mix(in srgb,var(--state-success) 4%,var(--surface))); }
+body.light-theme .fir-index-hero::after { background:repeating-linear-gradient(135deg,transparent 0 18px,rgba(40,124,243,.025) 18px 19px); }
+body.light-theme .fir-index-kicker { color:var(--brand-primary-hover); }
+body.light-theme .fir-index-hero h1 em,
+body.light-theme .fir-index-hero h1 .fir-index-hero-year { color:var(--state-success); }
+body.light-theme .fir-index-kicker i,
+body.light-theme .fir-index-motif i { background:var(--state-success); }
+body.light-theme .fir-index-motif { border-color:color-mix(in srgb,var(--state-success) 28%,var(--border-color)); color:var(--state-success); background:radial-gradient(circle,color-mix(in srgb,var(--state-success) 9%,var(--surface)),var(--surface) 72%); }
+body.light-theme .fir-index-motif::before,
+body.light-theme .fir-index-motif::after { border-color:color-mix(in srgb,var(--state-success) 22%,transparent); }
+body.light-theme .fir-index-motif-mark { stroke:var(--state-success); }
 .fir-index-hero p { margin:0; color:var(--text-secondary); font-size:12px; }
 .fir-index-back { display:inline-flex; min-height:37px; flex:0 0 auto; align-items:center; padding:0 12px; border:1px solid var(--border-color); border-radius:8px; color:var(--text-secondary); background:var(--surface); font-size:11px; font-weight:650; text-decoration:none; white-space:nowrap; }
 .fir-index-back:hover { border-color:rgba(85,209,170,.42); color:#8ce6c9; }

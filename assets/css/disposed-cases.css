@@ -90,6 +90,16 @@
 .archive-orbit i:nth-of-type(2) { bottom: 8px; left: 38px; }
 .archive-orbit i:nth-of-type(3) { top: 45px; left: 5px; }
 .hero-copy, .hero-actions { position: relative; z-index: 1; }
+body.light-theme .archive-hero { border-color:var(--border-color); background:radial-gradient(ellipse at 82% 2%,color-mix(in srgb,var(--brand-primary) 7%,transparent),transparent 38%),linear-gradient(125deg,var(--surface),var(--surface-raised) 72%,color-mix(in srgb,var(--state-success) 4%,var(--surface))); }
+body.light-theme .archive-hero::after { background:repeating-linear-gradient(135deg,transparent 0 18px,rgba(40,124,243,.025) 18px 19px); }
+body.light-theme .hero-eyebrow { color:var(--brand-primary-hover); }
+body.light-theme .hero-copy h1 em { color:var(--state-success); }
+body.light-theme .archive-orbit { border-color:color-mix(in srgb,var(--state-success) 28%,var(--border-color)); color:var(--state-success); background:radial-gradient(circle,color-mix(in srgb,var(--state-success) 9%,var(--surface)),var(--surface) 72%); }
+body.light-theme .archive-orbit::before,
+body.light-theme .archive-orbit::after { border-color:color-mix(in srgb,var(--state-success) 22%,transparent); }
+body.light-theme .archive-orbit i { background:var(--state-success); }
+body.light-theme .hero-actions .period-buttons .month-picker-trigger,
+body.light-theme .hero-actions .period-buttons .register-year { color:var(--text-primary); }
 .hero-actions { position: absolute; right: 24px; bottom: 6px; margin-right: 0; }
 .period-control { padding: 0; border: 0; border-radius: 0; background: transparent; }
 .control-label { padding-left: 2px; }

@@ -1,0 +1,30 @@
+{
+  "captures": 96,
+  "pages": 6,
+  "themes": 2,
+  "widths": [
+    360,
+    390,
+    430,
+    768,
+    1024,
+    1280,
+    1440,
+    1920
+  ],
+  "noHorizontalOverflow": true,
+  "darkThemeGradientsPreserved": true,
+  "lightThemeNavyStopsRemoved": true,
+  "contrastRatiosAgainstLightSurfaceStops": {
+    "primaryTextVsWorstStop": 14.5,
+    "secondaryTextVsWorstStop": 4.88,
+    "smallAccentBlueVsWorstStop": 4.98,
+    "largeAccentGreenVsWorstStop": 4.43,
+    "focusRingBlueVsWorstStop": 3.78
+  },
+  "focusCheck": {
+    "width": "2px",
+    "style": "solid",
+    "color": "rgb(40, 124, 243)"
+  }
+}

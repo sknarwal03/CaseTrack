@@ -7,6 +7,21 @@
 .fir-register-hero h1 { margin: 9px 0 5px; color: var(--text-primary); font-size: clamp(36px,4.3vw,52px); line-height: 1; letter-spacing: -.055em; }
 .fir-register-hero h1 em { color: #55d1aa; font-style: normal; }
 .fir-register-hero p { margin: 0; color: #a3b9d4; font-size: 13px; }
+body.light-theme .fir-register-hero {
+    border-color: var(--border-color);
+    background: radial-gradient(ellipse at 88% 8%, color-mix(in srgb, var(--brand-primary) 8%, transparent), transparent 31%), linear-gradient(118deg, var(--surface), var(--surface-raised) 72%, color-mix(in srgb, var(--state-success) 4%, var(--surface)));
+}
+body.light-theme .fir-register-hero::after { background: repeating-linear-gradient(135deg, transparent 0 26px, rgba(40,124,243,.025) 26px 27px); }
+body.light-theme .fir-register-kicker { color: var(--brand-primary-hover); }
+body.light-theme .fir-register-hero h1 em { color: var(--state-success); }
+body.light-theme .fir-register-kicker i { background: var(--state-success); }
+body.light-theme .fir-register-hero p { color: var(--text-secondary); }
+body.light-theme .fir-register-seal { border-color: color-mix(in srgb, var(--state-success) 28%, var(--border-color)); color: var(--state-success); background: radial-gradient(circle, color-mix(in srgb, var(--state-success) 9%, var(--surface)), var(--surface) 72%); }
+body.light-theme .fir-register-seal::before,
+body.light-theme .fir-register-seal::after { border-color: color-mix(in srgb, var(--state-success) 22%, transparent); }
+@media (max-width: 560px) {
+    body.light-theme .fir-register-hero-copy { padding-right: 76px; }
+}
 .fir-register-controls { display: grid; gap: 8px; min-width: 142px; margin-right: 124px; }
 .fir-register-controls label,.fir-index-heading span,.fir-record-section-title span { color: #92a8c4; font-size: 9px; font-weight: 750; letter-spacing: .14em; }
 .fir-register-year-source { display: none; }
