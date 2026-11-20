@@ -1,0 +1,255 @@
+/* Shared page-level hero geometry. Load after each page's own stylesheet. */
+:root {
+    --page-hero-height-desktop: 136px;
+    --page-hero-height-tablet: 120px;
+    --page-hero-height-mobile: 128px;
+    --page-hero-radius: 16px;
+}
+
+.welcome,
+.report-header,
+.settings-header,
+.cases-hero,
+.fir-register-hero,
+.fir-index-hero,
+.po-hero,
+.archive-hero,
+.judges-header {
+    box-sizing: border-box;
+    min-height: var(--page-hero-height-desktop);
+}
+
+.cases-hero,
+.fir-register-hero,
+.fir-index-hero,
+.po-hero,
+.archive-hero {
+    align-items: center;
+    border-radius: var(--page-hero-radius);
+    padding-block: 16px;
+}
+
+.po-hero-mark {
+    width: 96px;
+    height: 96px;
+    flex-basis: 96px;
+}
+
+.cases-hero h1,
+.fir-register-hero h1,
+.fir-index-hero h1,
+.po-hero h1,
+.archive-hero h1 {
+    font-size: clamp(30px, 2.5vw, 34px);
+    line-height: 1.08;
+}
+
+.cases-hero p,
+.fir-register-hero p,
+.fir-index-hero p,
+.po-hero p,
+.archive-hero .hero-copy p {
+    max-width: 48ch;
+    margin-top: 5px;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.welcome {
+    padding-block: 16px;
+}
+
+.welcome h1,
+.judges-header h1 {
+    font-size: 30px;
+    line-height: 1.1;
+}
+
+.welcome > div > p:not(.eyebrow) {
+    max-width: 52ch;
+    margin-block: 5px 0;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.report-header,
+.settings-header {
+    align-items: center;
+}
+
+.judges-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: 18px;
+}
+
+.judges-book .judges-header {
+    min-height: var(--page-hero-height-desktop);
+}
+
+.judges-header p:not(.judges-kicker) {
+    margin-top: 5px;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+    .welcome,
+    .report-header,
+    .settings-header,
+    .cases-hero,
+    .fir-register-hero,
+    .fir-index-hero,
+    .po-hero,
+    .archive-hero,
+    .judges-header {
+        min-height: var(--page-hero-height-tablet);
+    }
+
+    .cases-hero,
+    .fir-register-hero,
+    .fir-index-hero,
+    .po-hero,
+    .archive-hero {
+    padding-block: 16px;
+    }
+
+    .cases-hero h1,
+    .fir-register-hero h1,
+    .fir-index-hero h1,
+    .po-hero h1,
+    .archive-hero h1,
+    .welcome h1,
+    .judges-header h1 {
+        font-size: 28px;
+        line-height: 1.1;
+    }
+
+    .judges-book .judges-header {
+        min-height: var(--page-hero-height-tablet);
+    }
+
+    .po-hero-mark {
+        width: 80px;
+        height: 80px;
+        flex-basis: 80px;
+    }
+}
+
+@media (max-width: 600px) {
+    .welcome,
+    .report-header,
+    .settings-header,
+    .cases-hero,
+    .fir-register-hero,
+    .fir-index-hero,
+    .po-hero,
+    .archive-hero,
+    .judges-header {
+        min-height: var(--page-hero-height-mobile);
+    }
+
+    .welcome {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 8px 12px;
+        padding: 14px 0;
+    }
+
+    .welcome > div:first-child {
+        min-width: 0;
+    }
+
+    .welcome h1,
+    .cases-hero h1,
+    .fir-register-hero h1,
+    .fir-index-hero h1,
+    .po-hero h1,
+    .archive-hero h1,
+    .judges-header h1 {
+        font-size: 25px;
+        line-height: 1.08;
+    }
+
+    .judges-book .judges-header {
+        min-height: var(--page-hero-height-mobile);
+    }
+
+    .welcome > div > p:not(.eyebrow),
+    .cases-hero p,
+    .fir-register-hero p,
+    .fir-index-hero p,
+    .po-hero p,
+    .archive-hero .hero-copy p,
+    .judges-header p:not(.judges-kicker) {
+        margin-top: 4px;
+        font-size: 12px;
+        line-height: 1.3;
+    }
+
+    .welcome .new-case {
+        width: auto;
+        min-height: 44px;
+        padding: 9px 12px;
+        white-space: nowrap;
+    }
+
+    .fir-register-hero .fir-register-hero-year,
+    .fir-index-hero .fir-index-hero-year {
+        display: inline-flex;
+        min-width: 44px;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+    }
+
+    .archive-hero .print-register {
+        width: 44px;
+        height: 44px;
+        min-height: 44px;
+    }
+
+    .cases-hero,
+    .fir-register-hero,
+    .fir-index-hero,
+    .po-hero,
+    .archive-hero {
+        padding-block: 8px;
+    }
+
+    .archive-hero .hero-copy {
+        padding-right: 70px;
+    }
+
+    .po-hero-mark {
+        width: 60px;
+        height: 60px;
+        flex-basis: 60px;
+    }
+
+    .judges-header {
+        padding-block: 14px;
+    }
+}
+
+@media (max-width: 359px) {
+    .cases-hero h1,
+    .fir-register-hero h1,
+    .fir-index-hero h1,
+    .po-hero h1,
+    .archive-hero h1 {
+        font-size: 23px;
+    }
+
+    .welcome h1,
+    .judges-header h1 {
+        font-size: 23px;
+    }
+
+    .statusmap-hero h1 {
+        font-size: 20px;
+    }
+}
