@@ -328,8 +328,9 @@ function renderCaseTrends(proceedings = []) {
     pendingSeries?.setAttribute('points', makePoints(currentMonthPending));
     area?.setAttribute('d', `M${newPoints.replaceAll(' ', ' L')} L${right},${bottom} L${left},${bottom} Z`);
 
+    const brandColor = getComputedStyle(document.body).getPropertyValue('--brand-primary').trim();
     const seriesData = [
-        { values: openings, label: 'new cases', color: '#3b8dff' },
+        { values: openings, label: 'new cases', color: brandColor || '#55d1aa' },
         { values: closures, label: 'closed cases', color: '#19d49b' },
         { values: currentMonthPending, label: 'pending cases', color: '#935cf6' }
     ];

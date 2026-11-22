@@ -34,7 +34,7 @@ body.light-theme .admin-users-table td:first-child {
 }
 
 .admin-users-table-wrap:focus-visible {
-    outline: 2px solid var(--brand-primary, #8f83ff);
+    outline: 2px solid var(--brand-primary, #55d1aa);
     outline-offset: 2px;
 }
 

@@ -193,7 +193,7 @@ body.light-theme .diary-book {
     cursor: pointer;
 }
 .diary-header-actions-toggle:hover { filter: brightness(1.06); }
-.diary-header-actions-toggle:focus-visible { outline: 3px solid #aab4ed; outline-offset: 3px; }
+.diary-header-actions-toggle:focus-visible { outline: 3px solid var(--brand-secondary); outline-offset: 3px; }
 .diary-header-actions-menu {
     position: absolute;
     top: 50%;
@@ -268,7 +268,7 @@ body.light-theme .diary-book {
 .diary-action-disposed .diary-action-icon { background: linear-gradient(145deg, #ca7477, #98444b); }
 .diary-action-share .diary-action-icon { background: linear-gradient(145deg, #7a83b6, #4b527f); }
 .diary-header-actions-menu .diary-action:hover .diary-action-icon { filter: brightness(.9); }
-.diary-header-actions-menu .diary-action:focus-visible { outline: 3px solid #aab4ed; outline-offset: 3px; border-radius: 50%; }
+.diary-header-actions-menu .diary-action:focus-visible { outline: 3px solid var(--brand-secondary); outline-offset: 3px; border-radius: 50%; }
 
 
 
@@ -1045,7 +1045,7 @@ body.light-theme .diary-date-form-actions button + button:hover { background: #5
     border: 0;
     border-radius: 4px;
     background: transparent;
-    color: #b8d1f4;
+    color: var(--brand-primary);
     text-align: left;
     font: inherit;
     overflow-wrap: anywhere;
@@ -1058,8 +1058,8 @@ body.light-theme .diary-date-form-actions button + button:hover { background: #5
 .diary-saved-date-status .diary-disc-status,
 .diary-saved-date-status .diary-return-status { pointer-events: none; }
 .diary-saved-date-actions { display: flex; flex: 0 0 auto; gap: 6px; }
-.diary-date-edit { min-height: 32px; background: #53608f; }
-.diary-date-edit:hover { background: #3d4570; }
+.diary-date-edit { min-height: 32px; background: var(--brand-primary); }
+.diary-date-edit:hover { background: var(--brand-primary-hover); }
 .diary-date-delete { flex: 0 0 auto; min-height: 32px; background: #93404a; }
 .diary-date-delete:hover { background: #7c3039; }
 .diary-saved-dates-empty { margin: 0; color: #9cb1d0; font: 13px Arial, sans-serif; }
@@ -1073,8 +1073,8 @@ body.light-theme .diary-date-form-actions button + button:hover { background: #5
 }
 
 body.light-theme .diary-saved-date { border-color: #d0d0ca; }
-body.light-theme .diary-saved-date-link { color: #2d355f; }
-body.light-theme .diary-saved-date-link:hover { color: #3d4570; }
+body.light-theme .diary-saved-date-link { color: var(--brand-primary); }
+body.light-theme .diary-saved-date-link:hover { color: var(--brand-primary-hover); }
 body.light-theme .diary-saved-dates-empty { color: #666; }
 body.light-theme .diary-dialog-status { color: #93404a; }
 

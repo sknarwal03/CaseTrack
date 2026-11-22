@@ -213,15 +213,15 @@ body.light-theme .notification-date-form-actions button + button:hover { backgro
     border: 0;
     border-radius: 4px;
     background: transparent;
-    color: #b8d1f4;
+    color: var(--brand-primary);
     text-align: left;
     font: inherit;
     overflow-wrap: anywhere;
 }
 
 .notification-date-actions { display: flex; flex: 0 0 auto; gap: 6px; }
-.notification-date-actions .notification-date-edit { min-height: 32px; background: #53608f; }
-.notification-date-actions .notification-date-edit:hover { background: #3d4570; }
+.notification-date-actions .notification-date-edit { min-height: 32px; background: var(--brand-primary); }
+.notification-date-actions .notification-date-edit:hover { background: var(--brand-primary-hover); }
 .notification-date-actions .notification-date-delete { min-height: 32px; background: #93404a; }
 .notification-date-actions .notification-date-delete:hover { background: #7c3039; }
 .notification-date-empty { margin: 0; color: #9cb1d0; font: 13px Arial, sans-serif; }

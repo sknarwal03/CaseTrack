@@ -85,12 +85,13 @@
 
 .btn-primary {
     background: var(--primary);
-    color: white;
+    color: #08251d;
     border-color: var(--primary);
 }
 
 .btn-primary:hover {
     background: var(--primary-hover);
+    color: #08251d;
 }
 
 .btn-secondary {
@@ -484,14 +485,14 @@ select {
 
 #caseModal .case-record-menu-trigger {
     border: 1px solid var(--primary);
-    background: rgba(40, 124, 243, 0.12);
+    background: rgba(19, 132, 95, 0.12);
     color: var(--primary);
     white-space: nowrap;
 }
 
 #caseModal .case-record-menu-trigger:hover,
 #caseModal .case-record-menu-trigger[aria-expanded="true"] {
-    background: rgba(40, 124, 243, 0.2);
+    background: rgba(19, 132, 95, 0.2);
 }
 
 .police-report-menu {
@@ -596,10 +597,10 @@ select {
 }
 
 .case-record-commit {
-    border: 1px solid rgba(40, 124, 243, 0.5);
+    border: 1px solid rgba(19, 132, 95, 0.5);
     border-radius: 8px;
     padding: 9px 12px;
-    background: rgba(40, 124, 243, 0.12);
+    background: rgba(19, 132, 95, 0.12);
     color: var(--primary);
     cursor: pointer;
 }
@@ -666,9 +667,9 @@ select {
     display: grid;
     place-items: center;
 
-    border: 1px solid rgba(40, 124, 243, 0.4);
+    border: 1px solid rgba(19, 132, 95, 0.4);
 
-    background: rgba(40, 124, 243, 0.15);
+    background: rgba(19, 132, 95, 0.15);
 
     color: var(--primary);
 
@@ -904,18 +905,18 @@ select {
     border-color: var(--primary);
     background: var(--surface-2);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.10);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 10%, transparent);
 }
 
 body.light-theme #caseModal .io-manage-trigger {
     border-color: #c9d8ef;
     background: #ffffff;
-    color: #287cf3;
+    color: var(--brand-primary);
 }
 
 body.light-theme #caseModal .io-manage-trigger:hover,
 body.light-theme #caseModal .io-manage-trigger:focus-visible {
-    border-color: #287cf3;
+    border-color: var(--brand-primary);
     background: #edf4ff;
 }
 
@@ -1140,7 +1141,7 @@ textarea:focus {
     background: var(--bg);
 
     box-shadow:
-        0 0 0 3px rgba(59, 130, 246, 0.10);
+        0 0 0 3px color-mix(in srgb, var(--brand-primary) 10%, transparent);
 }
 
 .searchable-select {
@@ -1157,7 +1158,7 @@ textarea:focus {
 
 .searchable-select:focus-within input {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.10);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 10%, transparent);
     position: relative;
     z-index: 1;
 }
@@ -1277,7 +1278,7 @@ textarea:focus {
 
 .under-section-option mark {
     border-radius: 2px;
-    background: rgba(59, 130, 246, 0.28);
+    background: color-mix(in srgb, var(--brand-primary) 28%, transparent);
     color: inherit;
     font-weight: 700;
 }
@@ -1314,7 +1315,7 @@ textarea:focus {
 
 #caseModal .date-stage-control:focus-within {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 10%, transparent);
 }
 
 #caseModal .date-stage-control input,
@@ -1354,8 +1355,8 @@ body.light-theme #caseModal .date-stage-control {
 }
 
 body.light-theme #caseModal .date-stage-control:focus-within {
-    border-color: #287cf3;
-    box-shadow: 0 0 0 3px rgba(40, 124, 243, 0.1);
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(19, 132, 95, 0.1);
 }
 
 body.light-theme #caseModal .date-stage-control input,
@@ -1475,7 +1476,7 @@ body.light-theme .searchable-select-toggle {
 
 body.light-theme .searchable-select-toggle:hover,
 body.light-theme .searchable-select:focus-within .searchable-select-toggle {
-    border-color: #287cf3;
+    border-color: var(--brand-primary);
     color: #13253d;
 }
 
@@ -1496,7 +1497,7 @@ body.light-theme .searchable-select-option:focus {
 
 body.light-theme .searchable-select-option.add-master-option {
     border-color: #dce8f8;
-    color: #287cf3;
+    color: var(--brand-primary);
 }
 
 body.light-theme .searchable-select-empty {
@@ -1577,7 +1578,7 @@ body.light-theme .under-section-empty {
 .registration-input:focus-within {
     border-color: var(--primary);
     background: var(--bg);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.10);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 10%, transparent);
 }
 
 .registration-input span {
@@ -1690,7 +1691,7 @@ option {
     background: transparent;
     display: block;
     border: 1px dashed #385071;
-    color: #7db3ff;
+    color: var(--brand-primary);
 
     border-radius: 8px;
 
@@ -1702,7 +1703,7 @@ option {
 }
 
 .add-more:hover {
-    background: rgba(59, 130, 246, 0.07);
+    background: color-mix(in srgb, var(--brand-primary) 7%, transparent);
 
     border-color: var(--primary);
 }
@@ -2287,13 +2288,13 @@ body.light-theme #caseModal .required-indicator {
 ========================================================= */
 
 body.light-theme #caseModal .add-more {
-    border: 1px dashed #93c5fd;
-    color: #2563eb;
+    border: 1px dashed color-mix(in srgb,var(--brand-primary) 48%,#fff);
+    color: var(--brand-primary);
 }
 
 body.light-theme #caseModal .add-more:hover {
-    background: #eff6ff;
-    border-color: #3b82f6;
+    background: color-mix(in srgb,var(--brand-primary) 8%,#fff);
+    border-color: var(--brand-primary);
 }
 
 body.light-theme #caseModal .modal-footer .btn:not(.primary) {
@@ -2482,12 +2483,12 @@ body.light-theme #caseModal .input-group label {
 
 body.light-theme #caseModal .permanent-label-group > label {
     background: #ffffff;
-    color: #287cf3;
+    color: var(--brand-primary);
 }
 
 body.light-theme #caseModal .toggle-label-group > label {
     background: #f5f8fe;
-    color: #287cf3;
+    color: var(--brand-primary);
 }
 
 /* Accused card */
@@ -2526,13 +2527,13 @@ body.light-theme #caseModal textarea:focus,
 body.light-theme #caseModal .field input:focus,
 body.light-theme #caseModal .field select:focus,
 body.light-theme #caseModal .field textarea:focus {
-    border-color: #287cf3;
-    box-shadow: 0 0 0 3px rgba(40, 124, 243, 0.1);
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(19, 132, 95, 0.1);
 }
 
 body.light-theme #caseModal input::placeholder,
 body.light-theme #caseModal textarea::placeholder {
-    color: #8dafc8;
+    color: var(--text-muted);
 }
 
 /* Disabled inputs */
@@ -2541,7 +2542,7 @@ body.light-theme #caseModal select:disabled,
 body.light-theme #caseModal textarea:disabled {
     background: #f0f4fa;
     border-color: #dce8f8;
-    color: #8dafc8;
+    color: var(--text-muted);
     cursor: not-allowed;
 }
 
@@ -2552,8 +2553,8 @@ body.light-theme #caseModal .registration-input {
 }
 
 body.light-theme #caseModal .registration-input:focus-within {
-    border-color: #287cf3;
-    box-shadow: 0 0 0 3px rgba(40, 124, 243, 0.1);
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(19, 132, 95, 0.1);
 }
 
 body.light-theme #caseModal .registration-input span {
@@ -2581,7 +2582,7 @@ body.light-theme #caseModal .slider::before {
 
 /* Slider / switch — checked */
 body.light-theme #caseModal .switch input:checked + .slider {
-    background: #287cf3;
+    background: var(--brand-primary);
 }
 body.light-theme #caseModal .switch input:checked + .slider::before {
     background: #ffffff;
@@ -2619,9 +2620,9 @@ body.light-theme #caseModal .modal-body::-webkit-scrollbar-thumb:hover {
 
 /* Section icon */
 body.light-theme #caseModal .section-icon {
-    background: rgba(40, 124, 243, 0.1);
-    border-color: rgba(40, 124, 243, 0.25);
-    color: #287cf3;
+    background: rgba(19, 132, 95, 0.1);
+    border-color: rgba(19, 132, 95, 0.25);
+    color: var(--brand-primary);
 }
 
 /* case-topbar if visible inside modal */
@@ -2643,24 +2644,24 @@ body.light-theme #caseModal .floating-label-group label {
 
 body.light-theme #caseModal .floating-label-group select:focus ~ label,
 body.light-theme #caseModal .floating-label-group select:valid ~ label {
-    color: #287cf3;
+    color: var(--brand-primary);
     background: #ffffff;
 }
 
 /* Witness action button */
 body.light-theme #caseModal .remove-witness-btn,
 body.light-theme #caseModal .remove-accused-btn {
-    border-color: #287cf3;
-    color: #287cf3;
+    border-color: var(--brand-primary);
+    color: var(--brand-primary);
 }
 
 body.light-theme #caseModal .remove-witness-btn:hover,
 body.light-theme #caseModal .remove-accused-btn:hover {
-    background: #287cf3;
+    background: var(--brand-primary);
     color: #ffffff;
 }
 
 #caseModal :is(button, a, input, select, textarea, [tabindex]):focus-visible {
-    outline: 2px solid var(--primary, #287cf3);
+    outline: 2px solid var(--primary, var(--brand-primary));
     outline-offset: 2px;
 }

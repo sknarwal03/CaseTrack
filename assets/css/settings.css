@@ -12,7 +12,7 @@
 
 .eyebrow {
     margin: 0 0 8px;
-    color: #7ea9db;
+    color: var(--brand-primary);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     font-size: 11px;
@@ -91,7 +91,7 @@
 }
 
 .switch input:checked + .slider {
-    background: linear-gradient(135deg, #3d8bff, #6c5af7);
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
 }
 
 .switch input:checked + .slider::before {
@@ -132,18 +132,18 @@
 }
 
 .setting-link:hover {
-    border-color: #3d8bff;
+    border-color: var(--brand-primary);
     background: rgba(35, 65, 100, .65);
     transform: translateY(-1px);
 }
 
 .setting-link:focus-visible {
-    outline: 2px solid #7ea9db;
+    outline: 2px solid var(--brand-primary);
     outline-offset: 3px;
 }
 
 .setting-link-arrow {
-    color: #7ea9db;
+    color: var(--brand-primary);
     font-size: 28px;
     line-height: 1;
 }
@@ -317,7 +317,7 @@
 }
 
 .password-modal .config-form input:focus-visible {
-    outline: 2px solid #7ea9db;
+    outline: 2px solid var(--brand-primary);
     outline-offset: 2px;
 }
 
@@ -335,7 +335,7 @@ body.light-theme .security-card {
 
 body.light-theme .setting-link:hover {
     background: #f4f7fb;
-    border-color: #7ea9db;
+    border-color: var(--brand-primary);
 }
 
 body.light-theme .setting-row strong,

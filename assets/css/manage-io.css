@@ -1,6 +1,6 @@
 .io-book .judges-fab {
     background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
-    color: #fff;
+    color: #08251d;
 }
 
 .io-book .judges-fab:hover {
@@ -9,7 +9,7 @@
 
 body.light-theme .io-book .judges-fab {
     background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
-    color: #fff;
+    color: #08251d;
 }
 
 body.light-theme .io-book .judges-fab:hover {

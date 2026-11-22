@@ -100,8 +100,8 @@
     padding: 0;
     border: 0;
     border-radius: 50%;
-    background: #198754;
-    color: #fff;
+    background: var(--brand-primary, #13845f);
+    color: #08251d;
     box-shadow: 0 5px 16px rgba(0, 0, 0, .28);
     font: 36px/1 Arial, sans-serif;
     cursor: pointer;
@@ -110,11 +110,11 @@
 
 .judges-book .judges-fab {
     background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
-    color: #fff;
+    color: #08251d;
 }
 
 .judges-fab:hover {
-    background: #146c43;
+    background: var(--brand-primary-hover, #0f704e);
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, .32);
 }
@@ -125,7 +125,7 @@
 
 body.light-theme .judges-book .judges-fab {
     background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
-    color: #fff;
+    color: #08251d;
 }
 
 body.light-theme .judges-book .judges-fab:hover {
@@ -141,10 +141,10 @@ body.light-theme .judges-book .judges-fab:hover {
 .judge-cancel-button {
     min-height: 42px;
     padding: 10px 16px;
-    border: 1px solid #198754;
+    border: 1px solid var(--brand-primary, #13845f);
     border-radius: 8px;
-    background: #198754;
-    color: #fff;
+    background: var(--brand-primary, #13845f);
+    color: #08251d;
     font: 700 14px/1 Arial, sans-serif;
     cursor: pointer;
     white-space: nowrap;
@@ -152,7 +152,7 @@ body.light-theme .judges-book .judges-fab:hover {
 }
 
 .judges-add-button:hover {
-    background: #146c43;
+    background: var(--brand-primary-hover, #0f704e);
     transform: translateY(-1px);
 }
 

@@ -12,23 +12,23 @@
     --text-muted: #8096b4;
     --border-color: #1b3552;
     --border-strong: #294a6d;
-    --brand-primary: #348dff;
-    --brand-primary-hover: #287cf3;
-    --brand-secondary: #6c5af7;
+    --brand-primary: #55d1aa;
+    --brand-primary-hover: #39bd9a;
+    --brand-secondary: #85d9c1;
     --state-success: #19b987;
     --state-warning: #e4a33a;
     --state-error: #e05264;
-    --state-info: #348dff;
-    --fir-status-ui: #5B8DEF;
+    --state-info: #55d1aa;
+    --fir-status-ui: #55d1aa;
     --fir-status-ucr: #E6B84A;
     --fir-status-ut: #E66A73;
     --fir-status-disposed: #42B883;
     --fir-status-ink: #071827;
-    --fir-status-ui-text: #82baff;
+    --fir-status-ui-text: #72d7ba;
     --fir-status-ucr-text: #f0c766;
     --fir-status-ut-text: #ff9198;
     --fir-status-disposed-text: #70d6a8;
-    --focus-ring: rgba(52, 141, 255, 0.24);
+    --focus-ring: rgba(85, 209, 170, 0.24);
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
@@ -70,18 +70,18 @@ body.light-theme {
     --text-muted: #718198;
     --border-color: #d7e0eb;
     --border-strong: #c3cfdd;
-    --brand-primary: #287cf3;
-    --brand-primary-hover: #1e68d5;
-    --brand-secondary: #6550d8;
+    --brand-primary: #13845f;
+    --brand-primary-hover: #0f704e;
+    --brand-secondary: #34b38c;
     --state-success: #13845f;
-    --fir-status-ui-text: #2457a6;
+    --fir-status-ui-text: #126b4f;
     --fir-status-ucr-text: #765500;
     --fir-status-ut-text: #a62e39;
     --fir-status-disposed-text: #087347;
     --state-warning: #98600c;
     --state-error: #b83245;
-    --state-info: #245fb5;
-    --focus-ring: rgba(40, 124, 243, 0.2);
+    --state-info: #13845f;
+    --focus-ring: rgba(19, 132, 95, 0.2);
     --shadow-card: 0 12px 28px rgba(35, 57, 82, 0.08);
     --shadow-overlay: 0 18px 42px rgba(29, 45, 64, 0.18);
     --bg: var(--page-bg);
@@ -227,7 +227,7 @@ body.light-theme {
     position: relative;
     width: 42px;
     height: 42px;
-    color: #b8d1f4;
+    color: var(--brand-primary);
     background: #10223a;
     border: 0;
     border-radius: 13px;
@@ -286,7 +286,7 @@ body.light-theme {
 }
 
 .notification-header span {
-    color: #8cc6ff;
+    color: var(--brand-primary);
     font-size: 11px;
     font-weight: 700;
 }
@@ -341,7 +341,7 @@ body.light-theme {
     place-items: center;
     width: 43px;
     height: 43px;
-    color: #fff;
+    color: #08251d;
     background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
     border-radius: 50%;
     font-weight: 800;
@@ -620,7 +620,7 @@ body.light-theme .profile-trigger:hover {
     font-weight: 800;
     font-size: 14px;
     color: #fff;
-    background: linear-gradient(135deg, #4178c6, #1e3554);
+    background: linear-gradient(135deg, var(--brand-primary), #1e3554);
 }
 .pd-info {
     display: flex;
@@ -734,8 +734,8 @@ body.light-theme .notification-header {
     border-color: var(--line);
 }
 body.light-theme .notification-item.unread {
-    background: #edf5ff;
-    border-color: #d7e8ff;
+    background: color-mix(in srgb, var(--brand-primary) 8%, #fff);
+    border-color: color-mix(in srgb, var(--brand-primary) 22%, #fff);
 }
 body.light-theme .notification-item b,
 body.light-theme .notification-header strong,
@@ -743,7 +743,7 @@ body.light-theme .notification-item small {
     color: var(--text);
 }
 body.light-theme .notification-header span {
-    color: #2d6fe6;
+    color: var(--brand-primary);
 }
 
 
@@ -958,13 +958,13 @@ body {
 .btn.primary,
 .btn-primary {
     border-color: transparent;
-    color: #fff;
+    color: #08251d;
     background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
 }
 
 .btn.primary:hover:not(:disabled),
 .btn-primary:hover:not(:disabled) {
-    color: #fff;
+    color: #08251d;
     filter: brightness(1.06);
 }
 
@@ -1039,7 +1039,7 @@ body.light-theme .btn {
 
 body.light-theme .btn.primary,
 body.light-theme .btn-primary {
-    color: #fff;
+    color: #08251d;
     background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
     border-color: transparent;
 }
