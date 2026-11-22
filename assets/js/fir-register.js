@@ -327,7 +327,7 @@ function renderRecord(fir) {
     const cover = make('header', 'fir-record-cover');
     const heading = make('div', 'fir-record-cover-heading');
     heading.append(make('span', 'fir-record-overline', `FIR REGISTER · ${firYearOf(fir) || 'YEAR NOT RECORDED'}`));
-    heading.append(make('h2', '', displayFir(fir)));
+    heading.append(make('h2', '', fieldValue(sources, ['fileNo']) || displayFir(fir)));
     heading.append(make('p', '', [fieldValue(sources, ['policeStation']), fieldValue(sources, ['fileNo']) && `File ${fieldValue(sources, ['fileNo'])}`].filter(Boolean).join('  ·  ') || 'Official police case record'));
     const statusBadge = make('span', `fir-record-status status-${status.category}`, status.label);
     cover.append(heading, statusBadge);

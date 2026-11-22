@@ -298,7 +298,7 @@ const renderCaseTable = () => {
         }
 
         row.innerHTML =
-            '<td><strong style="cursor: pointer; color: var(--primary);" class="fir-trigger">' + displayFir + '</strong></td>' +
+            '<td><strong style="cursor: pointer; color: var(--brand-primary);" class="fir-trigger">' + displayFir + '</strong></td>' +
             '<td>' + (caseItem.firDate || '') + '</td>' +
             '<td>' + (caseItem.underSection || '') + '</td>' +
             '<td>' + (caseItem.courtName || '') + '</td>' +

@@ -342,7 +342,7 @@ caseSectionNav?.addEventListener('click', event => {
     });
     const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
     if (heading) {
-        heading.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        scrollCaseTargetInModal(heading, 'start');
         requestAnimationFrame(() => heading.focus({ preventScroll: true }));
     }
 });
@@ -357,7 +357,29 @@ if (caseModalBody && caseSectionNav && typeof MutationObserver !== 'undefined') 
 
 const caseSectionMobileLayout = window.matchMedia('(max-width: 780px)');
 let caseSectionScrollContainer = null;
+let caseSectionNavHideTimer = null;
+const caseSectionNavIsInteracting = () => caseSectionNav?.matches(':hover, :focus-within');
+function revealCaseSectionNav() {
+    if (!caseSectionNav) return;
+    clearTimeout(caseSectionNavHideTimer);
+    caseSectionNav.classList.remove('is-auto-hidden');
+    caseSectionNavHideTimer = setTimeout(() => {
+        if (!caseSectionNavIsInteracting()) caseSectionNav.classList.add('is-auto-hidden');
+    }, 1500);
+}
+caseSectionNav?.addEventListener('pointerenter', () => {
+    clearTimeout(caseSectionNavHideTimer);
+    caseSectionNav.classList.remove('is-auto-hidden');
+});
+caseSectionNav?.addEventListener('pointerleave', revealCaseSectionNav);
+caseSectionNav?.addEventListener('focusin', () => {
+    clearTimeout(caseSectionNavHideTimer);
+    caseSectionNav.classList.remove('is-auto-hidden');
+});
+caseSectionNav?.addEventListener('focusout', () => requestAnimationFrame(revealCaseSectionNav));
+caseSectionNav?.classList.add('is-auto-hidden');
 const onCaseSectionScroll = () => {
+    revealCaseSectionNav();
     masterComboboxes.forEach(({ render }) => render());
     updateCaseSectionNavigation();
 };
@@ -367,6 +389,16 @@ function syncCaseSectionScrollContainer() {
     caseSectionScrollContainer?.removeEventListener('scroll', onCaseSectionScroll);
     caseSectionScrollContainer = nextContainer;
     caseSectionScrollContainer?.addEventListener('scroll', onCaseSectionScroll, { passive: true });
+}
+function scrollCaseTargetInModal(target, alignment = 'start') {
+    const container = caseSectionScrollContainer || (caseSectionMobileLayout.matches ? caseModalForm : caseModalBody);
+    if (!container || !target) return;
+
+    const containerBounds = container.getBoundingClientRect();
+    const targetTop = target.getBoundingClientRect().top - containerBounds.top + container.scrollTop;
+    const navOffset = alignment === 'start' ? (caseSectionNav?.getBoundingClientRect().height || 0) + 8 : 0;
+    const centeredOffset = alignment === 'center' ? (container.clientHeight - target.getBoundingClientRect().height) / 2 : 0;
+    container.scrollTo({ top: targetTop - navOffset - centeredOffset, behavior: 'smooth' });
 }
 if (caseModalBody && caseSectionNav) {
     syncCaseSectionScrollContainer();
@@ -2924,7 +2956,7 @@ window.openAddCaseModal = (caseItem = null, options = {}) => {
         : section?.querySelector('input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), button:not(:disabled)') || section;
     if (!options.focusSelector) focusTarget = modal.querySelector('#firno') || focusTarget;
     if (focusTarget === section && !section.hasAttribute('tabindex')) section.setAttribute('tabindex', '-1');
-    if (options.focusSelector) focusTarget?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    if (options.focusSelector) scrollCaseTargetInModal(focusTarget, 'center');
     modalFocusManager.open({ openerElement: modalOpener, initialFocus: focusTarget });
 };
 

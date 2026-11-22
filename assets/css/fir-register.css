@@ -238,29 +238,29 @@ body.light-theme .fir-register-seal::after { border-color: color-mix(in srgb, va
     .fir-record-body > .fir-accused-section {
         padding: 0;
         overflow: hidden;
-        border: 1px solid #b9cce7;
+        border: 1px solid var(--border-color);
         border-radius: 10px;
-        background: #fff;
+        background: var(--surface);
         box-shadow: none;
     }
     .fir-accused-section > .fir-record-section-title {
         min-height: 36px;
         margin: 0;
         padding: 6px 14px;
-        border-bottom: 1px solid #c5d8f3;
+        border-bottom: 1px solid var(--border-color);
         border-radius: 9px 9px 0 0;
-        background: linear-gradient(100deg,#dceaff,#c8dcff);
+        background: linear-gradient(100deg,var(--surface-raised),var(--surface));
     }
     .fir-accused-section > .fir-record-section-title i {
         width: 24px;
         height: 24px;
         border: 0;
-        color: #123e7f;
+        color: var(--state-success);
         background: transparent;
         font-size: 19px;
     }
     .fir-accused-section > .fir-record-section-title h3 {
-        color: #102f66;
+        color: var(--text-primary);
         font-size: 20px;
         font-weight: 750;
     }
@@ -270,7 +270,13 @@ body.light-theme .fir-register-seal::after { border-color: color-mix(in srgb, va
         margin: 6px 8px 8px;
         overflow-x: auto;
         overscroll-behavior-x: contain;
+        scrollbar-color: color-mix(in srgb,var(--text-secondary) 42%,var(--surface)) var(--surface-raised);
+        scrollbar-width: thin;
     }
+    .fir-accused-table-wrap::-webkit-scrollbar { height: 9px; }
+    .fir-accused-table-wrap::-webkit-scrollbar-track { border-radius: 999px; background: var(--surface-raised); }
+    .fir-accused-table-wrap::-webkit-scrollbar-thumb { border: 2px solid var(--surface-raised); border-radius: 999px; background: color-mix(in srgb,var(--text-secondary) 42%,var(--surface)); }
+    .fir-accused-table-wrap::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb,var(--text-secondary) 65%,var(--surface)); }
     .fir-accused-table-wrap:focus-visible {
         outline: 2px solid var(--brand-primary, #2864b4);
         outline-offset: 2px;
@@ -285,12 +291,12 @@ body.light-theme .fir-register-seal::after { border-color: color-mix(in srgb, va
         width: 100%;
         min-width: 1180px;
         table-layout: fixed;
-        border: 1px solid #cbd8e8;
+        border: 1px solid var(--border-color);
         border-spacing: 0;
         border-collapse: separate;
         border-radius: 9px;
-        color: #172b49;
-        background: #fff;
+        color: var(--text-primary);
+        background: var(--surface);
         font: 12px/1.4 Inter,"Segoe UI",Arial,sans-serif;
     }
     .fir-accused-table col:nth-child(1) { width: 5%; }
@@ -308,25 +314,25 @@ body.light-theme .fir-register-seal::after { border-color: color-mix(in srgb, va
     .fir-accused-table td {
         box-sizing: border-box;
         padding: 6px 8px;
-        border-right: 1px solid #d4dfed;
-        border-bottom: 1px solid #d4dfed;
+        border-right: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
         vertical-align: middle;
         text-align: left;
         overflow-wrap: anywhere;
     }
     .fir-accused-table th {
-        color: #172b49;
-        background: #eff4fb;
+        color: var(--text-primary);
+        background: var(--surface-raised);
         font-weight: 700;
     }
     .fir-accused-table thead th:first-child { border-top-left-radius: 8px; }
     .fir-accused-table thead th:last-child { border-top-right-radius: 8px; }
     .fir-accused-table tr > :last-child { border-right: 0; }
     .fir-accused-table tbody tr:last-child > td { border-bottom: 0; }
-    .fir-accused-table tbody tr:nth-child(even) { background: #f8fafd; }
+    .fir-accused-table tbody tr:nth-child(even) { background: color-mix(in srgb,var(--surface-raised) 72%,var(--surface)); }
     .fir-accused-table th:first-child,
     .fir-accused-table .fir-accused-number { text-align: center; }
-    .fir-accused-table .fir-accused-name { color: #172b49; font-weight: 700; }
+    .fir-accused-table .fir-accused-name { color: var(--text-primary); font-weight: 700; }
     .fir-accused-table .fir-accused-empty { padding: 12px; color: var(--text-secondary); text-align: center; }
     .fir-accused-badge {
         display: inline-flex;
@@ -345,3 +351,12 @@ body.light-theme .fir-register-seal::after { border-color: color-mix(in srgb, va
     .fir-accused-badge.is-po { color: #991b1b; background: #fee2e2; }
     .fir-accused-badge.is-neutral { color: #475569; background: #eef2f7; }
 }
+
+body.light-theme .fir-record-body > .fir-accused-section { background: var(--surface); }
+body.light-theme .fir-accused-section > .fir-record-section-title { background: linear-gradient(100deg,#dceaff,#c8dcff); }
+body.light-theme .fir-accused-section > .fir-record-section-title i { color: #123e7f; }
+body.light-theme .fir-accused-section > .fir-record-section-title h3 { color: #102f66; }
+body.light-theme .fir-accused-table { color: #172b49; background: #fff; }
+body.light-theme .fir-accused-table th { color: #172b49; background: #eff4fb; }
+body.light-theme .fir-accused-table tbody tr:nth-child(even) { background: #f8fafd; }
+body.light-theme .fir-accused-table .fir-accused-name { color: #172b49; }
