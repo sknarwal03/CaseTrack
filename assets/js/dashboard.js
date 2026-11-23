@@ -366,6 +366,28 @@ const renderDonut = (cases) => {
     const donutTotalEl = document.getElementById('donutTotal');
     const legendEl     = document.querySelector('.legend');
     const tooltip      = document.querySelector('.donut-tooltip');
+    const positionTooltip = event => {
+        if (!tooltip) return;
+
+        const chartBounds = donutChartEl.getBoundingClientRect();
+        const tooltipBounds = tooltip.getBoundingClientRect();
+        const gap = 14;
+        const edge = 12;
+        const onLeft = event.clientX < chartBounds.left + chartBounds.width / 2;
+        const onTop = event.clientY < chartBounds.top + chartBounds.height / 2;
+        let left = onLeft ? event.clientX - tooltipBounds.width - gap : event.clientX + gap;
+        let top = onTop ? event.clientY - tooltipBounds.height - gap : event.clientY + gap;
+
+        if (left < edge) left = event.clientX + gap;
+        if (left + tooltipBounds.width > window.innerWidth - edge) left = event.clientX - tooltipBounds.width - gap;
+        if (top < edge) top = event.clientY + gap;
+        if (top + tooltipBounds.height > window.innerHeight - edge) top = event.clientY - tooltipBounds.height - gap;
+
+        left = Math.max(edge, Math.min(left, window.innerWidth - tooltipBounds.width - edge));
+        top = Math.max(edge, Math.min(top, window.innerHeight - tooltipBounds.height - edge));
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+    };
 
     if (!donutChartEl) return;
 
@@ -397,8 +419,7 @@ const renderDonut = (cases) => {
         return;
     }
 
-    // ── Build conic-gradient string ───────────────────────────────────
-    let gradParts = [];
+    // ── Build slice data for the SVG chart ────────────────────────────
     let runningDeg = 0;
     const sliceData = [];
 
@@ -406,13 +427,12 @@ const renderDonut = (cases) => {
         const color = DONUT_PALETTE[idx % DONUT_PALETTE.length];
         const deg = (count / total) * 360;
         const pct = ((count / total) * 100).toFixed(1);
-        gradParts.push(`${color} ${runningDeg.toFixed(4)}deg ${(runningDeg + deg).toFixed(4)}deg`);
         sliceData.push({ label, color, count, pct, startDeg: runningDeg, endDeg: runningDeg + deg });
         runningDeg += deg;
     });
 
-    donutChartEl.style.background =
-        `conic-gradient(${gradParts.join(', ')})`;
+    // Keep the track transparent so an exploded slice reveals the panel background.
+    donutChartEl.style.background = 'transparent';
 
     // ── Legend ────────────────────────────────────────────────────────
     if (legendEl) {
@@ -429,23 +449,29 @@ const renderDonut = (cases) => {
     donutChartEl.querySelector('.donut-slice-overlay')?.remove();
     if (tooltip) tooltip.classList.remove('show');
 
-    const EXPLODE_PX = 7;
+    const EXPLODE_PX = 4;
     const R = 50;
+    const INNER_R = 30.5;
     const ns = 'http://www.w3.org/2000/svg';
 
-    const polar = (angleDeg) => {
+    const polar = (angleDeg, radius = R) => {
         const rad = (angleDeg - 90) * Math.PI / 180;
-        return { x: 50 + R * Math.cos(rad), y: 50 + R * Math.sin(rad) };
+        return { x: 50 + radius * Math.cos(rad), y: 50 + radius * Math.sin(rad) };
     };
 
     const arcPath = (startDeg, endDeg) => {
         if (endDeg - startDeg >= 359.99) {
-            return `M 50 50 m -${R} 0 a ${R} ${R} 0 1 1 ${R*2} 0 a ${R} ${R} 0 1 1 -${R*2} 0`;
+            return `M 50 0 A ${R} ${R} 0 1 1 50 100 A ${R} ${R} 0 1 1 50 0 Z ` +
+                `M 50 ${50 - INNER_R} A ${INNER_R} ${INNER_R} 0 1 0 50 ${50 + INNER_R} ` +
+                `A ${INNER_R} ${INNER_R} 0 1 0 50 ${50 - INNER_R} Z`;
         }
         const s = polar(startDeg);
         const e = polar(endDeg);
+        const innerStart = polar(startDeg, INNER_R);
+        const innerEnd = polar(endDeg, INNER_R);
         const large = endDeg - startDeg > 180 ? 1 : 0;
-        return `M 50 50 L ${s.x} ${s.y} A ${R} ${R} 0 ${large} 1 ${e.x} ${e.y} Z`;
+        return `M ${s.x} ${s.y} A ${R} ${R} 0 ${large} 1 ${e.x} ${e.y} ` +
+            `L ${innerEnd.x} ${innerEnd.y} A ${INNER_R} ${INNER_R} 0 ${large} 0 ${innerStart.x} ${innerStart.y} Z`;
     };
 
     const svg = document.createElementNS(ns, 'svg');
@@ -460,35 +486,37 @@ const renderDonut = (cases) => {
         const tx = Math.cos(midRad) * EXPLODE_PX;
         const ty = Math.sin(midRad) * EXPLODE_PX;
 
-        const highlight = document.createElementNS(ns, 'path');
-        highlight.setAttribute('d', arcPath(slice.startDeg, slice.endDeg));
-        highlight.setAttribute('fill', slice.color);
-        highlight.classList.add('slice-highlight');
-        highlight.style.transform = 'translate(0,0)';
-        highlight.style.opacity = '0';
-        svg.appendChild(highlight);
-
         const hit = document.createElementNS(ns, 'path');
         hit.setAttribute('d', arcPath(slice.startDeg, slice.endDeg));
         hit.setAttribute('fill', 'transparent');
+        hit.setAttribute('fill-rule', 'evenodd');
         hit.classList.add('slice-hit');
         svg.appendChild(hit);
 
-        hit.addEventListener('mouseenter', () => {
-            highlight.style.transform = `translate(${tx}px, ${ty}px)`;
-            highlight.style.opacity = '1';
+        const segment = document.createElementNS(ns, 'path');
+        segment.setAttribute('d', arcPath(slice.startDeg, slice.endDeg));
+        segment.setAttribute('fill', slice.color);
+        segment.setAttribute('fill-rule', 'evenodd');
+        segment.classList.add('slice-segment');
+        svg.appendChild(segment);
+
+        hit.addEventListener('mouseenter', event => {
+            segment.style.transform = `translate(${tx}px, ${ty}px)`;
             if (tooltip) {
+                tooltip.style.setProperty('--tooltip-accent', slice.color);
                 tooltip.innerHTML =
                     `<div class="tooltip-label"><i style="background:${slice.color};color:${slice.color}"></i>${slice.label}</div>` +
                     `<div class="tooltip-row"><strong>Cases</strong><span>${slice.count}</span></div>` +
                     `<div class="tooltip-row"><strong>Percentage</strong><span>${slice.pct}%</span></div>`;
                 tooltip.classList.add('show');
+                positionTooltip(event);
             }
         });
 
+        hit.addEventListener('mousemove', positionTooltip);
+
         hit.addEventListener('mouseleave', () => {
-            highlight.style.transform = 'translate(0,0)';
-            highlight.style.opacity = '0';
+            segment.style.transform = 'translate(0,0)';
             if (tooltip) tooltip.classList.remove('show');
         });
     });
