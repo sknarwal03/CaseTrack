@@ -1,0 +1,3033 @@
+{
+  "results": [
+    {
+      "width": 360,
+      "theme": "dark",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "dark"
+      },
+      "m": {
+        "viewport": 360,
+        "documentWidth": 360,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 332,
+          "height": 220.25,
+          "right": 346,
+          "bottom": 325.25
+        },
+        "heading": {
+          "x": 68,
+          "y": 125.59,
+          "width": 217,
+          "height": 22.8,
+          "right": 285,
+          "bottom": 148.39
+        },
+        "subtitle": {
+          "x": 24,
+          "y": 163,
+          "width": 312,
+          "height": 16.25,
+          "right": 336,
+          "bottom": 179.25
+        },
+        "badges": {
+          "x": 24,
+          "y": 186.25,
+          "width": 312,
+          "height": 78,
+          "right": 336,
+          "bottom": 264.25
+        },
+        "stationBadge": {
+          "x": 24,
+          "y": 186.25,
+          "width": 137.48,
+          "height": 36,
+          "right": 161.48,
+          "bottom": 222.25
+        },
+        "stationLabel": {
+          "x": 56,
+          "y": 198.75,
+          "width": 97.48,
+          "height": 11,
+          "right": 153.48,
+          "bottom": 209.75
+        },
+        "weekBadge": {
+          "x": 167.48,
+          "y": 186.25,
+          "width": 83.28,
+          "height": 36,
+          "right": 250.77,
+          "bottom": 222.25
+        },
+        "art": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "image": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 24,
+          "y": 285.25,
+          "width": 132.77,
+          "height": 20,
+          "right": 156.77,
+          "bottom": 305.25
+        },
+        "button": {
+          "x": 206,
+          "y": 272.25,
+          "width": 130,
+          "height": 46,
+          "right": 336,
+          "bottom": 318.25
+        },
+        "buttonMinHeight": "46px",
+        "headingFont": "700 19px / 22.8px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 11px / 11px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(64, 166, 192, 0.18) 0%, rgba(41, 118, 148, 0.09) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(42, 115, 164, 0.43) 0%, rgba(22, 75, 112, 0.21) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(43, 126, 145, 0.2) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(6, 24, 39) 0%, rgb(11, 41, 67) 54%, rgb(8, 25, 45) 100%)"
+      }
+    },
+    {
+      "width": 360,
+      "theme": "light",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "light"
+      },
+      "m": {
+        "viewport": 360,
+        "documentWidth": 360,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 332,
+          "height": 220.25,
+          "right": 346,
+          "bottom": 325.25
+        },
+        "heading": {
+          "x": 68,
+          "y": 125.59,
+          "width": 217,
+          "height": 22.8,
+          "right": 285,
+          "bottom": 148.39
+        },
+        "subtitle": {
+          "x": 24,
+          "y": 163,
+          "width": 312,
+          "height": 16.25,
+          "right": 336,
+          "bottom": 179.25
+        },
+        "badges": {
+          "x": 24,
+          "y": 186.25,
+          "width": 312,
+          "height": 78,
+          "right": 336,
+          "bottom": 264.25
+        },
+        "stationBadge": {
+          "x": 24,
+          "y": 186.25,
+          "width": 137.48,
+          "height": 36,
+          "right": 161.48,
+          "bottom": 222.25
+        },
+        "stationLabel": {
+          "x": 56,
+          "y": 198.75,
+          "width": 97.48,
+          "height": 11,
+          "right": 153.48,
+          "bottom": 209.75
+        },
+        "weekBadge": {
+          "x": 167.48,
+          "y": 186.25,
+          "width": 83.28,
+          "height": 36,
+          "right": 250.77,
+          "bottom": 222.25
+        },
+        "art": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "image": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 24,
+          "y": 285.25,
+          "width": 132.77,
+          "height": 20,
+          "right": 156.77,
+          "bottom": 305.25
+        },
+        "button": {
+          "x": 206,
+          "y": 272.25,
+          "width": 130,
+          "height": 46,
+          "right": 336,
+          "bottom": 318.25
+        },
+        "buttonMinHeight": "46px",
+        "headingFont": "700 19px / 22.8px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 11px / 11px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(99, 164, 188, 0.12) 0%, rgba(92, 151, 178, 0.06) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(88, 151, 197, 0.2) 0%, rgba(92, 151, 193, 0.08) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(82, 157, 178, 0.1) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(248, 251, 255) 0%, rgb(238, 245, 251) 54%, rgb(248, 251, 255) 100%)"
+      }
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "dark"
+      },
+      "m": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 362,
+          "height": 221.5,
+          "right": 376,
+          "bottom": 326.5
+        },
+        "heading": {
+          "x": 73,
+          "y": 124.59,
+          "width": 236.23,
+          "height": 24.8,
+          "right": 309.23,
+          "bottom": 149.39
+        },
+        "subtitle": {
+          "x": 27,
+          "y": 163,
+          "width": 262.08,
+          "height": 17.5,
+          "right": 289.08,
+          "bottom": 180.5
+        },
+        "badges": {
+          "x": 27,
+          "y": 187.5,
+          "width": 336,
+          "height": 78,
+          "right": 363,
+          "bottom": 265.5
+        },
+        "stationBadge": {
+          "x": 27,
+          "y": 187.5,
+          "width": 151.34,
+          "height": 36,
+          "right": 178.34,
+          "bottom": 223.5
+        },
+        "stationLabel": {
+          "x": 63,
+          "y": 199.5,
+          "width": 106.34,
+          "height": 12,
+          "right": 169.34,
+          "bottom": 211.5
+        },
+        "weekBadge": {
+          "x": 184.34,
+          "y": 187.5,
+          "width": 92.22,
+          "height": 36,
+          "right": 276.56,
+          "bottom": 223.5
+        },
+        "art": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "image": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 27,
+          "y": 286.5,
+          "width": 142.47,
+          "height": 20,
+          "right": 169.47,
+          "bottom": 306.5
+        },
+        "button": {
+          "x": 218,
+          "y": 273.5,
+          "width": 145,
+          "height": 46,
+          "right": 363,
+          "bottom": 319.5
+        },
+        "buttonMinHeight": "46px",
+        "headingFont": "700 20.67px / 24.804px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 12px / 12px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(64, 166, 192, 0.18) 0%, rgba(41, 118, 148, 0.09) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(42, 115, 164, 0.43) 0%, rgba(22, 75, 112, 0.21) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(43, 126, 145, 0.2) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(6, 24, 39) 0%, rgb(11, 41, 67) 54%, rgb(8, 25, 45) 100%)"
+      }
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "stationStress": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 362,
+          "height": 221.5,
+          "right": 376,
+          "bottom": 326.5
+        },
+        "badge": {
+          "x": 27,
+          "y": 187.5,
+          "width": 240,
+          "height": 36,
+          "right": 267,
+          "bottom": 223.5
+        },
+        "label": {
+          "x": 63,
+          "y": 199.5,
+          "width": 195,
+          "height": 12,
+          "right": 258,
+          "bottom": 211.5
+        },
+        "labelScrollWidth": 518,
+        "weekBadge": {
+          "x": 27,
+          "y": 229.5,
+          "width": 92.22,
+          "height": 36,
+          "right": 119.22,
+          "bottom": 265.5
+        },
+        "fyBadge": {
+          "x": 125.22,
+          "y": 229.5,
+          "width": 107.05,
+          "height": 36,
+          "right": 232.27,
+          "bottom": 265.5
+        },
+        "art": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "copy": {
+          "x": 15,
+          "y": 106,
+          "width": 360,
+          "height": 163.5,
+          "right": 375,
+          "bottom": 269.5
+        },
+        "action": {
+          "x": 27,
+          "y": 269.5,
+          "width": 336,
+          "height": 50,
+          "right": 363,
+          "bottom": 319.5
+        },
+        "button": {
+          "x": 218,
+          "y": 273.5,
+          "width": 145,
+          "height": 46,
+          "right": 363,
+          "bottom": 319.5
+        },
+        "labelOverflowX": "hidden",
+        "labelTextOverflow": "ellipsis"
+      },
+      "screenshot": "docs/ui-ux-audit/dashboard-hero-final-responsive-refinement/after/station-name-390-dark.png"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "buttonInteraction": {
+        "focused": true,
+        "enterOpens": true,
+        "clickOpens": true
+      }
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "light"
+      },
+      "m": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 362,
+          "height": 221.5,
+          "right": 376,
+          "bottom": 326.5
+        },
+        "heading": {
+          "x": 73,
+          "y": 124.59,
+          "width": 236.23,
+          "height": 24.8,
+          "right": 309.23,
+          "bottom": 149.39
+        },
+        "subtitle": {
+          "x": 27,
+          "y": 163,
+          "width": 262.08,
+          "height": 17.5,
+          "right": 289.08,
+          "bottom": 180.5
+        },
+        "badges": {
+          "x": 27,
+          "y": 187.5,
+          "width": 336,
+          "height": 78,
+          "right": 363,
+          "bottom": 265.5
+        },
+        "stationBadge": {
+          "x": 27,
+          "y": 187.5,
+          "width": 151.34,
+          "height": 36,
+          "right": 178.34,
+          "bottom": 223.5
+        },
+        "stationLabel": {
+          "x": 63,
+          "y": 199.5,
+          "width": 106.34,
+          "height": 12,
+          "right": 169.34,
+          "bottom": 211.5
+        },
+        "weekBadge": {
+          "x": 184.34,
+          "y": 187.5,
+          "width": 92.22,
+          "height": 36,
+          "right": 276.56,
+          "bottom": 223.5
+        },
+        "art": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "image": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 27,
+          "y": 286.5,
+          "width": 142.47,
+          "height": 20,
+          "right": 169.47,
+          "bottom": 306.5
+        },
+        "button": {
+          "x": 218,
+          "y": 273.5,
+          "width": 145,
+          "height": 46,
+          "right": 363,
+          "bottom": 319.5
+        },
+        "buttonMinHeight": "46px",
+        "headingFont": "700 20.67px / 24.804px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 12px / 12px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(99, 164, 188, 0.12) 0%, rgba(92, 151, 178, 0.06) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(88, 151, 197, 0.2) 0%, rgba(92, 151, 193, 0.08) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(82, 157, 178, 0.1) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(248, 251, 255) 0%, rgb(238, 245, 251) 54%, rgb(248, 251, 255) 100%)"
+      }
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "stationStress": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 362,
+          "height": 221.5,
+          "right": 376,
+          "bottom": 326.5
+        },
+        "badge": {
+          "x": 27,
+          "y": 187.5,
+          "width": 240,
+          "height": 36,
+          "right": 267,
+          "bottom": 223.5
+        },
+        "label": {
+          "x": 63,
+          "y": 199.5,
+          "width": 195,
+          "height": 12,
+          "right": 258,
+          "bottom": 211.5
+        },
+        "labelScrollWidth": 518,
+        "weekBadge": {
+          "x": 27,
+          "y": 229.5,
+          "width": 92.22,
+          "height": 36,
+          "right": 119.22,
+          "bottom": 265.5
+        },
+        "fyBadge": {
+          "x": 125.22,
+          "y": 229.5,
+          "width": 107.05,
+          "height": 36,
+          "right": 232.27,
+          "bottom": 265.5
+        },
+        "art": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "copy": {
+          "x": 15,
+          "y": 106,
+          "width": 360,
+          "height": 163.5,
+          "right": 375,
+          "bottom": 269.5
+        },
+        "action": {
+          "x": 27,
+          "y": 269.5,
+          "width": 336,
+          "height": 50,
+          "right": 363,
+          "bottom": 319.5
+        },
+        "button": {
+          "x": 218,
+          "y": 273.5,
+          "width": 145,
+          "height": 46,
+          "right": 363,
+          "bottom": 319.5
+        },
+        "labelOverflowX": "hidden",
+        "labelTextOverflow": "ellipsis"
+      },
+      "screenshot": "docs/ui-ux-audit/dashboard-hero-final-responsive-refinement/after/station-name-390-light.png"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "buttonInteraction": {
+        "focused": true,
+        "enterOpens": true,
+        "clickOpens": true
+      }
+    },
+    {
+      "width": 430,
+      "theme": "dark",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "dark"
+      },
+      "m": {
+        "viewport": 430,
+        "documentWidth": 430,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 402,
+          "height": 202.5,
+          "right": 416,
+          "bottom": 307.5
+        },
+        "heading": {
+          "x": 79.69,
+          "y": 125.33,
+          "width": 260.66,
+          "height": 27.34,
+          "right": 340.34,
+          "bottom": 152.67
+        },
+        "subtitle": {
+          "x": 33.69,
+          "y": 165,
+          "width": 282.83,
+          "height": 17.5,
+          "right": 316.52,
+          "bottom": 182.5
+        },
+        "badges": {
+          "x": 33.69,
+          "y": 192.5,
+          "width": 362.61,
+          "height": 36,
+          "right": 396.3,
+          "bottom": 228.5
+        },
+        "stationBadge": {
+          "x": 33.69,
+          "y": 192.5,
+          "width": 151.34,
+          "height": 36,
+          "right": 185.03,
+          "bottom": 228.5
+        },
+        "stationLabel": {
+          "x": 69.69,
+          "y": 204.5,
+          "width": 106.34,
+          "height": 12,
+          "right": 176.03,
+          "bottom": 216.5
+        },
+        "weekBadge": {
+          "x": 191.03,
+          "y": 192.5,
+          "width": 92.22,
+          "height": 36,
+          "right": 283.25,
+          "bottom": 228.5
+        },
+        "art": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "image": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 27,
+          "y": 261.5,
+          "width": 142.47,
+          "height": 20,
+          "right": 169.47,
+          "bottom": 281.5
+        },
+        "button": {
+          "x": 258,
+          "y": 248.5,
+          "width": 145,
+          "height": 46,
+          "right": 403,
+          "bottom": 294.5
+        },
+        "buttonMinHeight": "46px",
+        "headingFont": "700 22.79px / 27.348px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 12px / 12px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(64, 166, 192, 0.18) 0%, rgba(41, 118, 148, 0.09) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(42, 115, 164, 0.43) 0%, rgba(22, 75, 112, 0.21) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(43, 126, 145, 0.2) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(6, 24, 39) 0%, rgb(11, 41, 67) 54%, rgb(8, 25, 45) 100%)"
+      }
+    },
+    {
+      "width": 430,
+      "theme": "light",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "light"
+      },
+      "m": {
+        "viewport": 430,
+        "documentWidth": 430,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 402,
+          "height": 202.5,
+          "right": 416,
+          "bottom": 307.5
+        },
+        "heading": {
+          "x": 79.69,
+          "y": 125.33,
+          "width": 260.66,
+          "height": 27.34,
+          "right": 340.34,
+          "bottom": 152.67
+        },
+        "subtitle": {
+          "x": 33.69,
+          "y": 165,
+          "width": 282.83,
+          "height": 17.5,
+          "right": 316.52,
+          "bottom": 182.5
+        },
+        "badges": {
+          "x": 33.69,
+          "y": 192.5,
+          "width": 362.61,
+          "height": 36,
+          "right": 396.3,
+          "bottom": 228.5
+        },
+        "stationBadge": {
+          "x": 33.69,
+          "y": 192.5,
+          "width": 151.34,
+          "height": 36,
+          "right": 185.03,
+          "bottom": 228.5
+        },
+        "stationLabel": {
+          "x": 69.69,
+          "y": 204.5,
+          "width": 106.34,
+          "height": 12,
+          "right": 176.03,
+          "bottom": 216.5
+        },
+        "weekBadge": {
+          "x": 191.03,
+          "y": 192.5,
+          "width": 92.22,
+          "height": 36,
+          "right": 283.25,
+          "bottom": 228.5
+        },
+        "art": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "image": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 27,
+          "y": 261.5,
+          "width": 142.47,
+          "height": 20,
+          "right": 169.47,
+          "bottom": 281.5
+        },
+        "button": {
+          "x": 258,
+          "y": 248.5,
+          "width": 145,
+          "height": 46,
+          "right": 403,
+          "bottom": 294.5
+        },
+        "buttonMinHeight": "46px",
+        "headingFont": "700 22.79px / 27.348px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 12px / 12px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(99, 164, 188, 0.12) 0%, rgba(92, 151, 178, 0.06) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(88, 151, 197, 0.2) 0%, rgba(92, 151, 193, 0.08) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(82, 157, 178, 0.1) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(248, 251, 255) 0%, rgb(238, 245, 251) 54%, rgb(248, 251, 255) 100%)"
+      }
+    },
+    {
+      "width": 560,
+      "theme": "dark",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "dark"
+      },
+      "m": {
+        "viewport": 560,
+        "documentWidth": 560,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 532,
+          "height": 202.5,
+          "right": 546,
+          "bottom": 307.5
+        },
+        "heading": {
+          "x": 73,
+          "y": 124,
+          "width": 286.11,
+          "height": 30,
+          "right": 359.11,
+          "bottom": 154
+        },
+        "subtitle": {
+          "x": 27,
+          "y": 165,
+          "width": 394.67,
+          "height": 17.5,
+          "right": 421.67,
+          "bottom": 182.5
+        },
+        "badges": {
+          "x": 27,
+          "y": 192.5,
+          "width": 506,
+          "height": 36,
+          "right": 533,
+          "bottom": 228.5
+        },
+        "stationBadge": {
+          "x": 27,
+          "y": 192.5,
+          "width": 151.34,
+          "height": 36,
+          "right": 178.34,
+          "bottom": 228.5
+        },
+        "stationLabel": {
+          "x": 63,
+          "y": 204.5,
+          "width": 106.34,
+          "height": 12,
+          "right": 169.34,
+          "bottom": 216.5
+        },
+        "weekBadge": {
+          "x": 184.34,
+          "y": 192.5,
+          "width": 92.22,
+          "height": 36,
+          "right": 276.56,
+          "bottom": 228.5
+        },
+        "art": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "image": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 27,
+          "y": 261.5,
+          "width": 142.47,
+          "height": 20,
+          "right": 169.47,
+          "bottom": 281.5
+        },
+        "button": {
+          "x": 388,
+          "y": 248.5,
+          "width": 145,
+          "height": 46,
+          "right": 533,
+          "bottom": 294.5
+        },
+        "buttonMinHeight": "46px",
+        "headingFont": "700 25px / 30px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 12px / 12px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(64, 166, 192, 0.18) 0%, rgba(41, 118, 148, 0.09) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(42, 115, 164, 0.43) 0%, rgba(22, 75, 112, 0.21) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(43, 126, 145, 0.2) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(6, 24, 39) 0%, rgb(11, 41, 67) 54%, rgb(8, 25, 45) 100%)"
+      }
+    },
+    {
+      "width": 560,
+      "theme": "light",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "light"
+      },
+      "m": {
+        "viewport": 560,
+        "documentWidth": 560,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 532,
+          "height": 202.5,
+          "right": 546,
+          "bottom": 307.5
+        },
+        "heading": {
+          "x": 73,
+          "y": 124,
+          "width": 286.11,
+          "height": 30,
+          "right": 359.11,
+          "bottom": 154
+        },
+        "subtitle": {
+          "x": 27,
+          "y": 165,
+          "width": 394.67,
+          "height": 17.5,
+          "right": 421.67,
+          "bottom": 182.5
+        },
+        "badges": {
+          "x": 27,
+          "y": 192.5,
+          "width": 506,
+          "height": 36,
+          "right": 533,
+          "bottom": 228.5
+        },
+        "stationBadge": {
+          "x": 27,
+          "y": 192.5,
+          "width": 151.34,
+          "height": 36,
+          "right": 178.34,
+          "bottom": 228.5
+        },
+        "stationLabel": {
+          "x": 63,
+          "y": 204.5,
+          "width": 106.34,
+          "height": 12,
+          "right": 169.34,
+          "bottom": 216.5
+        },
+        "weekBadge": {
+          "x": 184.34,
+          "y": 192.5,
+          "width": 92.22,
+          "height": 36,
+          "right": 276.56,
+          "bottom": 228.5
+        },
+        "art": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "image": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 27,
+          "y": 261.5,
+          "width": 142.47,
+          "height": 20,
+          "right": 169.47,
+          "bottom": 281.5
+        },
+        "button": {
+          "x": 388,
+          "y": 248.5,
+          "width": 145,
+          "height": 46,
+          "right": 533,
+          "bottom": 294.5
+        },
+        "buttonMinHeight": "46px",
+        "headingFont": "700 25px / 30px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 12px / 12px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(99, 164, 188, 0.12) 0%, rgba(92, 151, 178, 0.06) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(88, 151, 197, 0.2) 0%, rgba(92, 151, 193, 0.08) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(82, 157, 178, 0.1) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(248, 251, 255) 0%, rgb(238, 245, 251) 54%, rgb(248, 251, 255) 100%)"
+      }
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "dark"
+      },
+      "m": {
+        "viewport": 768,
+        "documentWidth": 768,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 740,
+          "height": 208.5,
+          "right": 754,
+          "bottom": 313.5
+        },
+        "heading": {
+          "x": 79,
+          "y": 124.88,
+          "width": 308.78,
+          "height": 32.25,
+          "right": 387.78,
+          "bottom": 157.13
+        },
+        "subtitle": {
+          "x": 39,
+          "y": 167,
+          "width": 458,
+          "height": 17.5,
+          "right": 497,
+          "bottom": 184.5
+        },
+        "badges": {
+          "x": 31,
+          "y": 194.5,
+          "width": 466,
+          "height": 36,
+          "right": 497,
+          "bottom": 230.5
+        },
+        "stationBadge": {
+          "x": 31,
+          "y": 194.5,
+          "width": 153.34,
+          "height": 36,
+          "right": 184.34,
+          "bottom": 230.5
+        },
+        "stationLabel": {
+          "x": 68,
+          "y": 206.5,
+          "width": 106.34,
+          "height": 12,
+          "right": 174.34,
+          "bottom": 218.5
+        },
+        "weekBadge": {
+          "x": 191.34,
+          "y": 194.5,
+          "width": 94.22,
+          "height": 36,
+          "right": 285.56,
+          "bottom": 230.5
+        },
+        "art": {
+          "x": 507,
+          "y": 106,
+          "width": 246,
+          "height": 136.5,
+          "right": 753,
+          "bottom": 242.5
+        },
+        "image": {
+          "x": 507,
+          "y": 110.5,
+          "width": 246,
+          "height": 132,
+          "right": 753,
+          "bottom": 242.5
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 33,
+          "y": 265.5,
+          "width": 165.88,
+          "height": 22,
+          "right": 198.88,
+          "bottom": 287.5
+        },
+        "button": {
+          "x": 555,
+          "y": 252.5,
+          "width": 180,
+          "height": 48,
+          "right": 735,
+          "bottom": 300.5
+        },
+        "buttonMinHeight": "48px",
+        "headingFont": "700 26.88px / 32.256px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 12px / 12px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(64, 166, 192, 0.18) 0%, rgba(41, 118, 148, 0.09) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(42, 115, 164, 0.43) 0%, rgba(22, 75, 112, 0.21) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(43, 126, 145, 0.2) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(6, 24, 39) 0%, rgb(11, 41, 67) 54%, rgb(8, 25, 45) 100%)"
+      }
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "light"
+      },
+      "m": {
+        "viewport": 768,
+        "documentWidth": 768,
+        "hero": {
+          "x": 14,
+          "y": 105,
+          "width": 740,
+          "height": 208.5,
+          "right": 754,
+          "bottom": 313.5
+        },
+        "heading": {
+          "x": 79,
+          "y": 124.88,
+          "width": 308.78,
+          "height": 32.25,
+          "right": 387.78,
+          "bottom": 157.13
+        },
+        "subtitle": {
+          "x": 39,
+          "y": 167,
+          "width": 458,
+          "height": 17.5,
+          "right": 497,
+          "bottom": 184.5
+        },
+        "badges": {
+          "x": 31,
+          "y": 194.5,
+          "width": 466,
+          "height": 36,
+          "right": 497,
+          "bottom": 230.5
+        },
+        "stationBadge": {
+          "x": 31,
+          "y": 194.5,
+          "width": 153.34,
+          "height": 36,
+          "right": 184.34,
+          "bottom": 230.5
+        },
+        "stationLabel": {
+          "x": 68,
+          "y": 206.5,
+          "width": 106.34,
+          "height": 12,
+          "right": 174.34,
+          "bottom": 218.5
+        },
+        "weekBadge": {
+          "x": 191.34,
+          "y": 194.5,
+          "width": 94.22,
+          "height": 36,
+          "right": 285.56,
+          "bottom": 230.5
+        },
+        "art": {
+          "x": 507,
+          "y": 106,
+          "width": 246,
+          "height": 136.5,
+          "right": 753,
+          "bottom": 242.5
+        },
+        "image": {
+          "x": 507,
+          "y": 110.5,
+          "width": 246,
+          "height": 132,
+          "right": 753,
+          "bottom": 242.5
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 33,
+          "y": 265.5,
+          "width": 165.88,
+          "height": 22,
+          "right": 198.88,
+          "bottom": 287.5
+        },
+        "button": {
+          "x": 555,
+          "y": 252.5,
+          "width": 180,
+          "height": 48,
+          "right": 735,
+          "bottom": 300.5
+        },
+        "buttonMinHeight": "48px",
+        "headingFont": "700 26.88px / 32.256px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 12px / 12px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(99, 164, 188, 0.12) 0%, rgba(92, 151, 178, 0.06) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(88, 151, 197, 0.2) 0%, rgba(92, 151, 193, 0.08) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(82, 157, 178, 0.1) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(248, 251, 255) 0%, rgb(238, 245, 251) 54%, rgb(248, 251, 255) 100%)"
+      }
+    },
+    {
+      "width": 1024,
+      "theme": "dark",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "dark"
+      },
+      "m": {
+        "viewport": 1024,
+        "documentWidth": 1024,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 724,
+          "height": 216.75,
+          "right": 996,
+          "bottom": 329.75
+        },
+        "heading": {
+          "x": 347,
+          "y": 135.41,
+          "width": 298.64,
+          "height": 31.19,
+          "right": 645.64,
+          "bottom": 166.59
+        },
+        "subtitle": {
+          "x": 301,
+          "y": 179,
+          "width": 398.94,
+          "height": 18.75,
+          "right": 699.94,
+          "bottom": 197.75
+        },
+        "badges": {
+          "x": 293,
+          "y": 207.75,
+          "width": 406.94,
+          "height": 36,
+          "right": 699.94,
+          "bottom": 243.75
+        },
+        "stationBadge": {
+          "x": 293,
+          "y": 207.75,
+          "width": 153.34,
+          "height": 36,
+          "right": 446.34,
+          "bottom": 243.75
+        },
+        "stationLabel": {
+          "x": 330,
+          "y": 219.75,
+          "width": 106.34,
+          "height": 12,
+          "right": 436.34,
+          "bottom": 231.75
+        },
+        "weekBadge": {
+          "x": 453.34,
+          "y": 207.75,
+          "width": 94.22,
+          "height": 36,
+          "right": 547.56,
+          "bottom": 243.75
+        },
+        "art": {
+          "x": 707.94,
+          "y": 114,
+          "width": 287.05,
+          "height": 142.75,
+          "right": 994.98,
+          "bottom": 256.75
+        },
+        "image": {
+          "x": 707.94,
+          "y": 120.75,
+          "width": 287.05,
+          "height": 136,
+          "right": 994.98,
+          "bottom": 256.75
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 291,
+          "y": 280.75,
+          "width": 175.58,
+          "height": 22,
+          "right": 466.58,
+          "bottom": 302.75
+        },
+        "button": {
+          "x": 796.98,
+          "y": 266.75,
+          "width": 180,
+          "height": 50,
+          "right": 976.98,
+          "bottom": 316.75
+        },
+        "buttonMinHeight": "50px",
+        "headingFont": "700 26px / 31.2px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 12px / 12px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(64, 166, 192, 0.18) 0%, rgba(41, 118, 148, 0.09) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(42, 115, 164, 0.43) 0%, rgba(22, 75, 112, 0.21) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(43, 126, 145, 0.2) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(6, 24, 39) 0%, rgb(11, 41, 67) 54%, rgb(8, 25, 45) 100%)"
+      }
+    },
+    {
+      "width": 1024,
+      "theme": "dark",
+      "stationStress": {
+        "viewport": 1024,
+        "documentWidth": 1024,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 724,
+          "height": 259.75,
+          "right": 996,
+          "bottom": 372.75
+        },
+        "badge": {
+          "x": 293,
+          "y": 207.75,
+          "width": 240,
+          "height": 36,
+          "right": 533,
+          "bottom": 243.75
+        },
+        "label": {
+          "x": 330,
+          "y": 219.75,
+          "width": 193,
+          "height": 12,
+          "right": 523,
+          "bottom": 231.75
+        },
+        "labelScrollWidth": 518,
+        "weekBadge": {
+          "x": 540,
+          "y": 207.75,
+          "width": 94.22,
+          "height": 36,
+          "right": 634.22,
+          "bottom": 243.75
+        },
+        "fyBadge": {
+          "x": 293,
+          "y": 250.75,
+          "width": 109.05,
+          "height": 36,
+          "right": 402.05,
+          "bottom": 286.75
+        },
+        "art": {
+          "x": 707.94,
+          "y": 114,
+          "width": 287.05,
+          "height": 185.75,
+          "right": 994.98,
+          "bottom": 299.75
+        },
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "copy": {
+          "x": 273,
+          "y": 114,
+          "width": 434.94,
+          "height": 185.75,
+          "right": 707.94,
+          "bottom": 299.75
+        },
+        "action": {
+          "x": 291,
+          "y": 299.75,
+          "width": 685.98,
+          "height": 60,
+          "right": 976.98,
+          "bottom": 359.75
+        },
+        "button": {
+          "x": 796.98,
+          "y": 309.75,
+          "width": 180,
+          "height": 50,
+          "right": 976.98,
+          "bottom": 359.75
+        },
+        "labelOverflowX": "hidden",
+        "labelTextOverflow": "ellipsis"
+      },
+      "screenshot": "docs/ui-ux-audit/dashboard-hero-final-responsive-refinement/after/station-name-1024-dark.png"
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "light"
+      },
+      "m": {
+        "viewport": 1024,
+        "documentWidth": 1024,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 724,
+          "height": 216.75,
+          "right": 996,
+          "bottom": 329.75
+        },
+        "heading": {
+          "x": 347,
+          "y": 135.41,
+          "width": 298.64,
+          "height": 31.19,
+          "right": 645.64,
+          "bottom": 166.59
+        },
+        "subtitle": {
+          "x": 301,
+          "y": 179,
+          "width": 398.94,
+          "height": 18.75,
+          "right": 699.94,
+          "bottom": 197.75
+        },
+        "badges": {
+          "x": 293,
+          "y": 207.75,
+          "width": 406.94,
+          "height": 36,
+          "right": 699.94,
+          "bottom": 243.75
+        },
+        "stationBadge": {
+          "x": 293,
+          "y": 207.75,
+          "width": 153.34,
+          "height": 36,
+          "right": 446.34,
+          "bottom": 243.75
+        },
+        "stationLabel": {
+          "x": 330,
+          "y": 219.75,
+          "width": 106.34,
+          "height": 12,
+          "right": 436.34,
+          "bottom": 231.75
+        },
+        "weekBadge": {
+          "x": 453.34,
+          "y": 207.75,
+          "width": 94.22,
+          "height": 36,
+          "right": 547.56,
+          "bottom": 243.75
+        },
+        "art": {
+          "x": 707.94,
+          "y": 114,
+          "width": 287.05,
+          "height": 142.75,
+          "right": 994.98,
+          "bottom": 256.75
+        },
+        "image": {
+          "x": 707.94,
+          "y": 120.75,
+          "width": 287.05,
+          "height": 136,
+          "right": 994.98,
+          "bottom": 256.75
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 291,
+          "y": 280.75,
+          "width": 175.58,
+          "height": 22,
+          "right": 466.58,
+          "bottom": 302.75
+        },
+        "button": {
+          "x": 796.98,
+          "y": 266.75,
+          "width": 180,
+          "height": 50,
+          "right": 976.98,
+          "bottom": 316.75
+        },
+        "buttonMinHeight": "50px",
+        "headingFont": "700 26px / 31.2px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 12px / 12px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(99, 164, 188, 0.12) 0%, rgba(92, 151, 178, 0.06) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(88, 151, 197, 0.2) 0%, rgba(92, 151, 193, 0.08) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(82, 157, 178, 0.1) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(248, 251, 255) 0%, rgb(238, 245, 251) 54%, rgb(248, 251, 255) 100%)"
+      }
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "stationStress": {
+        "viewport": 1024,
+        "documentWidth": 1024,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 724,
+          "height": 259.75,
+          "right": 996,
+          "bottom": 372.75
+        },
+        "badge": {
+          "x": 293,
+          "y": 207.75,
+          "width": 240,
+          "height": 36,
+          "right": 533,
+          "bottom": 243.75
+        },
+        "label": {
+          "x": 330,
+          "y": 219.75,
+          "width": 193,
+          "height": 12,
+          "right": 523,
+          "bottom": 231.75
+        },
+        "labelScrollWidth": 518,
+        "weekBadge": {
+          "x": 540,
+          "y": 207.75,
+          "width": 94.22,
+          "height": 36,
+          "right": 634.22,
+          "bottom": 243.75
+        },
+        "fyBadge": {
+          "x": 293,
+          "y": 250.75,
+          "width": 109.05,
+          "height": 36,
+          "right": 402.05,
+          "bottom": 286.75
+        },
+        "art": {
+          "x": 707.94,
+          "y": 114,
+          "width": 287.05,
+          "height": 185.75,
+          "right": 994.98,
+          "bottom": 299.75
+        },
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "copy": {
+          "x": 273,
+          "y": 114,
+          "width": 434.94,
+          "height": 185.75,
+          "right": 707.94,
+          "bottom": 299.75
+        },
+        "action": {
+          "x": 291,
+          "y": 299.75,
+          "width": 685.98,
+          "height": 60,
+          "right": 976.98,
+          "bottom": 359.75
+        },
+        "button": {
+          "x": 796.98,
+          "y": 309.75,
+          "width": 180,
+          "height": 50,
+          "right": 976.98,
+          "bottom": 359.75
+        },
+        "labelOverflowX": "hidden",
+        "labelTextOverflow": "ellipsis"
+      },
+      "screenshot": "docs/ui-ux-audit/dashboard-hero-final-responsive-refinement/after/station-name-1024-light.png"
+    },
+    {
+      "width": 1280,
+      "theme": "dark",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "dark"
+      },
+      "m": {
+        "viewport": 1280,
+        "documentWidth": 1280,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 980,
+          "height": 178,
+          "right": 1252,
+          "bottom": 291
+        },
+        "heading": {
+          "x": 357,
+          "y": 143.97,
+          "width": 356.23,
+          "height": 37.19,
+          "right": 713.23,
+          "bottom": 181.16
+        },
+        "subtitle": {
+          "x": 309,
+          "y": 193.56,
+          "width": 445,
+          "height": 21.88,
+          "right": 754,
+          "bottom": 215.44
+        },
+        "badges": {
+          "x": 297,
+          "y": 227.44,
+          "width": 457,
+          "height": 38,
+          "right": 754,
+          "bottom": 265.44
+        },
+        "stationBadge": {
+          "x": 297,
+          "y": 227.44,
+          "width": 170.2,
+          "height": 38,
+          "right": 467.2,
+          "bottom": 265.44
+        },
+        "stationLabel": {
+          "x": 339,
+          "y": 239.94,
+          "width": 115.2,
+          "height": 13,
+          "right": 454.2,
+          "bottom": 252.94
+        },
+        "weekBadge": {
+          "x": 477.2,
+          "y": 227.44,
+          "width": 106.16,
+          "height": 38,
+          "right": 583.36,
+          "bottom": 265.44
+        },
+        "art": {
+          "x": 762,
+          "y": 114,
+          "width": 273.83,
+          "height": 176,
+          "right": 1035.83,
+          "bottom": 290
+        },
+        "image": {
+          "x": 729.14,
+          "y": 92.88,
+          "width": 306.69,
+          "height": 197.12,
+          "right": 1035.83,
+          "bottom": 290
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 1061.61,
+          "y": 156.5,
+          "width": 175.58,
+          "height": 22,
+          "right": 1237.19,
+          "bottom": 178.5
+        },
+        "button": {
+          "x": 1051.91,
+          "y": 192.5,
+          "width": 195,
+          "height": 55,
+          "right": 1246.91,
+          "bottom": 247.5
+        },
+        "buttonMinHeight": "55px",
+        "headingFont": "700 31px / 37.2px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 13px / 13px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(64, 166, 192, 0.18) 0%, rgba(41, 118, 148, 0.09) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(42, 115, 164, 0.43) 0%, rgba(22, 75, 112, 0.21) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(43, 126, 145, 0.2) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(6, 24, 39) 0%, rgb(11, 41, 67) 54%, rgb(8, 25, 45) 100%)"
+      }
+    },
+    {
+      "width": 1280,
+      "theme": "light",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "light"
+      },
+      "m": {
+        "viewport": 1280,
+        "documentWidth": 1280,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 980,
+          "height": 178,
+          "right": 1252,
+          "bottom": 291
+        },
+        "heading": {
+          "x": 357,
+          "y": 143.97,
+          "width": 356.23,
+          "height": 37.19,
+          "right": 713.23,
+          "bottom": 181.16
+        },
+        "subtitle": {
+          "x": 309,
+          "y": 193.56,
+          "width": 445,
+          "height": 21.88,
+          "right": 754,
+          "bottom": 215.44
+        },
+        "badges": {
+          "x": 297,
+          "y": 227.44,
+          "width": 457,
+          "height": 38,
+          "right": 754,
+          "bottom": 265.44
+        },
+        "stationBadge": {
+          "x": 297,
+          "y": 227.44,
+          "width": 170.2,
+          "height": 38,
+          "right": 467.2,
+          "bottom": 265.44
+        },
+        "stationLabel": {
+          "x": 339,
+          "y": 239.94,
+          "width": 115.2,
+          "height": 13,
+          "right": 454.2,
+          "bottom": 252.94
+        },
+        "weekBadge": {
+          "x": 477.2,
+          "y": 227.44,
+          "width": 106.16,
+          "height": 38,
+          "right": 583.36,
+          "bottom": 265.44
+        },
+        "art": {
+          "x": 762,
+          "y": 114,
+          "width": 273.83,
+          "height": 176,
+          "right": 1035.83,
+          "bottom": 290
+        },
+        "image": {
+          "x": 729.14,
+          "y": 92.88,
+          "width": 306.69,
+          "height": 197.12,
+          "right": 1035.83,
+          "bottom": 290
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "none",
+        "divider": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "date": {
+          "x": 1061.61,
+          "y": 156.5,
+          "width": 175.58,
+          "height": 22,
+          "right": 1237.19,
+          "bottom": 178.5
+        },
+        "button": {
+          "x": 1051.91,
+          "y": 192.5,
+          "width": 195,
+          "height": 55,
+          "right": 1246.91,
+          "bottom": 247.5
+        },
+        "buttonMinHeight": "55px",
+        "headingFont": "700 31px / 37.2px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 13px / 13px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(99, 164, 188, 0.12) 0%, rgba(92, 151, 178, 0.06) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(88, 151, 197, 0.2) 0%, rgba(92, 151, 193, 0.08) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(82, 157, 178, 0.1) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(248, 251, 255) 0%, rgb(238, 245, 251) 54%, rgb(248, 251, 255) 100%)"
+      }
+    },
+    {
+      "width": 1366,
+      "theme": "dark",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "dark"
+      },
+      "m": {
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 1066,
+          "height": 178,
+          "right": 1338,
+          "bottom": 291
+        },
+        "heading": {
+          "x": 357,
+          "y": 143.97,
+          "width": 356.23,
+          "height": 37.19,
+          "right": 713.23,
+          "bottom": 181.16
+        },
+        "subtitle": {
+          "x": 309,
+          "y": 193.56,
+          "width": 488,
+          "height": 21.88,
+          "right": 797,
+          "bottom": 215.44
+        },
+        "badges": {
+          "x": 297,
+          "y": 227.44,
+          "width": 500,
+          "height": 38,
+          "right": 797,
+          "bottom": 265.44
+        },
+        "stationBadge": {
+          "x": 297,
+          "y": 227.44,
+          "width": 170.2,
+          "height": 38,
+          "right": 467.2,
+          "bottom": 265.44
+        },
+        "stationLabel": {
+          "x": 339,
+          "y": 239.94,
+          "width": 115.2,
+          "height": 13,
+          "right": 454.2,
+          "bottom": 252.94
+        },
+        "weekBadge": {
+          "x": 477.2,
+          "y": 227.44,
+          "width": 106.16,
+          "height": 38,
+          "right": 583.36,
+          "bottom": 265.44
+        },
+        "art": {
+          "x": 805,
+          "y": 114,
+          "width": 297.91,
+          "height": 176,
+          "right": 1102.91,
+          "bottom": 290
+        },
+        "image": {
+          "x": 760.31,
+          "y": 87.6,
+          "width": 342.59,
+          "height": 202.4,
+          "right": 1102.91,
+          "bottom": 290
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "block",
+        "divider": {
+          "x": 724.59,
+          "y": 96.41,
+          "width": 129.95,
+          "height": 211.19,
+          "right": 854.54,
+          "bottom": 307.59
+        },
+        "date": {
+          "x": 1138.16,
+          "y": 156.5,
+          "width": 175.58,
+          "height": 22,
+          "right": 1313.73,
+          "bottom": 178.5
+        },
+        "button": {
+          "x": 1128.44,
+          "y": 192.5,
+          "width": 195,
+          "height": 55,
+          "right": 1323.44,
+          "bottom": 247.5
+        },
+        "buttonMinHeight": "55px",
+        "headingFont": "700 31px / 37.2px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 13px / 13px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(64, 166, 192, 0.18) 0%, rgba(41, 118, 148, 0.09) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(42, 115, 164, 0.43) 0%, rgba(22, 75, 112, 0.21) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(43, 126, 145, 0.2) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(6, 24, 39) 0%, rgb(11, 41, 67) 54%, rgb(8, 25, 45) 100%)"
+      }
+    },
+    {
+      "width": 1366,
+      "theme": "dark",
+      "stationStress": {
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 1066,
+          "height": 178,
+          "right": 1338,
+          "bottom": 291
+        },
+        "badge": {
+          "x": 297,
+          "y": 227.44,
+          "width": 175,
+          "height": 38,
+          "right": 472,
+          "bottom": 265.44
+        },
+        "label": {
+          "x": 339,
+          "y": 239.94,
+          "width": 120,
+          "height": 13,
+          "right": 459,
+          "bottom": 252.94
+        },
+        "labelScrollWidth": 561,
+        "weekBadge": {
+          "x": 482,
+          "y": 227.44,
+          "width": 106.16,
+          "height": 38,
+          "right": 588.16,
+          "bottom": 265.44
+        },
+        "fyBadge": {
+          "x": 598.16,
+          "y": 227.44,
+          "width": 122.2,
+          "height": 38,
+          "right": 720.36,
+          "bottom": 265.44
+        },
+        "art": {
+          "x": 805,
+          "y": 114,
+          "width": 297.91,
+          "height": 176,
+          "right": 1102.91,
+          "bottom": 290
+        },
+        "divider": {
+          "x": 724.59,
+          "y": 96.41,
+          "width": 129.95,
+          "height": 211.19,
+          "right": 854.54,
+          "bottom": 307.59
+        },
+        "copy": {
+          "x": 273,
+          "y": 121.56,
+          "width": 532,
+          "height": 160.88,
+          "right": 805,
+          "bottom": 282.44
+        },
+        "action": {
+          "x": 1102.91,
+          "y": 114,
+          "width": 234.08,
+          "height": 176,
+          "right": 1336.98,
+          "bottom": 290
+        },
+        "button": {
+          "x": 1128.44,
+          "y": 192.5,
+          "width": 195,
+          "height": 55,
+          "right": 1323.44,
+          "bottom": 247.5
+        },
+        "labelOverflowX": "hidden",
+        "labelTextOverflow": "ellipsis"
+      },
+      "screenshot": "docs/ui-ux-audit/dashboard-hero-final-responsive-refinement/after/station-name-1366-dark.png"
+    },
+    {
+      "width": 1366,
+      "theme": "dark",
+      "buttonInteraction": {
+        "focused": true,
+        "enterOpens": true,
+        "clickOpens": true
+      }
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "light"
+      },
+      "m": {
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 1066,
+          "height": 178,
+          "right": 1338,
+          "bottom": 291
+        },
+        "heading": {
+          "x": 357,
+          "y": 143.97,
+          "width": 356.23,
+          "height": 37.19,
+          "right": 713.23,
+          "bottom": 181.16
+        },
+        "subtitle": {
+          "x": 309,
+          "y": 193.56,
+          "width": 488,
+          "height": 21.88,
+          "right": 797,
+          "bottom": 215.44
+        },
+        "badges": {
+          "x": 297,
+          "y": 227.44,
+          "width": 500,
+          "height": 38,
+          "right": 797,
+          "bottom": 265.44
+        },
+        "stationBadge": {
+          "x": 297,
+          "y": 227.44,
+          "width": 170.2,
+          "height": 38,
+          "right": 467.2,
+          "bottom": 265.44
+        },
+        "stationLabel": {
+          "x": 339,
+          "y": 239.94,
+          "width": 115.2,
+          "height": 13,
+          "right": 454.2,
+          "bottom": 252.94
+        },
+        "weekBadge": {
+          "x": 477.2,
+          "y": 227.44,
+          "width": 106.16,
+          "height": 38,
+          "right": 583.36,
+          "bottom": 265.44
+        },
+        "art": {
+          "x": 805,
+          "y": 114,
+          "width": 297.91,
+          "height": 176,
+          "right": 1102.91,
+          "bottom": 290
+        },
+        "image": {
+          "x": 760.31,
+          "y": 87.6,
+          "width": 342.59,
+          "height": 202.4,
+          "right": 1102.91,
+          "bottom": 290
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "block",
+        "divider": {
+          "x": 724.59,
+          "y": 96.41,
+          "width": 129.95,
+          "height": 211.19,
+          "right": 854.54,
+          "bottom": 307.59
+        },
+        "date": {
+          "x": 1138.16,
+          "y": 156.5,
+          "width": 175.58,
+          "height": 22,
+          "right": 1313.73,
+          "bottom": 178.5
+        },
+        "button": {
+          "x": 1128.44,
+          "y": 192.5,
+          "width": 195,
+          "height": 55,
+          "right": 1323.44,
+          "bottom": 247.5
+        },
+        "buttonMinHeight": "55px",
+        "headingFont": "700 31px / 37.2px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 13px / 13px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(99, 164, 188, 0.12) 0%, rgba(92, 151, 178, 0.06) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(88, 151, 197, 0.2) 0%, rgba(92, 151, 193, 0.08) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(82, 157, 178, 0.1) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(248, 251, 255) 0%, rgb(238, 245, 251) 54%, rgb(248, 251, 255) 100%)"
+      }
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "stationStress": {
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 1066,
+          "height": 178,
+          "right": 1338,
+          "bottom": 291
+        },
+        "badge": {
+          "x": 297,
+          "y": 227.44,
+          "width": 175,
+          "height": 38,
+          "right": 472,
+          "bottom": 265.44
+        },
+        "label": {
+          "x": 339,
+          "y": 239.94,
+          "width": 120,
+          "height": 13,
+          "right": 459,
+          "bottom": 252.94
+        },
+        "labelScrollWidth": 561,
+        "weekBadge": {
+          "x": 482,
+          "y": 227.44,
+          "width": 106.16,
+          "height": 38,
+          "right": 588.16,
+          "bottom": 265.44
+        },
+        "fyBadge": {
+          "x": 598.16,
+          "y": 227.44,
+          "width": 122.2,
+          "height": 38,
+          "right": 720.36,
+          "bottom": 265.44
+        },
+        "art": {
+          "x": 805,
+          "y": 114,
+          "width": 297.91,
+          "height": 176,
+          "right": 1102.91,
+          "bottom": 290
+        },
+        "divider": {
+          "x": 724.59,
+          "y": 96.41,
+          "width": 129.95,
+          "height": 211.19,
+          "right": 854.54,
+          "bottom": 307.59
+        },
+        "copy": {
+          "x": 273,
+          "y": 121.56,
+          "width": 532,
+          "height": 160.88,
+          "right": 805,
+          "bottom": 282.44
+        },
+        "action": {
+          "x": 1102.91,
+          "y": 114,
+          "width": 234.08,
+          "height": 176,
+          "right": 1336.98,
+          "bottom": 290
+        },
+        "button": {
+          "x": 1128.44,
+          "y": 192.5,
+          "width": 195,
+          "height": 55,
+          "right": 1323.44,
+          "bottom": 247.5
+        },
+        "labelOverflowX": "hidden",
+        "labelTextOverflow": "ellipsis"
+      },
+      "screenshot": "docs/ui-ux-audit/dashboard-hero-final-responsive-refinement/after/station-name-1366-light.png"
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "buttonInteraction": {
+        "focused": true,
+        "enterOpens": true,
+        "clickOpens": true
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "dark"
+      },
+      "m": {
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 1140,
+          "height": 178,
+          "right": 1412,
+          "bottom": 291
+        },
+        "heading": {
+          "x": 357,
+          "y": 143.97,
+          "width": 356.23,
+          "height": 37.19,
+          "right": 713.23,
+          "bottom": 181.16
+        },
+        "subtitle": {
+          "x": 309,
+          "y": 193.56,
+          "width": 525,
+          "height": 21.88,
+          "right": 834,
+          "bottom": 215.44
+        },
+        "badges": {
+          "x": 297,
+          "y": 227.44,
+          "width": 537,
+          "height": 38,
+          "right": 834,
+          "bottom": 265.44
+        },
+        "stationBadge": {
+          "x": 297,
+          "y": 227.44,
+          "width": 170.2,
+          "height": 38,
+          "right": 467.2,
+          "bottom": 265.44
+        },
+        "stationLabel": {
+          "x": 339,
+          "y": 239.94,
+          "width": 115.2,
+          "height": 13,
+          "right": 454.2,
+          "bottom": 252.94
+        },
+        "weekBadge": {
+          "x": 477.2,
+          "y": 227.44,
+          "width": 106.16,
+          "height": 38,
+          "right": 583.36,
+          "bottom": 265.44
+        },
+        "art": {
+          "x": 842,
+          "y": 114,
+          "width": 318.63,
+          "height": 176,
+          "right": 1160.63,
+          "bottom": 290
+        },
+        "image": {
+          "x": 816.51,
+          "y": 99.92,
+          "width": 344.11,
+          "height": 190.08,
+          "right": 1160.63,
+          "bottom": 290
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "block",
+        "divider": {
+          "x": 759.74,
+          "y": 96.41,
+          "width": 131.5,
+          "height": 211.19,
+          "right": 891.24,
+          "bottom": 307.59
+        },
+        "date": {
+          "x": 1204.02,
+          "y": 156.5,
+          "width": 175.58,
+          "height": 22,
+          "right": 1379.59,
+          "bottom": 178.5
+        },
+        "button": {
+          "x": 1194.3,
+          "y": 192.5,
+          "width": 195,
+          "height": 55,
+          "right": 1389.3,
+          "bottom": 247.5
+        },
+        "buttonMinHeight": "55px",
+        "headingFont": "700 31px / 37.2px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 13px / 13px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(64, 166, 192, 0.18) 0%, rgba(41, 118, 148, 0.09) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(42, 115, 164, 0.43) 0%, rgba(22, 75, 112, 0.21) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(43, 126, 145, 0.2) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(6, 24, 39) 0%, rgb(11, 41, 67) 54%, rgb(8, 25, 45) 100%)"
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "light"
+      },
+      "m": {
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "hero": {
+          "x": 272,
+          "y": 113,
+          "width": 1140,
+          "height": 178,
+          "right": 1412,
+          "bottom": 291
+        },
+        "heading": {
+          "x": 357,
+          "y": 143.97,
+          "width": 356.23,
+          "height": 37.19,
+          "right": 713.23,
+          "bottom": 181.16
+        },
+        "subtitle": {
+          "x": 309,
+          "y": 193.56,
+          "width": 525,
+          "height": 21.88,
+          "right": 834,
+          "bottom": 215.44
+        },
+        "badges": {
+          "x": 297,
+          "y": 227.44,
+          "width": 537,
+          "height": 38,
+          "right": 834,
+          "bottom": 265.44
+        },
+        "stationBadge": {
+          "x": 297,
+          "y": 227.44,
+          "width": 170.2,
+          "height": 38,
+          "right": 467.2,
+          "bottom": 265.44
+        },
+        "stationLabel": {
+          "x": 339,
+          "y": 239.94,
+          "width": 115.2,
+          "height": 13,
+          "right": 454.2,
+          "bottom": 252.94
+        },
+        "weekBadge": {
+          "x": 477.2,
+          "y": 227.44,
+          "width": 106.16,
+          "height": 38,
+          "right": 583.36,
+          "bottom": 265.44
+        },
+        "art": {
+          "x": 842,
+          "y": 114,
+          "width": 318.63,
+          "height": 176,
+          "right": 1160.63,
+          "bottom": 290
+        },
+        "image": {
+          "x": 816.51,
+          "y": 99.92,
+          "width": 344.11,
+          "height": 190.08,
+          "right": 1160.63,
+          "bottom": 290
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "block",
+        "divider": {
+          "x": 759.74,
+          "y": 96.41,
+          "width": 131.5,
+          "height": 211.19,
+          "right": 891.24,
+          "bottom": 307.59
+        },
+        "date": {
+          "x": 1204.02,
+          "y": 156.5,
+          "width": 175.58,
+          "height": 22,
+          "right": 1379.59,
+          "bottom": 178.5
+        },
+        "button": {
+          "x": 1194.3,
+          "y": 192.5,
+          "width": 195,
+          "height": 55,
+          "right": 1389.3,
+          "bottom": 247.5
+        },
+        "buttonMinHeight": "55px",
+        "headingFont": "700 31px / 37.2px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 13px / 13px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(99, 164, 188, 0.12) 0%, rgba(92, 151, 178, 0.06) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(88, 151, 197, 0.2) 0%, rgba(92, 151, 193, 0.08) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(82, 157, 178, 0.1) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(248, 251, 255) 0%, rgb(238, 245, 251) 54%, rgb(248, 251, 255) 100%)"
+      }
+    },
+    {
+      "width": 1920,
+      "theme": "dark",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "dark"
+      },
+      "m": {
+        "viewport": 1920,
+        "documentWidth": 1920,
+        "hero": {
+          "x": 360,
+          "y": 113,
+          "width": 1444,
+          "height": 178,
+          "right": 1804,
+          "bottom": 291
+        },
+        "heading": {
+          "x": 445,
+          "y": 143.97,
+          "width": 356.23,
+          "height": 37.19,
+          "right": 801.23,
+          "bottom": 181.16
+        },
+        "subtitle": {
+          "x": 397,
+          "y": 193.56,
+          "width": 677,
+          "height": 21.88,
+          "right": 1074,
+          "bottom": 215.44
+        },
+        "badges": {
+          "x": 385,
+          "y": 227.44,
+          "width": 689,
+          "height": 38,
+          "right": 1074,
+          "bottom": 265.44
+        },
+        "stationBadge": {
+          "x": 385,
+          "y": 227.44,
+          "width": 170.2,
+          "height": 38,
+          "right": 555.2,
+          "bottom": 265.44
+        },
+        "stationLabel": {
+          "x": 427,
+          "y": 239.94,
+          "width": 115.2,
+          "height": 13,
+          "right": 542.2,
+          "bottom": 252.94
+        },
+        "weekBadge": {
+          "x": 565.2,
+          "y": 227.44,
+          "width": 106.16,
+          "height": 38,
+          "right": 671.36,
+          "bottom": 265.44
+        },
+        "art": {
+          "x": 1082,
+          "y": 114,
+          "width": 403.75,
+          "height": 176,
+          "right": 1485.75,
+          "bottom": 290
+        },
+        "image": {
+          "x": 1082,
+          "y": 114,
+          "width": 403.75,
+          "height": 176,
+          "right": 1485.75,
+          "bottom": 290
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "block",
+        "divider": {
+          "x": 992.13,
+          "y": 96.41,
+          "width": 137.89,
+          "height": 211.19,
+          "right": 1130.02,
+          "bottom": 307.59
+        },
+        "date": {
+          "x": 1562.58,
+          "y": 156.5,
+          "width": 175.58,
+          "height": 22,
+          "right": 1738.16,
+          "bottom": 178.5
+        },
+        "button": {
+          "x": 1552.86,
+          "y": 192.5,
+          "width": 195,
+          "height": 55,
+          "right": 1747.86,
+          "bottom": 247.5
+        },
+        "buttonMinHeight": "55px",
+        "headingFont": "700 31px / 37.2px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 13px / 13px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(64, 166, 192, 0.18) 0%, rgba(41, 118, 148, 0.09) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(42, 115, 164, 0.43) 0%, rgba(22, 75, 112, 0.21) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(43, 126, 145, 0.2) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(6, 24, 39) 0%, rgb(11, 41, 67) 54%, rgb(8, 25, 45) 100%)"
+      }
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "actual": {
+        "greeting": "Good Afternoon,",
+        "name": "Officer!",
+        "station": "Old Sabzi Mandi PS",
+        "date": "Tuesday, 24 Nov 2026",
+        "week": "Week 48",
+        "financialYear": "FY 2026–27",
+        "theme": "light"
+      },
+      "m": {
+        "viewport": 1920,
+        "documentWidth": 1920,
+        "hero": {
+          "x": 360,
+          "y": 113,
+          "width": 1444,
+          "height": 178,
+          "right": 1804,
+          "bottom": 291
+        },
+        "heading": {
+          "x": 445,
+          "y": 143.97,
+          "width": 356.23,
+          "height": 37.19,
+          "right": 801.23,
+          "bottom": 181.16
+        },
+        "subtitle": {
+          "x": 397,
+          "y": 193.56,
+          "width": 677,
+          "height": 21.88,
+          "right": 1074,
+          "bottom": 215.44
+        },
+        "badges": {
+          "x": 385,
+          "y": 227.44,
+          "width": 689,
+          "height": 38,
+          "right": 1074,
+          "bottom": 265.44
+        },
+        "stationBadge": {
+          "x": 385,
+          "y": 227.44,
+          "width": 170.2,
+          "height": 38,
+          "right": 555.2,
+          "bottom": 265.44
+        },
+        "stationLabel": {
+          "x": 427,
+          "y": 239.94,
+          "width": 115.2,
+          "height": 13,
+          "right": 542.2,
+          "bottom": 252.94
+        },
+        "weekBadge": {
+          "x": 565.2,
+          "y": 227.44,
+          "width": 106.16,
+          "height": 38,
+          "right": 671.36,
+          "bottom": 265.44
+        },
+        "art": {
+          "x": 1082,
+          "y": 114,
+          "width": 403.75,
+          "height": 176,
+          "right": 1485.75,
+          "bottom": 290
+        },
+        "image": {
+          "x": 1082,
+          "y": 114,
+          "width": 403.75,
+          "height": 176,
+          "right": 1485.75,
+          "bottom": 290
+        },
+        "naturalImage": {
+          "width": 1547,
+          "height": 774
+        },
+        "dividerDisplay": "block",
+        "divider": {
+          "x": 992.13,
+          "y": 96.41,
+          "width": 137.89,
+          "height": 211.19,
+          "right": 1130.02,
+          "bottom": 307.59
+        },
+        "date": {
+          "x": 1562.58,
+          "y": 156.5,
+          "width": 175.58,
+          "height": 22,
+          "right": 1738.16,
+          "bottom": 178.5
+        },
+        "button": {
+          "x": 1552.86,
+          "y": 192.5,
+          "width": 195,
+          "height": 55,
+          "right": 1747.86,
+          "bottom": 247.5
+        },
+        "buttonMinHeight": "55px",
+        "headingFont": "700 31px / 37.2px Inter, \"Segoe UI\", Arial, sans-serif",
+        "badgeFont": "600 13px / 13px Inter, \"Segoe UI\", Arial, sans-serif",
+        "heroBackground": "radial-gradient(37% 15% at 64% 101%, rgba(99, 164, 188, 0.12) 0%, rgba(92, 151, 178, 0.06) 52%, rgba(0, 0, 0, 0) 100%), radial-gradient(38% 135% at 64% 83%, rgba(88, 151, 197, 0.2) 0%, rgba(92, 151, 193, 0.08) 42%, rgba(0, 0, 0, 0) 76%), radial-gradient(24% 42% at 64% 105%, rgba(82, 157, 178, 0.1) 0%, rgba(0, 0, 0, 0) 74%), linear-gradient(112deg, rgb(248, 251, 255) 0%, rgb(238, 245, 251) 54%, rgb(248, 251, 255) 100%)"
+      }
+    }
+  ],
+  "errors": []
+}

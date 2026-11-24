@@ -356,3 +356,10 @@ UX-002 remains **High · Open**. Isolated Chromium Playwright acceptance passed 
 ### Phase 5I outstanding acceptance items — preserved 18 November 2026
 
 UX-002 remains **High · Open**. Phase 5I automated axe review found a critical ARIA violation and serious contrast violations; these require targeted review and correction. Manual screen-reader verification is still pending because no audible NVDA/Narrator check was completed. The synthetic persistence round trip remains blocked by the existing fail-closed Playwright Functions stub for `saveFirMaster`; no production or real case writes were performed. Owner visual approval of the Add Case captures also remains pending. See `PHASE-5I-ADD-CASE-FINAL-VERIFICATION.md` and `evidence/phase-5i/`. These items are retained as outstanding; no UX-002 acceptance or closure is implied.
+## Dashboard Hero baseline freeze — 24 November 2026
+
+Owner review approved the current Dashboard Hero visual and responsive design at ten documented viewport widths in Dark and Light themes. Status: **DESIGN APPROVED · FROZEN · CLEANUP COMPLETE**. Post-cleanup verification confirmed all 450 inventoried obsolete artifacts are absent, the final baseline folder contains its five approved artifacts, retained links resolve, and all five canonical recovery snapshot checksums match. The owner-selected Officer! label and time-dependent greeting remain. This is not production release approval.
+
+Production build passed. Post-cleanup tests: 62 passed, 1 unrelated status-map color-token failure; `git diff --check` passed with existing line-ending warnings. Authenticated station-name resolution remains PENDING. Production release is NOT AUTHORIZED. Evidence and specification are in dashboard-hero-final-baseline/. This note changes no UX issue status and closes no unrelated issue.
+
+Canonical approved Dashboard Hero baseline: [DASHBOARD-HERO-FINAL.md](dashboard-hero-final-baseline/DASHBOARD-HERO-FINAL.md). This records design approval only; production release remains unauthorized.
