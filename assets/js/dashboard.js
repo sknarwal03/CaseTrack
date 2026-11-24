@@ -2,10 +2,12 @@ import { auth, db } from '@config/firebase-config.js';
 import { onAuthStateChanged } from 'firebase/auth';
 import { parseCaseDate, setupDropdown } from './shared-utils.js';
 import { normalizeTrialStage } from './trial-stages.js';
-import { countUniqueFirs, loadCaseRecords } from './fir-case-model.js';
+import { countUniqueFirs, loadDashboardCaseData } from './fir-case-model.js';
 import { isCourtProceeding } from './fir-status.mjs';
 
 let casesCache = [];
+let dashboardStationNames = [];
+let dashboardDataGeneration = 0;
 let activePcRange = 'thisMonth';
 let casesLoadError = null;
 let dashboardTasks = [];
@@ -160,15 +162,28 @@ function loadDashboardTasks(user) {
    FIRESTORE
 ========================= */
 const loadCases = async () => {
+    const generation = ++dashboardDataGeneration;
     try {
-        casesCache = await loadCaseRecords(db);
+        const dashboardData = await loadDashboardCaseData(db, {
+            onStationNames: names => {
+                if (generation !== dashboardDataGeneration) return;
+                dashboardStationNames = names;
+                updateDashboardHero();
+            }
+        });
+        if (generation !== dashboardDataGeneration) return;
+        casesCache = dashboardData.records;
+        dashboardStationNames = dashboardData.stationNames;
         casesLoadError = null;
     } catch (error) {
+        if (generation !== dashboardDataGeneration) return;
         console.error('Failed to load FIR and proceeding records:', error);
         casesLoadError = error;
         casesCache = [];
+        dashboardStationNames = [];
     }
     renderDashboard();
+    updateDashboardHero();
 };
 
 window.addEventListener('caseAdded', () => {
@@ -188,6 +203,39 @@ const updateTodayDate = () => {
         el.textContent = new Intl.DateTimeFormat('en-GB', options).format(new Date());
     }
 };
+
+function updateDashboardHero(user = auth.currentUser) {
+    const now = new Date();
+    const hour = now.getHours();
+    const greeting = hour >= 5 && hour < 12 ? 'Good Morning,'
+        : hour >= 12 && hour < 17 ? 'Good Afternoon,'
+            : hour >= 17 && hour < 21 ? 'Good Evening,' : 'Welcome Back,';
+    const heading = document.getElementById('dashboardWelcome');
+    const greetingEl = heading?.querySelector('.dashboard-greeting');
+    const nameEl = heading?.querySelector('.dashboard-user-name');
+    if (greetingEl) greetingEl.textContent = greeting;
+    if (nameEl) nameEl.textContent = 'Officer!';
+
+    const date = new Date(now);
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+    const firstThursday = new Date(date.getFullYear(), 0, 4);
+    const week = 1 + Math.round(((date - firstThursday) / 86400000 - 3 + ((firstThursday.getDay() + 6) % 7)) / 7);
+    const weekEl = document.getElementById('dashboardWeek');
+    if (weekEl) weekEl.textContent = `Week ${week}`;
+    const fyStart = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+    const fyEl = document.getElementById('dashboardFinancialYear');
+    if (fyEl) fyEl.textContent = `FY ${fyStart}\u2013${String(fyStart + 1).slice(-2)}`;
+
+    const stationBadge = document.getElementById('dashboardStationBadge');
+    const stationEl = document.getElementById('dashboardStation');
+    const stations = [...new Set(dashboardStationNames.map(name => String(name || '').trim()).filter(Boolean))];
+    if (stationEl) {
+        stationEl.textContent = stations.length === 1 ? stations[0]
+            : stations.length > 1 ? `${stations.length} stations` : 'Station unavailable';
+    }
+    if (stationBadge) stationBadge.hidden = false;
+}
 
 const TREND_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const trendDateValue = value => {
@@ -688,12 +736,16 @@ const bindViewAllButtons = () => {
 ========================= */
 const init = async () => {
     updateTodayDate();
+    updateDashboardHero();
     bindPcRangeSelector();
     bindViewAllButtons();
     bindTaskControls();
     document.getElementById('trendPeriod')?.addEventListener('change', () => renderCaseTrends(casesCache.filter(isCourtProceeding)));
-    onAuthStateChanged(auth, loadDashboardTasks);
-    await loadCases();
+    onAuthStateChanged(auth, user => {
+        loadDashboardTasks(user);
+        updateDashboardHero(user);
+        loadCases();
+    });
 
     // Re-render donut when the breakdown dropdown changes
     document.querySelector('.status-filter')?.addEventListener('change', () => {

@@ -175,8 +175,29 @@ export async function loadCaseRecords(db) {
     return mergeCaseRecords(masterSnapshot.docs, linkedSnapshot.docs, legacySnapshot.docs);
 }
 
-async function loadStationScopedCaseRecords(db) {
-    const { stationIds } = await getCaseAccessContext(db);
+export async function loadDashboardCaseData(db, { onStationNames } = {}) {
+    if (usesStationScopedAccess(db)) {
+        const context = await getCaseAccessContext(db);
+        const stationNames = context.stations.filter(station => {
+            const name = String(station.name || '').trim();
+            const id = String(station.id || '').trim();
+            return name && id && name.toLocaleLowerCase() !== id.toLocaleLowerCase();
+        }).map(station => String(station.name).trim());
+        onStationNames?.(stationNames);
+        return {
+            records: await loadStationScopedCaseRecords(db, context),
+            stationNames
+        };
+    }
+
+    const records = await loadCaseRecords(db);
+    // Legacy records do not carry an authorized station-name mapping. Do not
+    // infer a display name from case fields that may contain an internal ID.
+    return { records, stationNames: [] };
+}
+
+async function loadStationScopedCaseRecords(db, context = null) {
+    const { stationIds } = context || await getCaseAccessContext(db);
     const uniqueStationIds = [...new Set(stationIds)];
     if (uniqueStationIds.length === 0) return [];
 
